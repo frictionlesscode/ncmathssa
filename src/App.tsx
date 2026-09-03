@@ -1,0 +1,168 @@
+import React, { useState } from 'react';
+import { ProgressProvider, useProgress } from './context/ProgressContext';
+import { Navbar } from './components/Navbar';
+import type { NavTab } from './components/Navbar';
+import { Dashboard } from './components/Dashboard';
+import { CurriculumView } from './components/CurriculumView';
+import { QuizzesListView } from './components/QuizzesListView';
+import { WeakSpotsView } from './components/WeakSpotsView';
+import { QuizRunner } from './components/QuizRunner';
+import { QuizResults } from './components/QuizResults';
+import { StudyGuideModal } from './components/StudyGuideModal';
+import { StudyPaceModal } from './components/StudyPaceModal';
+import { PrintReportModal } from './components/PrintReportModal';
+import type { QuizAttempt, QuizDefinition } from './types';
+import {
+  createMissedQuestionsDrill,
+  createStandardDrill,
+  getQuizById
+} from './data/quizzes';
+
+const MainApp: React.FC = () => {
+  const { recordQuizAttempt } = useProgress();
+
+  const [currentTab, setCurrentTab] = useState<NavTab>('dashboard');
+  const [activeQuiz, setActiveQuiz] = useState<QuizDefinition | null>(null);
+  const [completedAttempt, setCompletedAttempt] = useState<QuizAttempt | null>(null);
+
+  // Modals
+  const [studyGuideStandard, setStudyGuideStandard] = useState<string | null>(null);
+  const [isPaceModalOpen, setIsPaceModalOpen] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+
+  // Launch a pre-defined quiz
+  const handleStartQuiz = (quizId: string) => {
+    const quiz = getQuizById(quizId);
+    if (quiz) {
+      setCompletedAttempt(null);
+      setActiveQuiz(quiz);
+    }
+  };
+
+  // Launch a standard-specific drill
+  const handleStartStandardDrill = (standardCode: string) => {
+    const drill = createStandardDrill(standardCode);
+    setCompletedAttempt(null);
+    setActiveQuiz(drill);
+  };
+
+  // Launch custom quiz for missed questions
+  const handleStartCustomQuiz = (questionIds: string[]) => {
+    const drill = createMissedQuestionsDrill(questionIds);
+    setCompletedAttempt(null);
+    setActiveQuiz(drill);
+  };
+
+  // Handle quiz completion
+  const handleFinishQuiz = (attempt: QuizAttempt) => {
+    recordQuizAttempt(attempt);
+    setCompletedAttempt(attempt);
+    setActiveQuiz(null);
+  };
+
+  // Retake currently viewed attempt
+  const handleRetake = () => {
+    if (completedAttempt) {
+      const quiz = getQuizById(completedAttempt.quizId) || createStandardDrill(completedAttempt.standardCode || 'NC.5.NF.1');
+      setCompletedAttempt(null);
+      setActiveQuiz(quiz);
+    }
+  };
+
+  // Render Test Runner if quiz is active
+  if (activeQuiz) {
+    return (
+      <QuizRunner
+        quiz={activeQuiz}
+        onFinish={handleFinishQuiz}
+        onExit={() => setActiveQuiz(null)}
+      />
+    );
+  }
+
+  // Render Post-Quiz Results if recently completed
+  if (completedAttempt) {
+    return (
+      <QuizResults
+        attempt={completedAttempt}
+        onRetake={handleRetake}
+        onStartStandardDrill={handleStartStandardDrill}
+        onOpenStudyGuide={setStudyGuideStandard}
+        onDone={() => setCompletedAttempt(null)}
+      />
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-slate-50 flex flex-col selection:bg-blue-500 selection:text-white">
+      {/* Top Navigation */}
+      <Navbar
+        currentTab={currentTab}
+        onSelectTab={setCurrentTab}
+        onOpenPaceModal={() => setIsPaceModalOpen(true)}
+        onOpenReportModal={() => setIsReportModalOpen(true)}
+      />
+
+      {/* Main Tab Content */}
+      <main className="flex-1">
+        {currentTab === 'dashboard' && (
+          <Dashboard
+            onStartQuiz={handleStartQuiz}
+            onOpenStudyGuide={setStudyGuideStandard}
+            onNavigateTab={setCurrentTab}
+            onOpenPaceModal={() => setIsPaceModalOpen(true)}
+            onOpenReportModal={() => setIsReportModalOpen(true)}
+          />
+        )}
+
+        {currentTab === 'curriculum' && (
+          <CurriculumView
+            onStartStandardDrill={handleStartStandardDrill}
+            onOpenStudyGuide={setStudyGuideStandard}
+          />
+        )}
+
+        {currentTab === 'quizzes' && (
+          <QuizzesListView
+            onStartQuiz={handleStartQuiz}
+            onStartStandardDrill={handleStartStandardDrill}
+          />
+        )}
+
+        {currentTab === 'weakspots' && (
+          <WeakSpotsView
+            onStartCustomQuiz={handleStartCustomQuiz}
+            onOpenStudyGuide={setStudyGuideStandard}
+          />
+        )}
+      </main>
+
+      {/* Modals */}
+      <StudyGuideModal
+        standardCode={studyGuideStandard}
+        onClose={() => setStudyGuideStandard(null)}
+        onStartStandardDrill={handleStartStandardDrill}
+      />
+
+      <StudyPaceModal
+        isOpen={isPaceModalOpen}
+        onClose={() => setIsPaceModalOpen(false)}
+      />
+
+      <PrintReportModal
+        isOpen={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
+      />
+    </div>
+  );
+};
+
+export function App() {
+  return (
+    <ProgressProvider>
+      <MainApp />
+    </ProgressProvider>
+  );
+}
+
+export default App;
