@@ -84,7 +84,7 @@ export const nbt3CompareDecimals: QuestionTemplate = {
     });
 
     return {
-      prompt: 'Which decimal is the greatest?',
+      prompt: 'Which of these decimals is the greatest?',
       promptDetails: listed.join(', '),
       options: labelOptions(ordered),
       answerText: answer,

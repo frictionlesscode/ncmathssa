@@ -88,7 +88,9 @@ export const nf4MultiplyFractions: QuestionTemplate = {
           `Step 1: Multiplying fractions needs no common denominator — multiply straight across.`,
           `Step 2: Numerators: ${n1} × ${n2} = ${n1 * n2}.`,
           `Step 3: Denominators: ${d1} × ${d2} = ${d1 * d2}.`,
-          `Step 4: That gives ${n1 * n2}/${d1 * d2}, which in simplest form is ${answer}.`,
+          `${n1 * n2}/${d1 * d2}` === answer
+            ? `Step 4: ${n1 * n2}/${d1 * d2} has no common factor left to remove, so the product is ${answer}.`
+            : `Step 4: ${n1 * n2}/${d1 * d2} simplifies to ${answer}.`,
         ],
         conceptSummary:
           'Multiplying by a fraction less than one takes a part of a part, so the product is smaller than either factor. Numerators multiply together and denominators multiply together, with no common denominator needed.',
