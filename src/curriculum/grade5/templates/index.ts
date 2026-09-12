@@ -2,6 +2,7 @@ import type { QuestionTemplate } from '../../../engine/template';
 import { nf1AddUnlike } from './nf1-add-unlike';
 import { nbt1PowersOfTen } from './nbt1-powers-of-ten';
 import { nbt3CompareDecimals } from './nbt3-compare-decimals';
+import { nbt5MultiDigitMultiply } from './nbt5-multi-digit-multiply';
 
 /** Every parameterized Grade 5 template. Generated items cover the fluency
  *  standards, where fresh numbers each run are what make practice practice;
@@ -11,6 +12,7 @@ export const GRADE_5_TEMPLATES: QuestionTemplate[] = [
   nf1AddUnlike,
   nbt1PowersOfTen,
   nbt3CompareDecimals,
+  nbt5MultiDigitMultiply,
 ];
 
-export { nf1AddUnlike, nbt1PowersOfTen, nbt3CompareDecimals };
+export { nf1AddUnlike, nbt1PowersOfTen, nbt3CompareDecimals, nbt5MultiDigitMultiply };
