@@ -1,6 +1,11 @@
 # NC Math SSA Prep (Wake County Grade 5 Math Acceleration)
 
-A dedicated, comprehensive web application built to help 4th grade students prepare for **North Carolina Single Subject Acceleration (SSA)** to skip 5th grade mathematics and place directly into 6th grade math in the **Wake County Public School System (WCPSS)**.
+A web application built to help students prepare for **North Carolina Single
+Subject Acceleration (SSA)** to skip 5th grade mathematics and place directly
+into 6th grade math in the **Wake County Public School System (WCPSS)**.
+
+**Current scope: Grade 5 only.** Grades 1–4 are a planned follow-on, not yet
+shipped — see [Roadmap](#roadmap-grades-1-4) below.
 
 ---
 
@@ -9,12 +14,12 @@ A dedicated, comprehensive web application built to help 4th grade students prep
 - **Target Assessment**: Above-grade-level comprehensive assessment administered by WCPSS and built by **CASE** (Collaborative Assessment Solutions for Educators).
 - **Qualifying Cutoff**: **80% or higher** on the comprehensive assessment.
 - **Honest Blueprint**: Because the secure CASE item bank is strictly confidential and never made public, this application does **not** guess or fabricate real test items. Instead, the entire curriculum and question bank is built directly against the official, public **North Carolina Standard Course of Study (NCSCOS) for Grade 5 Mathematics**.
-- **Assessment Format**: Supports both **Multiple-Choice** and **Open-Response / Free-Text** questions (including integers, decimals, simplified fractions, and mixed numbers).
+- **Assessment Format**: Every question is **multiple choice**. There is no open-response or free-text entry. Each wrong option is engineered to be the answer a specific, named misconception produces (e.g. "added the denominators" for a fraction-addition slip), so a missed question is diagnostic, not just wrong.
 - **Test Mode**: Real test simulation without mid-quiz answer hints. On completion, an immediate diagnostic report card displays overall score, SSA qualification status against the 80% cutoff, and full worked step-by-step solutions.
 
 ---
 
-## Program Structure: 5 Domains & 17 Standards
+## Program Structure: 5 Domains & 17 Standards (Grade 5)
 
 ### 1. Operations & Algebraic Thinking (OA) — 9–13% Blueprint Weight
 - **NC.5.OA.2**: Write, explain, and evaluate numerical expressions with four operations (up to two steps); parentheses, brackets, and braces; order of operations; commutative, associative, and distributive properties.
@@ -43,6 +48,14 @@ A dedicated, comprehensive web application built to help 4th grade students prep
 - **NC.5.G.1**: Graph points in the first quadrant of the coordinate plane; interpret $x$ and $y$ coordinates in real-world contexts.
 - **NC.5.G.3**: Classify two-dimensional figures (polygons, quadrilaterals, trapezoids, parallelograms, rectangles, rhombuses, squares) by properties in a hierarchy.
 
+> **Question pool note:** 10 of the 17 standards have a seeded question
+> generator, which supplies effectively unlimited practice items. The other
+> 7 — **NC.5.G.1, NC.5.G.3, NC.5.MD.2, NC.5.MD.4, NC.5.NF.3, NC.5.OA.2, and
+> NC.5.OA.3** — currently have hand-authored questions only, so their
+> practice pool is small and will repeat sooner than the generated
+> standards. This is a known gap, not an oversight; see `src/curriculum/grade5/templates/`
+> for the current generator set.
+
 ---
 
 ## Core Application Features
@@ -61,33 +74,98 @@ A dedicated, comprehensive web application built to help 4th grade students prep
    - **Interactive Scratchpad Whiteboard**:
      - Built-in drawing canvas with pen, eraser, color swatches, and clear tool for working out long division, fraction math, and scratchwork directly on the screen.
 
-3. **Difficulty Bias & Stretch Challenges**:
+3. **Adaptive Practice Engine**:
+   - Every session is composed by the engine, not hand-picked: due spaced-review items first (capped so a bad week doesn't turn every session into remediation), then standards the student is struggling with, then untested standards, then standards already going well — weight only breaks ties within a tier.
+   - A Leitner-style review scheduler tracks every missed question by a stable key (an authored item's id, or a generator template's id) and re-serves it on an expanding schedule (1, 3, 7, 16, 35 days); a correct answer promotes it, a miss sends it back to day 1, and enough correct answers in a row retires it from the queue.
+   - Per-standard mastery requires a minimum sample size before a perfect run counts as "acceleration-ready" — a lucky streak of 3 questions doesn't flip the gauge.
+
+4. **Difficulty Bias & Stretch Challenges**:
    - Questions trend toward the upper end of each standard (multi-step problems, reasoning over rote recall).
    - Includes **Above-Grade Stretch Questions** bridging 5th grade into 6th grade math (e.g. dividing fractions by fractions, rate ratios, composite prism volume) flagged clearly so pace tracking stays honest.
 
-4. **Smart Answer Checker**:
-   - Handles whole numbers, fractions (`3/4`), mixed numbers (`2 1/4`), decimals (`0.75`), and strips currency symbols (`$`) and units automatically.
+5. **Diagnostic Answer Options**:
+   - Every incorrect multiple-choice option is tagged with the specific misconception that produces it (e.g. "found a common denominator but forgot to convert the numerator"), so a miss tells you *why*, not just *that*.
 
-5. **Post-Quiz Diagnostic Review**:
+6. **Post-Quiz Diagnostic Review**:
    - Immediate score percentage and pass/fail indicator against the 80% cutoff.
    - Confetti burst when scoring $\ge 80\%$.
-   - Question-by-question breakdown showing student's answer vs correct target answer.
+   - Question-by-question breakdown showing the student's chosen option vs the correct one.
    - Complete step-by-step worked solutions from NCDPI unpacking guides.
-   - "Watch Out!" common 4th/5th grade misconception callouts.
-   - Inline "Try Again" tool to correct mistakes immediately.
+   - "Watch Out!" common misconception callouts, tied to the misconception tags above.
 
-6. **Weak Spots & Error Bank**:
-   - Automatically tracks every question missed on any quiz until mastered.
+7. **Weak Spots & Error Bank**:
+   - Automatically tracks every question missed on any quiz until mastered, via the Leitner review queue.
    - 1-click **"Practice Missed Questions"** custom test builder.
-   - Inline check & clear tool.
 
-7. **Parent & Student Report Card**:
+8. **Multiple Student Profiles**:
+   - State supports more than one profile (e.g. multiple children) under one browser, with an active-profile switch.
+   - Older single-profile save data is migrated automatically and losslessly the first time the app loads the new format — a prior error bank becomes due-immediately review entries rather than being discarded.
+
+9. **Parent & Student Report Card**:
    - Clean, professional report formatted for printing or saving to PDF (`window.print()`).
-   - Shows domain-by-domain mastery, 16-standard checklist, and test history.
+   - Shows domain-by-domain mastery, the 17-standard checklist, and test history.
 
-8. **Study Pace & Countdown Planner**:
-   - Set target SSA exam date (e.g., Spring WCPSS window) and daily question goals.
-   - Calculates daily questions required to complete full preparation on time.
+10. **Study Pace & Countdown Planner**:
+    - Set target SSA exam date (e.g., Spring WCPSS window) and daily question goals.
+    - Calculates daily questions required to complete full preparation on time.
+
+---
+
+## Architecture
+
+The refactor this app went through separates *what the questions are* from
+*how they get chosen and served*, so that supporting a new grade is a data
+change, not a new component.
+
+- **`src/curriculum/`** — curriculum as data. One module per grade
+  (currently only `grade5/`) exports a `GradeCurriculum`: its domains,
+  standards, official blueprint weighting (or an even-by-standard-count
+  weighting for grades with no state blueprint), and a `QuestionSource`.
+  `src/curriculum/registry.ts` is the single place that lists which grades
+  exist; the UI (first-run picker, profile grade selector) reads that
+  registry rather than hardcoding a grade.
+- **Two question sources, one interface** — `src/engine/questionSource.ts`
+  defines `QuestionSource`, implemented by `makeQuestionSource()` over two
+  kinds of content per standard: hand-authored items
+  (`src/curriculum/grade5/authored.ts`) and seeded generator templates
+  (`src/curriculum/grade5/templates/`, one file per standard) that produce
+  effectively unlimited fresh instances from a numeric seed. Callers ask
+  for `itemsFor(standardCode, { count, seedBase })` and get back a mix of
+  both, without caring which standard has which.
+- **`src/engine/`** — the adaptive engine, curriculum-agnostic:
+  - `mastery.ts` computes per-standard mastery status from quiz attempts.
+  - `scheduler.ts` is the Leitner-style spaced-review scheduler.
+  - `sessionComposer.ts` composes a practice session from due reviews plus
+    tiered standard selection (struggling > untested > going-well).
+  - `questionModel.ts` and `template.ts` define the `Question` / answer
+    option / misconception-tag shape and how a template realizes into a
+    concrete question given a seed.
+- **`src/state/`** — app state, with a versioned schema
+  (`AppStateV2`: multiple `Profile`s plus an `activeProfileId`) and a pure,
+  tested `migrate()` that upgrades older single-profile saves without
+  losing quiz history or the error bank.
+
+### Adding a grade
+
+Because curriculum is data and the engine is not, adding a grade does not
+touch `src/engine/` or the components under `src/components/`:
+
+1. Add `src/curriculum/gradeN/standards.ts` with that grade's domains and
+   standards, transcribed from the published NCSCOS document for that
+   grade (not recalled from memory — see the standards-integrity check
+   below).
+2. Set `weighting` to the NCDPI blueprint for grades with a state EOG
+   assessment, or `{ kind: 'even-by-standard-count' }` for grades without
+   one (currently grades 1–2), and label the UI gauge accordingly.
+3. Author multiple-choice items and/or write seeded generators for each
+   standard, and wire them into a `QuestionSource` via
+   `makeQuestionSource()`. Leave `contentComplete: false` on the
+   `GradeCurriculum` until every standard has at least one source — this
+   gates a coverage assertion in the integrity test suite
+   (`src/curriculum/integrity.test.ts`).
+4. Register the grade in `src/curriculum/registry.ts`. That alone makes it
+   selectable in the first-run picker and the profile grade selector —
+   no other file needs to change.
 
 ---
 
@@ -97,6 +175,9 @@ A dedicated, comprehensive web application built to help 4th grade students prep
 # Navigate to the project directory
 cd C:\Users\mswanson\Projects\ncmathssa
 
+# Install dependencies
+npm install
+
 # Start the local development server
 npm run dev
 
@@ -105,8 +186,29 @@ npm run build
 npm run preview
 ```
 
-Open your browser to:
+Open the URL Vite prints in the console (its default is
+`http://localhost:5173/`, but it will pick the next free port if that one
+is busy).
+
+### Tests and checks
+
+```bash
+npm run test:run   # runs the test suite once and exits (CI-safe)
+npm test           # watch mode — reruns on file changes; not for CI
+npm run lint       # oxlint
+npm run typecheck  # tsc --noEmit, project references
+npm run build      # tsc -b && vite build
 ```
-http://localhost:5185/
-```
-*(Or the port displayed in the console)*
+
+`.github/workflows/ci.yml` runs lint, typecheck, `test:run`, and build on
+every pull request and on pushes to `main`.
+
+---
+
+## Roadmap: Grades 1–4
+
+Grades 1–4 are deliberately out of scope for now. They require the NCSCOS
+standards for those grades to be transcribed from published documents
+rather than recalled, and grades 1–2 have no state EOG blueprint to weight
+against. Once the source documents are in hand, adding each grade follows
+the four steps under [Adding a grade](#adding-a-grade) above.
