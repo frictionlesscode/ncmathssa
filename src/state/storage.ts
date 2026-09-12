@@ -18,7 +18,7 @@ const defaultNewId = () => `p_${Math.random().toString(36).slice(2, 10)}`;
 export function newProfile(overrides: Partial<Profile> = {}): Profile {
   return {
     id: defaultNewId(),
-    studentName: 'Student',
+    studentName: '',
     grade: 5,
     targetExamDate: '',
     dailyQuestionGoal: 20,

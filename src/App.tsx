@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ProgressProvider, useProgress } from './context/ProgressContext';
+import { FirstRunScreen } from './components/FirstRunScreen';
 import { Navbar } from './components/Navbar';
 import type { NavTab } from './components/Navbar';
 import { Dashboard } from './components/Dashboard';
@@ -23,7 +24,7 @@ import {
 } from './data/quizzes';
 
 const MainApp: React.FC = () => {
-  const { recordAttempt, curriculum } = useProgress();
+  const { recordAttempt, curriculum, profile, updateActiveProfile } = useProgress();
 
   const [currentTab, setCurrentTab] = useState<NavTab>('dashboard');
   const [activeQuiz, setActiveQuiz] = useState<QuizDefinition | null>(null);
@@ -33,6 +34,15 @@ const MainApp: React.FC = () => {
   const [studyGuideStandard, setStudyGuideStandard] = useState<string | null>(null);
   const [isPaceModalOpen, setIsPaceModalOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+
+  // Warn before an in-progress quiz can be silently discarded (e.g. the
+  // browser back button). There is no router, so this is the only guard.
+  useEffect(() => {
+    if (!activeQuiz) return;
+    const warn = (e: BeforeUnloadEvent) => { e.preventDefault(); e.returnValue = ''; };
+    window.addEventListener('beforeunload', warn);
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [activeQuiz]);
 
   // Launch a pre-defined quiz
   const handleStartQuiz = (quizId: string) => {
@@ -90,6 +100,16 @@ const MainApp: React.FC = () => {
       }
     }
   };
+
+  // First-run: nothing typed yet and no history for this profile. Shown
+  // before anything else so a visitor sees it before any quiz UI.
+  if (!profile.studentName.trim() && profile.attempts.length === 0) {
+    return (
+      <FirstRunScreen
+        onComplete={({ studentName, grade }) => updateActiveProfile({ studentName, grade })}
+      />
+    );
+  }
 
   // Render Test Runner if quiz is active
   if (activeQuiz) {
