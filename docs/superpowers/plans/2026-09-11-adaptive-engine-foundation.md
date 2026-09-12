@@ -263,7 +263,7 @@ export function makeRng(seed: number): Rng {
 - [ ] **Step 7: Run tests to verify they pass**
 
 Run: `npm run test:run -- src/engine/rng.test.ts`
-Expected: PASS, 8 tests.
+Expected: PASS, 7 tests.
 
 - [ ] **Step 8: Verify the build still works**
 
