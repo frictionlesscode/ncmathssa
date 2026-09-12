@@ -2,7 +2,8 @@ import React from 'react';
 import { Printer, X, Award, CheckCircle, AlertTriangle, HelpCircle } from 'lucide-react';
 import { useProgress, useReadinessSummary, domainStatsFor } from '../context/ProgressContext';
 import { standardsOf } from '../curriculum/registry';
-import { topMisconceptions } from '../engine/mastery';
+import { topMisconceptionFamilies } from '../engine/mastery';
+import { MISCONCEPTIONS, familyLabel } from '../curriculum/misconceptions';
 
 interface PrintReportModalProps {
   isOpen: boolean;
@@ -14,7 +15,7 @@ export const PrintReportModal: React.FC<PrintReportModalProps> = ({ isOpen, onCl
   const readiness = useReadinessSummary();
   const passingPercent = curriculum.ssa.passingPercent;
   const standards = standardsOf(curriculum);
-  const misconceptions = topMisconceptions(mastery, 5);
+  const misconceptions = topMisconceptionFamilies(mastery, 5);
 
   if (!isOpen) return null;
 
@@ -241,15 +242,26 @@ export const PrintReportModal: React.FC<PrintReportModalProps> = ({ isOpen, onCl
                 Top Recurring Misconceptions
               </h3>
               <div className="grid grid-cols-2 gap-2 text-xs">
-                {misconceptions.map(({ tag, count }) => (
-                  <div
-                    key={tag}
-                    className="p-2.5 rounded-xl border border-rose-200 bg-rose-50 flex items-center justify-between"
-                  >
-                    <span className="text-rose-900 font-semibold">{tag.replace(/-/g, ' ')}</span>
-                    <span className="text-rose-700 font-mono font-bold">{count}×</span>
-                  </div>
-                ))}
+                {misconceptions.map(({ family, count, tags }) => {
+                  const topTag = tags[0]?.tag;
+                  const description = topTag ? MISCONCEPTIONS[topTag]?.description : undefined;
+                  return (
+                    <div
+                      key={family}
+                      className="p-2.5 rounded-xl border border-rose-200 bg-rose-50 flex items-center justify-between gap-3"
+                    >
+                      <div>
+                        <span className="text-rose-900 font-semibold block">{familyLabel(family)}</span>
+                        {description && (
+                          <span className="text-rose-700 text-[11px] leading-snug block mt-0.5">
+                            {description}
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-rose-700 font-mono font-bold whitespace-nowrap">{count}×</span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}

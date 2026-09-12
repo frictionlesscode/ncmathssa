@@ -525,3 +525,13 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
 export function familyOf(tag: string): MisconceptionFamily | undefined {
   return MISCONCEPTIONS[tag]?.family;
 }
+
+/** Human-readable label for a misconception family, e.g.
+ *  'fraction-operations' -> 'Fraction Operations'. Shared by every screen
+ *  that renders `topMisconceptionFamilies` output to a parent. */
+export function familyLabel(family: MisconceptionFamily): string {
+  return family
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}

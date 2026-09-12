@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   AlertTriangle,
   BookOpen,
+  Brain,
   CheckCircle,
   Clock,
   Flame,
@@ -12,6 +13,8 @@ import { dueEntries, BOX_INTERVALS_DAYS, type ReviewEntry } from '../engine/sche
 import { correctOption, questionRefId } from '../engine/questionModel';
 import type { Question, QuestionRef } from '../engine/questionModel';
 import type { QuizAttempt } from '../types';
+import { topMisconceptionFamilies } from '../engine/mastery';
+import { MISCONCEPTIONS, familyLabel } from '../curriculum/misconceptions';
 
 interface WeakSpotsViewProps {
   onStartCustomQuiz: (questionIds: string[]) => void;
@@ -50,7 +53,8 @@ export const WeakSpotsView: React.FC<WeakSpotsViewProps> = ({
   onStartCustomQuiz,
   onOpenStudyGuide
 }) => {
-  const { profile, curriculum, recordAttempt } = useProgress();
+  const { profile, curriculum, mastery, recordAttempt } = useProgress();
+  const misconceptionFamilies = topMisconceptionFamilies(mastery, 3);
   const [selectedStandard, setSelectedStandard] = useState<string>('all');
   const [retryResults, setRetryResults] = useState<Record<string, boolean>>({});
   // Items the student just answered are pinned here so the result banner
@@ -202,6 +206,35 @@ export const WeakSpotsView: React.FC<WeakSpotsViewProps> = ({
           </button>
         )}
       </div>
+
+      {/* Common Misconceptions */}
+      {misconceptionFamilies.length > 0 && (
+        <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-xs space-y-3">
+          <h2 className="text-sm font-black text-slate-900 flex items-center gap-2">
+            <Brain className="w-4 h-4 text-indigo-600" /> Common Misconceptions
+          </h2>
+          <div className="grid sm:grid-cols-3 gap-3">
+            {misconceptionFamilies.map(({ family, count, tags }) => {
+              const topTag = tags[0]?.tag;
+              const description = topTag ? MISCONCEPTIONS[topTag]?.description : undefined;
+              return (
+                <div
+                  key={family}
+                  className="p-3.5 rounded-2xl border border-indigo-100 bg-indigo-50/60"
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs font-bold text-indigo-900">{familyLabel(family)}</span>
+                    <span className="text-[11px] font-mono font-bold text-indigo-700">{count}×</span>
+                  </div>
+                  {description && (
+                    <p className="text-[11px] text-indigo-800 leading-snug">{description}</p>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {dueList.length === 0 && scheduled.length === 0 ? (
         /* Empty State: All Clear! */
