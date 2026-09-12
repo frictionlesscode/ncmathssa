@@ -14,7 +14,7 @@ A dedicated, comprehensive web application built to help 4th grade students prep
 
 ---
 
-## Program Structure: 5 Domains & 16 Standards
+## Program Structure: 5 Domains & 17 Standards
 
 ### 1. Operations & Algebraic Thinking (OA) — 9–13% Blueprint Weight
 - **NC.5.OA.2**: Write, explain, and evaluate numerical expressions with four operations (up to two steps); parentheses, brackets, and braces; order of operations; commutative, associative, and distributive properties.
@@ -50,7 +50,7 @@ A dedicated, comprehensive web application built to help 4th grade students prep
 1. **Overall SSA Readiness Gauge**:
    - Composite score dynamically weighted according to official NCDPI EOG weight midpoints (Fractions 41%, Base Ten 27%, Measurement & Data 13%, Algebraic Thinking 11%, Geometry 8%).
    - Visual gauge with prominent **80% WCPSS SSA benchmark marker**.
-   - Tracks how many of the 16 standards have reached the Acceleration-Ready tier.
+   - Tracks how many of the 17 standards have reached the Acceleration-Ready tier.
 
 2. **Test-Taking Environment**:
    - Realistic test conditions with a timer and pause toggle.

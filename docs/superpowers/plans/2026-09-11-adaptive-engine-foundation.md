@@ -558,10 +558,10 @@ describe('GRADE_5', () => {
     expect(GRADE_5.domains.map((d) => d.id).sort()).toEqual(['G', 'MD', 'NBT', 'NF', 'OA']);
   });
 
-  it('has all 16 standards', () => {
+  it('has all 17 standards', () => {
     const codes = GRADE_5.domains.flatMap((d) => d.standards.map((s) => s.code));
-    expect(codes).toHaveLength(16);
-    expect(new Set(codes).size).toBe(16);
+    expect(codes).toHaveLength(17);
+    expect(new Set(codes).size).toBe(17);
   });
 
   it('uses the NCDPI blueprint weighting and cites a source', () => {

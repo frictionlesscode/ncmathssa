@@ -20,7 +20,7 @@ and a study-pace planner.
 
 Three things limit it:
 
-1. **The question bank is thin.** 49 authored questions across 16 standards — between
+1. **The question bank is thin.** 49 authored questions across 17 standards — between
    one and four per standard. Every static quiz, including both "full simulation"
    assessments, draws from that same pool. A student memorizes it within a few passes.
 2. **Quizzes are static.** The app tracks weak spots but cannot build a session from
