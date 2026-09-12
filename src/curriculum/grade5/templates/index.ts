@@ -6,6 +6,7 @@ import { nbt5MultiDigitMultiply } from './nbt5-multi-digit-multiply';
 import { nbt6DivideTwoDigit } from './nbt6-divide-two-digit';
 import { nbt7DecimalArithmetic } from './nbt7-decimal-arithmetic';
 import { nf4MultiplyFractions } from './nf4-multiply-fractions';
+import { nf7DivideUnitFractions } from './nf7-divide-unit-fractions';
 
 /** Every parameterized Grade 5 template. Generated items cover the fluency
  *  standards, where fresh numbers each run are what make practice practice;
@@ -19,6 +20,7 @@ export const GRADE_5_TEMPLATES: QuestionTemplate[] = [
   nbt6DivideTwoDigit,
   nbt7DecimalArithmetic,
   nf4MultiplyFractions,
+  nf7DivideUnitFractions,
 ];
 
-export { nf1AddUnlike, nbt1PowersOfTen, nbt3CompareDecimals, nbt5MultiDigitMultiply, nbt6DivideTwoDigit, nbt7DecimalArithmetic, nf4MultiplyFractions };
+export { nf1AddUnlike, nbt1PowersOfTen, nbt3CompareDecimals, nbt5MultiDigitMultiply, nbt6DivideTwoDigit, nbt7DecimalArithmetic, nf4MultiplyFractions, nf7DivideUnitFractions };
