@@ -1436,15 +1436,3 @@ export const GRADE_5_AUTHORED: Question[] = [
     }
   }
 ];
-
-export function getQuestionsByDomain(domainId: string): Question[] {
-  return GRADE_5_AUTHORED.filter(q => q.domainId === domainId);
-}
-
-export function getQuestionsByStandard(standardCode: string): Question[] {
-  return GRADE_5_AUTHORED.filter(q => q.standardCode === standardCode);
-}
-
-export function getQuestionById(id: string): Question | undefined {
-  return GRADE_5_AUTHORED.find(q => q.id === id);
-}
