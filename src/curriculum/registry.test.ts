@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { getCurriculum, listCurricula, standardsOf, domainWeight } from './registry';
 import type { GradeCurriculum } from './types';
+import { makeQuestionSource } from '../engine/questionSource';
 
 describe('registry', () => {
   it('returns the grade 5 curriculum', () => {
@@ -41,6 +42,7 @@ describe('domainWeight', () => {
           { code: 'Y.1', domainId: 'B', title: '', description: '', weightCategory: '', keyConcepts: [] },
         ] },
     ],
+    source: makeQuestionSource([], []),
   };
 
   it('uses the NCDPI midpoint when a blueprint exists', () => {

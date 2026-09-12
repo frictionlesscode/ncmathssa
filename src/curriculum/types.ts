@@ -38,6 +38,8 @@ export type Weighting =
   | { kind: 'ncdpi-blueprint'; source: string }
   | { kind: 'even-by-standard-count' };
 
+import type { QuestionSource } from '../engine/questionSource';
+
 export interface GradeCurriculum {
   grade: Grade;
   label: string;
@@ -52,4 +54,5 @@ export interface GradeCurriculum {
    *  only when every standard in this grade has at least one source. */
   contentComplete: boolean;
   domains: DomainInfo[];
+  source: QuestionSource;
 }
