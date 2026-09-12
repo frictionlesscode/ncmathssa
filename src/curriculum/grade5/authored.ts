@@ -759,7 +759,7 @@ export const GRADE_5_AUTHORED: Question[] = [
     id: 'nf1-04',
     standardCode: 'NC.5.NF.1',
     domainId: 'NF',
-    prompt: 'Using benchmark fractions (0, 1/2, 1), estimate whether the sum of 7/12 and 9/10 is closer to 1, 1 1/2, or 2. Write your estimate as a number or fraction.',
+    prompt: 'Using benchmark fractions (0, 1/2, 1), estimate whether the sum of 7/12 and 9/10 is closer to 1, 1 1/2, or 2.',
     options: labelOptions([
       // Rounded both addends down to 1/2: 1/2 + 1/2 = 1.
       { text: '1', isCorrect: false, misconception: 'estimated-to-the-wrong-benchmark' },
@@ -835,7 +835,7 @@ export const GRADE_5_AUTHORED: Question[] = [
         'Step 4: The answer is 2 1/4 pounds.'
       ],
       conceptSummary: 'Division of whole numbers resulting in mixed numbers in simplified form.',
-      commonMisconception: 'Leaving the answer unsimplified as 18/8 or 2 2/8.'
+      commonMisconception: 'Ignoring the remainder entirely (2 pounds) or writing the leftover as a decimal (2.2 pounds) instead of converting it to the fraction 1/4.'
     }
   },
 
@@ -1326,7 +1326,7 @@ export const GRADE_5_AUTHORED: Question[] = [
     id: 'g1-03',
     standardCode: 'NC.5.G.1',
     domainId: 'G',
-    prompt: 'Three vertices of a rectangle are plotted on a coordinate grid at (3, 2), (9, 2), and (9, 7). What are the coordinates (x, y) of the fourth vertex? Enter in the format (x, y) or x, y.',
+    prompt: 'Three vertices of a rectangle are plotted on a coordinate grid at (3, 2), (9, 2), and (9, 7). What are the coordinates (x, y) of the fourth vertex?',
     options: labelOptions([
       { text: '(3, 7)', isCorrect: true },
       // Found the right pair of numbers and wrote them as (y, x).

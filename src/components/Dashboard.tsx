@@ -58,7 +58,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               Target: Master Grade {curriculum.grade} to Skip to Grade {curriculum.ssa.targetsGrade + 1} Math
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-              Wake County administers a secure, above-grade-level assessment built by CASE. The actual item bank is confidential, so this platform builds complete mastery against the public, authoritative <strong className="text-white">North Carolina Standard Course of Study (NCSCOS) Grade {curriculum.grade} Mathematics</strong> blueprint with multi-step reasoning, open-response items, and above-grade stretch challenges.
+              Wake County administers a secure, above-grade-level assessment built by CASE. The actual item bank is confidential, so this platform builds complete mastery against the public, authoritative <strong className="text-white">North Carolina Standard Course of Study (NCSCOS) Grade {curriculum.grade} Mathematics</strong> blueprint with multi-step reasoning, non-routine word problems, and above-grade stretch challenges.
             </p>
           </div>
 
@@ -228,8 +228,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
           </h2>
           <p className="text-xs sm:text-sm text-blue-100 leading-relaxed">
             {!hasTakenDiagnostic
-              ? `Test all ${totalStandardsCount} Grade ${curriculum.grade} NCSCOS standards in a single 35-minute test to establish your baseline and pinpoint exact focus areas.`
-              : 'Practice under authentic test conditions: strict test mode, no mid-quiz hints, mixed open-response and multiple-choice questions.'}
+              ? `Test all ${totalStandardsCount} Grade ${curriculum.grade} NCSCOS standards in a single ${diagnosticQuiz?.timeLimitMinutes ?? 45}-minute test to establish your baseline and pinpoint exact focus areas.`
+              : 'Practice under authentic test conditions: strict test mode, no mid-quiz hints, all multiple-choice questions.'}
           </p>
         </div>
 
