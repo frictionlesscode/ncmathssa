@@ -44,6 +44,8 @@ export interface QuizAttemptAnswer {
   questionId: string;
   studentAnswer: string;
   isCorrect: boolean;
+  standardCode: string;          // which standard this item assessed
+  misconception?: string;        // tag of the distractor chosen, when wrong
   timeSpentSeconds?: number;
   flaggedForReview?: boolean;
 }

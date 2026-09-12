@@ -153,22 +153,22 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         isPassingSSA: true,
         timeElapsedSeconds: 1650,
         answers: {
-          'oa2-01': { questionId: 'oa2-01', studentAnswer: 'A', isCorrect: true },
-          'oa3-01': { questionId: 'oa3-01', studentAnswer: 'A', isCorrect: true },
-          'nbt1-01': { questionId: 'nbt1-01', studentAnswer: 'A', isCorrect: true },
-          'nbt3-01': { questionId: 'nbt3-01', studentAnswer: 'A', isCorrect: true },
-          'nbt5-01': { questionId: 'nbt5-01', studentAnswer: '23976', isCorrect: true },
-          'nbt6-01': { questionId: 'nbt6-01', studentAnswer: '212', isCorrect: true },
-          'nbt7-01': { questionId: 'nbt7-01', studentAnswer: '53.25', isCorrect: false }, // Missed
-          'nf1-01': { questionId: 'nf1-01', studentAnswer: '4 7/12', isCorrect: true },
-          'nf3-01': { questionId: 'nf3-01', studentAnswer: 'A', isCorrect: true },
-          'nf4-01': { questionId: 'nf4-01', studentAnswer: '12', isCorrect: true },
-          'nf7-01': { questionId: 'nf7-01', studentAnswer: '24', isCorrect: true },
-          'md1-01': { questionId: 'md1-01', studentAnswer: '6000', isCorrect: true },
-          'md2-01': { questionId: 'md2-01', studentAnswer: 'A', isCorrect: true },
-          'md4-01': { questionId: 'md4-01', studentAnswer: '160', isCorrect: true },
-          'md5-01': { questionId: 'md5-01', studentAnswer: '1440', isCorrect: true },
-          'g1-01': { questionId: 'g1-01', studentAnswer: 'B', isCorrect: false } // Missed
+          'oa2-01': { questionId: 'oa2-01', standardCode: 'NC.5.OA.2', studentAnswer: 'A', isCorrect: true },
+          'oa3-01': { questionId: 'oa3-01', standardCode: 'NC.5.OA.3', studentAnswer: 'A', isCorrect: true },
+          'nbt1-01': { questionId: 'nbt1-01', standardCode: 'NC.5.NBT.1', studentAnswer: 'A', isCorrect: true },
+          'nbt3-01': { questionId: 'nbt3-01', standardCode: 'NC.5.NBT.3', studentAnswer: 'A', isCorrect: true },
+          'nbt5-01': { questionId: 'nbt5-01', standardCode: 'NC.5.NBT.5', studentAnswer: '23976', isCorrect: true },
+          'nbt6-01': { questionId: 'nbt6-01', standardCode: 'NC.5.NBT.6', studentAnswer: '212', isCorrect: true },
+          'nbt7-01': { questionId: 'nbt7-01', standardCode: 'NC.5.NBT.7', studentAnswer: '53.25', isCorrect: false }, // Missed
+          'nf1-01': { questionId: 'nf1-01', standardCode: 'NC.5.NF.1', studentAnswer: '4 7/12', isCorrect: true },
+          'nf3-01': { questionId: 'nf3-01', standardCode: 'NC.5.NF.3', studentAnswer: 'A', isCorrect: true },
+          'nf4-01': { questionId: 'nf4-01', standardCode: 'NC.5.NF.4', studentAnswer: '12', isCorrect: true },
+          'nf7-01': { questionId: 'nf7-01', standardCode: 'NC.5.NF.7', studentAnswer: '24', isCorrect: true },
+          'md1-01': { questionId: 'md1-01', standardCode: 'NC.5.MD.1', studentAnswer: '6000', isCorrect: true },
+          'md2-01': { questionId: 'md2-01', standardCode: 'NC.5.MD.2', studentAnswer: 'A', isCorrect: true },
+          'md4-01': { questionId: 'md4-01', standardCode: 'NC.5.MD.4', studentAnswer: '160', isCorrect: true },
+          'md5-01': { questionId: 'md5-01', standardCode: 'NC.5.MD.5', studentAnswer: '1440', isCorrect: true },
+          'g1-01': { questionId: 'g1-01', standardCode: 'NC.5.G.1', studentAnswer: 'B', isCorrect: false } // Missed
         }
       },
       {
@@ -183,13 +183,13 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         isPassingSSA: true,
         timeElapsedSeconds: 840,
         answers: {
-          'oa2-01': { questionId: 'oa2-01', studentAnswer: 'A', isCorrect: true },
-          'oa2-02': { questionId: 'oa2-02', studentAnswer: 'A', isCorrect: true },
-          'oa2-03': { questionId: 'oa2-03', studentAnswer: '33', isCorrect: true },
-          'oa2-04': { questionId: 'oa2-04', studentAnswer: 'A', isCorrect: true },
-          'oa3-01': { questionId: 'oa3-01', studentAnswer: 'A', isCorrect: true },
-          'oa3-02': { questionId: 'oa3-02', studentAnswer: '105', isCorrect: true },
-          'oa3-03': { questionId: 'oa3-03', studentAnswer: '75', isCorrect: false } // Missed
+          'oa2-01': { questionId: 'oa2-01', standardCode: 'NC.5.OA.2', studentAnswer: 'A', isCorrect: true },
+          'oa2-02': { questionId: 'oa2-02', standardCode: 'NC.5.OA.2', studentAnswer: 'A', isCorrect: true },
+          'oa2-03': { questionId: 'oa2-03', standardCode: 'NC.5.OA.2', studentAnswer: '33', isCorrect: true },
+          'oa2-04': { questionId: 'oa2-04', standardCode: 'NC.5.OA.2', studentAnswer: 'A', isCorrect: true },
+          'oa3-01': { questionId: 'oa3-01', standardCode: 'NC.5.OA.3', studentAnswer: 'A', isCorrect: true },
+          'oa3-02': { questionId: 'oa3-02', standardCode: 'NC.5.OA.3', studentAnswer: '105', isCorrect: true },
+          'oa3-03': { questionId: 'oa3-03', standardCode: 'NC.5.OA.3', studentAnswer: '75', isCorrect: false } // Missed
         }
       }
     ];

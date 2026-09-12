@@ -84,10 +84,20 @@ export const QuizRunner: React.FC<QuizRunnerProps> = ({ quiz, onFinish, onExit }
       const isCorrect = checkAnswer(q, studentAns);
       if (isCorrect) rawScore++;
 
+      const selectedOption = !isCorrect
+        ? q.options.find(
+            o =>
+              o.label.toLowerCase() === studentAns.trim().toLowerCase() ||
+              o.text.trim().toLowerCase() === studentAns.trim().toLowerCase()
+          )
+        : undefined;
+
       evaluatedAnswers[q.id] = {
         questionId: q.id,
         studentAnswer: studentAns,
         isCorrect,
+        standardCode: q.standardCode,
+        misconception: selectedOption?.misconception,
         flaggedForReview: flagged[q.id]
       };
     });
