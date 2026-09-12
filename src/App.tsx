@@ -14,7 +14,9 @@ import { PrintReportModal } from './components/PrintReportModal';
 import type { QuizAttempt, QuizDefinition } from './types';
 import { standardsOf } from './curriculum/registry';
 import { parseQuestionRef } from './engine/questionModel';
+import type { QuestionRef } from './engine/questionModel';
 import {
+  createAdaptiveSessionDrill,
   createMissedQuestionsDrill,
   createStandardDrill,
   getQuizById
@@ -51,6 +53,13 @@ const MainApp: React.FC = () => {
   // Launch custom quiz for missed questions
   const handleStartCustomQuiz = (questionIds: string[]) => {
     const drill = createMissedQuestionsDrill(questionIds);
+    setCompletedAttempt(null);
+    setActiveQuiz(drill);
+  };
+
+  // Launch an adaptive daily-practice session built by selectSession.
+  const handleStartAdaptiveSession = (refs: QuestionRef[]) => {
+    const drill = createAdaptiveSessionDrill(refs);
     setCompletedAttempt(null);
     setActiveQuiz(drill);
   };
@@ -139,6 +148,7 @@ const MainApp: React.FC = () => {
           <QuizzesListView
             onStartQuiz={handleStartQuiz}
             onStartStandardDrill={handleStartStandardDrill}
+            onStartAdaptiveSession={handleStartAdaptiveSession}
           />
         )}
 

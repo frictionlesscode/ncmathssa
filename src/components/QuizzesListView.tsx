@@ -11,15 +11,19 @@ import { useProgress } from '../context/ProgressContext';
 import { standardsOf } from '../curriculum/registry';
 import { STATIC_QUIZZES } from '../data/quizzes';
 import type { QuizDefinition } from '../types';
+import { AdaptiveSessionCard } from './AdaptiveSessionCard';
+import type { QuestionRef } from '../engine/questionModel';
 
 interface QuizzesListViewProps {
   onStartQuiz: (quizId: string) => void;
   onStartStandardDrill: (standardCode: string) => void;
+  onStartAdaptiveSession: (refs: QuestionRef[]) => void;
 }
 
 export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
   onStartQuiz,
-  onStartStandardDrill
+  onStartStandardDrill,
+  onStartAdaptiveSession
 }) => {
   const { profile, curriculum } = useProgress();
   const passingPercent = curriculum.ssa.passingPercent;
@@ -59,6 +63,15 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
         <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl">
           Take full timed mock exams, comprehensive module assessments, or drill individual standards. Every quiz is benchmarked against Wake County's {passingPercent}% passing bar.
         </p>
+      </div>
+
+      {/* 0. Adaptive daily practice - additive to the static library below,
+          not a replacement for it. */}
+      <div className="space-y-3">
+        <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+          Daily Practice
+        </h2>
+        <AdaptiveSessionCard onStart={onStartAdaptiveSession} />
       </div>
 
       {/* 1. Baseline Diagnostic */}

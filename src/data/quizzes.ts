@@ -1,6 +1,8 @@
 import type { QuizDefinition } from '../types';
 import type { GradeCurriculum } from '../curriculum/types';
 import { standardsOf } from '../curriculum/registry';
+import type { QuestionRef } from '../engine/questionModel';
+import { questionRefId } from '../engine/questionModel';
 
 // Named so the subtitle functions below can cite `.length` without
 // depending on `this` inside an object literal.
@@ -149,5 +151,21 @@ export function createMissedQuestionsDrill(missedIds: string[]): QuizDefinition 
     subtitle: `Re-testing ${missedIds.length} question(s) previously answered incorrectly.`,
     isCustomDrill: true,
     questionIds: missedIds
+  };
+}
+
+/**
+ * Wraps the refs `selectSession` (Task 11) produces as a `QuizDefinition`
+ * so the existing `QuizRunner`/`QuizAttempt` machinery can run an adaptive
+ * practice session without any special-casing: every ref, authored or
+ * generated, round-trips through `questionRefId`/`parseQuestionRef`.
+ */
+export function createAdaptiveSessionDrill(refs: QuestionRef[]): QuizDefinition {
+  return {
+    id: `adaptive-session-${Date.now()}`,
+    title: 'Adaptive Practice Session',
+    subtitle: `A ${refs.length}-question set built from your due reviews and current weak spots.`,
+    isCustomDrill: true,
+    questionIds: refs.map(questionRefId)
   };
 }
