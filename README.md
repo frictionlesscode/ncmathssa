@@ -173,7 +173,7 @@ touch `src/engine/` or the components under `src/components/`:
 
 ```bash
 # Navigate to the project directory
-cd C:\Users\mswanson\Projects\ncmathssa
+cd ncmathssa
 
 # Install dependencies
 npm install

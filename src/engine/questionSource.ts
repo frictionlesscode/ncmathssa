@@ -13,6 +13,12 @@ export interface QuestionSource {
    *  For UI callers (e.g. a "drill every authored question on this
    *  standard" quiz) that want the whole authored bank, not a sample. */
   authoredFor(standardCode: StandardCode): QuestionRef[];
+  /** True if this standard has at least one seeded generator template, in
+   *  which case its practice pool is effectively unlimited; false means
+   *  it is authored-only and will repeat sooner. Lets UI callers (e.g.
+   *  CurriculumView) surface that distinction from the live content
+   *  instead of a list of standard codes hardcoded in a component. */
+  hasGenerator(standardCode: StandardCode): boolean;
 }
 
 export function makeQuestionSource(
@@ -85,6 +91,10 @@ export function makeQuestionSource(
         kind: 'authored' as const,
         id: q.id,
       }));
+    },
+
+    hasGenerator(standardCode) {
+      return (templatesByStandard.get(standardCode) ?? []).length > 0;
     },
   };
 }

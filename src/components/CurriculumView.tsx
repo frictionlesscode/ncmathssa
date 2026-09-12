@@ -46,7 +46,7 @@ export const CurriculumView: React.FC<CurriculumViewProps> = ({
             Curriculum Structure & Standard Blueprints
           </h1>
           <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl">
-            Each standard is tested with non-routine word problems, multi-step math, and above-grade stretch items. Achieve {passingPercent}%+ on each to guarantee SSA acceleration readiness.
+            Standards with a generator (marked below) are tested with non-routine word problems, multi-step math, and above-grade stretch items across an effectively unlimited pool; authored-only standards draw from a smaller fixed set that will repeat sooner. Achieving {passingPercent}%+ on each is a strong signal of SSA acceleration readiness, not a guarantee of the actual WCPSS result.
           </p>
         </div>
 
@@ -128,6 +128,7 @@ export const CurriculumView: React.FC<CurriculumViewProps> = ({
                 {domain.standards.map(standard => {
                   const sm = mastery.get(standard.code);
                   const isExpanded = !!expandedStandards[standard.code];
+                  const hasGenerator = curriculum.source.hasGenerator(standard.code);
 
                   return (
                     <div
@@ -145,6 +146,21 @@ export const CurriculumView: React.FC<CurriculumViewProps> = ({
                               <h3 className="text-base font-extrabold text-slate-900">
                                 {standard.title}
                               </h3>
+                              {hasGenerator ? (
+                                <span
+                                  className="text-[10px] font-bold px-2 py-0.5 bg-blue-50 text-blue-700 rounded-full border border-blue-200"
+                                  title="This standard has a seeded generator: an effectively unlimited practice pool."
+                                >
+                                  Unlimited Practice
+                                </span>
+                              ) : (
+                                <span
+                                  className="text-[10px] font-bold px-2 py-0.5 bg-slate-100 text-slate-500 rounded-full border border-slate-200"
+                                  title="This standard is authored-only: a fixed, smaller set of questions that will repeat sooner."
+                                >
+                                  Fixed Question Set
+                                </span>
+                              )}
                             </div>
                             <p className="text-xs text-slate-600 max-w-2xl leading-relaxed">
                               {standard.description}
