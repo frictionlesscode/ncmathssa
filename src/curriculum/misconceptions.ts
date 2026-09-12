@@ -55,19 +55,24 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Added the numerators and the denominators straight across instead of finding a common denominator first.',
     ),
     entry(
-      'added-the-ones-digit-instead-of-multiplying',
-      'multi-digit-algorithm',
-      'Multiplied by the tens digit of the second factor but then added its ones digit instead of multiplying by it.',
-    ),
-    entry(
       'added-the-coordinates',
       'coordinate-plane',
       'Added the two coordinate values together instead of treating them as separate horizontal and vertical moves.',
     ),
     entry(
+      'added-the-ones-digit-instead-of-multiplying',
+      'multi-digit-algorithm',
+      'Multiplied by the tens digit of the second factor but then added its ones digit instead of multiplying by it.',
+    ),
+    entry(
       'added-to-the-denominator-instead-of-multiplying',
       'fraction-operations',
       'Added the whole number into the denominator instead of multiplying to find the divided share.',
+    ),
+    entry(
+      'added-without-carrying',
+      'multi-digit-algorithm',
+      'Added the columns without ever carrying the regrouped ten into the next place.',
     ),
     entry(
       'additive-instead-of-multiplicative-relationship',
