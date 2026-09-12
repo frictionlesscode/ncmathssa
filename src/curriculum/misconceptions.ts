@@ -390,6 +390,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Ordered the two numbers correctly but read the inequality symbol backwards, reversing which side is greater.',
     ),
     entry(
+      'scaled-the-wrong-addend',
+      'fraction-operations',
+      "Rescaled the second fraction's numerator by the common-denominator factor instead of the first fraction's, scaling the wrong addend to the common denominator.",
+    ),
+    entry(
       'reversed-the-relationship',
       'operation-choice',
       'Found the correct factor or ratio between two quantities but assigned it to the wrong one, reversing which quantity is larger.',

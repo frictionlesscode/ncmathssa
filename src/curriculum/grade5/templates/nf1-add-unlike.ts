@@ -27,7 +27,10 @@ export const nf1AddUnlike: QuestionTemplate = {
     const dLarge = dSmall * factor;
 
     const nSmall = rng.int(1, dSmall - 1);
-    const nLarge = rng.int(1, dLarge - 1);
+    let nLarge = rng.int(1, dLarge - 1);
+    // wrongAddend (below) equals the correct answer exactly when
+    // nLarge === nSmall, so nudge it off that value deterministically.
+    if (nLarge === nSmall) nLarge = nSmall === dLarge - 1 ? nSmall - 1 : nSmall + 1;
 
     // Rescale the small-denominator fraction up to the common denominator.
     const scaled = nSmall * factor;
@@ -38,25 +41,24 @@ export const nf1AddUnlike: QuestionTemplate = {
     // Each distractor is the result of one specific error.
     const addedAcross = simplify(nSmall + nLarge, dSmall + dLarge);
     const notScaled = simplify(nSmall + nLarge, dLarge);
-    const scaledBoth = simplify(scaled + nLarge * factor, dLarge * factor);
+    // Scales the wrong addend: multiplies the SECOND fraction's numerator by
+    // the factor instead of the first's (nSmall's numerator, which is what
+    // actually needs rescaling to the common denominator).
+    const wrongAddend = simplify(nSmall + nLarge * factor, dLarge);
 
     const candidates = [
       { text: answer, isCorrect: true },
       { text: addedAcross, isCorrect: false, misconception: 'added-numerators-and-denominators' },
       { text: notScaled, isCorrect: false, misconception: 'common-denominator-numerator-not-scaled' },
-      { text: scaledBoth, isCorrect: false, misconception: 'converted-only-second-fraction' },
+      { text: wrongAddend, isCorrect: false, misconception: 'scaled-the-wrong-addend' },
     ];
 
-    // Distinctness is an invariant the harness enforces; nudge collisions
-    // deterministically rather than rejecting the seed.
-    const seen = new Set<string>();
-    for (const c of candidates) {
-      let bump = 1;
-      while (seen.has(c.text)) {
-        c.text = simplify(sumNum + bump, dLarge);
-        bump += 1;
-      }
-      seen.add(c.text);
+    // Distractors must be distinct BY CONSTRUCTION. A collision here means a
+    // generator bug (an option's tag no longer describes the value it's
+    // attached to), so fail loudly rather than silently nudging the value.
+    const texts = candidates.map((c) => c.text);
+    if (new Set(texts).size !== texts.length) {
+      throw new Error(`nf1AddUnlike: option collision [${texts.join(' | ')}]`);
     }
 
     return {
