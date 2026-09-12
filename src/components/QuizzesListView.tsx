@@ -10,6 +10,7 @@ import {
 import { useProgress } from '../context/ProgressContext';
 import { standardsOf } from '../curriculum/registry';
 import { STATIC_QUIZZES } from '../data/quizzes';
+import type { QuizDefinition } from '../types';
 
 interface QuizzesListViewProps {
   onStartQuiz: (quizId: string) => void;
@@ -34,6 +35,13 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
   const diagnosticQuiz = STATIC_QUIZZES.find(q => q.isDiagnostic);
   const mockQuizzes = STATIC_QUIZZES.filter(q => q.isMockAssessment);
   const moduleDrills = STATIC_QUIZZES.filter(q => q.domainId && !q.isMockAssessment);
+
+  // A quiz's subtitle is either a plain string or a function of the active
+  // curriculum, for the handful of quizzes whose copy cites a standard
+  // count or the passing cutoff (Ruling F11 - no such figure may be a
+  // grade-5 literal).
+  const subtitleOf = (quiz: QuizDefinition) =>
+    typeof quiz.subtitle === 'function' ? quiz.subtitle(curriculum) : quiz.subtitle;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10 animate-in fade-in duration-200">
@@ -68,7 +76,7 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
                 <span className="text-xs font-bold text-blue-900">{diagnosticQuiz.questionIds.length} Questions (1 per standard)</span>
               </div>
               <h3 className="text-xl font-black text-slate-900">{diagnosticQuiz.title}</h3>
-              <p className="text-xs text-slate-600 max-w-xl">{diagnosticQuiz.subtitle}</p>
+              <p className="text-xs text-slate-600 max-w-xl">{subtitleOf(diagnosticQuiz)}</p>
             </div>
 
             <div className="flex items-center gap-4 self-end sm:self-center">
@@ -129,7 +137,7 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
                   </div>
 
                   <h3 className="text-lg font-black text-slate-900">{quiz.title}</h3>
-                  <p className="text-xs text-slate-600 leading-relaxed">{quiz.subtitle}</p>
+                  <p className="text-xs text-slate-600 leading-relaxed">{subtitleOf(quiz)}</p>
                 </div>
 
                 <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
@@ -185,7 +193,7 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
                   </div>
 
                   <h3 className="text-base font-extrabold text-slate-900">{quiz.title}</h3>
-                  <p className="text-xs text-slate-600 line-clamp-2">{quiz.subtitle}</p>
+                  <p className="text-xs text-slate-600 line-clamp-2">{subtitleOf(quiz)}</p>
                 </div>
 
                 <div className="pt-4 border-t border-slate-100 flex items-center justify-between">

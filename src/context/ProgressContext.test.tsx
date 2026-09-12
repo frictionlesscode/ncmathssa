@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen, act } from '@testing-library/react';
 import { ProgressProvider, useProgress } from './ProgressContext';
+import type { QuizAttempt } from '../types';
 
 function Probe() {
   const { profile, curriculum, readiness, addProfile, switchProfile, state } = useProgress();
@@ -18,6 +19,57 @@ function Probe() {
 }
 
 const renderApp = () => render(<ProgressProvider><Probe /></ProgressProvider>);
+
+function makeAttempt(id: string, wasCorrect: boolean): QuizAttempt {
+  return {
+    id,
+    quizId: 'test-quiz',
+    quizTitle: 'Test Quiz',
+    standardCode: 'NC.5.NF.1',
+    completedAt: new Date().toISOString(),
+    scoreRaw: wasCorrect ? 1 : 0,
+    scoreTotal: 1,
+    scorePercent: wasCorrect ? 100 : 0,
+    isPassingSSA: wasCorrect,
+    timeElapsedSeconds: 0,
+    answers: {
+      'nf1-01': {
+        questionId: 'nf1-01',
+        studentAnswer: 'A',
+        isCorrect: wasCorrect,
+        standardCode: 'NC.5.NF.1'
+      }
+    }
+  };
+}
+
+function ReviewQueueProbe() {
+  const { profile, recordAttempt } = useProgress();
+  const entry = profile.reviewQueue['a:nf1-01'];
+  return (
+    <div>
+      <span data-testid="box">{entry ? String(entry.box) : 'none'}</span>
+      <button
+        onClick={() =>
+          recordAttempt(makeAttempt('a1', false), [
+            { ref: { kind: 'authored', id: 'nf1-01' }, wasCorrect: false }
+          ])
+        }
+      >
+        wrong
+      </button>
+      <button
+        onClick={() =>
+          recordAttempt(makeAttempt('a2', true), [
+            { ref: { kind: 'authored', id: 'nf1-01' }, wasCorrect: true }
+          ])
+        }
+      >
+        right
+      </button>
+    </div>
+  );
+}
 
 describe('ProgressProvider', () => {
   beforeEach(() => localStorage.clear());
@@ -48,5 +100,16 @@ describe('ProgressProvider', () => {
     unmount();
     renderApp();
     expect(screen.getByTestId('count')).toHaveTextContent('2');
+  });
+
+  it('recordAttempt folds a wrong result into the reviewQueue at box 1, then promotes it on a correct retry', () => {
+    render(<ProgressProvider><ReviewQueueProbe /></ProgressProvider>);
+    expect(screen.getByTestId('box')).toHaveTextContent('none');
+
+    act(() => screen.getByText('wrong').click());
+    expect(screen.getByTestId('box')).toHaveTextContent('1');
+
+    act(() => screen.getByText('right').click());
+    expect(screen.getByTestId('box')).toHaveTextContent('2');
   });
 });

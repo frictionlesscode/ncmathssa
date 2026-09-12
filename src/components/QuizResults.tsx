@@ -12,7 +12,7 @@ import {
   XCircle
 } from 'lucide-react';
 import type { Question, QuizAttempt } from '../types';
-import { correctOption } from '../engine/questionModel';
+import { correctOption, parseQuestionRef } from '../engine/questionModel';
 import { useProgress } from '../context/ProgressContext';
 import { formatTime } from '../utils/answerChecker';
 
@@ -51,13 +51,15 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
     }
   }, [attempt.isPassingSSA]);
 
-  // Collect question objects. QuizRunner only ever draws authored questions,
-  // so every answer id resolves through the curriculum's authored source.
+  // Collect question objects. Most answer ids are authored ids, but a
+  // custom "practice due reviews" drill can carry generated refs too
+  // (encoded as `templateId#seed`), so every id is parsed back into its
+  // QuestionRef rather than assumed authored.
   const questionIds = Object.keys(attempt.answers);
   const questions: Question[] = questionIds
     .map(id => {
       try {
-        return curriculum.source.resolve({ kind: 'authored', id });
+        return curriculum.source.resolve(parseQuestionRef(id));
       } catch {
         return undefined;
       }

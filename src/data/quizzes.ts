@@ -1,21 +1,39 @@
 import type { QuizDefinition } from '../types';
+import type { GradeCurriculum } from '../curriculum/types';
+import { standardsOf } from '../curriculum/registry';
 
-import { GRADE_5_AUTHORED } from '../curriculum/grade5/authored';
+// Named so the subtitle functions below can cite `.length` without
+// depending on `this` inside an object literal.
+const DIAGNOSTIC_QUESTION_IDS = [
+  'oa2-01', 'oa3-01',
+  'nbt1-01', 'nbt3-01', 'nbt5-01', 'nbt6-01', 'nbt7-01',
+  'nf1-01', 'nf3-01', 'nf4-01', 'nf7-01',
+  'md1-01', 'md2-01', 'md4-01', 'md5-01',
+  'g1-01', 'g3-01'
+];
+
+const MOCK_SSA_01_QUESTION_IDS = [
+  // Calculator Inactive section
+  'oa2-01', 'oa2-02', 'oa3-01',
+  'nbt1-01', 'nbt1-02', 'nbt3-01', 'nbt3-02', 'nbt5-01', 'nbt6-01', 'nbt7-01', 'nbt7-02',
+  'nf1-01', 'nf1-02', 'nf3-01', 'nf3-02', 'nf4-01', 'nf4-02', 'nf7-01', 'nf7-02',
+  // Calculator Active section
+  'nbt5-02', 'nbt7-03', 'md1-01', 'md1-02', 'md2-01', 'md4-01', 'md5-01', 'md5-02', 'g1-01', 'g1-02', 'g3-01'
+];
 
 export const STATIC_QUIZZES: QuizDefinition[] = [
   {
     id: 'diagnostic-01',
     title: 'Baseline SSA Diagnostic Assessment',
-    subtitle: '17-question diagnostic covering all 17 Grade 5 NCSCOS standards to determine your initial baseline.',
+    // Both counts below come from the active curriculum, not a grade-5
+    // literal (Ruling F11): this quiz happens to test one item per
+    // standard, so the question count and the standard count are the
+    // same figure but are still each derived independently.
+    subtitle: (c: GradeCurriculum) =>
+      `${DIAGNOSTIC_QUESTION_IDS.length}-question diagnostic covering all ${standardsOf(c).length} Grade ${c.grade} NCSCOS standards to determine your initial baseline.`,
     isDiagnostic: true,
     timeLimitMinutes: 45,
-    questionIds: [
-      'oa2-01', 'oa3-01',
-      'nbt1-01', 'nbt3-01', 'nbt5-01', 'nbt6-01', 'nbt7-01',
-      'nf1-01', 'nf3-01', 'nf4-01', 'nf7-01',
-      'md1-01', 'md2-01', 'md4-01', 'md5-01',
-      'g1-01', 'g3-01'
-    ]
+    questionIds: DIAGNOSTIC_QUESTION_IDS
   },
   {
     id: 'mod-oa-01',
@@ -76,17 +94,11 @@ export const STATIC_QUIZZES: QuizDefinition[] = [
   {
     id: 'mock-ssa-01',
     title: 'Full NC SSA Simulation Assessment (Form A)',
-    subtitle: 'Comprehensive 24-item test simulating the above-grade CASE assessment. Benchmarked against the 80% passing bar.',
+    subtitle: (c: GradeCurriculum) =>
+      `Comprehensive ${MOCK_SSA_01_QUESTION_IDS.length}-item test simulating the above-grade CASE assessment. Benchmarked against the ${c.ssa.passingPercent}% passing bar.`,
     isMockAssessment: true,
     timeLimitMinutes: 60,
-    questionIds: [
-      // Calculator Inactive section
-      'oa2-01', 'oa2-02', 'oa3-01',
-      'nbt1-01', 'nbt1-02', 'nbt3-01', 'nbt3-02', 'nbt5-01', 'nbt6-01', 'nbt7-01', 'nbt7-02',
-      'nf1-01', 'nf1-02', 'nf3-01', 'nf3-02', 'nf4-01', 'nf4-02', 'nf7-01', 'nf7-02',
-      // Calculator Active section
-      'nbt5-02', 'nbt7-03', 'md1-01', 'md1-02', 'md2-01', 'md4-01', 'md5-01', 'md5-02', 'g1-01', 'g1-02', 'g3-01'
-    ]
+    questionIds: MOCK_SSA_01_QUESTION_IDS
   },
   {
     id: 'mock-ssa-02',
@@ -109,21 +121,21 @@ export function getQuizById(quizId: string): QuizDefinition | undefined {
 }
 
 /**
- * Creates a dynamic custom drill for a single standard.
+ * Creates a dynamic custom drill for a single standard, drawing every
+ * authored question for that standard from the active curriculum's
+ * question source rather than a specific grade's authored bank.
  */
-export function createStandardDrill(standardCode: string): QuizDefinition {
-  const matchingQuestions = GRADE_5_AUTHORED.filter(q => q.standardCode === standardCode);
+export function createStandardDrill(standardCode: string, curriculum: GradeCurriculum): QuizDefinition {
+  const refs = curriculum.source.authoredFor(standardCode);
+  const standardInfo = standardsOf(curriculum).find(s => s.code === standardCode);
   return {
     id: `drill-${standardCode}`,
     title: `Targeted Practice: ${standardCode}`,
     subtitle: `Focused mastery drill on standard ${standardCode}`,
     standardCode,
-    // The engine's DomainId is a plain string (grades differ in their domains);
-    // QuizDefinition still narrows to the grade 5 union. The authored bank's
-    // domain ids are asserted against the curriculum by authored.test.ts.
-    domainId: matchingQuestions[0]?.domainId as QuizDefinition['domainId'],
+    domainId: standardInfo?.domainId,
     isCustomDrill: true,
-    questionIds: matchingQuestions.map(q => q.id)
+    questionIds: refs.map(r => (r as { kind: 'authored'; id: string }).id)
   };
 }
 

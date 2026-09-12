@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import type { Question, QuizAttempt, QuizAttemptAnswer, QuizDefinition } from '../types';
 import { useProgress } from '../context/ProgressContext';
+import { parseQuestionRef } from '../engine/questionModel';
 import { checkAnswer, formatTime } from '../utils/answerChecker';
 import { Scratchpad } from './Scratchpad';
 import { Calculator } from './Calculator';
@@ -25,12 +26,14 @@ export const QuizRunner: React.FC<QuizRunnerProps> = ({ quiz, onFinish, onExit }
   const { curriculum } = useProgress();
   const passingPercent = curriculum.ssa.passingPercent;
 
-  // Load questions for this quiz. Every id in a QuizDefinition comes from
-  // the authored bank, so it resolves through the curriculum's source.
+  // Load questions for this quiz. Most quiz ids are authored ids, but a
+  // custom "practice due reviews" drill can carry generated refs too,
+  // encoded as `templateId#seed` (Ruling from Task 13 fix round 1) - parse
+  // each id back into a QuestionRef and resolve it through the curriculum.
   const questions: Question[] = quiz.questionIds
     .map(id => {
       try {
-        return curriculum.source.resolve({ kind: 'authored', id });
+        return curriculum.source.resolve(parseQuestionRef(id));
       } catch {
         return undefined;
       }

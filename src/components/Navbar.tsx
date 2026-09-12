@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   BookOpen,
   Calendar,
@@ -7,11 +7,13 @@ import {
   Printer,
   RotateCcw,
   Target,
-  UserPlus
+  UserPlus,
+  X
 } from 'lucide-react';
 import { useProgress, useReadinessSummary } from '../context/ProgressContext';
 import { dueEntries } from '../engine/scheduler';
 import { listCurricula } from '../curriculum/registry';
+import type { Grade } from '../curriculum/types';
 
 export type NavTab = 'dashboard' | 'curriculum' | 'quizzes' | 'weakspots';
 
@@ -33,11 +35,18 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const dueReviewCount = dueEntries(profile.reviewQueue, new Date()).length;
 
-  const handleAddProfile = () => {
-    const name = window.prompt('New student name?');
-    if (name && name.trim()) {
-      addProfile(name.trim(), listCurricula()[0].grade);
-    }
+  const availableCurricula = listCurricula();
+  const [isAddingProfile, setIsAddingProfile] = useState(false);
+  const [newProfileName, setNewProfileName] = useState('');
+  const [newProfileGrade, setNewProfileGrade] = useState<Grade>(availableCurricula[0].grade);
+
+  const handleSubmitNewProfile = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newProfileName.trim()) return;
+    addProfile(newProfileName.trim(), newProfileGrade);
+    setNewProfileName('');
+    setNewProfileGrade(availableCurricula[0].grade);
+    setIsAddingProfile(false);
   };
 
   return (
@@ -148,7 +157,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </nav>
 
           {/* Right Action Tools */}
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2.5 relative">
             {/* Profile Picker */}
             <select
               aria-label="Active student profile"
@@ -164,12 +173,55 @@ export const Navbar: React.FC<NavbarProps> = ({
               ))}
             </select>
             <button
-              onClick={handleAddProfile}
+              onClick={() => setIsAddingProfile((v) => !v)}
               className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors"
               title="Add a new student profile"
             >
               <UserPlus className="w-4 h-4" />
             </button>
+
+            {isAddingProfile && (
+              <div className="absolute top-full right-0 mt-2 z-50 bg-white border border-slate-200 rounded-2xl shadow-xl p-4 w-64">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-black text-slate-900">Add Student Profile</span>
+                  <button
+                    onClick={() => setIsAddingProfile(false)}
+                    className="p-1 text-slate-400 hover:text-slate-700 rounded-lg"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+                <form onSubmit={handleSubmitNewProfile} className="space-y-2.5">
+                  <input
+                    type="text"
+                    autoFocus
+                    value={newProfileName}
+                    onChange={(e) => setNewProfileName(e.target.value)}
+                    placeholder="Student name"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+                    required
+                  />
+                  <select
+                    aria-label="Grade for new student profile"
+                    value={newProfileGrade}
+                    onChange={(e) => setNewProfileGrade(Number(e.target.value) as Grade)}
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+                  >
+                    {availableCurricula.map((c) => (
+                      <option key={c.grade} value={c.grade}>
+                        Grade {c.grade} - {c.label}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    type="submit"
+                    className="w-full px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl transition-colors"
+                  >
+                    Add Profile
+                  </button>
+                </form>
+              </div>
+            )}
 
             {/* Readiness Gauge Pill */}
             <div

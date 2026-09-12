@@ -12,6 +12,8 @@ import { StudyGuideModal } from './components/StudyGuideModal';
 import { StudyPaceModal } from './components/StudyPaceModal';
 import { PrintReportModal } from './components/PrintReportModal';
 import type { QuizAttempt, QuizDefinition } from './types';
+import { standardsOf } from './curriculum/registry';
+import { parseQuestionRef } from './engine/questionModel';
 import {
   createMissedQuestionsDrill,
   createStandardDrill,
@@ -19,7 +21,7 @@ import {
 } from './data/quizzes';
 
 const MainApp: React.FC = () => {
-  const { recordAttempt } = useProgress();
+  const { recordAttempt, curriculum } = useProgress();
 
   const [currentTab, setCurrentTab] = useState<NavTab>('dashboard');
   const [activeQuiz, setActiveQuiz] = useState<QuizDefinition | null>(null);
@@ -41,7 +43,7 @@ const MainApp: React.FC = () => {
 
   // Launch a standard-specific drill
   const handleStartStandardDrill = (standardCode: string) => {
-    const drill = createStandardDrill(standardCode);
+    const drill = createStandardDrill(standardCode, curriculum);
     setCompletedAttempt(null);
     setActiveQuiz(drill);
   };
@@ -53,11 +55,13 @@ const MainApp: React.FC = () => {
     setActiveQuiz(drill);
   };
 
-  // Handle quiz completion. QuizRunner only ever draws its question ids
-  // from the authored bank, so every answer maps to an authored QuestionRef.
+  // Handle quiz completion. Most answer ids are authored ids, but a custom
+  // "practice due reviews" drill can carry generated refs too (encoded as
+  // `templateId#seed`), so every id is parsed back into its QuestionRef
+  // rather than assumed authored.
   const handleFinishQuiz = (attempt: QuizAttempt) => {
     const results = Object.entries(attempt.answers).map(([questionId, ans]) => ({
-      ref: { kind: 'authored' as const, id: questionId },
+      ref: parseQuestionRef(questionId),
       wasCorrect: ans.isCorrect
     }));
     recordAttempt(attempt, results);
@@ -68,9 +72,13 @@ const MainApp: React.FC = () => {
   // Retake currently viewed attempt
   const handleRetake = () => {
     if (completedAttempt) {
-      const quiz = getQuizById(completedAttempt.quizId) || createStandardDrill(completedAttempt.standardCode || 'NC.5.NF.1');
-      setCompletedAttempt(null);
-      setActiveQuiz(quiz);
+      const fallbackStandard = completedAttempt.standardCode ?? standardsOf(curriculum)[0]?.code;
+      const quiz = getQuizById(completedAttempt.quizId)
+        || (fallbackStandard ? createStandardDrill(fallbackStandard, curriculum) : undefined);
+      if (quiz) {
+        setCompletedAttempt(null);
+        setActiveQuiz(quiz);
+      }
     }
   };
 

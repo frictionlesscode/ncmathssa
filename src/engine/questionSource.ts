@@ -8,6 +8,11 @@ export interface QuestionSource {
   itemsFor(standardCode: StandardCode, opts: { count: number; seedBase: number }): QuestionRef[];
   resolve(ref: QuestionRef): Question;
   allStandardsWithContent(): StandardCode[];
+  /** Every authored item for a standard, deterministically and in full -
+   *  unlike itemsFor, which samples a mix of authored and generated items.
+   *  For UI callers (e.g. a "drill every authored question on this
+   *  standard" quiz) that want the whole authored bank, not a sample. */
+  authoredFor(standardCode: StandardCode): QuestionRef[];
 }
 
 export function makeQuestionSource(
@@ -73,6 +78,13 @@ export function makeQuestionSource(
 
     allStandardsWithContent() {
       return [...new Set([...authoredByStandard.keys(), ...templatesByStandard.keys()])];
+    },
+
+    authoredFor(standardCode) {
+      return (authoredByStandard.get(standardCode) ?? []).map((q) => ({
+        kind: 'authored' as const,
+        id: q.id,
+      }));
     },
   };
 }

@@ -7,12 +7,15 @@ export type { DomainId, StandardCode, StandardInfo, DomainInfo } from '../curric
 export type { Question, AnswerOption, Explanation } from '../engine/questionModel';
 export type { StandardMastery } from '../engine/mastery';
 
-import type { DomainId } from '../curriculum/types';
+import type { DomainId, GradeCurriculum } from '../curriculum/types';
 
 export interface QuizDefinition {
   id: string;
   title: string;
-  subtitle: string;
+  /** A plain string, or a function of the active curriculum for the rare
+   *  subtitle that needs to cite a standard count or the passing cutoff -
+   *  those must never be baked in as grade-5 literals (Ruling F11). */
+  subtitle: string | ((curriculum: GradeCurriculum) => string);
   domainId?: DomainId; // Undefined if comprehensive / multi-domain
   standardCode?: string; // If standard-specific drill
   isDiagnostic?: boolean;

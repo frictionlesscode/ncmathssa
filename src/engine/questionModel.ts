@@ -51,6 +51,24 @@ export function reviewKeyId(key: ReviewKey): string {
   return key.kind === 'authored' ? `a:${key.id}` : `g:${key.templateId}`;
 }
 
+/** Encodes a QuestionRef as a single string id that survives a round trip
+ *  through anything that only carries `string[]` question ids (a
+ *  QuizDefinition's `questionIds`, in particular). Deliberately reuses the
+ *  exact `${templateId}#${seed}` format `realize()` already assigns as a
+ *  generated Question's own `id`, so `parseQuestionRef` is a true inverse
+ *  of both this function and of reading `.id` off a resolved Question. */
+export function questionRefId(ref: QuestionRef): string {
+  return ref.kind === 'authored' ? ref.id : `${ref.templateId}#${ref.seed}`;
+}
+
+export function parseQuestionRef(id: string): QuestionRef {
+  const hashIdx = id.indexOf('#');
+  if (hashIdx === -1) return { kind: 'authored', id };
+  const templateId = id.slice(0, hashIdx);
+  const seed = Number(id.slice(hashIdx + 1));
+  return { kind: 'generated', templateId, seed };
+}
+
 export function correctOption(q: Question): AnswerOption {
   const correct = q.options.filter((o) => o.isCorrect);
   if (correct.length !== 1) {
