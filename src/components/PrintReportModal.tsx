@@ -1,7 +1,7 @@
 import React from 'react';
 import { Printer, X, Award, CheckCircle, AlertTriangle, HelpCircle } from 'lucide-react';
 import { useProgress } from '../context/ProgressContext';
-import { ALL_STANDARDS, NC_DOMAINS } from '../data/ncStandards';
+import { GRADE_5_STANDARDS, GRADE_5_DOMAINS } from '../curriculum/grade5';
 
 interface PrintReportModalProps {
   isOpen: boolean;
@@ -140,7 +140,7 @@ export const PrintReportModal: React.FC<PrintReportModalProps> = ({ isOpen, onCl
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200">
-                {NC_DOMAINS.map(domain => {
+                {GRADE_5_DOMAINS.map(domain => {
                   const dm = getDomainMastery(domain.id);
                   return (
                     <tr key={domain.id} className="hover:bg-slate-50">
@@ -195,7 +195,7 @@ export const PrintReportModal: React.FC<PrintReportModalProps> = ({ isOpen, onCl
               Individual NCSCOS Standards Checklist (16 Total)
             </h3>
             <div className="grid grid-cols-2 gap-2 text-xs">
-              {ALL_STANDARDS.map(std => {
+              {GRADE_5_STANDARDS.map(std => {
                 const sm = getStandardMastery(std.code);
                 return (
                   <div

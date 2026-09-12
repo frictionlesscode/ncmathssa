@@ -9,7 +9,7 @@ import {
   HelpCircle
 } from 'lucide-react';
 import { useProgress } from '../context/ProgressContext';
-import { NC_DOMAINS } from '../data/ncStandards';
+import { GRADE_5_DOMAINS } from '../curriculum/grade5';
 import { QUESTIONS_BANK } from '../data/questions';
 
 interface CurriculumViewProps {
@@ -33,8 +33,8 @@ export const CurriculumView: React.FC<CurriculumViewProps> = ({
   };
 
   const filteredDomains = selectedDomain === 'all'
-    ? NC_DOMAINS
-    : NC_DOMAINS.filter(d => d.id === selectedDomain);
+    ? GRADE_5_DOMAINS
+    : GRADE_5_DOMAINS.filter(d => d.id === selectedDomain);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-in fade-in duration-200">
@@ -65,7 +65,7 @@ export const CurriculumView: React.FC<CurriculumViewProps> = ({
           >
             All 5 Domains
           </button>
-          {NC_DOMAINS.map(d => (
+          {GRADE_5_DOMAINS.map(d => (
             <button
               key={d.id}
               onClick={() => setSelectedDomain(d.id)}

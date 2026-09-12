@@ -9,7 +9,7 @@ import {
   TrendingUp
 } from 'lucide-react';
 import { useProgress } from '../context/ProgressContext';
-import { NC_DOMAINS } from '../data/ncStandards';
+import { GRADE_5_DOMAINS } from '../curriculum/grade5';
 import { STATIC_QUIZZES } from '../data/quizzes';
 import type { NavTab } from './Navbar';
 
@@ -279,7 +279,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {NC_DOMAINS.map(domain => {
+          {GRADE_5_DOMAINS.map(domain => {
             const dm = getDomainMastery(domain.id);
             const isReady = dm.masteryPercent >= 80;
 

@@ -1,14 +1,13 @@
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import type {
   AppState,
-  DomainId,
   DomainMastery,
   QuizAttempt,
   StandardMastery,
   UserSettings
 } from '../types';
 
-import { ALL_STANDARDS, NC_DOMAINS } from '../data/ncStandards';
+import { GRADE_5_STANDARDS, GRADE_5_DOMAINS } from '../curriculum/grade5';
 import { QUESTIONS_BANK } from '../data/questions';
 
 const STORAGE_KEY = 'nc_math_ssa_prep_state_v1';
@@ -32,7 +31,7 @@ interface ProgressContextType {
   exportDataJson: () => string;
   importDataJson: (json: string) => boolean;
   getStandardMastery: (standardCode: string) => StandardMastery;
-  getDomainMastery: (domainId: DomainId) => DomainMastery;
+  getDomainMastery: (domainId: string) => DomainMastery;
   overallReadiness: {
     weightedScore: number;
     isAccelerationReady: boolean; // >= 80%
@@ -253,8 +252,8 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   // Compute domain mastery
-  const getDomainMastery = (domainId: DomainId): DomainMastery => {
-    const domain = NC_DOMAINS.find(d => d.id === domainId);
+  const getDomainMastery = (domainId: string): DomainMastery => {
+    const domain = GRADE_5_DOMAINS.find(d => d.id === domainId);
     if (!domain) {
       return {
         domainId,
@@ -326,7 +325,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     let totalQuestionsAnswered = 0;
     let totalCorrectAnswered = 0;
 
-    NC_DOMAINS.forEach(domain => {
+    GRADE_5_DOMAINS.forEach(domain => {
       const dm = getDomainMastery(domain.id);
       totalQuestionsAnswered += dm.totalQuestionsAnswered;
       totalCorrectAnswered += dm.totalCorrect;
@@ -342,7 +341,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
     // Count total mastered standards
     let masteredStandardsCount = 0;
-    ALL_STANDARDS.forEach(std => {
+    GRADE_5_STANDARDS.forEach(std => {
       const sm = getStandardMastery(std.code);
       if (sm.status === 'acceleration-ready') {
         masteredStandardsCount++;
@@ -367,7 +366,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       weightedScore,
       isAccelerationReady,
       masteredStandardsCount,
-      totalStandardsCount: ALL_STANDARDS.length,
+      totalStandardsCount: GRADE_5_STANDARDS.length,
       totalQuestionsAnswered,
       totalCorrectAnswered,
       overallAccuracy,

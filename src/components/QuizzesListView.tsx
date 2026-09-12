@@ -8,7 +8,7 @@ import {
   Target
 } from 'lucide-react';
 import { useProgress } from '../context/ProgressContext';
-import { ALL_STANDARDS, NC_DOMAINS } from '../data/ncStandards';
+import { GRADE_5_STANDARDS, GRADE_5_DOMAINS } from '../curriculum/grade5';
 import { STATIC_QUIZZES } from '../data/quizzes';
 
 interface QuizzesListViewProps {
@@ -164,7 +164,7 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
           {moduleDrills.map(quiz => {
             const best = getBestScore(quiz.id);
-            const domain = NC_DOMAINS.find(d => d.id === quiz.domainId);
+            const domain = GRADE_5_DOMAINS.find(d => d.id === quiz.domainId);
             const isPassing = best !== null && best >= 80;
 
             return (
@@ -221,7 +221,7 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
         </p>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          {ALL_STANDARDS.map(std => (
+          {GRADE_5_STANDARDS.map(std => (
             <div
               key={std.code}
               className="bg-white rounded-2xl p-4 border border-slate-200 shadow-2xs hover:border-blue-300 transition-all flex flex-col justify-between"

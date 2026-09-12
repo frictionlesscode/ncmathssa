@@ -92,7 +92,7 @@ export interface StandardMastery {
 }
 
 export interface DomainMastery {
-  domainId: DomainId;
+  domainId: string;
   masteryPercent: number;
   totalQuestionsAnswered: number;
   totalCorrect: number;

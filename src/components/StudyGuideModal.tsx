@@ -1,7 +1,7 @@
 import React from 'react';
 import { BookOpen, CheckCircle, AlertTriangle, Lightbulb, X, ArrowRight } from 'lucide-react';
 import { STUDY_GUIDES } from '../data/studyGuides';
-import { getStandardByCode } from '../data/ncStandards';
+import { getStandardByCode } from '../curriculum/grade5';
 
 interface StudyGuideModalProps {
   standardCode: string | null;

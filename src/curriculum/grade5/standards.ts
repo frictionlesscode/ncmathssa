@@ -1,7 +1,7 @@
 import type { DomainInfo, StandardInfo } from '../types';
 
 
-export const NC_DOMAINS: DomainInfo[] = [
+export const GRADE_5_DOMAINS: DomainInfo[] = [
   {
     id: 'NF',
     name: 'Number & Operations — Fractions',
@@ -279,12 +279,12 @@ export const NC_DOMAINS: DomainInfo[] = [
 ];
 
 // Helper to look up a standard by its code
-export const ALL_STANDARDS: StandardInfo[] = NC_DOMAINS.flatMap(d => d.standards);
+export const GRADE_5_STANDARDS: StandardInfo[] = GRADE_5_DOMAINS.flatMap(d => d.standards);
 
 export function getStandardByCode(code: string): StandardInfo | undefined {
-  return ALL_STANDARDS.find(s => s.code === code);
+  return GRADE_5_STANDARDS.find(s => s.code === code);
 }
 
 export function getDomainById(id: string): DomainInfo | undefined {
-  return NC_DOMAINS.find(d => d.id === id);
+  return GRADE_5_DOMAINS.find(d => d.id === id);
 }
