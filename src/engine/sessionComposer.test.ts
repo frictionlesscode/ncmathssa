@@ -4,7 +4,7 @@ import { getCurriculum } from '../curriculum/registry';
 import { masteryByStandard } from './mastery';
 import { recordResult } from './scheduler';
 import type { ReviewQueue } from './scheduler';
-import { reviewKeyId } from './questionModel';
+import { reviewKeyId, questionRefId } from './questionModel';
 
 const c = getCurriculum(5);
 const NOW = new Date('2026-03-01T09:00:00Z');
@@ -74,15 +74,34 @@ describe('selectSession', () => {
     for (const r of refs) expect(() => c.source.resolve(r)).not.toThrow();
   });
 
-  it('never repeats the same question in one session (Ruling F17)', () => {
+  it('never repeats the exact same question instance in one session (Ruling F17)', () => {
     let queue: ReviewQueue = {};
     for (let i = 0; i < 40; i++) {
       queue = recordResult(queue, { kind: 'authored', id: `nf1-0${i % 4 + 1}` }, false,
         new Date('2026-02-01T09:00:00Z'));
     }
     const refs = selectSession({ curriculum: c, mastery: empty, queue, size: 10, now: NOW, seed: 5 });
-    const ids = refs.map((r) =>
-      r.kind === 'authored' ? `a:${r.id}` : `g:${r.templateId}`);
+    const ids = refs.map(questionRefId);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('lets a single generated template contribute multiple distinct items to one session (Ruling F18/F14 fix)', () => {
+    // A large session, with no reviews competing for slots, should be able
+    // to draw more than one distinct seed from the same generated template
+    // rather than being capped at one item per template.
+    const refs = selectSession({ curriculum: c, mastery: empty, queue: {}, size: 30, now: NOW, seed: 11 });
+    const generatedByTemplate = new Map<string, Set<number>>();
+    for (const r of refs) {
+      if (r.kind !== 'generated') continue;
+      const seeds = generatedByTemplate.get(r.templateId) ?? new Set<number>();
+      seeds.add(r.seed);
+      generatedByTemplate.set(r.templateId, seeds);
+    }
+    const templatesWithMultipleSeeds = [...generatedByTemplate.values()].filter((seeds) => seeds.size > 1);
+    expect(templatesWithMultipleSeeds.length).toBeGreaterThan(0);
+
+    // But identical refs (same template AND same seed) still cannot repeat.
+    const ids = refs.map(questionRefId);
     expect(new Set(ids).size).toBe(ids.length);
   });
 });

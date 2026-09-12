@@ -1,7 +1,7 @@
 import type { GradeCurriculum, StandardCode } from '../curriculum/types';
 import { domainWeight, standardsOf } from '../curriculum/registry';
 import type { QuestionRef } from './questionModel';
-import { reviewKeyOf, reviewKeyId } from './questionModel';
+import { questionRefId } from './questionModel';
 import type { StandardMastery } from './mastery';
 import type { ReviewQueue } from './scheduler';
 import { dueEntries } from './scheduler';
@@ -27,9 +27,13 @@ export function selectSession(input: {
   const rng = makeRng(seed);
   const refs: QuestionRef[] = [];
 
-  // Every ref already chosen, by review key — a session must never repeat
-  // a question, whether it arrived as a due review or as new content
-  // (Ruling F17).
+  // Every ref already chosen, keyed by its exact identity (template + seed
+  // for a generated ref, id for an authored one) — a session must never
+  // show the very same question instance twice, whether it arrived as a
+  // due review or as new content (Ruling F17). This is deliberately NOT
+  // the seedless review key: two different seeds of one template are
+  // different questions, and a template with many possible instances
+  // should be able to contribute more than one of them to a session.
   const used = new Set<string>();
 
   // 1. Due reviews, most overdue first, capped.
@@ -40,7 +44,7 @@ export function selectSession(input: {
         ? { kind: 'authored', id: entry.key.id }
         : { kind: 'generated', templateId: entry.key.templateId, seed: rng.int(0, 2 ** 31 - 1) };
     refs.push(ref);
-    used.add(reviewKeyId(reviewKeyOf(ref)));
+    used.add(questionRefId(ref));
   }
 
   // 2-4. Fill the rest in tiers (spec §7.3, Ruling F18): standards the
@@ -93,7 +97,7 @@ export function selectSession(input: {
       const [ref] = c.source.itemsFor(s.code, { count: 1, seedBase: rng.int(0, 2 ** 31 - 1) });
       if (!ref) { stall += 1; continue; }
 
-      const key = reviewKeyId(reviewKeyOf(ref));
+      const key = questionRefId(ref);
       if (used.has(key)) { stall += 1; continue; }
 
       refs.push(ref);
