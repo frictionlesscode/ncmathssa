@@ -1,6 +1,12 @@
-import { describe, it, expect } from 'vitest';
-import { migrate, initialState, loadState, STORAGE_KEY_V1, STORAGE_KEY_V2 } from './storage';
+import { describe, it, expect, vi } from 'vitest';
+import { migrate, initialState, loadState, saveState, STORAGE_KEY_V1, STORAGE_KEY_V2 } from './storage';
+import { reviewKeyId } from '../engine/questionModel';
+import type { AppStateV2 } from './types';
 import v1Real from './__fixtures__/v1-real.json';
+
+const FIXED_NOW = new Date('2026-01-01T00:00:00.000Z');
+let idCounter = 0;
+const fixedNewId = () => `fixed-${idCounter++}`;
 
 describe('migrate', () => {
   it('carries a real v1 payload into one profile without losing attempts', () => {
@@ -28,6 +34,17 @@ describe('migrate', () => {
     expect(Object.keys(out.profiles[0].reviewQueue)).toEqual(['a:nf1-01', 'a:nbt5-02']);
   });
 
+  it("seeds the review queue from the real fixture's own missed questions", () => {
+    const missed = (v1Real as { missedQuestionIds: string[] }).missedQuestionIds;
+    expect(missed.length).toBeGreaterThanOrEqual(3);
+    const out = migrate(v1Real);
+    const expectedKeys = missed.map((id) => reviewKeyId({ kind: 'authored', id }));
+    expect(Object.keys(out.profiles[0].reviewQueue).sort()).toEqual(expectedKeys.sort());
+    for (const key of expectedKeys) {
+      expect(out.profiles[0].reviewQueue[key].box).toBe(1);
+    }
+  });
+
   it('returns a clean state for null, garbage, or a non-object', () => {
     for (const bad of [null, undefined, 42, 'nope', [], { nothing: true }]) {
       const out = migrate(bad);
@@ -37,9 +54,94 @@ describe('migrate', () => {
     }
   });
 
-  it('passes an already-v2 state through unchanged', () => {
-    const v2 = initialState();
-    expect(migrate(v2)).toEqual(v2);
+  it('coerces a non-array attempts or missedQuestionIds instead of throwing', () => {
+    const out = migrate({
+      settings: { studentName: 'Jo' },
+      attempts: 'oops-not-an-array',
+      missedQuestionIds: 123,
+    });
+    expect(out.profiles[0].attempts).toEqual([]);
+    expect(out.profiles[0].reviewQueue).toEqual({});
+    expect(out.profiles[0].studentName).toBe('Jo');
+  });
+
+  it('skips non-string entries in missedQuestionIds but keeps the valid ones', () => {
+    const out = migrate({
+      settings: { studentName: 'Jo' },
+      attempts: [],
+      missedQuestionIds: ['nf1-01', 42, null, 'nbt5-02', {}],
+    });
+    expect(Object.keys(out.profiles[0].reviewQueue)).toEqual(['a:nf1-01', 'a:nbt5-02']);
+  });
+
+  it('passes an already-v2 state through unchanged (real idempotency check)', () => {
+    const populated: AppStateV2 = {
+      version: 2,
+      activeProfileId: 'p_1',
+      profiles: [
+        {
+          id: 'p_1',
+          studentName: 'Ada',
+          grade: 5,
+          targetExamDate: '2026-05-15',
+          dailyQuestionGoal: 20,
+          attempts: migrate(v1Real).profiles[0].attempts,
+          reviewQueue: {
+            'a:nf1-01': {
+              key: { kind: 'authored', id: 'nf1-01' },
+              box: 2,
+              dueAt: '2026-01-05T00:00:00.000Z',
+              lastSeenAt: '2026-01-01T00:00:00.000Z',
+            },
+          },
+        },
+        {
+          id: 'p_2',
+          studentName: 'Grace',
+          grade: 4,
+          targetExamDate: '',
+          dailyQuestionGoal: 10,
+          attempts: [],
+          reviewQueue: {},
+        },
+      ],
+    };
+    const out = migrate(populated);
+    expect(out).toEqual(populated);
+    expect(out.profiles).toHaveLength(2);
+    expect(out.profiles[0].attempts).toHaveLength(2);
+    expect(out.profiles[0].reviewQueue['a:nf1-01'].box).toBe(2);
+  });
+
+  it('treats an unpopulated v2-shaped blob (empty profiles) as unrecognized', () => {
+    const out = migrate({ version: 2, profiles: [], activeProfileId: 'nope' });
+    expect(out.profiles).toHaveLength(1);
+    expect(out.profiles[0].attempts).toEqual([]);
+  });
+
+  it('treats a v2 blob whose activeProfileId does not resolve as unrecognized', () => {
+    const out = migrate({
+      version: 2,
+      profiles: [{ id: 'p_1', studentName: 'X', grade: 5, targetExamDate: '', dailyQuestionGoal: 20, attempts: [], reviewQueue: {} }],
+      activeProfileId: 'does-not-exist',
+    });
+    expect(out.profiles[0].studentName).not.toBe('X');
+  });
+
+  it('accepts injected now/newId so it is a pure, deterministic function', () => {
+    const out = migrate(
+      { settings: { studentName: 'Deterministic' }, attempts: [], missedQuestionIds: ['nf1-01'] },
+      { now: FIXED_NOW, newId: fixedNewId },
+    );
+    expect(out.profiles[0].id).toMatch(/^fixed-/);
+    expect(out.profiles[0].reviewQueue['a:nf1-01'].dueAt).toBe(FIXED_NOW.toISOString());
+    expect(out.profiles[0].reviewQueue['a:nf1-01'].lastSeenAt).toBe(FIXED_NOW.toISOString());
+  });
+
+  it('initialState accepts an injected id generator', () => {
+    const out = initialState(() => 'fixed-initial');
+    expect(out.profiles[0].id).toBe('fixed-initial');
+    expect(out.activeProfileId).toBe('fixed-initial');
   });
 });
 
@@ -78,9 +180,64 @@ describe('loadState', () => {
     expect(s.getItem(STORAGE_KEY_V1)).not.toBeNull();
   });
 
-  it('survives unparseable JSON', () => {
+  it('survives unparseable JSON in v2 with no v1 present', () => {
     const s = mem();
     s.setItem(STORAGE_KEY_V2, '{not json');
     expect(loadState(s).profiles).toHaveLength(1);
+  });
+
+  it('survives unparseable JSON in v1 specifically', () => {
+    const s = mem();
+    s.setItem(STORAGE_KEY_V1, '{not json either');
+    const out = loadState(s);
+    expect(out.profiles).toHaveLength(1);
+    expect(out.profiles[0].attempts).toEqual([]);
+  });
+
+  it('a corrupt/unrecognized v2 blob does not shadow a healthy v1 payload (Finding 1)', () => {
+    const s = mem();
+    // Valid JSON, but not a usable v2 state: no profiles.
+    s.setItem(STORAGE_KEY_V2, JSON.stringify({ version: 2, profiles: [], activeProfileId: 'ghost' }));
+    s.setItem(STORAGE_KEY_V1, JSON.stringify(v1Real));
+
+    const out = loadState(s);
+
+    expect(out.profiles).toHaveLength(1);
+    expect(out.profiles[0].attempts).toHaveLength((v1Real as { attempts: unknown[] }).attempts.length);
+    expect(out.profiles[0].studentName).toBe((v1Real as { settings: { studentName: string } }).settings.studentName);
+    // v1 must still be untouched on disk.
+    expect(s.getItem(STORAGE_KEY_V1)).not.toBeNull();
+  });
+
+  it('a v2 blob with a dangling activeProfileId also falls through to v1', () => {
+    const s = mem();
+    s.setItem(STORAGE_KEY_V2, JSON.stringify({
+      version: 2,
+      profiles: [{ id: 'p_x', studentName: 'Ghost', grade: 5, targetExamDate: '', dailyQuestionGoal: 20, attempts: [], reviewQueue: {} }],
+      activeProfileId: 'not-p_x',
+    }));
+    s.setItem(STORAGE_KEY_V1, JSON.stringify(v1Real));
+
+    const out = loadState(s);
+    expect(out.profiles[0].studentName).not.toBe('Ghost');
+    expect(out.profiles[0].attempts.length).toBe((v1Real as { attempts: unknown[] }).attempts.length);
+  });
+});
+
+describe('saveState', () => {
+  it('does not throw when storage.setItem throws (e.g. quota exceeded)', () => {
+    const throwingStorage = {
+      getItem: () => null,
+      setItem: () => { throw new DOMException('QuotaExceededError'); },
+      removeItem: () => {},
+      clear: () => {},
+      key: () => null,
+      length: 0,
+    } as Storage;
+
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    expect(() => saveState(throwingStorage, initialState())).not.toThrow();
+    expect(consoleErrorSpy).toHaveBeenCalled();
+    consoleErrorSpy.mockRestore();
   });
 });
