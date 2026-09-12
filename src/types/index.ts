@@ -23,28 +23,9 @@ export interface DomainInfo {
   standards: StandardInfo[];
 }
 
-export type QuestionType = 'multiple-choice' | 'open-response';
-
-export interface Question {
-  id: string;
-  standardCode: string; // e.g. 'NC.5.NF.1'
-  domainId: DomainId;
-  questionType: QuestionType;
-  prompt: string;
-  promptDetails?: string; // Optional context, diagram description, or data table
-  options?: string[]; // 4 choices for multiple choice
-  correctAnswer: string; // Canonical answer string e.g. 'B' or '3/4' or '48'
-  acceptableAnswers?: string[]; // Equivalent representations e.g. ['0.75', '3/4', '75%']
-  unit?: string; // e.g. 'inches', 'cubic cm', '$'
-  calculatorAllowed: boolean; // false for mental/algorithm math, true for complex word problems
-  isStretch: boolean; // Flagged as above-grade / 6th-grade stretch problem
-  difficulty: 'mastery' | 'advanced' | 'stretch';
-  explanation: {
-    stepByStep: string[];
-    conceptSummary: string;
-    commonMisconception?: string;
-  };
-}
+/** The question model lives in src/engine/questionModel.ts. Every item is
+ *  multiple choice, so there is no `questionType` discriminator any more. */
+export type { Question, AnswerOption, Explanation } from '../engine/questionModel';
 
 export interface QuizDefinition {
   id: string;

@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { useProgress } from '../context/ProgressContext';
 import { GRADE_5_DOMAINS } from '../curriculum/grade5';
-import { QUESTIONS_BANK } from '../data/questions';
+import { GRADE_5_AUTHORED } from '../curriculum/grade5/authored';
 
 interface CurriculumViewProps {
   onStartStandardDrill: (standardCode: string) => void;
@@ -133,7 +133,7 @@ export const CurriculumView: React.FC<CurriculumViewProps> = ({
                 {domain.standards.map(standard => {
                   const sm = getStandardMastery(standard.code);
                   const isExpanded = !!expandedStandards[standard.code];
-                  const stdQuestions = QUESTIONS_BANK.filter(q => q.standardCode === standard.code);
+                  const stdQuestions = GRADE_5_AUTHORED.filter(q => q.standardCode === standard.code);
                   const stretchCount = stdQuestions.filter(q => q.isStretch).length;
 
                   return (

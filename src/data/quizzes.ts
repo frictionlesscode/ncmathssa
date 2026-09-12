@@ -1,12 +1,12 @@
 import type { QuizDefinition } from '../types';
 
-import { QUESTIONS_BANK } from './questions';
+import { GRADE_5_AUTHORED } from '../curriculum/grade5/authored';
 
 export const STATIC_QUIZZES: QuizDefinition[] = [
   {
     id: 'diagnostic-01',
     title: 'Baseline SSA Diagnostic Assessment',
-    subtitle: '16-question diagnostic covering all 16 Grade 5 NCSCOS standards to determine your initial baseline.',
+    subtitle: '17-question diagnostic covering all 17 Grade 5 NCSCOS standards to determine your initial baseline.',
     isDiagnostic: true,
     timeLimitMinutes: 45,
     questionIds: [
@@ -14,7 +14,7 @@ export const STATIC_QUIZZES: QuizDefinition[] = [
       'nbt1-01', 'nbt3-01', 'nbt5-01', 'nbt6-01', 'nbt7-01',
       'nf1-01', 'nf3-01', 'nf4-01', 'nf7-01',
       'md1-01', 'md2-01', 'md4-01', 'md5-01',
-      'g1-01'
+      'g1-01', 'g3-01'
     ]
   },
   {
@@ -112,13 +112,16 @@ export function getQuizById(quizId: string): QuizDefinition | undefined {
  * Creates a dynamic custom drill for a single standard.
  */
 export function createStandardDrill(standardCode: string): QuizDefinition {
-  const matchingQuestions = QUESTIONS_BANK.filter(q => q.standardCode === standardCode);
+  const matchingQuestions = GRADE_5_AUTHORED.filter(q => q.standardCode === standardCode);
   return {
     id: `drill-${standardCode}`,
     title: `Targeted Practice: ${standardCode}`,
     subtitle: `Focused mastery drill on standard ${standardCode}`,
     standardCode,
-    domainId: matchingQuestions[0]?.domainId,
+    // The engine's DomainId is a plain string (grades differ in their domains);
+    // QuizDefinition still narrows to the grade 5 union. The authored bank's
+    // domain ids are asserted against the curriculum by authored.test.ts.
+    domainId: matchingQuestions[0]?.domainId as QuizDefinition['domainId'],
     isCustomDrill: true,
     questionIds: matchingQuestions.map(q => q.id)
   };

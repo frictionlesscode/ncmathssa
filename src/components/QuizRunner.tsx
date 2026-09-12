@@ -10,7 +10,7 @@ import {
   X
 } from 'lucide-react';
 import type { Question, QuizAttempt, QuizAttemptAnswer, QuizDefinition } from '../types';
-import { QUESTIONS_BANK } from '../data/questions';
+import { GRADE_5_AUTHORED } from '../curriculum/grade5/authored';
 import { checkAnswer, formatTime } from '../utils/answerChecker';
 import { Scratchpad } from './Scratchpad';
 import { Calculator } from './Calculator';
@@ -24,7 +24,7 @@ interface QuizRunnerProps {
 export const QuizRunner: React.FC<QuizRunnerProps> = ({ quiz, onFinish, onExit }) => {
   // Load questions for this quiz
   const questions: Question[] = quiz.questionIds
-    .map(id => QUESTIONS_BANK.find(q => q.id === id))
+    .map(id => GRADE_5_AUTHORED.find(q => q.id === id))
     .filter((q): q is Question => q !== undefined);
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -252,55 +252,36 @@ export const QuizRunner: React.FC<QuizRunnerProps> = ({ quiz, onFinish, onExit }
             )}
           </div>
 
-          {/* Answer Inputs: Multiple Choice vs Open Response */}
-          {currentQ.questionType === 'multiple-choice' && currentQ.options ? (
-            <div className="space-y-3">
-              {currentQ.options.map((option, idx) => {
-                const choiceLetter = option.charAt(0).toUpperCase();
-                const isSelected = answers[currentQ.id] === choiceLetter;
+          {/* Answer choices */}
+          <div className="space-y-3">
+            {currentQ.options.map(option => {
+              const isSelected = answers[currentQ.id] === option.label;
 
-                return (
-                  <button
-                    key={idx}
-                    onClick={() => handleSelectAnswer(choiceLetter)}
-                    className={`w-full text-left p-4 rounded-2xl border text-sm font-semibold transition-all flex items-center justify-between ${
-                      isSelected
-                        ? 'bg-blue-50/80 border-blue-600 text-blue-900 ring-2 ring-blue-500/20 shadow-xs'
-                        : 'bg-white border-slate-200 hover:border-slate-300 text-slate-800 hover:bg-slate-50'
-                    }`}
-                  >
-                    <span>{option}</span>
-                    <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${
-                      isSelected
-                        ? 'border-blue-600 bg-blue-600 text-white'
-                        : 'border-slate-300'
-                    }`}>
-                      {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          ) : (
-            /* Open Response / Free Text */
-            <div className="space-y-3">
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">
-                Open-Response Answer:
-              </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  value={answers[currentQ.id] || ''}
-                  onChange={e => handleSelectAnswer(e.target.value)}
-                  placeholder="Enter integer, decimal, or fraction (e.g. 3/4 or 2 1/3)..."
-                  className="w-full px-4 py-3.5 bg-slate-50 border border-slate-300 rounded-2xl text-base font-mono font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-600 focus:bg-white transition-all shadow-xs"
-                />
-              </div>
-              <p className="text-xs text-slate-500 italic">
-                💡 Enter numeric values directly. Fractions may be written as <code className="bg-slate-200 px-1 rounded">3/4</code> or mixed numbers as <code className="bg-slate-200 px-1 rounded">2 1/4</code>.
-              </p>
-            </div>
-          )}
+              return (
+                <button
+                  key={option.label}
+                  onClick={() => handleSelectAnswer(option.label)}
+                  className={`w-full text-left p-4 rounded-2xl border text-sm font-semibold transition-all flex items-center justify-between gap-4 ${
+                    isSelected
+                      ? 'bg-blue-50/80 border-blue-600 text-blue-900 ring-2 ring-blue-500/20 shadow-xs'
+                      : 'bg-white border-slate-200 hover:border-slate-300 text-slate-800 hover:bg-slate-50'
+                  }`}
+                >
+                  <span>
+                    <span className="font-mono font-black mr-2">{option.label})</span>
+                    {option.text}
+                  </span>
+                  <div className={`w-5 h-5 shrink-0 rounded-full border flex items-center justify-center ${
+                    isSelected
+                      ? 'border-blue-600 bg-blue-600 text-white'
+                      : 'border-slate-300'
+                  }`}>
+                    {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </main>
 

@@ -1,4 +1,5 @@
-import type { Question } from '../types';
+import type { Question } from '../engine/questionModel';
+import { correctOption } from '../engine/questionModel';
 
 
 /**
@@ -42,64 +43,32 @@ export function normalizeValue(raw: string): number | null {
 }
 
 /**
- * Evaluates whether studentAnswer matches the question's correctAnswer or acceptableAnswers.
+ * Evaluates a submitted answer. Every item is multiple choice, so a submission
+ * is an option label ('A'..'D'); the full option text is accepted too, which
+ * keeps the free-text retry boxes in the review screens usable.
  */
 export function checkAnswer(question: Question, rawStudentAnswer: string): boolean {
   if (!rawStudentAnswer) return false;
-  const student = rawStudentAnswer.trim();
-  const canonical = question.correctAnswer.trim();
+  const student = rawStudentAnswer.trim().toLowerCase();
+  if (!student) return false;
 
-  if (question.questionType === 'multiple-choice') {
-    // Exact letter match or choice string match
-    if (student.toUpperCase() === canonical.toUpperCase()) return true;
-    
-    // Check if student typed full option text that matches canonical choice
-    if (question.options) {
-      const canonicalIndex = canonical.charCodeAt(0) - 65; // 'A' -> 0, 'B' -> 1
-      if (canonicalIndex >= 0 && canonicalIndex < question.options.length) {
-        if (student.toLowerCase() === question.options[canonicalIndex].toLowerCase()) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
+  const correct = correctOption(question);
+  if (student === correct.label.toLowerCase()) return true;
+  if (student === correct.text.trim().toLowerCase()) return true;
 
-  // Open-response evaluation:
-  // 1. Exact string match (ignoring case & whitespace)
-  if (student.toLowerCase() === canonical.toLowerCase()) return true;
-
-  // 2. Check acceptableAnswers list if provided
-  if (question.acceptableAnswers && question.acceptableAnswers.length > 0) {
-    for (const alt of question.acceptableAnswers) {
-      if (student.toLowerCase() === alt.trim().toLowerCase()) {
-        return true;
-      }
-    }
-  }
-
-  // 3. Numeric / Fraction mathematical equivalence
+  // Accept a mathematically equivalent typed value (e.g. "2.25" for "2 1/4 pounds").
   const studentVal = normalizeValue(student);
-  const canonicalVal = normalizeValue(canonical);
+  const correctVal = normalizeValue(correct.text);
+  if (studentVal === null || correctVal === null) return false;
+  if (Math.abs(studentVal - correctVal) >= 0.0001) return false;
 
-  if (studentVal !== null && canonicalVal !== null) {
-    // Allow precision delta of 0.0001
-    if (Math.abs(studentVal - canonicalVal) < 0.0001) {
-      return true;
-    }
-  }
-
-  // 4. Check acceptable answers numerically
-  if (studentVal !== null && question.acceptableAnswers) {
-    for (const alt of question.acceptableAnswers) {
-      const altVal = normalizeValue(alt);
-      if (altVal !== null && Math.abs(studentVal - altVal) < 0.0001) {
-        return true;
-      }
-    }
-  }
-
-  return false;
+  // ...but only when no other option carries that same value, so a typed number
+  // can never be credited for an answer that is ambiguous between options.
+  return question.options.every((o) => {
+    if (o.label === correct.label) return true;
+    const v = normalizeValue(o.text);
+    return v === null || Math.abs(v - correctVal) >= 0.0001;
+  });
 }
 
 /**

@@ -8,7 +8,7 @@ import type {
 } from '../types';
 
 import { GRADE_5_STANDARDS, GRADE_5_DOMAINS } from '../curriculum/grade5';
-import { QUESTIONS_BANK } from '../data/questions';
+import { GRADE_5_AUTHORED } from '../curriculum/grade5/authored';
 
 const STORAGE_KEY = 'nc_math_ssa_prep_state_v1';
 
@@ -210,7 +210,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     // Iterate through all attempts in reverse chronological order
     for (const attempt of state.attempts) {
       for (const [qId, ans] of Object.entries(attempt.answers)) {
-        const q = QUESTIONS_BANK.find(item => item.id === qId);
+        const q = GRADE_5_AUTHORED.find(item => item.id === qId);
         if (q && q.standardCode === standardCode) {
           totalAttempts++;
           if (ans.isCorrect) {
@@ -271,7 +271,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
     for (const attempt of state.attempts) {
       for (const [qId, ans] of Object.entries(attempt.answers)) {
-        const q = QUESTIONS_BANK.find(item => item.id === qId);
+        const q = GRADE_5_AUTHORED.find(item => item.id === qId);
         if (q && q.domainId === domainId) {
           totalAnswered++;
           if (ans.isCorrect) totalCorrect++;

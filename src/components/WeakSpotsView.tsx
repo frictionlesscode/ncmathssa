@@ -8,8 +8,8 @@ import {
   Trash2
 } from 'lucide-react';
 import { useProgress } from '../context/ProgressContext';
-import { QUESTIONS_BANK } from '../data/questions';
-import { checkAnswer } from '../utils/answerChecker';
+import { GRADE_5_AUTHORED } from '../curriculum/grade5/authored';
+import { correctOption } from '../engine/questionModel';
 
 interface WeakSpotsViewProps {
   onStartCustomQuiz: (questionIds: string[]) => void;
@@ -22,11 +22,10 @@ export const WeakSpotsView: React.FC<WeakSpotsViewProps> = ({
 }) => {
   const { state, clearMissedQuestion } = useProgress();
   const [selectedStandard, setSelectedStandard] = useState<string>('all');
-  const [retryAnswers, setRetryAnswers] = useState<Record<string, string>>({});
   const [retryResults, setRetryResults] = useState<Record<string, boolean | null>>({});
 
   const missedQuestions = state.missedQuestionIds
-    .map(id => QUESTIONS_BANK.find(q => q.id === id))
+    .map(id => GRADE_5_AUTHORED.find(q => q.id === id))
     .filter((q): q is NonNullable<typeof q> => q !== undefined);
 
   // Filter by standard
@@ -37,12 +36,11 @@ export const WeakSpotsView: React.FC<WeakSpotsViewProps> = ({
   // Distinct standards with missed questions
   const distinctStandards = Array.from(new Set(missedQuestions.map(q => q.standardCode)));
 
-  const handleInlineCheck = (qId: string) => {
-    const q = QUESTIONS_BANK.find(item => item.id === qId);
+  const handleInlineCheck = (qId: string, label: string) => {
+    const q = GRADE_5_AUTHORED.find(item => item.id === qId);
     if (!q) return;
 
-    const userAns = retryAnswers[qId] || '';
-    const isCorrect = checkAnswer(q, userAns);
+    const isCorrect = correctOption(q).label === label;
     setRetryResults(prev => ({ ...prev, [qId]: isCorrect }));
 
     if (isCorrect) {
@@ -176,33 +174,30 @@ export const WeakSpotsView: React.FC<WeakSpotsViewProps> = ({
                     )}
                   </div>
 
-                  {/* Options if MC */}
-                  {q.questionType === 'multiple-choice' && q.options && (
-                    <div className="grid sm:grid-cols-2 gap-2 text-xs">
-                      {q.options.map((opt, oIdx) => (
-                        <div key={oIdx} className="p-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-700">
-                          {opt}
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  {/* Answer choices */}
+                  <div className="grid sm:grid-cols-2 gap-2 text-xs">
+                    {q.options.map(opt => (
+                      <div key={opt.label} className="p-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-700">
+                        <span className="font-mono font-black mr-1.5">{opt.label})</span>
+                        {opt.text}
+                      </div>
+                    ))}
+                  </div>
 
                   {/* Retry & Clearance Bar */}
                   <div className="pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-slate-50/50 p-3 rounded-2xl">
                     <div className="flex items-center gap-2 w-full sm:w-auto">
-                      <input
-                        type="text"
-                        placeholder="Type answer to clear error..."
-                        value={retryAnswers[q.id] || ''}
-                        onChange={e => setRetryAnswers({ ...retryAnswers, [q.id]: e.target.value })}
-                        className="px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs font-mono font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-rose-500/20 w-full sm:w-64"
-                      />
-                      <button
-                        onClick={() => handleInlineCheck(q.id)}
-                        className="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs rounded-xl shadow-xs transition-colors flex-shrink-0"
-                      >
-                        Check & Clear
-                      </button>
+                      <span className="text-xs font-bold text-slate-700 mr-1">Answer to clear:</span>
+                      {q.options.map(opt => (
+                        <button
+                          key={opt.label}
+                          onClick={() => handleInlineCheck(q.id, opt.label)}
+                          className="w-9 h-9 bg-white hover:bg-slate-800 hover:text-white text-slate-800 font-mono font-black text-xs rounded-xl border border-slate-300 transition-colors flex-shrink-0"
+                          title={opt.text}
+                        >
+                          {opt.label}
+                        </button>
+                      ))}
                     </div>
 
                     {result !== undefined && result !== null && (
@@ -215,7 +210,7 @@ export const WeakSpotsView: React.FC<WeakSpotsViewProps> = ({
                           </>
                         ) : (
                           <>
-                            <AlertTriangle className="w-4 h-4" /> Not quite right. Target answer is: <strong className="font-mono underline ml-1">{q.correctAnswer}</strong>
+                            <AlertTriangle className="w-4 h-4" /> Not quite right. Target answer is: <strong className="font-mono underline ml-1">{correctOption(q).label}) {correctOption(q).text}</strong>
                           </>
                         )}
                       </div>
