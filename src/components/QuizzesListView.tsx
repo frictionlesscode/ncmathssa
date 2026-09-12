@@ -8,7 +8,7 @@ import {
   Target
 } from 'lucide-react';
 import { useProgress } from '../context/ProgressContext';
-import { GRADE_5_STANDARDS, GRADE_5_DOMAINS } from '../curriculum/grade5';
+import { standardsOf } from '../curriculum/registry';
 import { STATIC_QUIZZES } from '../data/quizzes';
 
 interface QuizzesListViewProps {
@@ -20,11 +20,13 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
   onStartQuiz,
   onStartStandardDrill
 }) => {
-  const { state } = useProgress();
+  const { profile, curriculum } = useProgress();
+  const passingPercent = curriculum.ssa.passingPercent;
+  const standards = standardsOf(curriculum);
 
   // Helper to find highest score on a quiz
   const getBestScore = (quizId: string) => {
-    const attempts = state.attempts.filter(a => a.quizId === quizId);
+    const attempts = profile.attempts.filter(a => a.quizId === quizId);
     if (attempts.length === 0) return null;
     return Math.max(...attempts.map(a => a.scorePercent));
   };
@@ -44,10 +46,10 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
           <span className="text-xs font-semibold text-slate-500">Secure Assessment Simulations</span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-          NCSCOS Grade 5 Assessment Library
+          NCSCOS Grade {curriculum.grade} Assessment Library
         </h1>
         <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl">
-          Take full timed mock exams, comprehensive module assessments, or drill individual standards. Every quiz is benchmarked against Wake County's 80% passing bar.
+          Take full timed mock exams, comprehensive module assessments, or drill individual standards. Every quiz is benchmarked against Wake County's {passingPercent}% passing bar.
         </p>
       </div>
 
@@ -63,7 +65,7 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
                 <span className="font-mono text-[11px] font-bold px-2 py-0.5 bg-blue-600 text-white rounded-md">
                   DIAGNOSTIC
                 </span>
-                <span className="text-xs font-bold text-blue-900">16 Questions (1 per standard)</span>
+                <span className="text-xs font-bold text-blue-900">{diagnosticQuiz.questionIds.length} Questions (1 per standard)</span>
               </div>
               <h3 className="text-xl font-black text-slate-900">{diagnosticQuiz.title}</h3>
               <p className="text-xs text-slate-600 max-w-xl">{diagnosticQuiz.subtitle}</p>
@@ -74,7 +76,7 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
                 <div className="text-right">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Best Score</span>
                   <span className={`text-xl font-black ${
-                    (getBestScore(diagnosticQuiz.id) ?? 0) >= 80 ? 'text-emerald-600' : 'text-amber-600'
+                    (getBestScore(diagnosticQuiz.id) ?? 0) >= passingPercent ? 'text-emerald-600' : 'text-amber-600'
                   }`}>
                     {getBestScore(diagnosticQuiz.id)}%
                   </span>
@@ -106,7 +108,7 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
         <div className="grid md:grid-cols-2 gap-5">
           {mockQuizzes.map(quiz => {
             const best = getBestScore(quiz.id);
-            const isPassing = best !== null && best >= 80;
+            const isPassing = best !== null && best >= passingPercent;
 
             return (
               <div
@@ -154,18 +156,18 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
         </div>
       </div>
 
-      {/* 3. 5 Domain Module Drills */}
+      {/* 3. Domain Module Drills */}
       <div className="space-y-4">
         <h2 className="text-base font-black text-slate-900 flex items-center gap-2">
           <Layers className="w-5 h-5 text-blue-600" />
-          Domain Comprehensive Mastery Drills (5 Modules)
+          Domain Comprehensive Mastery Drills ({curriculum.domains.length} Modules)
         </h2>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
           {moduleDrills.map(quiz => {
             const best = getBestScore(quiz.id);
-            const domain = GRADE_5_DOMAINS.find(d => d.id === quiz.domainId);
-            const isPassing = best !== null && best >= 80;
+            const domain = curriculum.domains.find(d => d.id === quiz.domainId);
+            const isPassing = best !== null && best >= passingPercent;
 
             return (
               <div
@@ -210,18 +212,18 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
         </div>
       </div>
 
-      {/* 4. Standard-Specific Rapid Drills (16 Standards) */}
+      {/* 4. Standard-Specific Rapid Drills */}
       <div className="space-y-4">
         <h2 className="text-base font-black text-slate-900 flex items-center gap-2">
           <Target className="w-5 h-5 text-emerald-600" />
-          Targeted Single-Standard Drills (16 Total)
+          Targeted Single-Standard Drills ({standards.length} Total)
         </h2>
         <p className="text-xs text-slate-500">
           Drill a specific standard code to eliminate weak spots and guarantee mastery.
         </p>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          {GRADE_5_STANDARDS.map(std => (
+          {standards.map(std => (
             <div
               key={std.code}
               className="bg-white rounded-2xl p-4 border border-slate-200 shadow-2xs hover:border-blue-300 transition-all flex flex-col justify-between"

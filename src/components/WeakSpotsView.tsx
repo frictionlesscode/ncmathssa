@@ -4,52 +4,104 @@ import {
   BookOpen,
   CheckCircle,
   Flame,
-  RotateCcw,
-  Trash2
+  RotateCcw
 } from 'lucide-react';
 import { useProgress } from '../context/ProgressContext';
-import { GRADE_5_AUTHORED } from '../curriculum/grade5/authored';
+import { dueEntries } from '../engine/scheduler';
 import { correctOption } from '../engine/questionModel';
+import type { Question } from '../engine/questionModel';
+import type { QuestionRef } from '../engine/questionModel';
+import type { QuizAttempt } from '../types';
 
 interface WeakSpotsViewProps {
   onStartCustomQuiz: (questionIds: string[]) => void;
   onOpenStudyGuide: (standardCode: string) => void;
 }
 
+/** A due review entry's key is deliberately seedless (Ruling F3 elsewhere),
+ *  so a generated item needs a seed manufactured here to resolve to an
+ *  actual question. Deterministic per template id so re-renders are stable. */
+function seedFor(id: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < id.length; i++) {
+    h ^= id.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
 export const WeakSpotsView: React.FC<WeakSpotsViewProps> = ({
   onStartCustomQuiz,
   onOpenStudyGuide
 }) => {
-  const { state, clearMissedQuestion } = useProgress();
+  const { profile, curriculum, recordAttempt } = useProgress();
   const [selectedStandard, setSelectedStandard] = useState<string>('all');
   const [retryResults, setRetryResults] = useState<Record<string, boolean | null>>({});
+  const [clearedIds, setClearedIds] = useState<Set<string>>(new Set());
 
-  const missedQuestions = state.missedQuestionIds
-    .map(id => GRADE_5_AUTHORED.find(q => q.id === id))
-    .filter((q): q is NonNullable<typeof q> => q !== undefined);
+  const due = dueEntries(profile.reviewQueue, new Date());
+
+  const items: { id: string; ref: QuestionRef; question: Question }[] = due
+    .map((entry) => {
+      const ref: QuestionRef =
+        entry.key.kind === 'authored'
+          ? { kind: 'authored', id: entry.key.id }
+          : { kind: 'generated', templateId: entry.key.templateId, seed: seedFor(entry.key.templateId) };
+      const id = entry.key.kind === 'authored' ? `a:${entry.key.id}` : `g:${entry.key.templateId}`;
+      try {
+        return { id, ref, question: curriculum.source.resolve(ref) };
+      } catch {
+        return null;
+      }
+    })
+    .filter((x): x is { id: string; ref: QuestionRef; question: Question } => x !== null)
+    .filter((x) => !clearedIds.has(x.id));
 
   // Filter by standard
-  const filteredQuestions = selectedStandard === 'all'
-    ? missedQuestions
-    : missedQuestions.filter(q => q.standardCode === selectedStandard);
+  const filteredItems = selectedStandard === 'all'
+    ? items
+    : items.filter(({ question }) => question.standardCode === selectedStandard);
 
-  // Distinct standards with missed questions
-  const distinctStandards = Array.from(new Set(missedQuestions.map(q => q.standardCode)));
+  // Distinct standards with due questions
+  const distinctStandards = Array.from(new Set(items.map(({ question }) => question.standardCode)));
 
-  const handleInlineCheck = (qId: string, label: string) => {
-    const q = GRADE_5_AUTHORED.find(item => item.id === qId);
-    if (!q) return;
+  const handleInlineCheck = (item: { id: string; ref: QuestionRef; question: Question }, label: string) => {
+    const isCorrect = correctOption(item.question).label === label;
+    setRetryResults(prev => ({ ...prev, [item.id]: isCorrect }));
 
-    const isCorrect = correctOption(q).label === label;
-    setRetryResults(prev => ({ ...prev, [qId]: isCorrect }));
+    const attempt: QuizAttempt = {
+      id: `weakspot-retry-${Date.now()}`,
+      quizId: 'weakspots-retry',
+      quizTitle: 'Weak Spots Retry',
+      standardCode: item.question.standardCode,
+      completedAt: new Date().toISOString(),
+      scoreRaw: isCorrect ? 1 : 0,
+      scoreTotal: 1,
+      scorePercent: isCorrect ? 100 : 0,
+      isPassingSSA: isCorrect,
+      timeElapsedSeconds: 0,
+      answers: {
+        [item.question.id]: {
+          questionId: item.question.id,
+          studentAnswer: label,
+          isCorrect,
+          standardCode: item.question.standardCode
+        }
+      }
+    };
+    recordAttempt(attempt, [{ ref: item.ref, wasCorrect: isCorrect }]);
 
     if (isCorrect) {
       // Automatically clear after a short celebration delay
       setTimeout(() => {
-        clearMissedQuestion(qId);
+        setClearedIds(prev => new Set(prev).add(item.id));
       }, 1200);
     }
   };
+
+  const authoredIds = items
+    .filter(({ ref }) => ref.kind === 'authored')
+    .map(({ ref }) => (ref as { kind: 'authored'; id: string }).id);
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-in fade-in duration-200">
@@ -60,35 +112,35 @@ export const WeakSpotsView: React.FC<WeakSpotsViewProps> = ({
             <span className="font-mono text-xs font-bold text-rose-700 bg-rose-50 px-2.5 py-0.5 rounded-md border border-rose-200">
               TARGETED REMEDIATION
             </span>
-            <span className="text-xs font-semibold text-slate-500">Error Bank & Mastery Clearance</span>
+            <span className="text-xs font-semibold text-slate-500">Due Reviews & Mastery Clearance</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-            Weak Spots & Missed Questions Bank
+            Weak Spots & Due Reviews
           </h1>
           <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl">
-            Every question answered incorrectly across any test is automatically stored here. Practice them individually or launch a custom test to eliminate weak spots before the exam.
+            Every question answered incorrectly across any test is scheduled here for spaced review. Practice them individually or launch a custom test to clear your due reviews before the exam.
           </p>
         </div>
 
-        {missedQuestions.length > 0 && (
+        {authoredIds.length > 0 && (
           <button
-            onClick={() => onStartCustomQuiz(missedQuestions.map(q => q.id))}
+            onClick={() => onStartCustomQuiz(authoredIds)}
             className="flex items-center gap-2 px-5 py-3 bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-xs rounded-2xl shadow-md shadow-rose-600/20 transition-all self-start"
           >
-            <RotateCcw className="w-4 h-4" /> Practice All {missedQuestions.length} Missed Qs
+            <RotateCcw className="w-4 h-4" /> Practice All {items.length} Due Qs
           </button>
         )}
       </div>
 
-      {missedQuestions.length === 0 ? (
+      {items.length === 0 ? (
         /* Empty State: All Clear! */
         <div className="bg-white rounded-3xl p-12 border border-slate-200 text-center max-w-lg mx-auto shadow-xs">
           <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-sm">
             <CheckCircle className="w-8 h-8" />
           </div>
-          <h2 className="text-xl font-black text-slate-900">Zero Missed Questions!</h2>
+          <h2 className="text-xl font-black text-slate-900">Zero Due Reviews!</h2>
           <p className="text-xs text-slate-500 mt-2 leading-relaxed">
-            You currently have no unmastered questions in your weak spots bank. Any missed questions from upcoming practice quizzes or mock exams will automatically show up here for targeted practice.
+            You currently have no questions due for review. Any missed questions from upcoming practice quizzes or mock exams will automatically show up here for targeted practice.
           </p>
         </div>
       ) : (
@@ -105,7 +157,7 @@ export const WeakSpotsView: React.FC<WeakSpotsViewProps> = ({
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
-                All Standards ({missedQuestions.length})
+                All Standards ({items.length})
               </button>
               {distinctStandards.map(code => (
                 <button
@@ -117,20 +169,21 @@ export const WeakSpotsView: React.FC<WeakSpotsViewProps> = ({
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                   }`}
                 >
-                  {code} ({missedQuestions.filter(q => q.standardCode === code).length})
+                  {code} ({items.filter(({ question }) => question.standardCode === code).length})
                 </button>
               ))}
             </div>
           )}
 
-          {/* Missed Questions Grid */}
+          {/* Due Questions Grid */}
           <div className="grid gap-5">
-            {filteredQuestions.map(q => {
-              const result = retryResults[q.id];
+            {filteredItems.map(item => {
+              const q = item.question;
+              const result = retryResults[item.id];
 
               return (
                 <div
-                  key={q.id}
+                  key={item.id}
                   className="bg-white rounded-3xl p-6 border border-slate-200 shadow-xs hover:border-slate-300 transition-all space-y-4"
                 >
                   <div className="flex items-center justify-between gap-3">
@@ -151,13 +204,6 @@ export const WeakSpotsView: React.FC<WeakSpotsViewProps> = ({
                         className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1"
                       >
                         <BookOpen className="w-3.5 h-3.5" /> Study Guide
-                      </button>
-                      <button
-                        onClick={() => clearMissedQuestion(q.id)}
-                        className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
-                        title="Remove from weak spots bank"
-                      >
-                        <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
@@ -191,7 +237,7 @@ export const WeakSpotsView: React.FC<WeakSpotsViewProps> = ({
                       {q.options.map(opt => (
                         <button
                           key={opt.label}
-                          onClick={() => handleInlineCheck(q.id, opt.label)}
+                          onClick={() => handleInlineCheck(item, opt.label)}
                           className="w-9 h-9 bg-white hover:bg-slate-800 hover:text-white text-slate-800 font-mono font-black text-xs rounded-xl border border-slate-300 transition-colors flex-shrink-0"
                           title={opt.text}
                         >

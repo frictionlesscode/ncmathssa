@@ -10,7 +10,7 @@ import {
   X
 } from 'lucide-react';
 import type { Question, QuizAttempt, QuizAttemptAnswer, QuizDefinition } from '../types';
-import { GRADE_5_AUTHORED } from '../curriculum/grade5/authored';
+import { useProgress } from '../context/ProgressContext';
 import { checkAnswer, formatTime } from '../utils/answerChecker';
 import { Scratchpad } from './Scratchpad';
 import { Calculator } from './Calculator';
@@ -22,9 +22,19 @@ interface QuizRunnerProps {
 }
 
 export const QuizRunner: React.FC<QuizRunnerProps> = ({ quiz, onFinish, onExit }) => {
-  // Load questions for this quiz
+  const { curriculum } = useProgress();
+  const passingPercent = curriculum.ssa.passingPercent;
+
+  // Load questions for this quiz. Every id in a QuizDefinition comes from
+  // the authored bank, so it resolves through the curriculum's source.
   const questions: Question[] = quiz.questionIds
-    .map(id => GRADE_5_AUTHORED.find(q => q.id === id))
+    .map(id => {
+      try {
+        return curriculum.source.resolve({ kind: 'authored', id });
+      } catch {
+        return undefined;
+      }
+    })
     .filter((q): q is Question => q !== undefined);
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -103,7 +113,7 @@ export const QuizRunner: React.FC<QuizRunnerProps> = ({ quiz, onFinish, onExit }
     });
 
     const scorePercent = Math.round((rawScore / questions.length) * 1000) / 10;
-    const isPassingSSA = scorePercent >= 80;
+    const isPassingSSA = scorePercent >= passingPercent;
 
     const attempt: QuizAttempt = {
       id: `attempt-${Date.now()}`,

@@ -5,12 +5,9 @@ import {
   CheckCircle,
   ChevronDown,
   ChevronUp,
-  Flame,
   HelpCircle
 } from 'lucide-react';
-import { useProgress } from '../context/ProgressContext';
-import { GRADE_5_DOMAINS } from '../curriculum/grade5';
-import { GRADE_5_AUTHORED } from '../curriculum/grade5/authored';
+import { useProgress, domainStatsFor } from '../context/ProgressContext';
 
 interface CurriculumViewProps {
   onStartStandardDrill: (standardCode: string) => void;
@@ -21,20 +18,18 @@ export const CurriculumView: React.FC<CurriculumViewProps> = ({
   onStartStandardDrill,
   onOpenStudyGuide
 }) => {
-  const { getStandardMastery, getDomainMastery } = useProgress();
+  const { curriculum, mastery } = useProgress();
+  const passingPercent = curriculum.ssa.passingPercent;
   const [selectedDomain, setSelectedDomain] = useState<string>('all');
-  const [expandedStandards, setExpandedStandards] = useState<Record<string, boolean>>({
-    'NC.5.NF.1': true, // Open high-weight fractions by default
-    'NC.5.NBT.5': true
-  });
+  const [expandedStandards, setExpandedStandards] = useState<Record<string, boolean>>({});
 
   const toggleExpand = (code: string) => {
     setExpandedStandards(prev => ({ ...prev, [code]: !prev[code] }));
   };
 
   const filteredDomains = selectedDomain === 'all'
-    ? GRADE_5_DOMAINS
-    : GRADE_5_DOMAINS.filter(d => d.id === selectedDomain);
+    ? curriculum.domains
+    : curriculum.domains.filter(d => d.id === selectedDomain);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-in fade-in duration-200">
@@ -45,13 +40,13 @@ export const CurriculumView: React.FC<CurriculumViewProps> = ({
             <span className="font-mono text-xs font-bold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-200">
               NC STANDARD COURSE OF STUDY (NCSCOS)
             </span>
-            <span className="text-xs font-semibold text-slate-500">Grade 5 Content Blueprint</span>
+            <span className="text-xs font-semibold text-slate-500">Grade {curriculum.grade} Content Blueprint</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
             Curriculum Structure & Standard Blueprints
           </h1>
           <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl">
-            Each standard is tested with non-routine word problems, multi-step math, and above-grade stretch items. Achieve 80%+ on each to guarantee SSA acceleration readiness.
+            Each standard is tested with non-routine word problems, multi-step math, and above-grade stretch items. Achieve {passingPercent}%+ on each to guarantee SSA acceleration readiness.
           </p>
         </div>
 
@@ -63,9 +58,9 @@ export const CurriculumView: React.FC<CurriculumViewProps> = ({
               selectedDomain === 'all' ? 'bg-white text-blue-700 shadow-xs' : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            All 5 Domains
+            All {curriculum.domains.length} Domains
           </button>
-          {GRADE_5_DOMAINS.map(d => (
+          {curriculum.domains.map(d => (
             <button
               key={d.id}
               onClick={() => setSelectedDomain(d.id)}
@@ -82,8 +77,8 @@ export const CurriculumView: React.FC<CurriculumViewProps> = ({
       {/* Domain Sections */}
       <div className="space-y-10">
         {filteredDomains.map(domain => {
-          const dm = getDomainMastery(domain.id);
-          const isDomainReady = dm.masteryPercent >= 80;
+          const dm = domainStatsFor(domain, mastery, passingPercent);
+          const isDomainReady = dm.masteryPercent >= passingPercent;
 
           return (
             <div key={domain.id} className="space-y-4">
@@ -131,10 +126,8 @@ export const CurriculumView: React.FC<CurriculumViewProps> = ({
               {/* Standard Cards within Domain */}
               <div className="grid gap-4">
                 {domain.standards.map(standard => {
-                  const sm = getStandardMastery(standard.code);
+                  const sm = mastery.get(standard.code);
                   const isExpanded = !!expandedStandards[standard.code];
-                  const stdQuestions = GRADE_5_AUTHORED.filter(q => q.standardCode === standard.code);
-                  const stretchCount = stdQuestions.filter(q => q.isStretch).length;
 
                   return (
                     <div
@@ -152,12 +145,6 @@ export const CurriculumView: React.FC<CurriculumViewProps> = ({
                               <h3 className="text-base font-extrabold text-slate-900">
                                 {standard.title}
                               </h3>
-                              {stretchCount > 0 && (
-                                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 bg-amber-50 text-amber-800 rounded-full border border-amber-200">
-                                  <Flame className="w-3 h-3 text-amber-600" />
-                                  {stretchCount} Stretch Challenge
-                                </span>
-                              )}
                             </div>
                             <p className="text-xs text-slate-600 max-w-2xl leading-relaxed">
                               {standard.description}
@@ -169,22 +156,22 @@ export const CurriculumView: React.FC<CurriculumViewProps> = ({
                         <div className="flex items-center gap-2 self-end sm:self-center flex-shrink-0">
                           {/* Status Pill */}
                           <div className="text-right mr-2">
-                            {sm.status === 'acceleration-ready' && (
+                            {sm?.status === 'acceleration-ready' && (
                               <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-50 text-emerald-700 font-extrabold text-xs rounded-full border border-emerald-200">
-                                <CheckCircle className="w-3.5 h-3.5" /> Ready ({sm.masteryPercent}%)
+                                <CheckCircle className="w-3.5 h-3.5" /> Ready ({Math.round(sm.percent)}%)
                               </span>
                             )}
-                            {sm.status === 'approaching' && (
+                            {sm?.status === 'approaching' && (
                               <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-amber-50 text-amber-700 font-extrabold text-xs rounded-full border border-amber-200">
-                                Approaching ({sm.masteryPercent}%)
+                                Approaching ({Math.round(sm.percent)}%)
                               </span>
                             )}
-                            {sm.status === 'needs-focus' && (
+                            {sm?.status === 'needs-focus' && (
                               <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-rose-50 text-rose-700 font-extrabold text-xs rounded-full border border-rose-200">
-                                Needs Focus ({sm.masteryPercent}%)
+                                Needs Focus ({Math.round(sm.percent)}%)
                               </span>
                             )}
-                            {sm.status === 'untested' && (
+                            {(!sm || sm.status === 'untested') && (
                               <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-100 text-slate-500 font-semibold text-xs rounded-full">
                                 <HelpCircle className="w-3.5 h-3.5" /> Untested
                               </span>

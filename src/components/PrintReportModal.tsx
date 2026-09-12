@@ -1,7 +1,8 @@
 import React from 'react';
 import { Printer, X, Award, CheckCircle, AlertTriangle, HelpCircle } from 'lucide-react';
-import { useProgress } from '../context/ProgressContext';
-import { GRADE_5_STANDARDS, GRADE_5_DOMAINS } from '../curriculum/grade5';
+import { useProgress, useReadinessSummary, domainStatsFor } from '../context/ProgressContext';
+import { standardsOf } from '../curriculum/registry';
+import { topMisconceptions } from '../engine/mastery';
 
 interface PrintReportModalProps {
   isOpen: boolean;
@@ -9,7 +10,11 @@ interface PrintReportModalProps {
 }
 
 export const PrintReportModal: React.FC<PrintReportModalProps> = ({ isOpen, onClose }) => {
-  const { state, overallReadiness, getStandardMastery, getDomainMastery } = useProgress();
+  const { profile, curriculum, mastery } = useProgress();
+  const readiness = useReadinessSummary();
+  const passingPercent = curriculum.ssa.passingPercent;
+  const standards = standardsOf(curriculum);
+  const misconceptions = topMisconceptions(mastery, 5);
 
   if (!isOpen) return null;
 
@@ -61,7 +66,7 @@ export const PrintReportModal: React.FC<PrintReportModalProps> = ({ isOpen, onCl
                   Single Subject Acceleration (SSA) Readiness Evaluation
                 </h1>
                 <p className="text-xs text-slate-600 mt-1">
-                  Comprehensive mastery report aligned to the North Carolina Standard Course of Study (NCSCOS) for Grade 5 Mathematics.
+                  Comprehensive mastery report aligned to the North Carolina Standard Course of Study (NCSCOS) for Grade {curriculum.grade} Mathematics.
                 </p>
               </div>
               <div className="text-right">
@@ -74,26 +79,26 @@ export const PrintReportModal: React.FC<PrintReportModalProps> = ({ isOpen, onCl
             <div className="grid grid-cols-4 gap-4 mt-5 p-3.5 bg-slate-50 rounded-xl border border-slate-200 text-xs">
               <div>
                 <span className="text-slate-500 block">Student:</span>
-                <span className="font-bold text-slate-900 text-sm">{state.settings.studentName}</span>
+                <span className="font-bold text-slate-900 text-sm">{profile.studentName}</span>
               </div>
               <div>
                 <span className="text-slate-500 block">Current Grade:</span>
-                <span className="font-bold text-slate-900 text-sm">Grade {state.settings.currentGrade}</span>
+                <span className="font-bold text-slate-900 text-sm">Grade {curriculum.grade}</span>
               </div>
               <div>
                 <span className="text-slate-500 block">Target Assessment:</span>
-                <span className="font-bold text-slate-900 text-sm">Grade {state.settings.targetGrade} (Skip to 6th)</span>
+                <span className="font-bold text-slate-900 text-sm">Grade {curriculum.ssa.targetsGrade} (Skip to {curriculum.ssa.targetsGrade + 1})</span>
               </div>
               <div>
                 <span className="text-slate-500 block">SSA Qualifying Bar:</span>
-                <span className="font-bold text-emerald-700 text-sm">80% or Higher</span>
+                <span className="font-bold text-emerald-700 text-sm">{passingPercent}% or Higher</span>
               </div>
             </div>
           </div>
 
           {/* Readiness Summary Banner */}
           <div className={`p-6 rounded-2xl border flex items-center justify-between ${
-            overallReadiness.isAccelerationReady
+            readiness.isAccelerationReady
               ? 'bg-emerald-50 border-emerald-300 text-emerald-950'
               : 'bg-amber-50 border-amber-300 text-amber-950'
           }`}>
@@ -102,24 +107,24 @@ export const PrintReportModal: React.FC<PrintReportModalProps> = ({ isOpen, onCl
                 Composite Grade-Level Readiness
               </span>
               <h2 className="text-3xl font-black mt-1">
-                {overallReadiness.weightedScore}% Weighted Readiness
+                {readiness.weightedScore}% Weighted Readiness
               </h2>
               <p className="text-xs mt-1 font-medium max-w-lg">
-                {overallReadiness.isAccelerationReady
-                  ? 'Candidate has achieved the 80% acceleration threshold across tested standards. Continue maintaining readiness with timed full mock exams.'
-                  : `Currently ${80 - overallReadiness.weightedScore}% below the 80% WCPSS qualifying bar. Focused drill on high-weight domains (Fractions & Base Ten) is recommended.`}
+                {readiness.isAccelerationReady
+                  ? `Candidate has achieved the ${passingPercent}% acceleration threshold across tested standards. Continue maintaining readiness with timed full mock exams.`
+                  : `Currently ${passingPercent - readiness.weightedScore}% below the ${passingPercent}% WCPSS qualifying bar. Focused drill on high-weight domains is recommended.`}
               </p>
             </div>
             <div className="text-right flex flex-col items-end">
               <span className={`px-3.5 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-wide border shadow-xs ${
-                overallReadiness.isAccelerationReady
+                readiness.isAccelerationReady
                   ? 'bg-emerald-600 text-white border-emerald-700'
                   : 'bg-amber-500 text-white border-amber-600'
               }`}>
-                {overallReadiness.isAccelerationReady ? 'SSA Ready (Level 5)' : 'Approaching Benchmark'}
+                {readiness.isAccelerationReady ? 'SSA Ready' : 'Approaching Benchmark'}
               </span>
               <span className="text-xs font-semibold text-slate-600 mt-2">
-                {overallReadiness.masteredStandardsCount} of {overallReadiness.totalStandardsCount} Standards Mastered
+                {readiness.masteredStandardsCount} of {readiness.totalStandardsCount} Standards Mastered
               </span>
             </div>
           </div>
@@ -136,12 +141,12 @@ export const PrintReportModal: React.FC<PrintReportModalProps> = ({ isOpen, onCl
                   <th className="p-2.5 font-bold">NC Blueprint Weight</th>
                   <th className="p-2.5 font-bold">Questions Practiced</th>
                   <th className="p-2.5 font-bold">Mastery Score</th>
-                  <th className="p-2.5 font-bold text-right">SSA Status (Bar: 80%)</th>
+                  <th className="p-2.5 font-bold text-right">SSA Status (Bar: {passingPercent}%)</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200">
-                {GRADE_5_DOMAINS.map(domain => {
-                  const dm = getDomainMastery(domain.id);
+                {curriculum.domains.map(domain => {
+                  const dm = domainStatsFor(domain, mastery, passingPercent);
                   return (
                     <tr key={domain.id} className="hover:bg-slate-50">
                       <td className="p-2.5 font-bold text-slate-900">
@@ -157,7 +162,7 @@ export const PrintReportModal: React.FC<PrintReportModalProps> = ({ isOpen, onCl
                         {dm.status === 'untested' ? (
                           <span className="text-slate-400">Untested</span>
                         ) : (
-                          <span className={dm.masteryPercent >= 80 ? 'text-emerald-600 font-extrabold' : 'text-amber-600 font-extrabold'}>
+                          <span className={dm.masteryPercent >= passingPercent ? 'text-emerald-600 font-extrabold' : 'text-amber-600 font-extrabold'}>
                             {dm.masteryPercent}%
                           </span>
                         )}
@@ -165,7 +170,7 @@ export const PrintReportModal: React.FC<PrintReportModalProps> = ({ isOpen, onCl
                       <td className="p-2.5 text-right font-semibold">
                         {dm.status === 'acceleration-ready' && (
                           <span className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
-                            Ready (≥80%)
+                            Ready (≥{passingPercent}%)
                           </span>
                         )}
                         {dm.status === 'approaching' && (
@@ -192,11 +197,11 @@ export const PrintReportModal: React.FC<PrintReportModalProps> = ({ isOpen, onCl
           {/* Standard-by-Standard Detail */}
           <div>
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
-              Individual NCSCOS Standards Checklist (16 Total)
+              Individual NCSCOS Standards Checklist ({standards.length} Total)
             </h3>
             <div className="grid grid-cols-2 gap-2 text-xs">
-              {GRADE_5_STANDARDS.map(std => {
-                const sm = getStandardMastery(std.code);
+              {standards.map(std => {
+                const sm = mastery.get(std.code);
                 return (
                   <div
                     key={std.code}
@@ -209,17 +214,17 @@ export const PrintReportModal: React.FC<PrintReportModalProps> = ({ isOpen, onCl
                       </span>
                     </div>
                     <div>
-                      {sm.status === 'acceleration-ready' ? (
+                      {sm?.status === 'acceleration-ready' ? (
                         <span className="flex items-center gap-1 text-emerald-600 font-bold text-[11px]">
-                          <CheckCircle className="w-3.5 h-3.5" /> {sm.masteryPercent}%
+                          <CheckCircle className="w-3.5 h-3.5" /> {Math.round(sm.percent)}%
                         </span>
-                      ) : sm.status === 'untested' ? (
+                      ) : !sm || sm.status === 'untested' ? (
                         <span className="text-slate-400 text-[11px] flex items-center gap-1">
                           <HelpCircle className="w-3.5 h-3.5" /> Untested
                         </span>
                       ) : (
                         <span className="text-amber-600 font-bold text-[11px] flex items-center gap-1">
-                          <AlertTriangle className="w-3.5 h-3.5" /> {sm.masteryPercent}%
+                          <AlertTriangle className="w-3.5 h-3.5" /> {Math.round(sm.percent)}%
                         </span>
                       )}
                     </div>
@@ -229,17 +234,37 @@ export const PrintReportModal: React.FC<PrintReportModalProps> = ({ isOpen, onCl
             </div>
           </div>
 
+          {/* Top Misconceptions */}
+          {misconceptions.length > 0 && (
+            <div>
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+                Top Recurring Misconceptions
+              </h3>
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                {misconceptions.map(({ tag, count }) => (
+                  <div
+                    key={tag}
+                    className="p-2.5 rounded-xl border border-rose-200 bg-rose-50 flex items-center justify-between"
+                  >
+                    <span className="text-rose-900 font-semibold">{tag.replace(/-/g, ' ')}</span>
+                    <span className="text-rose-700 font-mono font-bold">{count}×</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Parent Strategy Recommendations */}
           <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-700 space-y-1.5">
             <h4 className="font-bold text-slate-900">Next Steps & Testing Recommendation:</h4>
             <p className="leading-relaxed">
-              1. <strong>Fractions Priority:</strong> Number and Operations—Fractions accounts for ~41% of the total exam weight. Focus heavily on unlike denominator mixed number subtraction with regrouping (NC.5.NF.1) and fraction division (NC.5.NF.7).
+              1. <strong>Focus by Blueprint Weight:</strong> Prioritize the domains with the highest NC EOG blueprint weight above, especially any still below the {passingPercent}% qualifying bar.
             </p>
             <p className="leading-relaxed">
-              2. <strong>Calculator Inactive Mastery:</strong> Ensure all multi-digit multiplication (NC.5.NBT.5) and division (NC.5.NBT.6) are completed accurately on paper without using a calculator.
+              2. <strong>Address Recurring Misconceptions:</strong> Review the misconceptions listed above with the student before their next practice session.
             </p>
             <p className="leading-relaxed">
-              3. <strong>Timed Mock Testing:</strong> Have the student complete at least two full 40-question mock exams within a 60-minute window before the Wake County test day.
+              3. <strong>Timed Mock Testing:</strong> Have the student complete at least two full mock exams within a 60-minute window before the Wake County test day.
             </p>
           </div>
         </div>

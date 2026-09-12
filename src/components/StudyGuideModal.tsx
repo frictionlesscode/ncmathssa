@@ -1,7 +1,8 @@
 import React from 'react';
 import { BookOpen, CheckCircle, AlertTriangle, Lightbulb, X, ArrowRight } from 'lucide-react';
 import { STUDY_GUIDES } from '../data/studyGuides';
-import { getStandardByCode } from '../curriculum/grade5';
+import { useProgress } from '../context/ProgressContext';
+import { standardsOf } from '../curriculum/registry';
 
 interface StudyGuideModalProps {
   standardCode: string | null;
@@ -14,10 +15,12 @@ export const StudyGuideModal: React.FC<StudyGuideModalProps> = ({
   onClose,
   onStartStandardDrill
 }) => {
+  const { curriculum } = useProgress();
+
   if (!standardCode) return null;
 
   const guide = STUDY_GUIDES[standardCode];
-  const standard = getStandardByCode(standardCode);
+  const standard = standardsOf(curriculum).find((s) => s.code === standardCode);
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">

@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import type { Question, QuizAttempt } from '../types';
 import { correctOption } from '../engine/questionModel';
-import { GRADE_5_AUTHORED } from '../curriculum/grade5/authored';
+import { useProgress } from '../context/ProgressContext';
 import { formatTime } from '../utils/answerChecker';
 
 interface QuizResultsProps {
@@ -31,10 +31,12 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
   onOpenStudyGuide,
   onDone
 }) => {
+  const { curriculum } = useProgress();
+  const passingPercent = curriculum.ssa.passingPercent;
   const [filter, setFilter] = useState<'all' | 'missed' | 'correct' | 'flagged'>('all');
   const [retryResults, setRetryResults] = useState<Record<string, boolean | null>>({});
 
-  // Confetti effect if passed SSA bar (>= 80%)
+  // Confetti effect if passed the SSA bar
   useEffect(() => {
     if (attempt.isPassingSSA) {
       try {
@@ -49,10 +51,17 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
     }
   }, [attempt.isPassingSSA]);
 
-  // Collect question objects
+  // Collect question objects. QuizRunner only ever draws authored questions,
+  // so every answer id resolves through the curriculum's authored source.
   const questionIds = Object.keys(attempt.answers);
   const questions: Question[] = questionIds
-    .map(id => GRADE_5_AUTHORED.find(q => q.id === id))
+    .map(id => {
+      try {
+        return curriculum.source.resolve({ kind: 'authored', id });
+      } catch {
+        return undefined;
+      }
+    })
     .filter((q): q is Question => q !== undefined);
 
   const missedQuestions = questions.filter(q => !attempt.answers[q.id]?.isCorrect);
@@ -93,7 +102,7 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
                   ? 'bg-emerald-600 text-white border-emerald-700'
                   : 'bg-amber-500 text-white border-amber-600'
               }`}>
-                {attempt.isPassingSSA ? '★ SSA Acceleration-Ready (Passed ≥ 80%)' : 'Needs Practice (Below 80% Cutoff)'}
+                {attempt.isPassingSSA ? `★ SSA Acceleration-Ready (Passed ≥ ${passingPercent}%)` : `Needs Practice (Below ${passingPercent}% Cutoff)`}
               </span>
               <span className="text-xs text-slate-500 font-mono">
                 {formatTime(attempt.timeElapsedSeconds)} Elapsed
@@ -104,8 +113,8 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
             </h1>
             <p className="text-xs sm:text-sm text-slate-600 max-w-xl">
               {attempt.isPassingSSA
-                ? 'Excellent mastery! Scoring at or above 80% satisfies the Wake County Single Subject Acceleration performance benchmark on this module.'
-                : 'Wake County SSA requires an 80% or higher score to accelerate. Review the missed questions below to identify and master weak concepts.'}
+                ? `Excellent mastery! Scoring at or above ${passingPercent}% satisfies the Wake County Single Subject Acceleration performance benchmark on this module.`
+                : `Wake County SSA requires a ${passingPercent}% or higher score to accelerate. Review the missed questions below to identify and master weak concepts.`}
             </p>
           </div>
 
@@ -123,7 +132,7 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
               {attempt.scoreRaw} of {attempt.scoreTotal} Correct
             </div>
             <div className="text-[11px] text-slate-500 mt-0.5">
-              Qualifying Bar: 80%
+              Qualifying Bar: {passingPercent}%
             </div>
           </div>
         </div>

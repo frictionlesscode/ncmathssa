@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Calendar, Target, Clock, X, Check, ArrowRight } from 'lucide-react';
+import { Calendar, Target, X, Check, ArrowRight } from 'lucide-react';
 
-import { useProgress } from '../context/ProgressContext';
+import { useProgress, useReadinessSummary } from '../context/ProgressContext';
+import { standardsOf } from '../curriculum/registry';
 
 interface StudyPaceModalProps {
   isOpen: boolean;
@@ -9,22 +10,22 @@ interface StudyPaceModalProps {
 }
 
 export const StudyPaceModal: React.FC<StudyPaceModalProps> = ({ isOpen, onClose }) => {
-  const { state, updateSettings, overallReadiness } = useProgress();
-  const [name, setName] = useState(state.settings.studentName);
-  const [examDate, setExamDate] = useState(state.settings.targetExamDate);
-  const [dailyGoal, setDailyGoal] = useState(state.settings.dailyQuestionGoal);
-  const [weeklyHours, setWeeklyHours] = useState(state.settings.weeklyStudyGoalHours);
+  const { profile, curriculum, updateActiveProfile } = useProgress();
+  const readiness = useReadinessSummary();
+  const totalStandardsCount = standardsOf(curriculum).length;
+  const [name, setName] = useState(profile.studentName);
+  const [examDate, setExamDate] = useState(profile.targetExamDate);
+  const [dailyGoal, setDailyGoal] = useState(profile.dailyQuestionGoal);
   const [saved, setSaved] = useState(false);
 
   if (!isOpen) return null;
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-    updateSettings({
+    updateActiveProfile({
       studentName: name,
       targetExamDate: examDate,
-      dailyQuestionGoal: Number(dailyGoal),
-      weeklyStudyGoalHours: Number(weeklyHours)
+      dailyQuestionGoal: Number(dailyGoal)
     });
     setSaved(true);
     setTimeout(() => {
@@ -83,40 +84,24 @@ export const StudyPaceModal: React.FC<StudyPaceModalProps> = ({ isOpen, onClose 
               required
             />
             <p className="text-[11px] text-slate-500 mt-1">
-              {overallReadiness.daysUntilExam} days remaining until test window.
+              {readiness.daysUntilExam} days remaining until test window.
             </p>
           </div>
 
           {/* Goals */}
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1">
-                <Target className="w-3.5 h-3.5 text-emerald-600" />
-                Daily Questions
-              </label>
-              <input
-                type="number"
-                min="3"
-                max="50"
-                value={dailyGoal}
-                onChange={e => setDailyGoal(Number(e.target.value))}
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5 text-emerald-600" />
-                Target Weekly Hours
-              </label>
-              <input
-                type="number"
-                min="1"
-                max="20"
-                value={weeklyHours}
-                onChange={e => setWeeklyHours(Number(e.target.value))}
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500"
-              />
-            </div>
+          <div>
+            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1">
+              <Target className="w-3.5 h-3.5 text-emerald-600" />
+              Daily Questions
+            </label>
+            <input
+              type="number"
+              min="3"
+              max="50"
+              value={dailyGoal}
+              onChange={e => setDailyGoal(Number(e.target.value))}
+              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500"
+            />
           </div>
 
           {/* Pace Analysis Card */}
@@ -124,11 +109,11 @@ export const StudyPaceModal: React.FC<StudyPaceModalProps> = ({ isOpen, onClose 
             <div className="flex items-center justify-between font-bold text-emerald-950">
               <span>Recommended Daily Pace:</span>
               <span className="px-2 py-0.5 bg-emerald-200/80 rounded-full font-extrabold text-emerald-900">
-                {overallReadiness.dailyQuestionsPace} questions/day
+                {readiness.dailyQuestionsPace} questions/day
               </span>
             </div>
             <p className="text-emerald-800 leading-relaxed">
-              At this pace, you will cover all 16 Grade 5 NCSCOS standards, reinforce weak spots, and complete full mock assessments well before testing.
+              At this pace, you will cover all {totalStandardsCount} Grade {curriculum.grade} NCSCOS standards, reinforce weak spots, and complete full mock assessments well before testing.
             </p>
           </div>
 

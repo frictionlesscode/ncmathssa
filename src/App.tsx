@@ -19,7 +19,7 @@ import {
 } from './data/quizzes';
 
 const MainApp: React.FC = () => {
-  const { recordQuizAttempt } = useProgress();
+  const { recordAttempt } = useProgress();
 
   const [currentTab, setCurrentTab] = useState<NavTab>('dashboard');
   const [activeQuiz, setActiveQuiz] = useState<QuizDefinition | null>(null);
@@ -53,9 +53,14 @@ const MainApp: React.FC = () => {
     setActiveQuiz(drill);
   };
 
-  // Handle quiz completion
+  // Handle quiz completion. QuizRunner only ever draws its question ids
+  // from the authored bank, so every answer maps to an authored QuestionRef.
   const handleFinishQuiz = (attempt: QuizAttempt) => {
-    recordQuizAttempt(attempt);
+    const results = Object.entries(attempt.answers).map(([questionId, ans]) => ({
+      ref: { kind: 'authored' as const, id: questionId },
+      wasCorrect: ans.isCorrect
+    }));
+    recordAttempt(attempt, results);
     setCompletedAttempt(attempt);
     setActiveQuiz(null);
   };
