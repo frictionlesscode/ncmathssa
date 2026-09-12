@@ -11,7 +11,11 @@ export type MisconceptionFamily =
   | 'unit-conversion'
   | 'order-of-operations'
   | 'coordinate-plane'
-  | 'incomplete-procedure';
+  | 'incomplete-procedure'
+  /** Reasoning about what a shape IS - its definition and its place in the
+   *  polygon hierarchy (e.g. "is every square a rectangle?") - as distinct
+   *  from measuring or computing with a shape once it's identified. */
+  | 'shape-classification';
 
 export interface MisconceptionInfo {
   tag: string;
@@ -82,7 +86,7 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
     ),
     entry(
       'classified-by-one-property-only',
-      'geometry-and-measurement',
+      'shape-classification',
       "Classified the shape using only one of its properties instead of checking every property needed for the most specific name.",
     ),
     entry(
@@ -182,7 +186,7 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
     ),
     entry(
       'exclusive-trapezoid-definition',
-      'geometry-and-measurement',
+      'shape-classification',
       "Used the exclusive definition of a trapezoid (exactly one pair of parallel sides) instead of NC's inclusive definition (at least one pair).",
     ),
     entry(
@@ -202,23 +206,23 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
     ),
     entry(
       'hierarchy-inverted',
-      'geometry-and-measurement',
+      'shape-classification',
       'Reversed a shape-category containment relationship, claiming the broader category is a member of the narrower one.',
     ),
     entry(
       'hierarchy-too-broad',
-      'geometry-and-measurement',
+      'shape-classification',
       'Applied a shape category to a broader set of shapes than its definition actually allows.',
     ),
     entry(
       'hierarchy-too-narrow',
-      'geometry-and-measurement',
+      'shape-classification',
       'Denied a valid containment between shape categories, treating them as more separate than they really are.',
     ),
     entry(
       'ignored-a-constraint',
-      'geometry-and-measurement',
-      "Used some of the shape's given properties but ignored one stated constraint that ruled out the chosen answer.",
+      'shape-classification',
+      "Used some of the shape's given properties but ignored one stated definitional constraint that ruled out the chosen answer.",
     ),
     entry(
       'ignored-grouping-symbols',
@@ -312,7 +316,7 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
     ),
     entry(
       'named-a-broader-category',
-      'geometry-and-measurement',
+      'shape-classification',
       'Gave a true but less specific shape name instead of the most specific category that fits every given property.',
     ),
     entry(
@@ -342,7 +346,7 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
     ),
     entry(
       'property-inherited-upward',
-      'geometry-and-measurement',
+      'shape-classification',
       "Applied a special shape's property to the whole broader category it belongs to, when the property does not hold for every member.",
     ),
     entry(
