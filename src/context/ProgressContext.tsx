@@ -23,6 +23,14 @@ export interface ProgressContextValue {
    *  UI needs some way to persist an edit, and the profile record is where
    *  those fields now live. */
   updateActiveProfile(patch: Partial<Omit<Profile, 'id' | 'attempts' | 'reviewQueue'>>): void;
+  /** Erases the active profile's attempt history and review queue, in
+   *  service of the first-run promise that "everything stays on this
+   *  device" — a promise that has to include the ability to remove it. */
+  clearActiveProfileHistory(): void;
+  /** Deletes a profile entirely. Refuses to delete the last remaining
+   *  profile (there must always be at least one), and reassigns
+   *  activeProfileId to another profile if the active one is removed. */
+  deleteProfile(id: string): void;
 }
 
 const ProgressContext = createContext<ProgressContextValue | undefined>(undefined);
@@ -89,6 +97,26 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     [],
   );
 
+  const clearActiveProfileHistory = useCallback(() => {
+    setState((prev) => ({
+      ...prev,
+      profiles: prev.profiles.map((p) =>
+        p.id === prev.activeProfileId ? { ...p, attempts: [], reviewQueue: {} } : p,
+      ),
+    }));
+  }, []);
+
+  const deleteProfile = useCallback((id: string) => {
+    setState((prev) => {
+      if (prev.profiles.length <= 1) return prev;
+      const profiles = prev.profiles.filter((p) => p.id !== id);
+      if (profiles.length === prev.profiles.length) return prev;
+      const activeProfileId =
+        prev.activeProfileId === id ? profiles[0].id : prev.activeProfileId;
+      return { ...prev, profiles, activeProfileId };
+    });
+  }, []);
+
   const value: ProgressContextValue = useMemo(
     () => ({
       state,
@@ -100,8 +128,22 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       addProfile,
       recordAttempt,
       updateActiveProfile,
+      clearActiveProfileHistory,
+      deleteProfile,
     }),
-    [state, profile, curriculum, mastery, readiness, switchProfile, addProfile, recordAttempt, updateActiveProfile],
+    [
+      state,
+      profile,
+      curriculum,
+      mastery,
+      readiness,
+      switchProfile,
+      addProfile,
+      recordAttempt,
+      updateActiveProfile,
+      clearActiveProfileHistory,
+      deleteProfile,
+    ],
   );
 
   return <ProgressContext.Provider value={value}>{children}</ProgressContext.Provider>;

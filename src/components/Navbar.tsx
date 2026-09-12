@@ -6,7 +6,9 @@ import {
   Layers,
   Printer,
   RotateCcw,
+  Settings,
   Target,
+  Trash2,
   UserPlus,
   X
 } from 'lucide-react';
@@ -30,7 +32,15 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenPaceModal,
   onOpenReportModal
 }) => {
-  const { state, profile, curriculum, switchProfile, addProfile } = useProgress();
+  const {
+    state,
+    profile,
+    curriculum,
+    switchProfile,
+    addProfile,
+    clearActiveProfileHistory,
+    deleteProfile
+  } = useProgress();
   const readiness = useReadinessSummary();
 
   const dueReviewCount = dueEntries(profile.reviewQueue, new Date()).length;
@@ -39,6 +49,20 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [isAddingProfile, setIsAddingProfile] = useState(false);
   const [newProfileName, setNewProfileName] = useState('');
   const [newProfileGrade, setNewProfileGrade] = useState<Grade>(availableCurricula[0].grade);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [confirmingAction, setConfirmingAction] = useState<'clear' | 'delete' | null>(null);
+
+  const handleClearHistory = () => {
+    clearActiveProfileHistory();
+    setConfirmingAction(null);
+    setIsProfileMenuOpen(false);
+  };
+
+  const handleDeleteProfile = () => {
+    deleteProfile(profile.id);
+    setConfirmingAction(null);
+    setIsProfileMenuOpen(false);
+  };
 
   const handleSubmitNewProfile = (e: React.FormEvent) => {
     e.preventDefault();
@@ -179,6 +203,102 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <UserPlus className="w-4 h-4" />
             </button>
+
+            <button
+              onClick={() => {
+                setIsProfileMenuOpen((v) => !v);
+                setConfirmingAction(null);
+              }}
+              className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors"
+              title="Profile data settings"
+              aria-label="Profile data settings"
+            >
+              <Settings className="w-4 h-4" />
+            </button>
+
+            {isProfileMenuOpen && (
+              <div className="absolute top-full right-0 mt-2 z-50 bg-white border border-slate-200 rounded-2xl shadow-xl p-4 w-72">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-black text-slate-900">
+                    {profile.studentName || 'This profile'}&apos;s data
+                  </span>
+                  <button
+                    onClick={() => {
+                      setIsProfileMenuOpen(false);
+                      setConfirmingAction(null);
+                    }}
+                    className="p-1 text-slate-400 hover:text-slate-700 rounded-lg"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+                <p className="text-[11px] text-slate-500 mb-3 leading-relaxed">
+                  Everything stays on this device. You can erase it here, any time.
+                </p>
+
+                {confirmingAction === 'clear' ? (
+                  <div className="space-y-2 mb-2 p-3 bg-rose-50 border border-rose-200 rounded-xl">
+                    <p className="text-[11px] font-semibold text-rose-800">
+                      Erase all test history and review queue for this profile? This cannot be undone.
+                    </p>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={handleClearHistory}
+                        className="flex-1 px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-[11px] rounded-lg transition-colors"
+                      >
+                        Yes, erase history
+                      </button>
+                      <button
+                        onClick={() => setConfirmingAction(null)}
+                        className="flex-1 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] rounded-lg transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setConfirmingAction('clear')}
+                    className="w-full flex items-center gap-2 px-3 py-2 mb-2 text-left text-xs font-bold text-slate-700 hover:bg-slate-50 rounded-xl transition-colors"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5 text-slate-500" />
+                    Clear this profile&apos;s history
+                  </button>
+                )}
+
+                {state.profiles.length > 1 && (
+                  confirmingAction === 'delete' ? (
+                    <div className="space-y-2 p-3 bg-rose-50 border border-rose-200 rounded-xl">
+                      <p className="text-[11px] font-semibold text-rose-800">
+                        Delete this entire profile, including its history? This cannot be undone.
+                      </p>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={handleDeleteProfile}
+                          className="flex-1 px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-[11px] rounded-lg transition-colors"
+                        >
+                          Yes, delete profile
+                        </button>
+                        <button
+                          onClick={() => setConfirmingAction(null)}
+                          className="flex-1 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] rounded-lg transition-colors"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => setConfirmingAction('delete')}
+                      className="w-full flex items-center gap-2 px-3 py-2 text-left text-xs font-bold text-rose-600 hover:bg-rose-50 rounded-xl transition-colors"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      Delete this profile
+                    </button>
+                  )
+                )}
+              </div>
+            )}
 
             {isAddingProfile && (
               <div className="absolute top-full right-0 mt-2 z-50 bg-white border border-slate-200 rounded-2xl shadow-xl p-4 w-64">
