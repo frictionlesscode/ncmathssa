@@ -2,9 +2,9 @@ import { describe, it, expect } from 'vitest';
 import { MISCONCEPTIONS } from './misconceptions';
 import { GRADE_5_AUTHORED } from './grade5/authored';
 import { makeRng } from '../engine/rng';
-import { nf1AddUnlike } from './grade5/templates/nf1-add-unlike';
+import { GRADE_5_TEMPLATES } from './grade5/templates';
 
-const GENERATED_TEMPLATES = [nf1AddUnlike];
+const GENERATED_TEMPLATES = GRADE_5_TEMPLATES;
 
 /** Tags used anywhere in content: authored items plus every misconception a
  *  generator can emit, sampled across many seeds so a rare distractor still
