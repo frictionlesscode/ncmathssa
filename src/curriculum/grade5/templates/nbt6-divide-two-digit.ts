@@ -12,7 +12,7 @@ import { labelOptions } from '../../../engine/questionModel';
  *   answer      "q R r"
  *   no leftover "q"                  remainder thrown away
  *   multiplied  "n*d"                multiplied instead of dividing
- *   shifted     "10q R r"            quotient digits one place too far left
+ *   shifted     "10q R r"            quotient digits one column too far left
  *
  * Two of the four carry " R ", two do not, so the only pairs that could
  * collide are (answer, shifted) and (no leftover, multiplied):
@@ -47,7 +47,15 @@ export const nbt6DivideTwoDigit: QuestionTemplate = {
       { text: answer, isCorrect: true },
       { text: remainderIgnored, isCorrect: false, misconception: 'ignored-remainder' },
       { text: multiplied, isCorrect: false, misconception: 'multiplied-instead-of-divided' },
-      { text: quotientShifted, isCorrect: false, misconception: 'decimal-point-misplaced' },
+      {
+        text: quotientShifted,
+        isCorrect: false,
+        // Deliberately not decimal-point-misplaced: no decimal point appears
+        // anywhere in this item, and these tags drive the parent-facing
+        // diagnostic. The value is a quotient digit recorded one column too
+        // far left, which is precisely what this tag names.
+        misconception: 'misplaced-digits-in-the-quotient',
+      },
     ];
 
     const texts = candidates.map((c) => c.text);

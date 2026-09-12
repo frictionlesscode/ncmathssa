@@ -61,8 +61,17 @@ describe('nbt6DivideTwoDigit', () => {
         expect(optionText(g, 'ignored-remainder')).toBe(`${quotient}`);
         // Multiplied the two numbers instead of dividing.
         expect(optionText(g, 'multiplied-instead-of-divided')).toBe(`${dividend * divisor}`);
-        // Quotient digits written one place too far left.
-        expect(optionText(g, 'decimal-point-misplaced')).toBe(`${quotient * 10} R ${remainder}`);
+        // Quotient digits written one column too far left.
+        expect(optionText(g, 'misplaced-digits-in-the-quotient')).toBe(
+          `${quotient * 10} R ${remainder}`,
+        );
+        // Nothing in this item contains a decimal point, so no option may
+        // claim a decimal error — these tags feed the parent diagnostic.
+        expect(g.promptDetails).not.toContain('.');
+        for (const o of g.options) {
+          expect(o.text).not.toContain('.');
+          expect(o.misconception).not.toBe('decimal-point-misplaced');
+        }
       });
     }
   });
