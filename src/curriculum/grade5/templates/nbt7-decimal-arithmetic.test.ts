@@ -101,7 +101,7 @@ describe('nbt7DecimalArithmetic', () => {
     for (const seed of [4, 31, 512, 4912, 20250911]) {
       it(`seed ${seed}`, () => {
         const g = nbt7DecimalArithmetic.generate(makeRng(seed));
-        const { left, right, op, leftCents, rightCents } = parse(g.promptDetails ?? '');
+        const { left, op, leftCents, rightCents } = parse(g.promptDetails ?? '');
         // The operand printed to tenths is the one that slides a place when
         // the columns are aligned on their last digit instead of the point.
         const shortIsLeft = places(left) === 1;
