@@ -95,6 +95,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Switched to a common denominator but forgot to rescale the numerators to match it.',
     ),
     entry(
+      'compared-by-digit-count',
+      'place-value-and-decimals',
+      'Judged a decimal as larger because its decimal part has more digits, reading those digits as a whole number instead of by place value.',
+    ),
+    entry(
       'compared-decimals-right-to-left',
       'place-value-and-decimals',
       'Compared the decimals starting from the rightmost digit instead of the leftmost, most significant place.',
