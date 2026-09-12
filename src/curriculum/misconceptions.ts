@@ -267,7 +267,7 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
     entry(
       'inverted-both-fractions',
       'fraction-operations',
-      'Took the reciprocal of both fractions in a division problem instead of only the divisor.',
+      'Took the reciprocal of both fractions instead of leaving them as written — division flips only the divisor, and multiplication flips nothing.',
     ),
     entry(
       'inverted-the-ratio',
