@@ -34,11 +34,16 @@ export const Dashboard: React.FC<DashboardProps> = ({
   const totalStandardsCount = standardsOf(curriculum).length;
   const dueReviewCount = dueEntries(profile.reviewQueue, new Date()).length;
 
+  // Both are found by their flag, not by a literal id: Grade 4's are
+  // `g4-diagnostic-01` and `g4-mock-ssa-01`, so a grade-5 id here would
+  // silently blank the simulation card and leave the diagnostic prompt
+  // showing forever for every other grade.
   const diagnosticQuiz = curriculum.quizzes.find(q => q.isDiagnostic);
-  const mockQuiz = curriculum.quizzes.find(q => q.id === 'mock-ssa-01');
+  const mockQuiz = curriculum.quizzes.find(q => q.isMockAssessment);
 
   // Check if diagnostic has been taken
-  const hasTakenDiagnostic = profile.attempts.some(a => a.quizId === 'diagnostic-01');
+  const hasTakenDiagnostic = !!diagnosticQuiz
+    && profile.attempts.some(a => a.quizId === diagnosticQuiz.id);
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-in fade-in duration-200">

@@ -11,13 +11,13 @@ describe('registry', () => {
   });
 
   it('throws for a grade with no curriculum module', () => {
-    // Grades 1-4 are a later plan; asking for one must fail loudly,
+    // Grades 1-3 are a later batch; asking for one must fail loudly,
     // not return an empty curriculum that renders as a blank app.
     expect(() => getCurriculum(3)).toThrow(/no curriculum/i);
   });
 
   it('lists only grades that actually have modules', () => {
-    expect(listCurricula().map((c) => c.grade)).toEqual([5]);
+    expect(listCurricula().map((c) => c.grade)).toEqual([4, 5]);
   });
 });
 

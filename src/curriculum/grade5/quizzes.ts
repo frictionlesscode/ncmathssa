@@ -118,10 +118,6 @@ export const GRADE_5_QUIZZES: QuizDefinition[] = [
   }
 ];
 
-export function getQuizById(quizId: string): QuizDefinition | undefined {
-  return GRADE_5_QUIZZES.find(q => q.id === quizId);
-}
-
 /**
  * Creates a dynamic custom drill for a single standard, drawing every
  * authored question for that standard from the active curriculum's

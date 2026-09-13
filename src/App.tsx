@@ -19,8 +19,7 @@ import type { QuestionRef } from './engine/questionModel';
 import {
   createAdaptiveSessionDrill,
   createMissedQuestionsDrill,
-  createStandardDrill,
-  getQuizById
+  createStandardDrill
 } from './curriculum/grade5/quizzes';
 
 const MainApp: React.FC = () => {
@@ -44,9 +43,14 @@ const MainApp: React.FC = () => {
     return () => window.removeEventListener('beforeunload', warn);
   }, [activeQuiz]);
 
+  // A quiz id is only meaningful within the active grade: `g4-mod-nf-01`
+  // exists in Grade 4's set and nowhere else, so the lookup runs over
+  // `curriculum.quizzes` rather than over one grade's exported bank.
+  const findQuiz = (quizId: string) => curriculum.quizzes.find(q => q.id === quizId);
+
   // Launch a pre-defined quiz
   const handleStartQuiz = (quizId: string) => {
-    const quiz = getQuizById(quizId);
+    const quiz = findQuiz(quizId);
     if (quiz) {
       setCompletedAttempt(null);
       setActiveQuiz(quiz);
@@ -92,7 +96,7 @@ const MainApp: React.FC = () => {
   const handleRetake = () => {
     if (completedAttempt) {
       const fallbackStandard = completedAttempt.standardCode ?? standardsOf(curriculum)[0]?.code;
-      const quiz = getQuizById(completedAttempt.quizId)
+      const quiz = findQuiz(completedAttempt.quizId)
         || (fallbackStandard ? createStandardDrill(fallbackStandard, curriculum) : undefined);
       if (quiz) {
         setCompletedAttempt(null);

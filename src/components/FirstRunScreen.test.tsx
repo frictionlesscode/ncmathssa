@@ -36,6 +36,8 @@ describe('FirstRunScreen', () => {
   it('offers only grades that have a curriculum', () => {
     render(<FirstRunScreen onComplete={vi.fn()} />);
     const options = screen.getAllByRole('option').map((o) => (o as HTMLOptionElement).value);
-    expect(options).toEqual(['5']);
+    // Grades 4 and 5 are registered; 1-3 are a later batch and must not be
+    // offered, because choosing one would land on an empty curriculum.
+    expect(options).toEqual(['4', '5']);
   });
 });
