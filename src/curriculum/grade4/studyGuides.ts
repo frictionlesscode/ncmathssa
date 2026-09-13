@@ -39,8 +39,8 @@ export const GRADE_4_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     ],
     commonTraps: [
       'Adding the same number to both parts instead of multiplying: 2/3 becomes 11/12, which is nearly a whole, while 2/3 is only a little over half. Adding the same amount to both parts does not preserve a fraction; only multiplying does.',
-      'Keeping the old numerator after the parts are re-cut. Answering 3/12 when the rectangle was re-cut shades only half as much as before - the new lines cannot have removed any shading.',
-      'Using the denominator as the new numerator, as if the bottom number told you how many parts are shaded.',
+      'Keeping the old numerator after the parts are re-cut. Answering 2/12 leaves only a quarter of the shading there was before, and the new pencil lines cannot have removed any shading.',
+      'Using the denominator as the new numerator, as if the bottom number told you how many parts are shaded. On this rectangle that gives 3/12, which is less than half the 8/12 that is really shaded.',
       'Comparing numerators only, or denominators only. Neither number decides anything on its own - more parts, each smaller, can land on exactly the same amount.',
     ],
     workedExample: {
@@ -111,7 +111,7 @@ export const GRADE_4_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       { label: 'Word problems', detail: 'Write the equation from the picture first - a bar or number line - then compute.' },
     ],
     stepByStepMethod: [
-      'Step 1: Check that both fractions have the same denominator. At Grade 4 they always will.',
+      'Step 1: Check that both fractions have the same denominator. In this standard they always do - tenths added to hundredths is the separate skill in the decimals guide, NC.4.NF.6.',
       'Step 2: If it is a subtraction and the top fraction is too small, trade one whole for that many fifths, eighths or twelfths first.',
       'Step 3: Add or subtract the whole numbers.',
       'Step 4: Add or subtract the numerators only. Write the same denominator underneath.',
@@ -325,9 +325,9 @@ export const GRADE_4_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       'Step 5: For expanded form, write the value of each non-zero box and join them with plus signs.',
     ],
     commonTraps: [
-      'Writing the digits in the order you hear them, so a place that was never spoken is quietly skipped and the number comes out nearly a thousand too large.',
+      'Writing the digits in the order you hear them, so a place nobody spoke is quietly skipped. On this number that gives 6,318 - nearly ten times too small, because nothing was left holding the thousands place.',
       'Reading two spoken digits as neighbors when a zero sits between them - that zero is worth a whole place.',
-      'Writing just the digits that appear, giving a number about a hundred times too small, because two empty places were never held open.',
+      'Writing only the digits you can hear, so "sixty thousand eighteen" comes out 6,018 instead of 60,018. Every place you skip makes the number ten times too small.',
       'Stopping at standard form when the question also asked for expanded form.',
     ],
     workedExample: {
@@ -369,7 +369,7 @@ export const GRADE_4_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     commonTraps: [
       'Starting at the ones digit, which gets it exactly backwards - 8 ones look bigger than 0 ones while 0 tens are what actually decide it.',
       'Reading the digits straight across without counting places, so a big digit in a small place wins an argument it should lose.',
-      'Being fooled by a large leading digit: a leading 9 makes 9,984 look like the biggest number on the page when it is the smallest by about 61,000.',
+      'Being fooled by a large leading digit. A leading 9 makes 9,984 look bigger than 60,318, but 9,984 has only four digits and is more than 50,000 smaller.',
       'Stopping the comparison too soon, before reaching the first place where the numbers actually differ.',
       'Ordering from the wrong end when the question asked for least to greatest.',
     ],
@@ -414,7 +414,7 @@ export const GRADE_4_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       'Borrowing without reducing the next column, so the number you borrowed from is used at full value twice.',
       'Carrying into the wrong column, which moves the regrouped ten into a place it was never worth.',
       'Adding when the story called for subtracting, or the other way round.',
-      'Forgetting the final step, so a two-part story stops in the middle - answering what the library had after giving books away, rather than what the question asked.',
+      'Forgetting the final step, so a two-part story stops in the middle and the number from step one is handed in as the answer.',
     ],
     workedExample: {
       problem: 'A stadium sold 24,600 tickets for the season. 18,475 of them were sold online. How many were not sold online?',
@@ -454,7 +454,7 @@ export const GRADE_4_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       'Step 6: Compare with your estimate. If they are far apart, look for a dropped zero or a mis-added carry.',
     ],
     commonTraps: [
-      'Adding a carry before multiplying instead of after. A carry is added AFTER the next column is multiplied, never before - adding it first turns 40 x 8 into 90 x 8.',
+      'Adding a carry before multiplying instead of after. In 36 x 4, the 2 carried from 6 x 4 = 24 is added to 3 x 4 = 12 to give 14. Adding it to the 3 first would give 5 x 4 = 20 and a partial product of 204 instead of 144.',
       'Dropping the partial product zero, which makes the second line ten times too small. An estimate catches it instantly: 36 x 24 is close to 1,000, so 216 is nowhere near right.',
       'Multiplying each digit without carrying at all.',
       'Multiplying by the tens digit and then ADDING the ones digit instead of multiplying by it.',
@@ -500,7 +500,7 @@ export const GRADE_4_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       'Stopping the division too early, so the remainder is bigger than the divisor. A remainder larger than the divisor always means another group still fits.',
       'Ignoring the remainder, which leaves children standing on the sidewalk or without a bed. A remainder that represents people always needs a place of its own.',
       'Reporting the remainder without interpreting it, when the question asked how many vans or boxes are needed.',
-      'Dropping a zero in the quotient. Multiplying the quotient back by the divisor catches it in one step: 26 x 4 = 104, nowhere near 824.',
+      'Dropping a zero in the quotient, so 824 / 4 comes out 26 instead of 206. Multiplying the quotient back by the divisor catches it in one step: 26 x 4 = 104, nowhere near 824.',
       'Subtracting or multiplying when the story called for dividing.',
     ],
     workedExample: {
@@ -585,7 +585,7 @@ export const GRADE_4_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     commonTraps: [
       'Inverting the conversion and dividing. That gives 0.3 centimeters for a 30-meter hallway, which is thinner than a pencil - a hallway cannot become a number smaller than 30 just by renaming its unit.',
       'Using the wrong conversion factor, such as 100 where the conversion needs 1,000.',
-      'Extending the table one row at a time by adding, so 4,000 is copied down to the 6 kilogram row. Check the rule against EVERY filled row, not just the last one.',
+      'Extending the table one row at a time instead of applying the rule, so the 6 kilogram row is filled with 4,000 - the answer belonging to the row above it. Check the rule against EVERY filled row, not just the last one.',
       'Omitting part of the measurement - converting the liters and then forgetting the 250 milliliters entirely.',
       'Adding two measurements without converting them to the same unit first.',
     ],
@@ -617,11 +617,12 @@ export const GRADE_4_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       { label: 'Check by going back', detail: 'Add the interval to the start time again and see if you land on the end time.' },
     ],
     stepByStepMethod: [
-      'Step 1: Write down the start time and what the question is really asking - an end time, a start time, or how long something lasted.',
-      'Step 2: Find the minutes REMAINING to the next full hour: 60 minus the minutes showing.',
-      'Step 3: Take that many minutes out of the interval and move the clock to that full hour.',
-      'Step 4: Add whatever is left of the interval into the new hour.',
-      'Step 5: Check that your minutes are under 60, and check by working backwards.',
+      'Step 1: Write down the times you are given and decide which of three things the question wants: an end time, a start time, or how long something lasted.',
+      'Step 2: Find the minutes REMAINING to the next full hour: 60 minus the minutes showing on the earlier time.',
+      'Step 3: For an END time, compare the interval with those remaining minutes. If the interval is smaller, just add it on - you never leave the hour. If it is bigger, use the remaining minutes to reach the full hour and then add what is left of the interval into the new hour.',
+      'Step 4: For HOW LONG something lasted, count in three parts: the minutes from the start time up to the next full hour, then any whole hours after that, then the minutes past the last full hour. Add the three parts.',
+      'Step 5: For a START time, work backwards from the end time: take off enough minutes to drop to the full hour below it, then take the rest of the interval off from there.',
+      'Step 6: Check that no part of your answer holds 60 or more minutes, and check by working the other direction.',
     ],
     commonTraps: [
       'Adding the minutes straight down to get something like "4:95". No clock ever shows 4:95 - once the minutes reach 60 they become an hour. Any answer with 60 or more minutes is a signal to trade.',
@@ -631,15 +632,18 @@ export const GRADE_4_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       'Forgetting the final step - taking off the ride but not the getting-ready time. A multi-step problem is not finished until every interval named in it has been used.',
     ],
     workedExample: {
-      problem: 'A film starts at 3:45 p.m. and lasts 50 minutes. What time does it finish?',
+      problem: '(a) A film starts at 3:45 p.m. and lasts 50 minutes. What time does it finish? (b) The next film runs from 5:10 p.m. to 6:05 p.m. How long is it?',
       steps: [
-        '1. Start at 3:45 p.m. and the interval is 50 minutes.',
+        '1. Part (a) wants an END time. Start at 3:45 p.m., interval 50 minutes.',
         '2. Minutes remaining to 4:00: 60 - 45 = 15 minutes.',
-        '3. Use 15 of the 50 minutes to reach 4:00 p.m. That leaves 50 - 15 = 35 minutes.',
+        '3. 50 minutes is bigger than 15, so use 15 of them to reach 4:00 p.m. That leaves 50 - 15 = 35 minutes.',
         '4. Add the remaining 35 minutes into the new hour: 4:00 + 35 minutes = 4:35 p.m.',
-        '5. Check backwards: from 3:45 to 4:35 is 15 + 35 = 50 minutes.',
+        '5. Part (b) wants HOW LONG, so count it in parts. From 5:10 p.m. up to 6:00 p.m. is 60 - 10 = 50 minutes.',
+        '6. There are no whole hours after 6:00 p.m., and the end time is 5 minutes past it.',
+        '7. Add the parts: 50 + 5 = 55 minutes.',
+        '8. Check (a) backwards: from 3:45 to 4:35 is 15 + 35 = 50 minutes. Check (b) forwards: 5:10 plus 55 minutes is 5:10 + 50 = 6:00, then 5 more, which is 6:05 p.m.',
       ],
-      answer: '4:35 p.m.',
+      answer: '(a) 4:35 p.m.   (b) 55 minutes',
       whyItMattersForSSA:
         'Elapsed time lives in Measurement and Data, which NCDPI weights together with Geometry as one reporting category worth 23–27% of the Grade 4 EOG, and it is the standard where a child who is fluent in base ten still has to remember that sixty, not a hundred, makes the next unit.',
     },
@@ -669,7 +673,7 @@ export const GRADE_4_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       'Using the area formula when the question asked for perimeter. Multiplying 13 x 9 gives 117, the number of square meters of floor - which would be right if she were carpeting the room, not trimming its edge.',
       'Using the perimeter formula when the question asked for area.',
       'Adding the length and the width once each, which reports half of a perimeter.',
-      'Multiplying every side length together. That gives 280 for a 13 by 9 room, nearly seven times the real floor - each rectangle uses only its OWN two dimensions.',
+      'Multiplying every side length together on an L-shape. For a figure made of a 7 by 5 rectangle and a 4 by 2 rectangle, 7 x 5 x 4 x 2 = 280, nearly seven times its real area of 43 square meters - each rectangle uses only its OWN two dimensions, and the two areas are then ADDED.',
       'Omitting one part of a composite figure, so a whole rectangle of the L-shape is never counted.',
       'Assuming a longer side means a greater area. A long pen looks roomier, but 11 by 1 encloses only 11 square meters - less than a third of what the same fencing gives as a 6 by 6 square.',
     ],
@@ -970,7 +974,7 @@ export const GRADE_4_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     ],
     commonTraps: [
       'Forgetting the final step. Stopping at 96 answers "how many were baked", which is the step before the one the problem asked about.',
-      'Ignoring the remainder, which leaves four children standing on the sidewalk when the remainder needed a van of its own.',
+      'Ignoring the remainder, which leaves children standing on the sidewalk when the remainder needed a van of its own.',
       'Reporting the remainder without interpreting it, when the question asked how many vans are needed.',
       'Reporting the estimate. An estimate answers "about how much", and some problems use the word "exactly".',
       'Writing the equation without grouping, so only part of it is operated on.',

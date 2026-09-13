@@ -26,6 +26,24 @@ function citedPercents(text: string): { matched: string; numbers: string[] }[] {
   }));
 }
 
+/** The two endpoints of an `officialWeightRange` such as "30–34%". Compared as
+ *  a PAIR, never as a substring of the range string: "30–34%".includes('3') is
+ *  true, so a substring test would pass "Fractions are 3% of the test", and
+ *  "25–29%".includes('25') would pass the point value 25% that NCDPI never
+ *  published for Base Ten (its midpoint is 27). */
+function bandEndpoints(range: string): [string, string] {
+  const m = /^(\d+)\s*[-–—]\s*(\d+)\s*%$/.exec(range.trim());
+  if (!m) throw new Error(`officialWeightRange "${range}" is not a band`);
+  return [m[1], m[2]];
+}
+
+/** Ruling 10.1 binds the SENTENCE carrying the figure, not the field: "Geometry
+ *  is 23–27%. Measurement and Data is tested alongside it." makes the banned
+ *  single-domain claim while the field as a whole names both domains. */
+function sentencesOf(text: string): string[] {
+  return text.split(/(?<=[.!?])\s+/).filter((s) => s.trim().length > 0);
+}
+
 describe('grade 4 study guides', () => {
   it('writes one guide per standard, keyed by its own code', () => {
     for (const s of STANDARDS) {
@@ -65,15 +83,16 @@ describe('grade 4 study guides', () => {
     for (const [code, g] of Object.entries(GRADE_4_STUDY_GUIDES)) {
       const domain = DOMAIN_OF.get(code);
       expect(domain, `${code} is not a grade 4 standard`).toBeTruthy();
+      const [low, high] = bandEndpoints(domain!.officialWeightRange);
       const cited = citedPercents(g.workedExample.whyItMattersForSSA);
       expect(cited.length, `${code} cites no blueprint figure`).toBeGreaterThan(0);
       for (const { matched, numbers } of cited) {
-        for (const n of numbers) {
-          expect(
-            domain!.officialWeightRange.includes(n),
-            `${code} cites "${matched}", which is not the ${domain!.id} band ${domain!.officialWeightRange}`,
-          ).toBe(true);
-        }
+        // The whole expression must be the band - both endpoints, in order.
+        // A lone endpoint is a point value the blueprint does not publish.
+        expect(
+          numbers.length === 2 && numbers[0] === low && numbers[1] === high,
+          `${code} cites "${matched}", which is not the ${domain!.id} band ${domain!.officialWeightRange}`,
+        ).toBe(true);
       }
     }
   });
@@ -86,13 +105,15 @@ describe('grade 4 study guides', () => {
     for (const [code, g] of Object.entries(GRADE_4_STUDY_GUIDES)) {
       const domain = DOMAIN_OF.get(code);
       if (!domain?.weightGroup) continue;
-      const why = g.workedExample.whyItMattersForSSA;
-      for (const { matched } of citedPercents(why)) {
-        expect(
-          /measurement/i.test(why) && /geometry/i.test(why),
-          `${code} cites "${matched}" without naming both Measurement and Geometry, ` +
-            'which claims a weight for one domain inside a combined band',
-        ).toBe(true);
+      for (const sentence of sentencesOf(g.workedExample.whyItMattersForSSA)) {
+        for (const { matched } of citedPercents(sentence)) {
+          expect(
+            /measurement/i.test(sentence) && /geometry/i.test(sentence),
+            `${code} cites "${matched}" in a sentence that does not name both ` +
+              `Measurement and Geometry, which claims a weight for one domain ` +
+              `inside a combined band: "${sentence.trim()}"`,
+          ).toBe(true);
+        }
       }
     }
   });
