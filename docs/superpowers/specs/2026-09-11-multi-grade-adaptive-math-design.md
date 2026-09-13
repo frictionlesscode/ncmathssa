@@ -222,6 +222,32 @@ says nothing about cause; a consistently chosen distractor names the misconcepti
 app tallies misconception selections per standard and surfaces them in the weak-spots
 view and the parent report.
 
+### 6.5 One template, one skill
+
+A template's modes must be the same skill at different numbers, never two
+different procedures behind one `id`.
+
+`ReviewKey` is deliberately seedless (§7.2): a generated item is scheduled as
+`{kind:'generated', templateId}`, and when the review falls due the session
+composer re-realizes it at a **fresh random seed**. That is what makes spaced
+repetition work for generators — the child meets the same skill with new
+numbers rather than memorising one instance.
+
+It also means a template that branches on the seed between two procedures is
+unschedulable. A Grade 4 `add-subtract` template did exactly this. A child who
+missed a subtraction files one review key; at review time the coin-flip serves
+addition half the time; answering it correctly promotes the Leitner box; after
+enough promotions the key is retired as mastered and the borrowing failure is
+never retested. The app would report a skill repaired that the child still
+cannot do.
+
+The tell is the misconception set. If a template's two modes emit disjoint
+tags — borrow errors against carry errors — they are two skills and want two
+ids. Modes that share a distractor family, like multiplying or dividing by a
+power of ten, are one skill and may share a template.
+
+Mastery is per standard, so splitting a template costs nothing there.
+
 ### 6.4 Curriculum integrity test
 
 A test walks every curriculum module and asserts: every authored question and every
