@@ -411,8 +411,14 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Reported the raw quotient and remainder without interpreting what they mean for the situation in the problem.',
     ),
     entry(
+      // Filed under remainder-handling until 2026-09-13 because its first two
+      // uses happened to be division problems. The error has nothing to do
+      // with remainders - one use is 601 x 7 - and its exact mirror image,
+      // computed-exactly-instead-of-estimating, was already here. Grouping
+      // them apart told a parent their child struggles with remainders when
+      // what they actually do is stop at an approximation.
       'reported-the-estimate',
-      'remainder-handling',
+      'incomplete-procedure',
       'Rounded the numbers and reported an estimate instead of computing the exact answer the problem required.',
     ),
     entry(
