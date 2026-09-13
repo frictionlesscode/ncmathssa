@@ -28,17 +28,36 @@ describe('g4.md3.rectangle-area', () => {
     expect(md3RectangleArea.generate(makeRng(31))).toEqual(md3RectangleArea.generate(makeRng(31)));
   });
 
+  // Literal, not derived from what the generator printed. A pin that reads the
+  // dimensions back out of the prompt asserts only self-consistency and passes
+  // for any rectangle the generator emits.
   it('produces a known question at a pinned seed', () => {
     const g = md3RectangleArea.generate(makeRng(6));
-    const { length, width } = dimensions(g.prompt);
-    expect(g.answerText).toBe(`${length * width} square meters`);
-    expect(g.options.find((o) => o.isCorrect)!.text).toBe(g.answerText);
+    expect(g.prompt).toBe(
+      'A rectangular playground mat measures 4 meters by 2 meters. How many square meters is its area?',
+    );
+    expect(g.answerText).toBe('8 square meters');
+    expect(g.options.map((o) => o.text)).toEqual([
+      '10 square meters',
+      '12 square meters',
+      '8 square meters',
+      '6 square meters',
+    ]);
+    expect(g.options.find((o) => o.isCorrect)!.text).toBe('8 square meters');
   });
 
   it('produces a second known question at a pinned seed', () => {
     const g = md3RectangleArea.generate(makeRng(91));
-    const { length, width } = dimensions(g.prompt);
-    expect(g.answerText).toBe(`${length * width} square meters`);
+    expect(g.prompt).toBe(
+      'A rectangular playground mat measures 4 meters by 3 meters. How many square meters is its area?',
+    );
+    expect(g.answerText).toBe('12 square meters');
+    expect(g.options.map((o) => o.text)).toEqual([
+      '7 square meters',
+      '12 square meters',
+      '14 square meters',
+      '11 square meters',
+    ]);
   });
 
   it('asks for the area, and the key is the area', () => {

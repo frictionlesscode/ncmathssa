@@ -28,19 +28,24 @@ describe('g4.md2.metric-convert', () => {
     expect(md2MetricConvert.generate(makeRng(23))).toEqual(md2MetricConvert.generate(makeRng(23)));
   });
 
+  // Literal, not derived from what the generator printed. A pin that reads the
+  // conversion back out of promptDetails asserts only self-consistency and
+  // passes for any question the generator emits.
   it('produces a known question at a pinned seed', () => {
     const g = md2MetricConvert.generate(makeRng(2));
-    const { quantity, big, small } = asked(g.promptDetails!);
-    const factor = PAIRS.find((p) => p.big === big && p.small === small)!.factor;
-    expect(bare(g.answerText)).toBe(quantity * factor);
-    expect(g.options.find((o) => o.isCorrect)!.text).toBe(g.answerText);
+    expect(g.prompt).toBe('Convert this measurement to the smaller unit.');
+    expect(g.promptDetails).toBe('4 liters = ? milliliters');
+    expect(g.answerText).toBe('4,000');
+    expect(g.options.map((o) => o.text)).toEqual(['4,000', '40,000', '4', '400']);
+    expect(g.options.find((o) => o.isCorrect)!.text).toBe('4,000');
   });
 
   it('produces a second known question at a pinned seed', () => {
     const g = md2MetricConvert.generate(makeRng(58));
-    const { quantity, big, small } = asked(g.promptDetails!);
-    const factor = PAIRS.find((p) => p.big === big && p.small === small)!.factor;
-    expect(bare(g.answerText)).toBe(quantity * factor);
+    expect(g.promptDetails).toBe('7 kilograms = ? grams');
+    expect(g.answerText).toBe('7,000');
+    expect(g.options.map((o) => o.text)).toEqual(['7', '700', '7,000', '70,000']);
+    expect(g.options.find((o) => o.isCorrect)!.text).toBe('7,000');
   });
 
   // NC.4.MD.2's sourced text is "convert metric measurements from a LARGER

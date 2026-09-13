@@ -32,17 +32,36 @@ describe('g4.md3.rectangle-perimeter', () => {
     );
   });
 
+  // Literal, not derived from what the generator printed. A pin that reads the
+  // dimensions back out of the prompt asserts only self-consistency and passes
+  // for any rectangle the generator emits.
   it('produces a known question at a pinned seed', () => {
     const g = md3RectanglePerimeter.generate(makeRng(6));
-    const { length, width } = dimensions(g.prompt);
-    expect(g.answerText).toBe(`${2 * (length + width)} meters`);
-    expect(g.options.find((o) => o.isCorrect)!.text).toBe(g.answerText);
+    expect(g.prompt).toBe(
+      'A rectangular banner measures 4 meters by 2 meters. What is the distance all the way around its edge?',
+    );
+    expect(g.answerText).toBe('12 meters');
+    expect(g.options.map((o) => o.text)).toEqual([
+      '10 meters',
+      '8 meters',
+      '12 meters',
+      '6 meters',
+    ]);
+    expect(g.options.find((o) => o.isCorrect)!.text).toBe('12 meters');
   });
 
   it('produces a second known question at a pinned seed', () => {
     const g = md3RectanglePerimeter.generate(makeRng(91));
-    const { length, width } = dimensions(g.prompt);
-    expect(g.answerText).toBe(`${2 * (length + width)} meters`);
+    expect(g.prompt).toBe(
+      'A rectangular banner measures 4 meters by 3 meters. What is the distance all the way around its edge?',
+    );
+    expect(g.answerText).toBe('14 meters');
+    expect(g.options.map((o) => o.text)).toEqual([
+      '7 meters',
+      '14 meters',
+      '12 meters',
+      '11 meters',
+    ]);
   });
 
   it('asks for the perimeter, and the key is the perimeter', () => {

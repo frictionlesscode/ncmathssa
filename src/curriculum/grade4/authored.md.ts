@@ -953,8 +953,15 @@ export const GRADE_4_MD_AUTHORED: Question[] = [
     id: 'g4-md4-04',
     standardCode: 'NC.4.MD.4',
     domainId: 'MD',
+    // The stem, not the explanation, has to carry the discriminator. An earlier
+    // version asked only for "numerical data", and under that stem "How many
+    // students in our class own a dog?" is defensibly right: a child applying
+    // the standard's own test - is the answer a number? - gets yes. Requiring
+    // that EACH STUDENT answer with a number ABOUT THEMSELVES settles it in the
+    // question itself, which is where NC.4.MD.4's distinction between a survey
+    // question and a single class fact actually lives.
     prompt:
-      'Ms. Okafor wants each student in her class to answer a survey question that will give her NUMERICAL data. Which question should she ask?',
+      'Ms. Okafor wants every student in her class to answer one survey question with a number about themselves, so that she collects numerical data she can graph. Which question should she ask?',
     // All four options are questions, not quantities, so the canonical parser
     // returns null for every one. Checked by hand: four different questions.
     options: labelOptions([
@@ -985,9 +992,9 @@ export const GRADE_4_MD_AUTHORED: Question[] = [
     difficulty: 'mastery',
     explanation: {
       stepByStep: [
-        'Step 1: Numerical data means every answer is a number that can be counted or measured, and those numbers can be put on a number line.',
+        'Step 1: Numerical data means every student answers with a number of their own, and those numbers can be put on a number line.',
         'Step 2: "Favorite kind of pet" and "a dog or a cat" are answered with names, so they collect categorical data — good for a bar graph, but not numerical.',
-        'Step 3: "How many students in our class own a dog?" has one answer for the whole class, so it is not something each student can respond to and it produces no data set.',
+        'Step 3: "How many students in our class own a dog?" is a number, but it is ONE number about the whole class. No student can answer it about themselves, so it collects no data at all.',
         'Step 4: She should ask: How many pets do you have at home?',
       ],
       conceptSummary:

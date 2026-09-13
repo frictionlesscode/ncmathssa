@@ -37,18 +37,38 @@ describe('g4.md1.metric-word-problem', () => {
     );
   });
 
+  // Literal, not derived from what the generator printed. A pin that reads the
+  // numbers back out of the prompt asserts only self-consistency and passes for
+  // any question the generator emits, so it cannot see a changed pool, a
+  // changed context list, or a changed order of rng draws.
   it('produces a known question at a pinned seed', () => {
     const g = md1MetricWordProblem.generate(makeRng(5));
-    const { each, count } = stated(g.prompt);
-    expect(g.answerText.startsWith(`${each * count} `)).toBe(true);
-    expect(g.options.find((o) => o.isCorrect)!.text).toBe(g.answerText);
+    expect(g.prompt).toBe(
+      'Each watering can holds 80 liters. How many liters do 3 full watering cans hold altogether?',
+    );
+    expect(g.answerText).toBe('240 liters');
+    expect(g.options.map((o) => o.text)).toEqual([
+      '77 liters',
+      '24 liters',
+      '83 liters',
+      '240 liters',
+    ]);
+    expect(g.options.find((o) => o.isCorrect)!.text).toBe('240 liters');
   });
 
   it('produces a second known question at a pinned seed', () => {
     const g = md1MetricWordProblem.generate(makeRng(77));
-    const { each, count } = stated(g.prompt);
-    expect(g.answerText.startsWith(`${each * count} `)).toBe(true);
-    expect(g.options.find((o) => o.isCorrect)!.text).toBe(g.answerText);
+    expect(g.prompt).toBe(
+      'Each bag of rice has a mass of 20 grams. What is the total mass of 5 bags?',
+    );
+    expect(g.answerText).toBe('100 grams');
+    expect(g.options.map((o) => o.text)).toEqual([
+      '10 grams',
+      '100 grams',
+      '25 grams',
+      '15 grams',
+    ]);
+    expect(g.options.find((o) => o.isCorrect)!.text).toBe('100 grams');
   });
 
   it('multiplies equal groups, and every option wears the same metric unit', () => {

@@ -38,18 +38,47 @@ describe('g4.md6.missing-angle-part', () => {
     );
   });
 
+  // Literal, not derived from what the generator printed. A pin that reads the
+  // measures back out of the figure asserts only self-consistency and passes
+  // for any angle the generator emits, including one from a changed pool.
   it('produces a known question at a pinned seed', () => {
     const g = md6MissingAnglePart.generate(makeRng(3));
-    const { whole, part } = figure(g.promptDetails!);
-    expect(g.answerText).toBe(`${whole - part} degrees`);
-    expect(g.options.find((o) => o.isCorrect)!.text).toBe(g.answerText);
+    expect(g.prompt).toBe(
+      'The diagram shows angle WXY cut into two smaller angles by ray XZ. What is the measure of angle ZXY?',
+    );
+    expect(g.promptDetails).toBe(
+      'Angle description: ray XW and ray XY share the endpoint X, and angle WXY measures 42 degrees. ' +
+        'Ray XZ also starts at X and lies inside angle WXY, so angle WXZ and angle ZXY do not overlap ' +
+        'and together make angle WXY. Angle WXZ measures 28 degrees.',
+    );
+    expect(g.answerText).toBe('14 degrees');
+    expect(g.options.map((o) => o.text)).toEqual([
+      '26 degrees',
+      '152 degrees',
+      '14 degrees',
+      '70 degrees',
+    ]);
+    expect(g.options.find((o) => o.isCorrect)!.text).toBe('14 degrees');
   });
 
   it('produces a second known question at a pinned seed', () => {
     const g = md6MissingAnglePart.generate(makeRng(104));
-    const { whole, part } = figure(g.promptDetails!);
-    expect(g.answerText).toBe(`${whole - part} degrees`);
-    expect(g.options.find((o) => o.isCorrect)!.text).toBe(g.answerText);
+    expect(g.prompt).toBe(
+      'The diagram shows angle HNV cut into two smaller angles by ray NQ. What is the measure of angle QNV?',
+    );
+    expect(g.promptDetails).toBe(
+      'Angle description: ray NH and ray NV share the endpoint N, and angle HNV measures 95 degrees. ' +
+        'Ray NQ also starts at N and lies inside angle HNV, so angle HNQ and angle QNV do not overlap ' +
+        'and together make angle HNV. Angle HNQ measures 68 degrees.',
+    );
+    expect(g.answerText).toBe('27 degrees');
+    expect(g.options.map((o) => o.text)).toEqual([
+      '163 degrees',
+      '112 degrees',
+      '27 degrees',
+      '33 degrees',
+    ]);
+    expect(g.options.find((o) => o.isCorrect)!.text).toBe('27 degrees');
   });
 
   it('always asks for the part of the angle the figure leaves unknown', () => {
