@@ -117,7 +117,7 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       // problem when what they have is a subtraction-algorithm problem.
       'borrowed-without-reducing-the-next-column',
       'multi-digit-algorithm',
-      'Took a ten into the ones column of a subtraction but never reduced the tens digit it came from, so the answer came out ten too large.',
+      'Regrouped into a column of a subtraction but never reduced the digit in the place to its left that the amount was taken from, so the answer came out one unit of that place too large.',
     ),
     entry(
       'carried-into-the-wrong-column',
@@ -529,10 +529,14 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
     entry(
       // Deliberately broader than "reading": a zero place is skipped just as
       // often mid-algorithm (405 x 7 worked as 45 x 7) as it is mid-numeral,
-      // and it is the same error to repair either way.
+      // and it is the same error to repair either way. Broad on DIRECTION too:
+      // closing up an empty place while reading a numeral drops later digits a
+      // column, while doing it when writing a number name pushes them up one
+      // ("forty thousand, ninety-three" written 40,930). Same error, and the
+      // description must not name a direction it only sometimes has.
       'skipped-the-zero-place',
       'place-value-and-decimals',
-      'Skipped over a place holding a zero, so every digit past it landed one place too low and the number lost a place value.',
+      'Closed up a place holding a zero instead of letting it hold that place open, so the digits past it landed in the wrong columns.',
     ),
     entry(
       'squared-the-base-area',

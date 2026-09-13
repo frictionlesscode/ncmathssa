@@ -38,7 +38,8 @@ const PLACE_NAMES = ['ones', 'tens', 'hundreds', 'thousands', 'ten thousands'];
  *
  * lo is capped at 2 so the largest value printed anywhere in the item is
  * d * 10^4 <= 90,000, inside the standard's own ceiling of 100,000; the
- * numeral itself is at most 98,999.
+ * numeral itself is at most 99,889 — d = 8 sitting in the tens and hundreds,
+ * with 9s in the three free places.
  */
 export const nbt1TenTimes: QuestionTemplate = {
   id: 'g4.nbt1.ten-times',

@@ -4,7 +4,8 @@ import { oa4FactorPairs } from './oa4-factor-pairs';
 import { nbt1TenTimes } from './nbt1-ten-times';
 import { nbt2ExpandedForm } from './nbt2-expanded-form';
 import { nbt7CompareNumbers } from './nbt7-compare-numbers';
-import { nbt4AddSubtract } from './nbt4-add-subtract';
+import { nbt4Add } from './nbt4-add';
+import { nbt4Subtract } from './nbt4-subtract';
 import { nbt5TwoDigitMultiply } from './nbt5-two-digit-multiply';
 import { nbt6DivideOneDigit } from './nbt6-divide-one-digit';
 
@@ -20,11 +21,17 @@ import { nbt6DivideOneDigit } from './nbt6-divide-one-digit';
  *
  *  Base Ten is the opposite case, and every one of its six standards has a
  *  generator here: place value, reading and writing numerals, comparing,
- *  the addition and subtraction algorithm, multiplication and division. These
- *  are procedures, and a procedure is learned on numbers a student has not
- *  seen before. The authored NBT bank sits alongside them doing what they
- *  cannot — word problems, error analysis, and choosing what a remainder
- *  means — and is held clear of their output by prompt shape.
+ *  addition, subtraction, multiplication and division. These are procedures,
+ *  and a procedure is learned on numbers a student has not seen before. The
+ *  authored NBT bank sits alongside them doing what they cannot — word
+ *  problems, error analysis, and choosing what a remainder means — and is held
+ *  clear of their output by prompt shape.
+ *
+ *  NC.4.NBT.4 gets TWO templates, not one, even though it is one standard.
+ *  A review key is seedless, so one template spanning addition and subtraction
+ *  would let a child who failed at borrowing be reviewed with an addition item,
+ *  promoted for answering it, and retired as mastered with the borrowing never
+ *  retested. One template, one skill — see the docstring on ./nbt4-subtract.ts.
  *
  *  Tasks 7 through 9 append this grade's NF, MD and G templates here. */
 export const GRADE_4_TEMPLATES: QuestionTemplate[] = [
@@ -33,7 +40,8 @@ export const GRADE_4_TEMPLATES: QuestionTemplate[] = [
   nbt1TenTimes,
   nbt2ExpandedForm,
   nbt7CompareNumbers,
-  nbt4AddSubtract,
+  nbt4Add,
+  nbt4Subtract,
   nbt5TwoDigitMultiply,
   nbt6DivideOneDigit,
 ];
@@ -44,7 +52,8 @@ export {
   nbt1TenTimes,
   nbt2ExpandedForm,
   nbt7CompareNumbers,
-  nbt4AddSubtract,
+  nbt4Add,
+  nbt4Subtract,
   nbt5TwoDigitMultiply,
   nbt6DivideOneDigit,
 };

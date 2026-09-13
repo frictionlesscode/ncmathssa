@@ -337,7 +337,7 @@ export const GRADE_4_NBT_AUTHORED: Question[] = [
         'Step 4: 0 is less than 8, so 62,408 < 62,480.',
       ],
       conceptSummary:
-        'Comparing means working left to right and stopping at the first place where the digits differ. Everything to the right of that place is irrelevant — 80 more can never overturn a difference of 80 in the tens.',
+        'Comparing means working left to right and stopping at the first place where the digits differ. Everything to the right of that place is too small to matter — 8 more in the ones can never overturn a difference of 80 in the tens.',
       commonMisconception:
         'Starting at the ones digit gets this exactly backwards, because 8 ones look bigger than 0 ones while 0 tens are what actually decide it.',
     },

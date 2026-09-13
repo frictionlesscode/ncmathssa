@@ -14,22 +14,36 @@ import { fmt } from './numberFormat';
  * student who reads by place value from one who reads the digits in a row.
  * The largest numeral is 99,099, inside the standard's ceiling of 100,000.
  *
- * The four options are four expanded-form STRINGS, so the distinctness
- * argument is over their first term, which is the only term whose place
- * differs between them:
+ * The four options are four expanded-form STRINGS, each with exactly FOUR
+ * terms. Equal term counts are not cosmetic: if the key were the only option
+ * with four terms while the rest had five, a test-wise child could pick it by
+ * shape without doing any mathematics.
  *
- *   answer      a*10^4 + b*10^3 + e*10 + f      the empty place written as
+ *   answer      a*10^4 + b*10^3 + e*10   + f    the empty place written as
  *                                               nothing, as expanded form does
- *   zero place  a*10^3 + b*10^2 + e*10 + f      the numeral read as the
+ *   zero place  a*10^3 + b*10^2 + e*10   + f    the numeral read as the
  *               skipped                         four-digit number "abef"
- *   digits      a + b + 0 + e + f               the digits themselves added
- *   one place   a*10^5 + b*10^4 + e*10^2 + f*10 every place counted one too
- *               too high                        high
+ *   digits      a      + b      + e      + f    the digits themselves, not the
+ *                                               amounts they stand for
+ *   tens as     a*10^4 + b*10^3 + e*10^2 + f    the empty hundreds place closed
+ *               hundreds                        up from the RIGHT, so the tens
+ *                                               digit was expanded as hundreds
  *
- * The four leading terms are a*10^4, a*10^3, a and a*10^5. For any a >= 1
- * these are four different numbers (a*10^i = a*10^j forces i = j), so the four
- * strings differ in their very first token and can never coincide. Nothing is
- * excluded, and nothing is resampled.
+ * Distinctness, by leading term and then by third term:
+ *   the leading terms are a*10^4 (the answer and "tens as hundreds"), a*10^3
+ *   and a. For a >= 2, a*10^i = a*10^j forces i = j, so those three values
+ *   differ, which separates "zero place skipped" and "digits" from each other
+ *   and from the remaining pair;
+ *   that remaining pair differ in their third term, e*10 against e*10^2, and
+ *   those differ for every e >= 1.
+ * Nothing is excluded, and nothing is resampled.
+ *
+ * Every value printed stays inside the standard's ceiling of 100,000: the
+ * largest is the first term of "tens as hundreds", a*10^4 <= 90,000, and its
+ * full sum is at most 99,909. An earlier draft shifted every place one column
+ * UP instead, which reached a leading term of 900,000 — a hundred-thousands
+ * place inside a standard that stops at 100,000, and a place Grade 4 has not
+ * been taught to name.
  *
  * An exhaustive sweep of all 8 * 9 * 9 * 9 = 5,832 admissible (a, b, e, f)
  * quadruples confirms it: no collision at any of them.
@@ -64,14 +78,15 @@ export const nbt2ExpandedForm: QuestionTemplate = {
       // The digits listed instead of the amounts they stand for. This sum is
       // a + b + e + f, nowhere near the number itself.
       {
-        text: `${a} + ${b} + 0 + ${e} + ${f}`,
+        text: `${a} + ${b} + ${e} + ${f}`,
         isCorrect: false,
         misconception: 'wrote-the-digit-not-its-value',
       },
-      // Every place counted one column too high: the ten thousands digit
-      // expanded as hundred thousands, and so on down the numeral.
+      // The empty hundreds place closed up from the right instead of the left:
+      // the two big places were kept and the tens digit was pulled up into the
+      // hundreds, so e tens was expanded as e hundreds — one place too high.
       {
-        text: `${fmt(a * 100000)} + ${fmt(b * 10000)} + ${fmt(e * 100)} + ${fmt(f * 10)}`,
+        text: `${fmt(a * 10000)} + ${fmt(b * 1000)} + ${fmt(e * 100)} + ${f}`,
         isCorrect: false,
         misconception: 'wrong-power-of-ten',
       },

@@ -81,23 +81,48 @@ describe('g4.nbt2.expanded-form', () => {
           e * 10,
           f,
         ]);
-        // The digits themselves, including the 0 that stands for nothing.
-        expect(terms(taggedText(g, 'wrote-the-digit-not-its-value'))).toEqual([a, b, 0, e, f]);
-        // Every place counted one column too high.
+        // The digits themselves, not the amounts they stand for.
+        expect(terms(taggedText(g, 'wrote-the-digit-not-its-value'))).toEqual([a, b, e, f]);
+        // The empty hundreds place closed up from the right, so the tens digit
+        // was expanded as hundreds.
         expect(terms(taggedText(g, 'wrong-power-of-ten'))).toEqual([
-          a * 100000,
-          b * 10000,
+          a * 10000,
+          b * 1000,
           e * 100,
-          f * 10,
+          f,
         ]);
       });
     }
   });
 
+  it('every option has four terms, so the key cannot be picked by shape', () => {
+    for (let seed = 0; seed < 300; seed++) {
+      for (const o of nbt2ExpandedForm.generate(makeRng(seed)).options) {
+        expect(terms(o.text).length, `seed ${seed}: ${o.text}`).toBe(4);
+      }
+    }
+  });
+
+  it('nothing the item prints runs past the standard ceiling of 100,000', () => {
+    for (let seed = 0; seed < 300; seed++) {
+      const g = nbt2ExpandedForm.generate(makeRng(seed));
+      const text = [
+        g.prompt,
+        ...g.options.map((o) => o.text),
+        ...g.explanation.stepByStep,
+        g.explanation.commonMisconception ?? '',
+      ].join(' ');
+      for (const token of text.match(/\d[\d,]*/g) ?? []) {
+        expect(Number(token.replace(/,/g, '')), `seed ${seed}: ${token}`)
+          .toBeLessThanOrEqual(100000);
+      }
+    }
+  });
+
   it('sweeps its whole parameter space without a collision', () => {
-    // The four option strings differ only in their first term, which is
-    // a*10^4, a*10^3, a and a*10^5 — so a sweep over all admissible
-    // (a, b, e, f) is the complete argument.
+    // Leading terms are a*10^4 (twice), a*10^3 and a; the two that share a
+    // leading term differ at their third, e*10 against e*10^2. A sweep over
+    // all admissible (a, b, e, f) is the complete argument.
     let checked = 0;
     const failures: string[] = [];
     for (let a = 2; a <= 9; a++) {
@@ -107,8 +132,8 @@ describe('g4.nbt2.expanded-form', () => {
             const texts = new Set([
               `${a * 10000} + ${b * 1000} + ${e * 10} + ${f}`,
               `${a * 1000} + ${b * 100} + ${e * 10} + ${f}`,
-              `${a} + ${b} + 0 + ${e} + ${f}`,
-              `${a * 100000} + ${b * 10000} + ${e * 100} + ${f * 10}`,
+              `${a} + ${b} + ${e} + ${f}`,
+              `${a * 10000} + ${b * 1000} + ${e * 100} + ${f}`,
             ]);
             if (texts.size !== 4) failures.push(`a=${a} b=${b} e=${e} f=${f}`);
             checked++;

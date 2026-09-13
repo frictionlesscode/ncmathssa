@@ -116,7 +116,7 @@ export const nbt5TwoDigitMultiply: QuestionTemplate = {
         conceptSummary:
           'Multiplying by a two-digit number is two multiplications added together, one for each place of the second factor. The tens row counts TENS of the first factor, which is exactly what the placeholder zero records.',
         commonMisconception:
-          `An estimate catches a dropped placeholder zero: ${a} × ${b} should land near ${fmt(Math.round(a / 10) * 10 * (Math.round(b / 10) * 10))}, not near a tenth of it.`,
+          `The tens row counts TENS of ${a}. Writing it as ${a} × ${tens} = ${fmt(a * tens)} instead of ${a} × ${tens * 10} = ${fmt(tensRow)} loses exactly ${fmt(9 * a * tens)} from the product. Checking that the second partial product ends in a zero before adding catches it every time.`,
       },
     };
   },
