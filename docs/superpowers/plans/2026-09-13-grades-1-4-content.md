@@ -12,6 +12,7 @@
 
 ## Global Constraints
 
+- **Rounding is not in NC's grades 1–5 mathematics standards.** CCSS has it at 4.NBT.A.3; North Carolina's revised NCSCOS does not, at any grade in this plan. This plan named `NC.4.NBT.7` "rounding" in its first draft — that came from model recall, not from the source, and the Grade 4 Base Ten implementer caught it by reading the sourced text instead of the brief. `NC.4.NBT.7` is comparison with `>`, `=` and `<`. When a brief and `standards.ts` disagree, **`standards.ts` wins** — it is transcribed from the published document and this plan is not.
 - **Never invent an NC standard code, a standard's text, or a blueprint weight.** Every code and every domain weight in this plan comes from `docs/sources/nc-standards-1-5.json` and `docs/sources/nc-eog-blueprint.json`, transcribed from published NCDPI documents and described in `docs/sources/PROVENANCE.md`. Tests assert the TypeScript against those JSON files. If a value you need is not in them, stop and say so — do not supply it from memory.
 - **Codes, weights, and `ssa` figures are three separate claims against three documents** (spec §5.3). Verifying one does not verify another.
 - **Grades 1–2 have no NCDPI blueprint** — no EOG exists below grade 3. Their `weighting` is `{ kind: 'even-by-standard-count' }` and their UI must not imply an official weight exists.
@@ -807,11 +808,11 @@ Expected: FAIL — `./authored.nbt` does not exist.
 
 - [ ] **Step 3: Author the bank**
 
-At least three items per standard, eighteen minimum. This is the algorithm-heavy domain, so distractors are the classic procedural slips: a regrouping dropped in multi-digit subtraction; a carried digit added before multiplying rather than after; a partial product not shifted a place; a remainder discarded when the question asks what to do with it; a number rounded to the wrong place.
+At least three items per standard, eighteen minimum. This is the algorithm-heavy domain, so distractors are the classic procedural slips: a regrouping dropped in multi-digit subtraction; a carried digit added before multiplying rather than after; a partial product not shifted a place; a remainder discarded when the question asks what to do with it; a comparison made on digit count rather than place value.
 
 - [ ] **Step 4: Write the templates**
 
-Every NBT standard here is computational and gets a template: place-value relationship (`NC.4.NBT.1`), comparison (`NC.4.NBT.2`), rounding (`NC.4.NBT.7`), multi-digit addition and subtraction (`NC.4.NBT.4`), multiplication (`NC.4.NBT.5`), and division with remainders (`NC.4.NBT.6`). Study `src/curriculum/grade5/templates/nbt5-multi-digit-multiply.ts` and `nbt6-divide-two-digit.ts` first — the Grade 4 versions are the same generators at a smaller number range.
+Every NBT standard here is computational and gets a template: place-value relationship (`NC.4.NBT.1`), reading and writing including expanded form (`NC.4.NBT.2`), comparison with >, = and < (`NC.4.NBT.7`), multi-digit addition and subtraction (`NC.4.NBT.4`), multiplication (`NC.4.NBT.5`), and division with remainders (`NC.4.NBT.6`). Study `src/curriculum/grade5/templates/nbt5-multi-digit-multiply.ts` and `nbt6-divide-two-digit.ts` first — the Grade 4 versions are the same generators at a smaller number range.
 
 Each gets a sibling test calling `assertTemplateSound()` at the default 300 runs plus a determinism check and a pinned seed, exactly as in Task 5 Step 5. Where two distractor formulas can collide, exclude the colliding parameters by construction and document the algebra in a file comment.
 
@@ -1472,13 +1473,13 @@ Expected: FAIL — neither `./authored.nbt` nor `./authored.nf` exists.
 
 - [ ] **Step 3: Author both banks**
 
-NBT: at least three items per standard, six minimum. Rounding to the wrong place and losing a regrouping across a zero are the two errors worth naming.
+NBT: at least three items per standard, six minimum. Grade 3 NBT is only addition and subtraction within 1,000 (`NC.3.NBT.2`) and a one-digit number times a multiple of 10 (`NC.3.NBT.3`) — nothing else. Losing a regrouping across a zero, and multiplying the tens digit while dropping its place, are the two errors worth naming.
 
 NF: at least three items per standard, twelve minimum — and this is a child's first year of fractions, so the misconceptions are foundational. Name them precisely: reading `1/4` as "one and four"; believing a larger denominator means a larger fraction; placing a fraction on a number line by counting tick marks rather than by counting equal intervals; calling two fractions equivalent because their numerators differ by the same amount as their denominators.
 
 - [ ] **Step 4: Write the templates**
 
-Templates for rounding and multi-digit addition and subtraction (`NC.3.NBT.2`, `NC.3.NBT.3`), for identifying a unit fraction of a whole (`NC.3.NF.1`), for locating a fraction on a number line (`NC.3.NF.2`), and for equivalence and comparison (`NC.3.NF.3`, `NC.3.NF.4`). Each gets a sibling test as in Task 12 Step 4. Append them all to `GRADE_3_TEMPLATES`.
+Templates for addition and subtraction within 1,000 (`NC.3.NBT.2`) and for a one-digit number times a multiple of 10 (`NC.3.NBT.3`), for identifying a unit fraction of a whole (`NC.3.NF.1`), for locating a fraction on a number line (`NC.3.NF.2`), and for equivalence and comparison (`NC.3.NF.3`, `NC.3.NF.4`). Each gets a sibling test as in Task 12 Step 4. Append them all to `GRADE_3_TEMPLATES`.
 
 - [ ] **Step 5: Declare any new misconception tags**
 
