@@ -1,27 +1,25 @@
 import { describe, it, expect } from 'vitest';
 import { MISCONCEPTIONS } from './misconceptions';
-import { listCurricula, standardsOf } from './registry';
+import { everyAuthoredQuestion, everyTemplate } from './allContent';
 import { makeRng } from '../engine/rng';
 
-/** Tags used anywhere in any registered grade: authored items plus every
- *  misconception a generator can emit, sampled across many seeds so a rare
- *  distractor still counts as "used." Registry-driven so a new grade's tags
- *  count the moment that grade registers. */
+/** Tags used anywhere in any grade's content, registered or not: authored items
+ *  plus every misconception a generator can emit, sampled across many seeds so
+ *  a rare distractor still counts as "used."
+ *
+ *  Deliberately NOT registry-driven. A grade's content lands several tasks
+ *  before that grade registers, and scoping this to registered grades made
+ *  every new tag an orphan during that window - which pushed the first Grade 4
+ *  author into reusing tags that named the wrong error rather than going red. */
 function allUsedTags(): Set<string> {
   const used = new Set<string>();
-  for (const c of listCurricula()) {
-    for (const s of standardsOf(c)) {
-      for (const ref of c.source.authoredFor(s.code)) {
-        for (const o of c.source.resolve(ref).options) {
-          if (o.misconception) used.add(o.misconception);
-        }
-      }
-    }
-    for (const t of c.source.templates()) {
-      for (let seed = 0; seed < 100; seed++) {
-        for (const o of t.generate(makeRng(seed)).options) {
-          if (o.misconception) used.add(o.misconception);
-        }
+  for (const q of everyAuthoredQuestion()) {
+    for (const o of q.options) if (o.misconception) used.add(o.misconception);
+  }
+  for (const t of everyTemplate()) {
+    for (let seed = 0; seed < 100; seed++) {
+      for (const o of t.generate(makeRng(seed)).options) {
+        if (o.misconception) used.add(o.misconception);
       }
     }
   }
