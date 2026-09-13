@@ -1,0 +1,999 @@
+{
+  "1": [
+    {
+      "id": "OA",
+      "name": "Operations and Algebraic Thinking",
+      "standards": [
+        {
+          "code": "NC.1.OA.1",
+          "cluster": "Represent and solve problems.",
+          "text": "Represent and solve addition and subtraction word problems, within 20, with unknowns, by using objects, drawings, and equations with a symbol for the unknown number to represent the problem, when solving:",
+          "bullets": [
+            "Add to/Take from-Change Unknown",
+            "Put together/Take Apart-Addend Unknown",
+            "Compare-Difference Unknown"
+          ]
+        },
+        {
+          "code": "NC.1.OA.2",
+          "cluster": "Represent and solve problems.",
+          "text": "Represent and solve word problems that call for addition of three whole numbers whose sum is less than or equal to 20, by using objects, drawings, and equations with a symbol for the unknown number.",
+          "bullets": []
+        },
+        {
+          "code": "NC.1.OA.3",
+          "cluster": "Understand and apply the properties of operations.",
+          "text": "Apply the commutative and associative properties as strategies for solving addition problems.",
+          "bullets": []
+        },
+        {
+          "code": "NC.1.OA.4",
+          "cluster": "Understand and apply the properties of operations.",
+          "text": "Solve an unknown-addend problem, within 20, by using addition strategies and/or changing it to a subtraction problem.",
+          "bullets": []
+        },
+        {
+          "code": "NC.1.OA.9",
+          "cluster": "Add and subtract within 20.",
+          "text": "Demonstrate fluency with addition and subtraction within 10.",
+          "bullets": []
+        },
+        {
+          "code": "NC.1.OA.6",
+          "cluster": "Add and subtract within 20.",
+          "text": "Add and subtract, within 20, using strategies such as:",
+          "bullets": [
+            "Counting on",
+            "Making ten",
+            "Decomposing a number leading to a ten",
+            "Using the relationship between addition and subtraction",
+            "Using a number line",
+            "Creating equivalent but simpler or known sums"
+          ]
+        },
+        {
+          "code": "NC.1.OA.7",
+          "cluster": "Analyze addition and subtraction equations within 20.",
+          "text": "Apply understanding of the equal sign to determine if equations involving addition and subtraction are true.",
+          "bullets": []
+        },
+        {
+          "code": "NC.1.OA.8",
+          "cluster": "Analyze addition and subtraction equations within 20.",
+          "text": "Determine the unknown whole number in an addition or subtraction equation involving three whole numbers.",
+          "bullets": []
+        }
+      ]
+    },
+    {
+      "id": "NBT",
+      "name": "Number and Operations in Base Ten",
+      "standards": [
+        {
+          "code": "NC.1.NBT.1",
+          "cluster": "Extend and recognize patterns in the counting sequence.",
+          "text": "Count to 150, starting at any number less than 150.",
+          "bullets": []
+        },
+        {
+          "code": "NC.1.NBT.7",
+          "cluster": "Extend and recognize patterns in the counting sequence.",
+          "text": "Read and write numerals, and represent a number of objects with a written numeral, to 100.",
+          "bullets": [
+            "Standard: Understand place value."
+          ]
+        },
+        {
+          "code": "NC.1.NBT.2",
+          "cluster": "Extend and recognize patterns in the counting sequence.",
+          "text": "Understand that the two digits of a two-digit number represent amounts of tens and ones.",
+          "bullets": [
+            "Unitize by making a ten from a collection of ten ones.",
+            "Model the numbers from 11 to 19 as composed of a ten and one, two, three, four, five, six, seven, eight, or nine ones.",
+            "Demonstrate that the numbers 10, 20, 30, 40, 50, 60, 70, 80, 90 refer to one, two, three, four, five, six, seven, eight, or nine tens, with 0 ones."
+          ]
+        },
+        {
+          "code": "NC.1.NBT.3",
+          "cluster": "Extend and recognize patterns in the counting sequence.",
+          "text": "Compare two two-digit numbers based on the value of the tens and ones digits, recording the results of comparisons with the symbols >, =, and <",
+          "bullets": []
+        },
+        {
+          "code": "NC.1.NBT.4",
+          "cluster": "Use place value understanding and properties of operations.",
+          "text": "Using concrete models or drawings, strategies based on place value, properties of operations, and explaining the reasoning used, add, within 100, in the following situations:",
+          "bullets": [
+            "A two-digit number and a one-digit number",
+            "A two-digit number and a multiple of 10"
+          ]
+        },
+        {
+          "code": "NC.1.NBT.5",
+          "cluster": "Use place value understanding and properties of operations.",
+          "text": "Given a two-digit number, mentally find 10 more or 10 less than the number, without having to count; explain the reasoning used.",
+          "bullets": []
+        },
+        {
+          "code": "NC.1.NBT.6",
+          "cluster": "Use place value understanding and properties of operations.",
+          "text": "Subtract multiples of 10 in the range 10-90 from multiples of 10 in the range 10-90, explaining the reasoning, using:",
+          "bullets": [
+            "Concrete models and drawings",
+            "Number lines",
+            "Strategies based on place value",
+            "Properties of operations",
+            "The relationship between addition and subtraction"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MD",
+      "name": "Measurement and Data",
+      "standards": [
+        {
+          "code": "NC.1.MD.1",
+          "cluster": "Measure lengths.",
+          "text": "Order three objects by length; compare the lengths of two objects indirectly by using a third object.",
+          "bullets": []
+        },
+        {
+          "code": "NC.1.MD.2",
+          "cluster": "Measure lengths.",
+          "text": "Measure lengths with non-standard units.",
+          "bullets": [
+            "Express the length of an object as a whole number of non-standard length units.",
+            "Measure by laying multiple copies of a shorter object (the length unit) end to end (iterating) with no gaps or overlaps."
+          ]
+        },
+        {
+          "code": "NC.1.MD.3",
+          "cluster": "Build understanding of time and money.",
+          "text": "Tell and write time in hours and half-hours using analog and digital clocks.",
+          "bullets": []
+        },
+        {
+          "code": "NC.1.MD.5",
+          "cluster": "Build understanding of time and money.",
+          "text": "Identify quarters, dimes, and nickels and relate their values to pennies.",
+          "bullets": []
+        },
+        {
+          "code": "NC.1.MD.4",
+          "cluster": "Represent and interpret data.",
+          "text": "Organize, represent, and interpret data with up to three categories.",
+          "bullets": [
+            "Ask and answer questions about the total number of data points.",
+            "Ask and answer questions about how many in each category.",
+            "Ask and answer questions about how many more or less are in one category than in another."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "G",
+      "name": "Geometry",
+      "standards": [
+        {
+          "code": "NC.1.G.1",
+          "cluster": "Reason with shapes and their attributes.",
+          "text": "Distinguish between defining and non-defining attributes and create shapes with defining attributes by:",
+          "bullets": [
+            "Building and drawing triangles, rectangles, squares, trapezoids, hexagons, circles.",
+            "Building cubes, rectangular prisms, cones, spheres, and cylinders."
+          ]
+        },
+        {
+          "code": "NC.1.G.2",
+          "cluster": "Reason with shapes and their attributes.",
+          "text": "Create composite shapes by:",
+          "bullets": [
+            "Making a two-dimensional composite shape using rectangles, squares, trapezoids, triangles, and half-circles naming the components of the new shape.",
+            "Making a three-dimensional composite shape using cubes, rectangular prisms, cones, and cylinders, naming the components of the new shape."
+          ]
+        },
+        {
+          "code": "NC.1.G.3",
+          "cluster": "Reason with shapes and their attributes.",
+          "text": "Partition circles and rectangles into two and four equal shares.",
+          "bullets": [
+            "Describe the shares as halves and  fourths, as half of and fourth of.",
+            "Describe the whole as two of, or four of the shares.",
+            "Explain that decomposing into more equal shares creates smaller shares."
+          ]
+        }
+      ]
+    }
+  ],
+  "2": [
+    {
+      "id": "OA",
+      "name": "Operations and Algebraic Thinking",
+      "standards": [
+        {
+          "code": "NC.2.OA.1",
+          "cluster": "Represent and solve problems.",
+          "text": "Represent and solve addition and subtraction word problems, within 100, with unknowns in all positions, by using representations and equations with a symbol for the unknown number to represent the problem, when solving:",
+          "bullets": [
+            "One-Step problems:",
+            "Add to/Take from-Start Unknown",
+            "Compare-Bigger Unknown",
+            "Compare-Smaller Unknown",
+            "Two-Step problems involving single digits",
+            "Add to/Take from- Change Unknown",
+            "Add to/Take From- Result Unknown"
+          ]
+        },
+        {
+          "code": "NC.2.OA.2",
+          "cluster": "Add and subtract within 20.",
+          "text": "Demonstrate fluency with addition and subtraction, within 20, using mental strategies.",
+          "bullets": []
+        },
+        {
+          "code": "NC.2.OA.3",
+          "cluster": "Work with equal groups.",
+          "text": "Determine whether a group of objects, within 20, has an odd or even number of members by:",
+          "bullets": [
+            "Pairing objects, then counting them by 2s.",
+            "Determining whether objects can be placed into two equal groups.",
+            "Writing an equation to express an even number as a sum of two equal addends."
+          ]
+        },
+        {
+          "code": "NC.2.OA.4",
+          "cluster": "Work with equal groups.",
+          "text": "Use addition to find the total number of objects arranged in rectangular arrays with up to 5 rows and up to 5 columns; write an equation to express the total as a sum of equal addends.",
+          "bullets": []
+        }
+      ]
+    },
+    {
+      "id": "NBT",
+      "name": "Number and Operations in Base Ten",
+      "standards": [
+        {
+          "code": "NC.2.NBT.1",
+          "cluster": "Understand place value.",
+          "text": "Understand that the three digits of a three-digit number represent amounts of hundreds, tens, and ones.",
+          "bullets": [
+            "Unitize by making a hundred from a collection of ten tens.",
+            "Demonstrate that the numbers 100, 200, 300, 400, 500, 600, 700, 800, 900 refer to one, two, three, four, five, six, seven, eight, or nine hundreds, with 0 tens and 0 ones.",
+            "Compose and decompose numbers using various groupings of hundreds, tens, and ones."
+          ]
+        },
+        {
+          "code": "NC.2.NBT.2",
+          "cluster": "Understand place value.",
+          "text": "Count within 1000; skip-count by 5s, 10s, and 100s.",
+          "bullets": []
+        },
+        {
+          "code": "NC.2.NBT.3",
+          "cluster": "Understand place value.",
+          "text": "Read and write numbers, within 1000, using base-ten numerals, number names, and expanded form.",
+          "bullets": []
+        },
+        {
+          "code": "NC.2.NBT.4",
+          "cluster": "Understand place value.",
+          "text": "Compare two three-digit numbers based on the value of the hundreds, tens, and ones digits, using >, =, and < symbols to record the results of comparisons.",
+          "bullets": []
+        },
+        {
+          "code": "NC.2.NBT.5",
+          "cluster": "Use place value understanding and properties of operations.",
+          "text": "Demonstrate fluency with addition and subtraction, within 100, by:",
+          "bullets": [
+            "Flexibly using strategies based on place value, properties of operations, and/or the relationship between addition and subtraction.",
+            "Comparing addition and subtraction strategies, and explaining why they work.",
+            "Selecting an appropriate strategy in order to efficiently compute sums and differences."
+          ]
+        },
+        {
+          "code": "NC.2.NBT.6",
+          "cluster": "Use place value understanding and properties of operations.",
+          "text": "Add up to three two-digit numbers using strategies based on place value and properties of operations.",
+          "bullets": []
+        },
+        {
+          "code": "NC.2.NBT.7",
+          "cluster": "Use place value understanding and properties of operations.",
+          "text": "Add and subtract, within 1000, relating the strategy to a written method, using:",
+          "bullets": [
+            "Concrete models or drawings",
+            "Strategies based on place value",
+            "Properties of operations",
+            "Relationship between addition and subtraction"
+          ]
+        },
+        {
+          "code": "NC.2.NBT.8",
+          "cluster": "Use place value understanding and properties of operations.",
+          "text": "Mentally add 10 or 100 to a given number 100–900, and mentally subtract 10 or 100 from a given number 100–900.",
+          "bullets": []
+        }
+      ]
+    },
+    {
+      "id": "MD",
+      "name": "Measurement and Data",
+      "standards": [
+        {
+          "code": "NC.2.MD.1",
+          "cluster": "Measure and estimate lengths.",
+          "text": "Measure the length of an object in standard units by selecting and using appropriate tools such as rulers, yardsticks, meter sticks, and measuring tapes.",
+          "bullets": []
+        },
+        {
+          "code": "NC.2.MD.2",
+          "cluster": "Measure and estimate lengths.",
+          "text": "Measure the length of an object twice, using length units of different lengths for the two measurements; describe how the two measurements relate to the size of the unit chosen.",
+          "bullets": []
+        },
+        {
+          "code": "NC.2.MD.3",
+          "cluster": "Measure and estimate lengths.",
+          "text": "Estimate lengths in using standard units of inches, feet, yards, centimeters, and meters.",
+          "bullets": []
+        },
+        {
+          "code": "NC.2.MD.4",
+          "cluster": "Measure and estimate lengths.",
+          "text": "Measure to determine how much longer one object is than another, expressing the length difference in terms of a standard length unit.",
+          "bullets": []
+        },
+        {
+          "code": "NC.2.MD.5",
+          "cluster": "Relate addition and subtraction to length.",
+          "text": "Use addition and subtraction, within 100, to solve word problems involving lengths that are given in the same units, using equations with a symbol for the unknown number to represent the problem.",
+          "bullets": [
+            "Represent whole numbers as lengths from 0 on a number line diagram with equally spaced points and represent whole-number sums and differences, within 100, on a number line."
+          ]
+        },
+        {
+          "code": "NC.2.MD.6",
+          "cluster": "Build understanding of time and money.",
+          "text": "Represent whole numbers as lengths from 0 on a number line diagram with equally spaced points and represent whole-number sums and differences, within 100, on a number line.",
+          "bullets": []
+        },
+        {
+          "code": "NC.2.MD.7",
+          "cluster": "Build understanding of time and money.",
+          "text": "Tell and write time from analog and digital clocks to the nearest five minutes, using a.m. and p.m.",
+          "bullets": []
+        },
+        {
+          "code": "NC.2.MD.8",
+          "cluster": "Build understanding of time and money.",
+          "text": "Solve word problems involving:",
+          "bullets": [
+            "Quarters, dimes, nickels, and pennies within 99¢, using ¢ symbols appropriately.",
+            "Whole dollar amounts, using the $ symbol appropriately."
+          ]
+        },
+        {
+          "code": "NC.2.MD.10",
+          "cluster": "Represent and interpret data.",
+          "text": "Organize, represent, and interpret data with up to four categories.",
+          "bullets": [
+            "Draw a picture graph and a bar graph with a single-unit scale to represent a data set.",
+            "Solve simple put-together, take-apart, and compare problems using information presented in a picture and a bar graph."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "G",
+      "name": "Geometry",
+      "standards": [
+        {
+          "code": "NC.2.G.1",
+          "cluster": "Reason with shapes and their attributes.",
+          "text": "Recognize and draw triangles, quadrilaterals, pentagons, and hexagons, having specified attributes; recognize and describe attributes of rectangular prisms and cubes.",
+          "bullets": []
+        },
+        {
+          "code": "NC.2.G.3",
+          "cluster": "Reason with shapes and their attributes.",
+          "text": "Partition circles and rectangles into two, three, or four equal shares.",
+          "bullets": [
+            "Describe the shares using the words halves, thirds, half of, a third of, fourths, fourth of, quarter of.",
+            "Describe the whole as two halves, three thirds, four fourths.",
+            "Explain that equal shares of identical wholes need not have the same shape."
+          ]
+        }
+      ]
+    }
+  ],
+  "3": [
+    {
+      "id": "OA",
+      "name": "Operations and Algebraic Thinking",
+      "standards": [
+        {
+          "code": "NC.3.OA.1",
+          "cluster": "Represent and solve problems involving multiplication and division.",
+          "text": "For products of whole numbers with two factors up to and including 10:",
+          "bullets": [
+            "Interpret the factors as representing the number of equal groups and the number of objects in each group.",
+            "Illustrate and explain strategies including arrays, repeated addition, decomposing a factor, and applying the commutative and associative properties."
+          ]
+        },
+        {
+          "code": "NC.3.OA.2",
+          "cluster": "Represent and solve problems involving multiplication and division.",
+          "text": "For whole-number quotients of whole numbers with a one-digit divisor and a one-digit quotient:",
+          "bullets": [
+            "Interpret the divisor and quotient in a division equation as representing the number of equal groups and the number of objects in each group.",
+            "Illustrate and explain strategies including arrays, repeated addition or subtraction, and decomposing a factor."
+          ]
+        },
+        {
+          "code": "NC.3.OA.3",
+          "cluster": "Represent and solve problems involving multiplication and division.",
+          "text": "Represent, interpret, and solve one-step problems involving multiplication and division.",
+          "bullets": [
+            "Solve multiplication word problems with factors up to and including 10. Represent the problem using arrays, pictures, and/or equations with a symbol for the unknown number to represent the problem.",
+            "Solve division word problems with a divisor and quotient up to and including 10. Represent the problem using arrays, pictures, repeated subtraction and/or equations with a symbol for the unknown number to represent the problem."
+          ]
+        },
+        {
+          "code": "NC.3.OA.6",
+          "cluster": "Understand properties of multiplication and the relationship between multiplication and division.",
+          "text": "Solve an unknown-factor problem, by using division strategies and/or changing it to a multiplication problem.",
+          "bullets": []
+        },
+        {
+          "code": "NC.3.OA.7",
+          "cluster": "Multiply and divide within 100.",
+          "text": "Demonstrate fluency with multiplication and division with factors, quotients and divisors up to and including 10.",
+          "bullets": [
+            "Know from memory all products with factors up to and including 10.",
+            "Illustrate and explain using the relationship between multiplication and division.",
+            "Determine the unknown whole number in a multiplication or division equation relating three whole numbers."
+          ]
+        },
+        {
+          "code": "NC.3.OA.8",
+          "cluster": "Solve two-step problems.",
+          "text": "Solve two-step word problems using addition, subtraction, and multiplication, representing problems using equations with a symbol for the unknown number.",
+          "bullets": []
+        },
+        {
+          "code": "NC.3.OA.9",
+          "cluster": "Explore patterns of numbers.",
+          "text": "Interpret patterns of multiplication on a hundreds board and/or multiplication table.",
+          "bullets": []
+        }
+      ]
+    },
+    {
+      "id": "NBT",
+      "name": "Number and Operations in Base Ten",
+      "standards": [
+        {
+          "code": "NC.3.NBT.2",
+          "cluster": "Use place value to add and subtract.",
+          "text": "Add and subtract whole numbers up to and including 1,000.",
+          "bullets": [
+            "Use estimation strategies to assess reasonableness of answers.",
+            "Model and explain how the relationship between addition and subtraction can be applied to solve addition and subtraction problems.",
+            "Use expanded form to decompose numbers and then find sums and differences."
+          ]
+        },
+        {
+          "code": "NC.3.NBT.3",
+          "cluster": "Generalize place value understanding for multi-digit numbers.",
+          "text": "Use concrete and pictorial models, based on place value and the properties of operations, to find the product of a one-digit whole number by a multiple of 10 in the range 10–90.",
+          "bullets": []
+        }
+      ]
+    },
+    {
+      "id": "NF",
+      "name": "Number and Operations – Fractions",
+      "standards": [
+        {
+          "code": "NC.3.NF.1",
+          "cluster": "Understand fractions as numbers.",
+          "text": "Interpret unit fractions with denominators of 2, 3, 4, 6, and 8 as quantities formed when a whole is partitioned into equal parts;",
+          "bullets": [
+            "Explain that a unit fraction is one of those parts.",
+            "Represent and identify unit fractions using area and length models."
+          ]
+        },
+        {
+          "code": "NC.3.NF.2",
+          "cluster": "Understand fractions as numbers.",
+          "text": "Interpret fractions with denominators of 2, 3, 4, 6, and 8 using area and length models.",
+          "bullets": [
+            "Using an area model, explain that the numerator of a fraction represents the number of equal parts of the unit fraction.",
+            "Using a number line, explain that the numerator of a fraction represents the number of lengths of the unit fraction from 0."
+          ]
+        },
+        {
+          "code": "NC.3.NF.3",
+          "cluster": "Understand fractions as numbers.",
+          "text": "Represent equivalent fractions with area and length models by:",
+          "bullets": [
+            "Composing and decomposing fractions into equivalent fractions using related fractions: halves, fourths and eighths; thirds and sixths.",
+            "Explaining that a fraction with the same numerator and denominator equals one whole.",
+            "Expressing whole numbers as fractions, and recognize fractions that are equivalent to whole numbers."
+          ]
+        },
+        {
+          "code": "NC.3.NF.4",
+          "cluster": "Understand fractions as numbers.",
+          "text": "Compare two fractions with the same numerator or the same denominator by reasoning about their size, using area and length models, and using the >, <, and = symbols. Recognize that comparisons are valid only when the two fractions refer to the same whole with denominators: halves, fourths and eighths; thirds and sixths.",
+          "bullets": []
+        }
+      ]
+    },
+    {
+      "id": "MD",
+      "name": "Measurement and Data",
+      "standards": [
+        {
+          "code": "NC.3.MD.1",
+          "cluster": "Solve problems involving measurement.",
+          "text": "Tell and write time to the nearest minute. Solve word problems involving addition and subtraction of time intervals within the same hour.",
+          "bullets": []
+        },
+        {
+          "code": "NC.3.MD.2",
+          "cluster": "Solve problems involving measurement.",
+          "text": "Solve problems involving customary measurement.",
+          "bullets": [
+            "Estimate and measure lengths in customary units to the quarter-inch and half-inch, and feet and yards to the whole unit.",
+            "Estimate and measure capacity and weight in customary units to a whole number: cups, pints, quarts, gallons, ounces, and pounds.",
+            "Add, subtract, multiply, or divide to solve one-step word problems involving whole number measurements of length, weight, and capacity in the same customary units."
+          ]
+        },
+        {
+          "code": "NC.3.MD.3",
+          "cluster": "Represent and interpret data.",
+          "text": "Represent and interpret scaled picture and bar graphs:",
+          "bullets": [
+            "Collect data by asking a question that yields data in up to four categories.",
+            "Make a representation of data and interpret data in a frequency table, scaled picture graph, and/or scaled bar graph with axes provided.",
+            "Solve one and two-step “how many more” and “how many less” problems using information from these graphs"
+          ]
+        },
+        {
+          "code": "NC.3.MD.5",
+          "cluster": "Understand the concept of area.",
+          "text": "Find the area of a rectangle with whole-number side lengths by tiling without gaps or overlaps and counting unit squares.",
+          "bullets": []
+        },
+        {
+          "code": "NC.3.MD.7",
+          "cluster": "Understand the concept of area.",
+          "text": "Relate area to the operations of multiplication and addition.",
+          "bullets": [
+            "Find the area of a rectangle with whole-number side lengths by tiling it, and show that the area is the same as would be found by multiplying the side lengths.",
+            "Multiply side lengths to find areas of rectangles with whole-number side lengths in the context of solving problems, and represent whole-number products as rectangular areas in mathematical reasoning.",
+            "Use tiles and/or arrays to illustrate and explain that the area of a rectangle can be found by partitioning it into two smaller rectangles, and that the area of the large rectangle is the sum of the two smaller rectangles."
+          ]
+        },
+        {
+          "code": "NC.3.MD.8",
+          "cluster": "Understand the concept of perimeter.",
+          "text": "Solve problems involving perimeters of polygons, including finding the perimeter given the side lengths, and finding an unknown side length.",
+          "bullets": []
+        }
+      ]
+    },
+    {
+      "id": "G",
+      "name": "Geometry",
+      "standards": [
+        {
+          "code": "NC.3.G.1",
+          "cluster": "Reason with shapes and their attributes.",
+          "text": "Reason with two-dimensional shapes and their attributes.",
+          "bullets": [
+            "Investigate, describe, and reason about composing triangles and quadrilaterals and decomposing quadrilaterals.",
+            "Recognize and draw examples and non-examples of types of quadrilaterals including rhombuses, rectangles, squares, parallelograms, and trapezoids."
+          ]
+        }
+      ]
+    }
+  ],
+  "4": [
+    {
+      "id": "OA",
+      "name": "Operations and Algebraic Thinking",
+      "standards": [
+        {
+          "code": "NC.4.OA.1",
+          "cluster": "Represent and solve problems involving multiplication and division.",
+          "text": "Interpret a multiplication equation as a comparison. Multiply or divide to solve word problems involving multiplicative comparisons using models and equations with a symbol for the unknown number. Distinguish multiplicative comparison from additive comparison.",
+          "bullets": []
+        },
+        {
+          "code": "NC.4.OA.3",
+          "cluster": "Use the four operations with whole numbers to solve problems.",
+          "text": "Solve two-step word problems involving the four operations with whole numbers.",
+          "bullets": [
+            "Use estimation strategies to assess reasonableness of answers.",
+            "Interpret remainders in word problems.",
+            "Represent problems using equations with a letter standing for the unknown quantity."
+          ]
+        },
+        {
+          "code": "NC.4.OA.4",
+          "cluster": "Gain familiarity with factors and multiples.",
+          "text": "Find all factor pairs for whole numbers up to and including 50 to:",
+          "bullets": [
+            "Recognize that a whole number is a multiple of each of its factors.",
+            "Determine whether a given whole number is a multiple of a given one-digit number.",
+            "Determine if the number is prime or composite."
+          ]
+        },
+        {
+          "code": "NC.4.OA.5",
+          "cluster": "Generate and analyze patterns.",
+          "text": "Generate and analyze a number or shape pattern that follows a given rule.",
+          "bullets": []
+        }
+      ]
+    },
+    {
+      "id": "NBT",
+      "name": "Number and Operations in Base Ten",
+      "standards": [
+        {
+          "code": "NC.4.NBT.1",
+          "cluster": "Generalize place value understanding for multi-digit numbers whole numbers.",
+          "text": "Explain that in a multi-digit whole number, a digit in one place represents 10 times as much as it represents in the place to its right, up to 100,000.",
+          "bullets": []
+        },
+        {
+          "code": "NC.4.NBT.2",
+          "cluster": "Generalize place value understanding for multi-digit numbers whole numbers.",
+          "text": "Read and write multi-digit whole numbers up to and including 100,000 using numerals, number names, and expanded form.",
+          "bullets": []
+        },
+        {
+          "code": "NC.4.NBT.7",
+          "cluster": "Generalize place value understanding for multi-digit numbers whole numbers.",
+          "text": "Compare two multi-digit numbers up to and including 100,000 based on the values of the digits in each place, using >, =, and < symbols to record the results of comparisons.",
+          "bullets": []
+        },
+        {
+          "code": "NC.4.NBT.4",
+          "cluster": "Use place value understanding and properties of operations to perform multi-digit arithmetic.",
+          "text": "Add and subtract multi-digit whole numbers up to and including 100,000 using the standard algorithm with place value understanding.",
+          "bullets": []
+        },
+        {
+          "code": "NC.4.NBT.5",
+          "cluster": "Use place value understanding and properties of operations to perform multi-digit arithmetic.",
+          "text": "Multiply a whole number of up to three digits by a one-digit whole number, and multiply up to two two-digit numbers with place value understanding using area models, partial products, and the properties of operations. Use models to make connections and develop the algorithm.",
+          "bullets": []
+        },
+        {
+          "code": "NC.4.NBT.6",
+          "cluster": "Use place value understanding and properties of operations to perform multi-digit arithmetic.",
+          "text": "Find whole-number quotients and remainders with up to three-digit dividends and one-digit divisors with place value understanding using rectangular arrays, area models, repeated subtraction, partial quotients, properties of operations, and/or the relationship between multiplication and division.",
+          "bullets": []
+        }
+      ]
+    },
+    {
+      "id": "NF",
+      "name": "Number and Operations – Fractions",
+      "standards": [
+        {
+          "code": "NC.4.NF.1",
+          "cluster": "Extend understanding of fractions.",
+          "text": "Explain why a fraction is equivalent to another fraction by using area and length fraction models, with attention to how the number and size of the parts differ even though the two fractions themselves are the same size.",
+          "bullets": []
+        },
+        {
+          "code": "NC.4.NF.2",
+          "cluster": "Extend understanding of fractions.",
+          "text": "Compare two fractions with different numerators and different denominators, using the denominators 2, 3, 4, 5, 6, 8, 10, 12, and 100.  Recognize that comparisons are valid only when the two fractions refer to the same whole. Record the results of comparisons with symbols >, =, or <, and justify the conclusions by:",
+          "bullets": [
+            "Reasoning about their size and using area and length models.",
+            "Using benchmark fractions 0, ½, and a whole.",
+            "Comparing common numerator or common denominators."
+          ]
+        },
+        {
+          "code": "NC.4.NF.3",
+          "cluster": "Build fractions from unit fractions by applying and extending previous understandings of operations on whole numbers.",
+          "text": "Understand and justify decompositions of fractions with denominators of 2, 3, 4, 5, 6, 8, 10, 12, and 100.",
+          "bullets": [
+            "Understand addition and subtraction of fractions as joining and separating parts referring to the same whole.",
+            "Decompose a fraction into a sum of unit fractions and a sum of fractions with the same denominator in more than one way using area models, length models, and equations.",
+            "Add and subtract fractions, including mixed numbers with like denominators, by replacing each mixed number with an equivalent fraction, and/or by using properties of operations and the relationship between addition and subtraction.",
+            "Solve word problems involving addition and subtraction of fractions, including mixed numbers by writing equations from a visual representation of the problem."
+          ]
+        },
+        {
+          "code": "NC.4.NF.4",
+          "cluster": "Use unit fractions to understand operations of fractions.",
+          "text": "Apply and extend previous understandings of multiplication to:",
+          "bullets": [
+            "Model and explain how fractions can be represented by multiplying a whole number by a unit fraction, using this understanding to multiply a whole number by any fraction less than one.",
+            "Solve word problems involving multiplication of a fraction by a whole number."
+          ]
+        },
+        {
+          "code": "NC.4.NF.6",
+          "cluster": "Understand decimal notation for fractions, and compare decimal fractions.",
+          "text": "Use decimal notation to represent fractions.",
+          "bullets": [
+            "Express, model and explain the equivalence between fractions with denominators of 10 and 100.",
+            "Use equivalent fractions to add two fractions with denominators of 10 or 100.",
+            "Represent tenths and hundredths with models, making connections between fractions and decimals."
+          ]
+        },
+        {
+          "code": "NC.4.NF.7",
+          "cluster": "Understand decimal notation for fractions, and compare decimal fractions.",
+          "text": "Compare two decimals to hundredths by reasoning about their size using area and length models, and recording the results of comparisons with the symbols >, =, or <. Recognize that comparisons are valid only when the two decimals refer to the same whole.",
+          "bullets": []
+        }
+      ]
+    },
+    {
+      "id": "MD",
+      "name": "Measurement and Data",
+      "standards": [
+        {
+          "code": "NC.4.MD.1",
+          "cluster": "Solve problems involving measurement.",
+          "text": "Know relative sizes of measurement units. Solve problems involving metric measurement.",
+          "bullets": [
+            "Measure to solve problems involving metric units:, centimeter, meter, gram, kilogram, Liter, milliliter.",
+            "Add, subtract, multiply, and divide to solve one-step word problems involving whole-number measurements of length, mass, and capacity that are given in metric units."
+          ]
+        },
+        {
+          "code": "NC.4.MD.2",
+          "cluster": "Solve problems involving measurement.",
+          "text": "Use multiplicative reasoning to convert metric measurements from a larger unit to a smaller unit using place value understanding, two-column tables, and length models.",
+          "bullets": []
+        },
+        {
+          "code": "NC.4.MD.8",
+          "cluster": "Solve problems involving measurement.",
+          "text": "Solve word problems involving addition and subtraction of time intervals that cross the hour.",
+          "bullets": []
+        },
+        {
+          "code": "NC.4.MD.3",
+          "cluster": "Solve problems involving area and perimeter.",
+          "text": "Solve problems with area and perimeter.",
+          "bullets": [
+            "Find areas of rectilinear figures with known side lengths.",
+            "Solve problems involving a fixed area and varying perimeters and a fixed perimeter and varying areas.",
+            "Apply the area and perimeter formulas for rectangles in real world and mathematical problems."
+          ]
+        },
+        {
+          "code": "NC.4.MD.4",
+          "cluster": "Represent and interpret data.",
+          "text": "Represent and interpret data using whole numbers.",
+          "bullets": [
+            "Collect data by asking a question that yields numerical data.",
+            "Make a representation of data and interpret data in a frequency table, scaled bar graph, and/or line plot.",
+            "Determine whether a survey question will yield categorical or numerical data."
+          ]
+        },
+        {
+          "code": "NC.4.MD.6",
+          "cluster": "Understand concepts of angle and measure angles.",
+          "text": "Develop an understanding of angles and angle measurement.",
+          "bullets": [
+            "Understand angles as geometric shapes that are formed wherever two rays share a common endpoint, and are measured in degrees.",
+            "Measure and sketch angles in whole-number degrees using a protractor.",
+            "Solve addition and subtraction problems to find unknown angles on a diagram in real-world and mathematical problems."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "G",
+      "name": "Geometry",
+      "standards": [
+        {
+          "code": "NC.4.G.1",
+          "cluster": "Classify shapes based on lines and angles in two-dimensional figures.",
+          "text": "Draw and identify points, lines, line segments, rays, angles, and perpendicular and parallel lines.",
+          "bullets": []
+        },
+        {
+          "code": "NC.4.G.2",
+          "cluster": "Classify shapes based on lines and angles in two-dimensional figures.",
+          "text": "Classify quadrilaterals and triangles based on angle measure, side lengths, and the presence or absence of parallel or perpendicular lines.",
+          "bullets": []
+        },
+        {
+          "code": "NC.4.G.3",
+          "cluster": "Classify shapes based on lines and angles in two-dimensional figures.",
+          "text": "Recognize symmetry in a two-dimensional figure, and identify and draw lines of symmetry.",
+          "bullets": []
+        }
+      ]
+    }
+  ],
+  "5": [
+    {
+      "id": "OA",
+      "name": "Operations and Algebraic Thinking",
+      "standards": [
+        {
+          "code": "NC.5.OA.2",
+          "cluster": "Write and interpret numerical expressions.",
+          "text": "Write, explain, and evaluate numerical expressions involving the four operations to solve up to two-step problems. Include expressions involving:",
+          "bullets": [
+            "Parentheses, using the order of operations",
+            "Commutative, associative and distributive properties"
+          ]
+        },
+        {
+          "code": "NC.5.OA.3",
+          "cluster": "Analyze patterns and relationships.",
+          "text": "Generate two numerical patterns using two given rules.",
+          "bullets": [
+            "Identify apparent relationships between corresponding terms.",
+            "Form ordered pairs consisting of corresponding terms from the two patterns.",
+            "Graph the ordered pairs on a coordinate plane."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "NBT",
+      "name": "Number and Operations in Base Ten",
+      "standards": [
+        {
+          "code": "NC.5.NBT.1",
+          "cluster": "Understand the place value system.",
+          "text": "Explain the patterns in the place value system from one million to the thousandths place.",
+          "bullets": [
+            "Explain that in a multi-digit number, a digit in one place represents 10 times as much as it represents in the place to its right and 1/10 of what it represents in the place to its left.",
+            "Explain patterns in products and quotients when numbers are multiplied by 1,000, 100, 10, 0.1, and 0.01 and/or divided by 10 and 100."
+          ]
+        },
+        {
+          "code": "NC.5.NBT.3",
+          "cluster": "Understand the place value system.",
+          "text": "Read, write, and compare decimals to thousandths.",
+          "bullets": [
+            "Write decimals using base-ten numerals, number names, and expanded form.",
+            "Compare two decimals to thousandths based on the value of the digits in each place, using >, =, and < symbols to record the results of comparisons."
+          ]
+        },
+        {
+          "code": "NC.5.NBT.5",
+          "cluster": "Perform operations with multi-digit whole numbers.",
+          "text": "Demonstrate fluency with the multiplication of two whole numbers up to a three-digit number by a two-digit number using the standard algorithm.",
+          "bullets": []
+        },
+        {
+          "code": "NC.5.NBT.6",
+          "cluster": "Perform operations with multi-digit whole numbers.",
+          "text": "Find quotients with remainders when dividing whole numbers with up to four-digit dividends and two-digit divisors using rectangular arrays, area models, repeated subtraction, partial quotients, and/or the relationship between multiplication and division. Use models to make connections and develop the algorithm.",
+          "bullets": []
+        },
+        {
+          "code": "NC.5.NBT.7",
+          "cluster": "Perform operations with decimals.",
+          "text": "Compute and solve real-world problems with multi-digit whole numbers and decimal numbers.",
+          "bullets": [
+            "Add and subtract decimals to thousandths using models, drawings or strategies based on place value.",
+            "Multiply decimals with a product to thousandths using models, drawings, or strategies based on place value.",
+            "Divide a whole number by a decimal and divide a decimal by a whole number, using repeated subtraction or area models. Decimals should be limited to hundredths.",
+            "Use estimation strategies to assess reasonableness of answers."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "NF",
+      "name": "Number and Operations – Fractions",
+      "standards": [
+        {
+          "code": "NC.5.NF.1",
+          "cluster": "Use equivalent fractions as a strategy to add and subtract fractions.",
+          "text": "Add and subtract fractions, including mixed numbers, with unlike denominators using related fractions: halves, fourths and eighths; thirds, sixths, and twelfths; fifths, tenths, and hundredths.",
+          "bullets": [
+            "Use benchmark fractions and number sense of fractions to estimate mentally and assess the reasonableness of answers.",
+            "Solve one- and two-step word problems in context using area and length models to develop the algorithm. Represent the word problem in an equation."
+          ]
+        },
+        {
+          "code": "NC.5.NF.3",
+          "cluster": "Apply and extend previous understandings of multiplication and division to multiply and divide fractions.",
+          "text": "Use fractions to model and solve division problems.",
+          "bullets": [
+            "Interpret a fraction as an equal sharing context, where a quantity is divided into equal parts.",
+            "Model and interpret a fraction as the division of the numerator by the denominator.",
+            "Solve one-step word problems involving division of whole numbers leading to answers in the form of fractions and mixed numbers, with denominators of 2, 3, 4, 5, 6, 8, 10, and 12, using area, length, and set models or equations."
+          ]
+        },
+        {
+          "code": "NC.5.NF.4",
+          "cluster": "Apply and extend previous understandings of multiplication and division to multiply and divide fractions.",
+          "text": "Apply and extend previous understandings of multiplication to multiply a fraction or whole number by a fraction, including mixed numbers.",
+          "bullets": [
+            "Use area and length models to multiply two fractions, with the denominators 2, 3, 4.",
+            "Explain why multiplying a given number by a fraction greater than 1 results in a product greater than the given number and when multiplying a given number by a fraction less than 1 results in a product smaller than the given number.",
+            "Solve one-step word problems involving multiplication of fractions using models to develop the algorithm."
+          ]
+        },
+        {
+          "code": "NC.5.NF.7",
+          "cluster": "Apply and extend previous understandings of multiplication and division to multiply and divide fractions.",
+          "text": "Solve one-step word problems involving division of unit fractions by non-zero whole numbers and division of whole numbers by unit fractions using area and length models, and equations to represent the problem.",
+          "bullets": []
+        }
+      ]
+    },
+    {
+      "id": "MD",
+      "name": "Measurement and Data",
+      "standards": [
+        {
+          "code": "NC.5.MD.1",
+          "cluster": "Convert like measurement units within a given measurement system.",
+          "text": "Given a conversion chart, use multiplicative reasoning to solve one-step conversion problems within a given measurement system.",
+          "bullets": []
+        },
+        {
+          "code": "NC.5.MD.2",
+          "cluster": "Represent and interpret data.",
+          "text": "Represent and interpret data.",
+          "bullets": [
+            "Collect data by asking a question that yields data that changes over time.",
+            "Make and interpret a representation of data using a line graph.",
+            "Determine whether a survey question will yield categorical or numerical data, or data that changes over time."
+          ]
+        },
+        {
+          "code": "NC.5.MD.4",
+          "cluster": "Understand concepts of volume.",
+          "text": "Recognize volume as an attribute of solid figures and measure volume by counting unit cubes, using cubic centimeters, cubic inches, cubic feet, and improvised units.",
+          "bullets": []
+        },
+        {
+          "code": "NC.5.MD.5",
+          "cluster": "Understand concepts of volume.",
+          "text": "Relate volume to the operations of multiplication and addition.",
+          "bullets": [
+            "Find the volume of a rectangular prism with whole-number side lengths by packing it with unit cubes, and show that the volume is the same as would be found by multiplying the edge lengths.",
+            "Build understanding of the volume formula for rectangular prisms with whole-number edge lengths in the context of solving problems.",
+            "Find volume of solid figures with one-digit dimensions composed of two non-overlapping rectangular prisms."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "G",
+      "name": "Geometry",
+      "standards": [
+        {
+          "code": "NC.5.G.1",
+          "cluster": "Understand the coordinate plane.",
+          "text": "Graph points in the first quadrant of a coordinate plane, and identify and interpret the x and y coordinates to solve problems.",
+          "bullets": []
+        },
+        {
+          "code": "NC.5.G.3",
+          "cluster": "Classify quadrilaterals.",
+          "text": "Classify quadrilaterals into categories based on their properties.",
+          "bullets": [
+            "Explain that attributes belonging to a category of quadrilaterals also belong to all subcategories of that category.",
+            "Classify quadrilaterals in a hierarchy based on properties."
+          ]
+        }
+      ]
+    }
+  ]
+}
