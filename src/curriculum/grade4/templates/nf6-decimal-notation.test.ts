@@ -86,9 +86,54 @@ describe('g4.nf6.decimal-notation', () => {
     }
   });
 
-  it('sweeps its whole parameter space without a collision', () => {
-    // (t, u) is the entire space; only the option shuffle is left to the seed,
-    // and that cannot change what the options say.
+  // The sweep DRIVES generate() rather than recomputing what generate() ought
+  // to print. A sweep that rebuilds the option texts inline is checking its own
+  // arithmetic against itself, and that copy can drift from the generator in
+  // silence — the same defect the shared numericValue() guard had while a
+  // domain test kept a private copy of its patterns.
+  it('covers its whole parameter space, checked on what it really generates', () => {
+    const admissible = new Set(admissiblePairs().map(([t, u]) => `${t},${u}`));
+    const seen = new Set<string>();
+    const failures: string[] = [];
+    // 300 seeds reached only 69 of the 71 draws; 2,000 reaches all of them.
+    for (let seed = 0; seed < 2000; seed++) {
+      const g = nf6DecimalNotation.generate(makeRng(seed));
+      const shaded = Number(g.promptDetails!.match(/^(\d+) of the 100/)![1]);
+      const t = Math.floor(shaded / 10);
+      const u = shaded % 10;
+      const key = `${t},${u}`;
+      seen.add(key);
+      const where = `seed ${seed} (${shaded} squares)`;
+      if (!admissible.has(key)) {
+        failures.push(`${where}: drew a barred combination`);
+        continue;
+      }
+      // Solved from the prompt, not rebuilt from the generator's expressions.
+      if (Math.abs(Number(g.answerText) - shaded / 100) > 1e-12) {
+        failures.push(`${where}: key ${g.answerText} is not ${shaded}/100`);
+      }
+      if (g.answerText.split('.')[1].length !== 2) failures.push(`${where}: key is not hundredths`);
+      const texts = g.options.map((o) => o.text);
+      if (new Set(texts).size !== 4) failures.push(`${where}: duplicate option text`);
+      const values = texts.map(Number);
+      if (new Set(values.map((v) => v.toFixed(12))).size !== 4) {
+        failures.push(`${where}: two options name one quantity`);
+      }
+      for (const numeral of [g.promptDetails!, ...texts].join(' ').match(/\d+/g) ?? []) {
+        if (Number(numeral) > 100) failures.push(`${where}: ${numeral} out of range`);
+      }
+    }
+    expect(failures.slice(0, 5)).toEqual([]);
+    // 81 (t, u) pairs are in range; 9 are barred by t !== u and 1 more is owned
+    // by the authored bank, leaving 71 — and 2,000 seeds reach every one.
+    expect(admissible.size).toBe(71);
+    expect(seen.size).toBe(71);
+  });
+
+  // This one has to recompute, and says so: the generator never emits these
+  // pairs, so there is no output to check them against. What it proves is that
+  // nothing was excluded merely for tidiness.
+  it('excludes only pairs that really would have collided', () => {
     const admissible = new Set(admissiblePairs().map(([t, u]) => `${t},${u}`));
     let inRange = 0;
     let barredByCollision = 0;
@@ -97,29 +142,21 @@ describe('g4.nf6.decimal-notation', () => {
     for (let t = 1; t <= 9; t++) {
       for (let u = 1; u <= 9; u++) {
         inRange++;
+        if (admissible.has(`${t},${u}`)) continue;
+        if (OWNED_BY_AUTHORED_BANK.has(`${t},${u}`)) {
+          barredByAuthoredBank++;
+          continue;
+        }
+        barredByCollision++;
         const texts = [`0.${t}${u}`, `0.0${t}${u}`, `${t}.${u}`, `0.${u}${t}`];
         const values = texts.map(Number);
         const collides =
           new Set(values.map((v) => v.toFixed(12))).size !== 4 || new Set(texts).size !== 4;
-        const where = `t=${t} u=${u}`;
-        const owned = OWNED_BY_AUTHORED_BANK.has(`${t},${u}`);
-        if (!admissible.has(`${t},${u}`)) {
-          if (owned) {
-            barredByAuthoredBank++;
-            continue;
-          }
-          barredByCollision++;
-          if (!collides) failures.push(`barred but sound: ${where}`);
-          continue;
-        }
-        if (owned) failures.push(`authored-bank draw not barred: ${where}`);
-        if (collides) failures.push(`collision: ${where}`);
-        if (10 * t + u > 100) failures.push(`out of range: ${where}`);
+        if (!collides) failures.push(`barred but sound: t=${t} u=${u}`);
       }
     }
-    expect(failures.slice(0, 5)).toEqual([]);
+    expect(failures).toEqual([]);
     expect(inRange).toBe(81);
-    expect(admissible.size).toBe(71);
     expect(barredByCollision).toBe(9);
     expect(barredByAuthoredBank).toBe(1);
   });

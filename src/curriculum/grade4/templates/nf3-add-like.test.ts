@@ -101,9 +101,51 @@ describe('g4.nf3.add-like', () => {
     }
   });
 
-  it('sweeps its whole parameter space without a collision', () => {
-    // (d, a, b) is the entire space: the only other draw a seed makes is the
-    // shuffle of the four options, which cannot change what they say.
+  // The sweep DRIVES generate() rather than recomputing what generate() ought
+  // to print. A sweep that rebuilds the option texts inline is checking its own
+  // arithmetic against itself, and that copy can drift from the generator in
+  // silence — the same defect the shared numericValue() guard had while a
+  // domain test kept a private copy of its patterns.
+  it('covers its whole parameter space, checked on what it really generates', () => {
+    const admissible = new Set(admissibleAddends().map(([d, a, b]) => `${d},${a},${b}`));
+    const seen = new Set<string>();
+    const failures: string[] = [];
+    for (let seed = 0; seed < 2000; seed++) {
+      const g = nf3AddLike.generate(makeRng(seed));
+      const [left, right] = g.promptDetails!.split(' + ');
+      const [a, d] = left.split('/').map(Number);
+      const [b, d2] = right.split('/').map(Number);
+      const key = `${d},${a},${b}`;
+      seen.add(key);
+      const where = `seed ${seed} (${g.promptDetails})`;
+      if (!admissible.has(key)) {
+        failures.push(`${where}: drew a barred combination`);
+        continue;
+      }
+      if (d2 !== d) failures.push(`${where}: denominators differ`);
+      // Solved from the prompt, not rebuilt from the generator's expressions.
+      if (g.answerText !== `${a + b}/${d}`) failures.push(`${where}: key is ${g.answerText}`);
+      const texts = g.options.map((o) => o.text);
+      if (new Set(texts).size !== 4) failures.push(`${where}: duplicate option text`);
+      const values = texts.map(valueOf);
+      if (new Set(values.map((v) => v.toFixed(12))).size !== 4) {
+        failures.push(`${where}: two options name one quantity`);
+      }
+      for (const numeral of texts.join(' ').match(/\d+/g) ?? []) {
+        if (Number(numeral) > 144) failures.push(`${where}: ${numeral} out of range`);
+      }
+    }
+    expect(failures.slice(0, 5)).toEqual([]);
+    // 75 (d, a, b) combinations are in range and 63 survive the two
+    // exclusions — and 2,000 seeds reach every one of the 63.
+    expect(admissible.size).toBe(63);
+    expect(seen.size).toBe(63);
+  });
+
+  // This one has to recompute, and says so: the generator never emits these
+  // combinations, so there is no output to check them against. What it proves
+  // is that nothing was excluded merely for tidiness.
+  it('excludes only combinations that really would have collided', () => {
     const admissible = new Set(admissibleAddends().map(([d, a, b]) => `${d},${a},${b}`));
     let inRange = 0;
     let barred = 0;
@@ -113,22 +155,17 @@ describe('g4.nf3.add-like', () => {
         for (let b = 1; b < a; b++) {
           if (a + b > d) continue;
           inRange++;
+          if (admissible.has(`${d},${a},${b}`)) continue;
+          barred++;
           const values = [(a + b) / d, (a + b) / (2 * d), (a + b) / (d * d), (a - b) / d];
-          const collides = new Set(values.map((v) => v.toFixed(12))).size !== 4;
-          const where = `d=${d} a=${a} b=${b}`;
-          if (!admissible.has(`${d},${a},${b}`)) {
-            barred++;
-            if (!collides) failures.push(`barred but sound: ${where}`);
-            continue;
+          if (new Set(values.map((v) => v.toFixed(12))).size === 4) {
+            failures.push(`barred but sound: d=${d} a=${a} b=${b}`);
           }
-          if (collides) failures.push(`collision: ${where}`);
-          if (d * d > 144) failures.push(`out of range: ${where}`);
         }
       }
     }
-    expect(failures.slice(0, 5)).toEqual([]);
+    expect(failures).toEqual([]);
     expect(inRange).toBe(75);
-    expect(admissible.size).toBe(63);
     expect(barred).toBe(12);
   });
 });

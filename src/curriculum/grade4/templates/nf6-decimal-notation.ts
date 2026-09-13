@@ -72,6 +72,16 @@ const PAIRS = admissiblePairs();
  * disjoint from this one's. Notation and addition are two procedures, so they
  * are two template ids and two review keys.
  *
+ * THIS TEMPLATE PRINTS THOUSANDTHS on every one of its 71 draws: the `0.0tu`
+ * distractor has three decimal places. That is deliberate and it is the whole
+ * point of the option — writing a hundredths fraction with three places is the
+ * shifted-place error NC.4.NF.6 exists to catch — but it has to be stated,
+ * because thousandths are NC.5.NBT.3 and anyone checking the grade boundary
+ * will look for a claim about them. No draw ever asks a child to COMPUTE in
+ * thousandths; ruling the option out needs only the knowledge that hundredths
+ * live in the second decimal place. The domain-level statement of this is in
+ * `../authored.nf.ts`, and it names this file.
+ *
  * Largest number printed: 100, the number of squares in the grid.
  */
 export const nf6DecimalNotation: QuestionTemplate = {

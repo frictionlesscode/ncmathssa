@@ -86,9 +86,53 @@ describe('g4.nf4.multiply-by-whole', () => {
     }
   });
 
-  it('sweeps its whole parameter space without a collision', () => {
-    // (w, n, d) is the entire space; only the option shuffle is left to the
-    // seed, and that cannot change what the options say.
+  // The sweep DRIVES generate() rather than recomputing what generate() ought
+  // to print. A sweep that rebuilds the option texts inline is checking its own
+  // arithmetic against itself, and that copy can drift from the generator in
+  // silence — the same defect the shared numericValue() guard had while a
+  // domain test kept a private copy of its patterns.
+  it('covers its whole parameter space, checked on what it really generates', () => {
+    const admissible = new Set(admissibleProducts().map(([w, n, d]) => `${w},${n},${d}`));
+    const seen = new Set<string>();
+    const failures: string[] = [];
+    // 203 combinations; 5,000 seeds is comfortably past the coupon-collector
+    // cost of reaching all of them.
+    for (let seed = 0; seed < 5000; seed++) {
+      const g = nf4MultiplyByWhole.generate(makeRng(seed));
+      const [whole, frac] = g.promptDetails!.split(' × ');
+      const w = Number(whole);
+      const [n, d] = frac.split('/').map(Number);
+      const key = `${w},${n},${d}`;
+      seen.add(key);
+      const where = `seed ${seed} (${g.promptDetails})`;
+      if (!admissible.has(key)) {
+        failures.push(`${where}: drew a barred combination`);
+        continue;
+      }
+      // Solved from the prompt, not rebuilt from the generator's expressions.
+      if (g.answerText !== `${w * n}/${d}`) failures.push(`${where}: key is ${g.answerText}`);
+      if (n >= d) failures.push(`${where}: the fraction is not less than one`);
+      const texts = g.options.map((o) => o.text);
+      if (new Set(texts).size !== 4) failures.push(`${where}: duplicate option text`);
+      const values = texts.map(valueOf);
+      if (new Set(values.map((v) => v.toFixed(12))).size !== 4) {
+        failures.push(`${where}: two options name one quantity`);
+      }
+      for (const numeral of texts.join(' ').match(/\d+/g) ?? []) {
+        if (Number(numeral) > 72) failures.push(`${where}: ${numeral} out of range`);
+      }
+    }
+    expect(failures.slice(0, 5)).toEqual([]);
+    // 210 (w, n, d) combinations are in range and 203 survive the single
+    // exclusion — and 5,000 seeds reach every one of the 203.
+    expect(admissible.size).toBe(203);
+    expect(seen.size).toBe(203);
+  });
+
+  // This one has to recompute, and says so: the generator never emits these
+  // combinations, so there is no output to check them against. What it proves
+  // is that nothing was excluded merely for tidiness.
+  it('excludes only combinations that really would have collided', () => {
     const admissible = new Set(admissibleProducts().map(([w, n, d]) => `${w},${n},${d}`));
     let inRange = 0;
     let barred = 0;
@@ -97,22 +141,17 @@ describe('g4.nf4.multiply-by-whole', () => {
       for (const d of DENOMINATORS) {
         for (let n = 1; n <= d - 1; n++) {
           inRange++;
+          if (admissible.has(`${w},${n},${d}`)) continue;
+          barred++;
           const values = [(w * n) / d, (w * n) / (w * d), w + n / d, (w + n) / d];
-          const collides = new Set(values.map((v) => v.toFixed(12))).size !== 4;
-          const where = `w=${w} n=${n} d=${d}`;
-          if (!admissible.has(`${w},${n},${d}`)) {
-            barred++;
-            if (!collides) failures.push(`barred but sound: ${where}`);
-            continue;
+          if (new Set(values.map((v) => v.toFixed(12))).size === 4) {
+            failures.push(`barred but sound: w=${w} n=${n} d=${d}`);
           }
-          if (collides) failures.push(`collision: ${where}`);
-          if (w * d > 72 || w * n > 72) failures.push(`out of range: ${where}`);
         }
       }
     }
-    expect(failures.slice(0, 5)).toEqual([]);
+    expect(failures).toEqual([]);
     expect(inRange).toBe(210);
-    expect(admissible.size).toBe(203);
     expect(barred).toBe(7);
   });
 });

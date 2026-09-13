@@ -101,9 +101,58 @@ describe('g4.nf3.subtract-mixed', () => {
     }
   });
 
-  it('sweeps its whole parameter space without a collision', () => {
-    // (d, f1, f2, W1, W2) is the entire space. Only the option shuffle is left
-    // to the seed, and that cannot change what the options say.
+  // The sweep DRIVES generate() rather than recomputing what generate() ought
+  // to print. A sweep that rebuilds the option texts inline is checking its own
+  // arithmetic against itself, and that copy can drift from the generator in
+  // silence — the same defect the shared numericValue() guard had while a
+  // domain test kept a private copy of its patterns.
+  it('covers its whole parameter space, checked on what it really generates', () => {
+    const parts = new Set(admissibleParts().map(([d, f1, f2]) => `${d},${f1},${f2}`));
+    const wholes = admissibleWholes();
+    const admissible = new Set<string>();
+    for (const p of parts) for (const [w1, w2] of wholes) admissible.add(`${p},${w1},${w2}`);
+
+    const seen = new Set<string>();
+    const failures: string[] = [];
+    // 765 combinations, drawn as 51 fraction parts against 15 whole-number
+    // pairs; 20,000 seeds is comfortably past the coupon-collector cost of
+    // reaching all of them.
+    for (let seed = 0; seed < 20000; seed++) {
+      const g = nf3SubtractMixed.generate(makeRng(seed));
+      const [left, right] = g.promptDetails!.split(' - ');
+      const a = partsOf(left);
+      const b = partsOf(right);
+      const key = `${a.d},${a.n},${b.n},${a.whole},${b.whole}`;
+      seen.add(key);
+      const where = `seed ${seed} (${g.promptDetails})`;
+      if (!admissible.has(key)) {
+        failures.push(`${where}: drew a barred combination`);
+        continue;
+      }
+      // Solved from the prompt, not rebuilt from the generator's expressions.
+      const expected = valueOf(left) - valueOf(right);
+      if (Math.abs(valueOf(g.answerText) - expected) > 1e-9) {
+        failures.push(`${where}: key ${g.answerText} is not the difference`);
+      }
+      const texts = g.options.map((o) => o.text);
+      if (new Set(texts).size !== 4) failures.push(`${where}: duplicate option text`);
+      const values = texts.map(valueOf);
+      if (new Set(values.map((v) => v.toFixed(12))).size !== 4) {
+        failures.push(`${where}: two options name one quantity`);
+      }
+      for (const numeral of texts.join(' ').match(/\d+/g) ?? []) {
+        if (Number(numeral) > 12) failures.push(`${where}: ${numeral} out of range`);
+      }
+    }
+    expect(failures.slice(0, 5)).toEqual([]);
+    expect(admissible.size).toBe(765);
+    expect(seen.size).toBe(765);
+  });
+
+  // This one has to recompute, and says so: the generator never emits these
+  // combinations, so there is no output to check them against. What it proves
+  // is that nothing was excluded merely for tidiness.
+  it('excludes only combinations that really would have collided', () => {
     const parts = new Set(admissibleParts().map(([d, f1, f2]) => `${d},${f1},${f2}`));
     const wholes = admissibleWholes();
     let inRange = 0;
@@ -116,21 +165,17 @@ describe('g4.nf3.subtract-mixed', () => {
           const admissible = parts.has(`${d},${f1},${f2}`);
           for (const [w1, w2] of wholes) {
             inRange++;
+            if (admissible) continue;
+            barred++;
             const values = [
               w1 - w2 - 1 + (f1 + d - f2) / d,
               w1 - w2 + (f2 - f1) / d,
               w1 - w2 + (f1 + d - f2) / d,
               w1 + w2 + (f1 + f2) / d,
             ];
-            const collides = new Set(values.map((v) => v.toFixed(12))).size !== 4;
-            const where = `d=${d} f1=${f1} f2=${f2} w1=${w1} w2=${w2}`;
-            if (!admissible) {
-              barred++;
-              if (!collides) failures.push(`barred but sound: ${where}`);
-              continue;
+            if (new Set(values.map((v) => v.toFixed(12))).size === 4) {
+              failures.push(`barred but sound: d=${d} f1=${f1} f2=${f2} w1=${w1} w2=${w2}`);
             }
-            if (collides) failures.push(`collision: ${where}`);
-            if (w1 + w2 > 12 || d > 12) failures.push(`out of range: ${where}`);
           }
         }
       }

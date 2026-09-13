@@ -96,12 +96,59 @@ describe('g4.nf1.equivalent-fraction', () => {
     }
   });
 
-  it('sweeps its whole parameter space without a collision', () => {
-    // Every option is written over the SAME denominator D, so two options name
-    // the same quantity exactly when their numerators are equal. The parameter
-    // space is therefore (b, D, a) in full — there is nothing else that could
-    // move a numerator.
-    let checked = 0;
+  // The sweep DRIVES generate() rather than recomputing what generate() ought
+  // to print. A sweep that rebuilds the option texts inline is checking its own
+  // arithmetic against itself, and that copy can drift from the generator in
+  // silence — the same defect the shared numericValue() guard had while a
+  // domain test kept a private copy of its patterns.
+  it('covers its whole parameter space, checked on what it really generates', () => {
+    const admissible = new Set<string>();
+    for (const [b, D] of PAIRS) {
+      for (const a of admissibleNumerators(b, D)) admissible.add(`${b},${D},${a}`);
+    }
+
+    const seen = new Set<string>();
+    const failures: string[] = [];
+    for (let seed = 0; seed < 2000; seed++) {
+      const g = nf1EquivalentFraction.generate(makeRng(seed));
+      const [given, target] = g.promptDetails!.split(' = ');
+      const [a, b] = given.split('/').map(Number);
+      const D = Number(target.split('/')[1]);
+      const key = `${b},${D},${a}`;
+      seen.add(key);
+      if (!admissible.has(key)) {
+        failures.push(`seed ${seed} drew a barred combination: ${key}`);
+        continue;
+      }
+      // Solved here from the prompt alone, not rebuilt from the generator's
+      // own expressions.
+      if (g.answerText !== `${(a * D) / b}/${D}`) {
+        failures.push(`seed ${seed}: key ${g.answerText} is not equivalent to ${a}/${b}`);
+      }
+      const texts = g.options.map((o) => o.text);
+      if (new Set(texts).size !== 4) failures.push(`seed ${seed}: duplicate option text`);
+      const values = texts.map(valueOf);
+      if (new Set(values.map((v) => v.toFixed(12))).size !== 4) {
+        failures.push(`seed ${seed}: two options name one quantity at ${key}`);
+      }
+      for (const text of texts) {
+        const [n, d] = text.split('/').map(Number);
+        if (d !== D) failures.push(`seed ${seed}: option ${text} is not over ${D}`);
+        if (n < 1 || n > 100) failures.push(`seed ${seed}: numerator ${n} out of range`);
+      }
+    }
+    expect(failures.slice(0, 5)).toEqual([]);
+    // 40 (b, D, a) combinations are in range; 3 are barred by the a = b/k
+    // collision and 2 more are owned by the authored bank, leaving 35 — and
+    // 2,000 seeds reach every one of them.
+    expect(admissible.size).toBe(35);
+    expect(seen.size).toBe(35);
+  });
+
+  // This one has to recompute, and says so: the generator never emits these
+  // combinations, so there is no output to check them against. What it proves
+  // is that nothing was excluded merely for tidiness.
+  it('excludes only combinations that really would have collided', () => {
     let barredByCollision = 0;
     let barredByAuthoredBank = 0;
     const failures: string[] = [];
@@ -109,32 +156,19 @@ describe('g4.nf1.equivalent-fraction', () => {
       const k = D / b;
       const admissible = new Set(admissibleNumerators(b, D));
       for (let a = 1; a <= b - 1; a++) {
-        const numerators = [a * k, a, a + b * (k - 1), b];
-        const collides = new Set(numerators).size !== 4;
-        const owned = OWNED_BY_AUTHORED_BANK.has(`${b},${D},${a}`);
-        if (!admissible.has(a)) {
-          if (owned) {
-            barredByAuthoredBank++;
-            continue;
-          }
-          barredByCollision++;
-          // Nothing is excluded for tidiness: every value barred by the
-          // algebra really would have put two options on the same number.
-          if (!collides) failures.push(`barred but sound: b=${b} D=${D} a=${a}`);
+        if (admissible.has(a)) continue;
+        if (OWNED_BY_AUTHORED_BANK.has(`${b},${D},${a}`)) {
+          barredByAuthoredBank++;
           continue;
         }
-        if (owned) failures.push(`authored-bank draw not barred: b=${b} D=${D} a=${a}`);
-        if (collides) failures.push(`collision: b=${b} D=${D} a=${a} -> ${numerators}`);
-        for (const n of numerators) {
-          if (n > 100 || n < 1) failures.push(`out of range: b=${b} D=${D} a=${a} n=${n}`);
+        barredByCollision++;
+        const numerators = [a * k, a, a + b * (k - 1), b];
+        if (new Set(numerators).size === 4) {
+          failures.push(`barred but sound: b=${b} D=${D} a=${a} -> ${numerators}`);
         }
-        checked++;
       }
     }
-    expect(failures.slice(0, 5)).toEqual([]);
-    // 40 in range: 3 barred by the a = b/k collision, 2 more owned by the
-    // authored bank, 35 left.
-    expect(checked).toBe(35);
+    expect(failures).toEqual([]);
     expect(barredByCollision).toBe(3);
     expect(barredByAuthoredBank).toBe(2);
   });

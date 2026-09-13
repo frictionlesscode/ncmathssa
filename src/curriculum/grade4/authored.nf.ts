@@ -35,12 +35,18 @@ import { labelOptions } from '../../engine/questionModel';
  * list of its own, and rather than let one standard's items contradict the
  * generator filed under the same standard, they follow NF.2's.
  *
- * No item REQUIRES working in thousandths, which is NC.5.NBT.3. Two items do
- * PRINT a thousandths distractor — `0.018 m` in g4-nf6-01 and `0.009` in
- * g4-nf6-04 — and both are deliberate: writing 18/100 with three decimal
- * places is exactly the shifted-place error NC.4.NF.6 exists to catch, and
- * ruling it out needs no arithmetic in thousandths at all, only the knowledge
- * that hundredths live in the second decimal place.
+ * Nothing in this domain REQUIRES working in thousandths, which is
+ * NC.5.NBT.3. Thousandths are nevertheless PRINTED, always as a distractor and
+ * always on purpose: `0.018 m` in g4-nf6-01, `0.009` in g4-nf6-04, and the
+ * `0.0tu` option that `./templates/nf6-decimal-notation.ts` emits on every one
+ * of its 71 draws. Writing 18/100 with three decimal places is exactly the
+ * shifted-place error NC.4.NF.6 exists to catch, and ruling it out needs no
+ * arithmetic in thousandths at all — only the knowledge that hundredths live
+ * in the second decimal place.
+ *
+ * This paragraph has been wrong twice, both times because content was added
+ * after it was written and not because the content was wrong. Anything added
+ * to this domain that prints a third decimal place belongs in the list above.
  *
  * THE TRAP THIS DOMAIN SETS. In a fractions bank the likeliest single defect
  * is not a wrong answer, it is a SECOND right one: an unsimplified equivalent
@@ -229,6 +235,9 @@ export const GRADE_4_NF_AUTHORED: Question[] = [
     },
   },
   {
+    // Options are EQUATIONS, so the shared kit's numericValue() returns null
+    // for all four and the automatic same-quantity guard does not cover this
+    // item. The four values are 0.75, 0.25, 0.333 and 0.917, checked by hand.
     id: 'g4-nf1-04',
     standardCode: 'NC.4.NF.1',
     domainId: 'NF',
@@ -538,7 +547,7 @@ export const GRADE_4_NF_AUTHORED: Question[] = [
       conceptSummary:
         'Regrouping a mixed number works exactly as it does in the standard algorithm: one whole is traded for its equivalent in fifths, and the whole-number part must drop by one at the same moment the fraction part grows.',
       commonMisconception:
-        'Add the answer back to check it: 2 3/5 + 1 3/5 = 4 1/5, exactly what the jug held. The dodge that avoids regrouping gives 3 2/5, and 3 2/5 + 1 3/5 = 5 liters — a liter more juice than was ever in the jug.',
+        'Add the answer back to check it: 2 3/5 + 1 3/5 = 4 1/5, exactly what the jug held. The dodge that avoids regrouping gives 3 2/5, and 3 2/5 + 1 3/5 = 5 liters, which is 4/5 of a liter more than the jug ever held.',
     },
   },
   {
@@ -618,7 +627,7 @@ export const GRADE_4_NF_AUTHORED: Question[] = [
       conceptSummary:
         'Subtracting like denominators separates parts of the same size, so only the count changes. The denominator is a label on what is being counted, not a number in the subtraction.',
       commonMisconception:
-        'Add the answer back to check it: 7/12 + 4/12 = 11/12, exactly what the bag held. Subtracting the denominators too gives 7/8, and 7/8 + 4/12 comes to more than a whole pound — more rice than the bag ever contained.',
+        'Add the answer back to check it: 7/12 + 4/12 = 11/12, exactly what the bag held. Subtracting the denominators too gives 7/8, and eighths are bigger parts than twelfths — 7/8 is more than 10/12, so almost none of the rice would have been used at all.',
     },
   },
 
@@ -628,6 +637,11 @@ export const GRADE_4_NF_AUTHORED: Question[] = [
   // denominator, "in more than one way". The two items below are that half of
   // the standard; the four above are the adding and subtracting half.
   {
+    // Options are SUMS, so the shared kit's numericValue() returns null for all
+    // four and the automatic same-quantity guard does not cover this item. The
+    // four values are 3/4, 1, 1/4 and 9/4, checked by hand. Checked by hand too:
+    // that no distractor is itself a valid decomposition of 3/4 into unit
+    // fractions — 1/2 + 1/4 would have been one, and is not offered.
     id: 'g4-nf3-05',
     standardCode: 'NC.4.NF.3',
     domainId: 'NF',
@@ -673,6 +687,11 @@ export const GRADE_4_NF_AUTHORED: Question[] = [
     },
   },
   {
+    // Options are EQUATIONS, so the shared kit's numericValue() returns null
+    // for all four and the automatic same-quantity guard does not cover this
+    // item. The right-hand sides come to 9/5, 8/10, 9/10 and 10/10, checked by
+    // hand. Checked by hand too: only one of them equals 9/10, and no other
+    // valid decomposition (1/10 + 8/10, 2/10 + 7/10, ...) is offered.
     id: 'g4-nf3-06',
     standardCode: 'NC.4.NF.3',
     domainId: 'NF',
@@ -1199,32 +1218,32 @@ export const GRADE_4_NF_AUTHORED: Question[] = [
     standardCode: 'NC.4.NF.7',
     domainId: 'NF',
     prompt:
-      'Maya filled 0.6 of a small watering can. Theo filled 0.08 of a large watering can, and the large can holds far more water than the small one. Theo says he must have less water, because 0.08 is less than 0.6. What is wrong with his reasoning?',
+      'A juice carton is 0.4 full. A milk jug is 0.05 full. The carton and the jug are not the same size. Which statement is TRUE?',
     options: labelOptions([
-      // The zero holding the tenths place in 0.08 was ignored, so 0.08 was read
-      // as 0.8 and 8 tenths beat 6 tenths.
+      // The zero holding the tenths place in 0.05 was ignored, so 0.05 was read
+      // as 0.5, and 5 tenths beats the carton's 4 tenths.
       {
-        text: 'He should have said 0.08 is the greater number, because 8 is greater than 6.',
+        text: 'The jug is the greater fraction full, because 5 is greater than 4.',
         isCorrect: false,
         misconception: 'omitted-placeholder-zero',
       },
-      // The decimal parts read as whole numbers: 8 is one digit and 0.08 shows
-      // two, so the longer one was called the larger.
+      // The decimal parts read as whole numbers: 0.05 shows two digits after
+      // the point and 0.4 shows one, so the longer one was called the larger.
       {
-        text: 'He should have said 0.08 is the greater number, because it has more digits than 0.6.',
+        text: 'The jug is the greater fraction full, because 0.05 has more digits than 0.4.',
         isCorrect: false,
         misconception: 'compared-by-digit-count',
       },
-      // Accepts the comparison of the two decimals as if the cans were the same
-      // size. 0.08 IS less than 0.6 - but 0.08 of a large can can still be more
-      // water than 0.6 of a small one.
+      // Reads the comparison of the two decimals as a comparison of the two
+      // amounts. 0.4 IS greater than 0.05 - but 0.05 of a much larger jug can
+      // still be more liquid than 0.4 of the carton.
       {
-        text: 'Nothing is wrong: 0.08 is less than 0.6, so Theo has less water than Maya.',
+        text: 'The carton holds more liquid than the jug, because 0.4 is greater than 0.05.',
         isCorrect: false,
         misconception: 'compared-across-different-wholes',
       },
       {
-        text: 'The two cans are different sizes, so comparing 0.08 and 0.6 cannot tell you who has more water.',
+        text: 'The carton is the greater fraction full, but which container holds more liquid cannot be told from 0.4 and 0.05 alone.',
         isCorrect: true,
       },
     ]),
@@ -1233,15 +1252,15 @@ export const GRADE_4_NF_AUTHORED: Question[] = [
     difficulty: 'advanced',
     explanation: {
       stepByStep: [
-        'Step 1: Theo has the decimals the right way round: 0.08 is 8 hundredths and 0.6 is 60 hundredths, so 0.08 is much the smaller NUMBER.',
-        'Step 2: But 0.6 and 0.08 are fractions OF something, and here they are fractions of two different cans.',
-        'Step 3: If the large can holds ten times what the small one holds, 0.08 of it is 0.8 of a small can — more water than Maya has, not less.',
-        'Step 4: The two cans are different sizes, so comparing 0.08 and 0.6 cannot tell you who has more water.',
+        'Step 1: Compare the two decimals by place value: 0.4 is 40 hundredths and 0.05 is 5 hundredths, so 0.4 is much the greater number.',
+        'Step 2: That settles one of the two questions here — which container is the greater fraction full. It is the carton.',
+        'Step 3: It does not settle the other. A decimal is a fraction OF something, and these are fractions of two different containers: if the jug holds ten times what the carton holds, 0.05 of the jug is half a carton — more liquid than the carton has in it.',
+        'Step 4: The carton is the greater fraction full, but which container holds more liquid cannot be told from 0.4 and 0.05 alone.',
       ],
       conceptSummary:
-        'NC.4.NF.7 says it directly: a comparison of two decimals is valid only when they refer to the same whole. A decimal is not an amount of anything until you know what it is a decimal of.',
+        'NC.4.NF.7 says it directly: a comparison of two decimals is valid only when they refer to the same whole. Two questions hide in one here — which is fuller, and which holds more — and the decimals answer only the first.',
       commonMisconception:
-        'The trap is that Theo\'s comparison of the numbers is CORRECT. What he skipped is checking that the comparison answers the question asked — and with two different cans, it does not.',
+        'Comparing the numbers 0.4 and 0.05 is the easy half and it is worth doing. The trap is treating the answer to it as the answer to a question about amounts of liquid, which needs the sizes of the containers as well.',
     },
   },
 ];

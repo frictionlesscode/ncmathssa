@@ -106,44 +106,60 @@ describe('g4.nf7.compare-decimals', () => {
     }
   });
 
-  it('sweeps its whole parameter space without a collision', () => {
-    // (w, t, e, z, q) is the entire space; only the shuffle is left to the
-    // seed, and it reorders the options without changing them.
-    let checked = 0;
+  // The sweep DRIVES generate() rather than recomputing what generate() ought
+  // to print. A sweep that rebuilds the option texts inline is checking its own
+  // arithmetic against itself, and that copy can drift from the generator in
+  // silence — the same defect the shared numericValue() guard had while a
+  // domain test kept a private copy of its patterns.
+  //
+  // (w, t, e, z, q) is the whole space and the four option texts determine it,
+  // so the set of texts serves as the coverage key. 3,150 combinations need
+  // about 28,000 seeds to collect; 60,000 leaves room.
+  it('covers its whole parameter space, checked on what it really generates', () => {
+    const seen = new Set<string>();
     const failures: string[] = [];
-    for (let w = 0; w <= 9; w++) {
-      for (let t = 3; t <= 7; t++) {
-        for (let e = 1; e <= t - 2; e++) {
-          for (let z = t + 1; z <= 8; z++) {
-            for (let q = 0; q <= 8; q++) {
-              const opts = [`${w}.${t}`, `${w}.${t - 1}${q}`, `${w}.${e}9`, `${w}.0${z}`];
-              const where = `w=${w} t=${t} e=${e} z=${z} q=${q}`;
-              if (new Set(opts).size !== 4) failures.push(`text collision ${where}`);
-              const values = opts.map(Number);
-              if (new Set(values).size !== 4) failures.push(`value collision ${where}`);
-              if (Math.max(...values) !== values[0]) failures.push(`key not greatest ${where}`);
-              // Each faulty rule must pick its own option, uniquely.
-              const picks = [
-                opts.map(digitString),
-                opts.map(lastDigit),
-                opts.map(withoutPlaceholderZero),
-              ];
-              picks.forEach((scores, i) => {
-                const best = Math.max(...scores);
-                if (scores.filter((s) => s === best).length !== 1) {
-                  failures.push(`rule ${i} ties ${where}`);
-                } else if (scores.indexOf(best) !== i + 1) {
-                  failures.push(`rule ${i} picks the wrong option ${where}`);
-                }
-              });
-              checked++;
-            }
-          }
+    for (let seed = 0; seed < 60000; seed++) {
+      const g = nf7CompareDecimals.generate(makeRng(seed));
+      const texts = g.options.map((o) => o.text);
+      seen.add([...texts].sort().join('|'));
+      const where = `seed ${seed} (${texts.join(', ')})`;
+
+      if (new Set(texts).size !== 4) failures.push(`${where}: duplicate option text`);
+      const values = texts.map(Number);
+      if (new Set(values.map((v) => v.toFixed(12))).size !== 4) {
+        failures.push(`${where}: two options name one quantity`);
+      }
+      // The key is the greatest, uniquely, and is the shortest of the four.
+      const answer = Number(g.answerText);
+      if (Math.max(...values) !== answer) failures.push(`${where}: key is not the greatest`);
+      if (values.filter((v) => v === answer).length !== 1) failures.push(`${where}: tied maximum`);
+      if (g.answerText.split('.')[1].length !== 1) failures.push(`${where}: key is not one place`);
+      for (const text of texts) {
+        if (text.split('.')[1].length > 2) failures.push(`${where}: ${text} passes hundredths`);
+        if (Number(text) >= 10) failures.push(`${where}: ${text} out of range`);
+      }
+      // Each faulty rule must pick its OWN distractor, uniquely, and never the
+      // key — checked against the option the generator actually tagged.
+      const rules: [string, (v: string) => number][] = [
+        ['compared-by-digit-count', digitString],
+        ['compared-decimals-right-to-left', lastDigit],
+        ['omitted-placeholder-zero', withoutPlaceholderZero],
+      ];
+      for (const [tag, score] of rules) {
+        const scores = texts.map(score);
+        const best = Math.max(...scores);
+        if (scores.filter((s) => s === best).length !== 1) {
+          failures.push(`${where}: rule ${tag} ties`);
+          continue;
         }
+        const picked = texts[scores.indexOf(best)];
+        const tagged = g.options.find((o) => o.misconception === tag);
+        if (!tagged) failures.push(`${where}: no option tagged ${tag}`);
+        else if (tagged.text !== picked) failures.push(`${where}: rule ${tag} picks ${picked}`);
       }
     }
     expect(failures.slice(0, 5)).toEqual([]);
     // 35 admissible (t, e, z) triples x 9 values of q x 10 whole-number parts.
-    expect(checked).toBe(3150);
+    expect(seen.size).toBe(3150);
   });
 });

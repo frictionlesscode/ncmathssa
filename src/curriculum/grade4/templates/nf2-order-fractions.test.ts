@@ -132,35 +132,54 @@ describe('g4.nf2.order-fractions', () => {
     }
   });
 
-  it('sweeps its whole parameter space without a collision', () => {
-    // The parameter space IS the triple table: the only other draws a seed
-    // makes are which of the two unused orderings to present and how to
-    // shuffle the four options, and neither can change what the options say.
+  // The sweep DRIVES generate() rather than recomputing what generate() ought
+  // to print. A sweep that rebuilds the orderings inline is checking its own
+  // arithmetic against itself, and that copy can drift from the generator in
+  // silence — the same defect the shared numericValue() guard had while a
+  // domain test kept a private copy of its patterns.
+  it('covers its whole parameter space, checked on what it really generates', () => {
+    // The true ordering identifies the triple, and the triple is the whole
+    // parameter space: the only other draws a seed makes are which unused
+    // ordering to present and how to shuffle the options, and neither can
+    // change what the options say.
+    const admissible = new Set(TRIPLES.map((t) => orderingsOf(t)[0]));
+    const seen = new Set<string>();
     const failures: string[] = [];
-    for (const t of TRIPLES) {
-      const where = t.map((f) => `${f.n}/${f.d}`).join(' ');
-      const orders = orderingsOf(t);
-      if (new Set(orders).size !== 4) failures.push(`collision ${where}`);
-      if (!(t[0].v < t[1].v && t[1].v < t[2].v)) failures.push(`order ${where}`);
-      if (t[1].v - t[0].v < 1 / 12 - 1e-12 || t[2].v - t[1].v < 1 / 12 - 1e-12) {
-        failures.push(`gap ${where}`);
+    for (let seed = 0; seed < 2000; seed++) {
+      const g = nf2OrderFractions.generate(makeRng(seed));
+      seen.add(g.answerText);
+      const where = `seed ${seed} (${g.answerText})`;
+      if (!admissible.has(g.answerText)) {
+        failures.push(`${where}: ordering is not in the table`);
+        continue;
       }
-      if (new Set(t.map((f) => f.n)).size !== 3) failures.push(`numerators ${where}`);
-      if (new Set(t.map((f) => f.d)).size !== 3) failures.push(`denominators ${where}`);
+      const order = listOf(g.answerText);
+      if (!(order[0].v < order[1].v && order[1].v < order[2].v)) failures.push(`${where}: order`);
+      if (order[1].v - order[0].v < 1 / 12 - 1e-12 || order[2].v - order[1].v < 1 / 12 - 1e-12) {
+        failures.push(`${where}: gap`);
+      }
+      if (new Set(order.map((f) => f.n)).size !== 3) failures.push(`${where}: numerators`);
+      if (new Set(order.map((f) => f.d)).size !== 3) failures.push(`${where}: denominators`);
+      if (new Set(g.options.map((o) => o.text)).size !== 4) failures.push(`${where}: collision`);
       // Both adjacent pairs must be settleable by a strategy the standard
       // names, without an off-list denominator: either one denominator divides
       // the other, or the benchmark 1/2 separates them.
-      for (const [x, y] of [[t[0], t[1]], [t[1], t[2]]]) {
+      for (const [x, y] of [
+        [order[0], order[1]],
+        [order[1], order[2]],
+      ]) {
         const divides = y.d % x.d === 0 || x.d % y.d === 0;
         const benchmark = 2 * x.n <= x.d && 2 * y.n >= y.d;
-        if (!divides && !benchmark) failures.push(`unsettleable pair ${where}`);
+        if (!divides && !benchmark) failures.push(`${where}: unsettleable pair`);
       }
     }
     expect(failures.slice(0, 5)).toEqual([]);
     // 23 proper fractions in lowest terms over the eight denominators, so
     // 23^3 = 12,167 ordered triples were examined to build this table. 81 make
     // four distinct orderings; 46 of those can also be worked with the
-    // standard's own strategies and no off-list denominator.
+    // standard's own strategies and no off-list denominator — and 2,000 seeds
+    // reach every one of the 46.
     expect(TRIPLES.length).toBe(46);
+    expect(seen.size).toBe(46);
   });
 });
