@@ -139,6 +139,24 @@ And **verifying a grade's standard codes does not verify the grade.** Codes, wei
 and `ssa` policy figures are three separate claims against three documents. Grade 5's
 codes were correct while its weights were invented.
 
+### 5.4 Quizzes and study guides are curriculum data too
+
+Standards are not the only per-grade content. `STATIC_QUIZZES` (§7.4) and
+`STUDY_GUIDES` live in `src/data/` as module-level constants whose entries name
+Grade 5 authored item ids and `NC.5.*` codes. §8.2 moved nine components onto the
+active curriculum, but these two escaped it because they are data files rather than
+components: `Dashboard` and `QuizzesListView` import the quiz array directly, and
+`StudyGuideModal` indexes the guide record by standard code. A Grade 4 profile would
+be offered Grade 5's diagnostic and would open Grade 5 study guides.
+
+Both become fields on `GradeCurriculum` — `quizzes: QuizDefinition[]` and
+`studyGuides: Record<StandardCode, StudyGuideSection>` — supplied by each grade
+module and read from context like everything else. The integrity test (§6.4) then
+checks them per grade: every `questionIds` entry must resolve against that grade's
+own question source, and every study-guide key must be a standard of that grade. A
+quiz naming an item from another grade becomes a test failure rather than a blank
+question in a child's face.
+
 ## 6. Question sources
 
 One interface, two implementations. The quiz engine never knows which source produced an
