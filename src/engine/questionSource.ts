@@ -19,6 +19,10 @@ export interface QuestionSource {
    *  CurriculumView) surface that distinction from the live content
    *  instead of a list of standard codes hardcoded in a component. */
   hasGenerator(standardCode: StandardCode): boolean;
+  /** Every template this source can draw from. Exposed so the misconception
+   *  registry test can sample the tags generators emit; not for quiz code,
+   *  which should go through itemsFor(). */
+  templates(): QuestionTemplate[];
 }
 
 export function makeQuestionSource(
@@ -95,6 +99,10 @@ export function makeQuestionSource(
 
     hasGenerator(standardCode) {
       return (templatesByStandard.get(standardCode) ?? []).length > 0;
+    },
+
+    templates() {
+      return templates;
     },
   };
 }
