@@ -586,7 +586,7 @@ For each grade, follow `src/curriculum/grade5/standards.ts` exactly: a `DomainIn
 
 Per standard, `code` and `domainId` come from the source JSON verbatim. `description` is the source JSON's `text` field, lightly punctuated if it ends mid-clause, with the `bullets` array folded in as `keyConcepts` where they exist. `title` is yours to write — a short, parent-legible name for what the standard teaches, matching the Grade 5 register ("Add & Subtract Fractions with Unlike Denominators"). `weightCategory` is a short phrase naming the standard's priority; for grades 3–4 reference the domain's real band, and for grades 1–2 use a phrase with no percentage in it, such as `'Core (no state assessment at this grade)'`.
 
-Reuse the Grade 5 `color`/`badgeBg` pairs by domain so a domain looks the same in every grade: NF emerald, NBT blue, OA amber, MD violet, G rose — read the exact Tailwind class strings out of `src/curriculum/grade5/standards.ts` rather than retyping them.
+Reuse the Grade 5 `color`/`badgeBg` pairs by domain so a domain looks the same in every grade: NF emerald, NBT blue, MD amber, OA violet, G rose — and read the exact Tailwind class strings out of `src/curriculum/grade5/standards.ts` rather than retyping them, because that file is the ground truth if this sentence and it ever disagree.
 
 - [ ] **Step 4: Run the test**
 
