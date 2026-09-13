@@ -14,7 +14,15 @@ export interface FirstRunScreenProps {
 export const FirstRunScreen: React.FC<FirstRunScreenProps> = ({ onComplete }) => {
   const curricula = listCurricula();
   const [name, setName] = useState('');
-  const [grade, setGrade] = useState<Grade>(curricula[0]?.grade ?? 5);
+  // The HIGHEST registered grade, not the first. `listCurricula()` sorts
+  // ascending, so `curricula[0]` would pre-select the lowest grade on the
+  // list and silently re-point the default at every grade this plan
+  // registers - a parent who types a name and hits Start without touching
+  // the picker would end up with a Grade 1 profile once Grade 1 lands.
+  // SSA is for the oldest cohort, so the top of the list is the right
+  // default and the one that keeps today's behaviour unchanged.
+  const defaultGrade = curricula[curricula.length - 1]?.grade ?? 5;
+  const [grade, setGrade] = useState<Grade>(defaultGrade);
   const trimmedName = name.trim();
 
   const handleStart = (e: React.FormEvent) => {

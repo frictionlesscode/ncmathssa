@@ -84,10 +84,19 @@ describe('grade 4 curriculum', () => {
     expect(mock.questionIds).toHaveLength(30);
     expect(counts).toEqual({ OA: 5, NBT: 8, NF: 10, MD: 5, G: 2 });
 
+    // Asserted as "one of the two roundings of the ideal", not as a distance
+    // under a tolerance. Geometry's ideal is exactly 2.5 - a genuine tie
+    // between 2 and 3 - and in floating point it lands at
+    // 2.4999999999999996, so a `<= 0.5` guard passes by one ULP and would
+    // redden on any reassociation of domainWeight's expression while telling
+    // us nothing about the allocation. floor/ceil is exact integer
+    // arithmetic: it still rejects G=1 or G=4 and NF=8 or NF=11.
     for (const [domainId, n] of Object.entries(counts)) {
-      const expected = (domainWeight(GRADE_4, domainId as never) / 100) * 30;
-      expect(Math.abs(n - expected), `${domainId} carries ${n} of 30 items, band wants ${expected}`)
-        .toBeLessThanOrEqual(0.5);
+      const ideal = (domainWeight(GRADE_4, domainId as never) / 100) * 30;
+      expect(
+        n >= Math.floor(ideal) && n <= Math.ceil(ideal),
+        `${domainId} carries ${n} of 30 items; its band wants ${ideal}`,
+      ).toBe(true);
     }
   });
 
