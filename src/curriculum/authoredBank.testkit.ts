@@ -2,6 +2,8 @@ import { expect } from 'vitest';
 import type { Question } from '../engine/questionModel';
 import type { DomainInfo } from './types';
 import { MISCONCEPTIONS } from './misconceptions';
+import type { QuestionTemplate } from '../engine/template';
+import { makeRng } from '../engine/rng';
 
 /**
  * Parses an option into the quantity it names ("1 3/4", "0.75", "$1,200",
@@ -104,6 +106,24 @@ export function assertAuthoredBankSound(
       .toBeGreaterThanOrEqual(floor);
   }
 
+  // Ruling F2, promoted out of grade5/authored.test.ts where it only ever
+  // guarded one bank: a child who notices the key is usually C stops doing
+  // mathematics and starts reading the layout.
+  const labels = items.map((q) => q.options.find((o) => o.isCorrect)!.label);
+  const distinct = new Set(labels);
+  if (items.length >= 8) {
+    expect(
+      distinct.size,
+      `${domain.id}: correct answers only ever at ${[...distinct].join(', ')}`,
+    ).toBeGreaterThanOrEqual(3);
+  }
+  for (const l of distinct) {
+    expect(
+      labels.filter((x) => x === l).length,
+      `${domain.id}: more than half the answers sit at ${l}`,
+    ).toBeLessThanOrEqual(Math.ceil(items.length / 2));
+  }
+
   // A bank of nothing but mastery items never stretches a student, and a bank
   // of nothing but stretch items teaches nobody. Both tiers must be present.
   const difficulties = new Set(items.map((q) => q.difficulty));
@@ -112,4 +132,32 @@ export function assertAuthoredBankSound(
     difficulties.has('advanced') || difficulties.has('stretch'),
     `${domain.id} has no items above mastery level`,
   ).toBe(true);
+}
+
+/**
+ * A question a generator can also produce reaches the scheduler under two
+ * review keys - {authored, id} and {generated, templateId} - so a child is
+ * served it twice and the second serving teaches nothing. Generalised out of
+ * the Grade 4 OA bank, where a review found two authored items their own
+ * generators reproduced verbatim.
+ *
+ * Call this from any domain test whose standards have both authored items and
+ * templates.
+ */
+export function assertNoGeneratorDuplicatesAuthored(
+  items: Question[],
+  templates: QuestionTemplate[],
+  opts: { seeds?: number } = {},
+): void {
+  const seeds = opts.seeds ?? 2000;
+  const authored = new Set(items.map((q) => q.prompt.trim()));
+  for (const t of templates) {
+    for (let seed = 0; seed < seeds; seed++) {
+      const prompt = t.generate(makeRng(seed)).prompt.trim();
+      expect(
+        authored.has(prompt),
+        `${t.id} at seed ${seed} reproduces an authored item: "${prompt}"`,
+      ).toBe(false);
+    }
+  }
 }
