@@ -618,10 +618,10 @@ export const GRADE_4_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     ],
     stepByStepMethod: [
       'Step 1: Write down the times you are given and decide which of three things the question wants: an end time, a start time, or how long something lasted.',
-      'Step 2: Find the minutes REMAINING to the next full hour: 60 minus the minutes showing on the earlier time.',
+      'Step 2: If you know the start time, find the minutes REMAINING to the next full hour: 60 minus the minutes showing on it.',
       'Step 3: For an END time, compare the interval with those remaining minutes. If the interval is smaller, just add it on - you never leave the hour. If it is bigger, use the remaining minutes to reach the full hour and then add what is left of the interval into the new hour.',
-      'Step 4: For HOW LONG something lasted, count in three parts: the minutes from the start time up to the next full hour, then any whole hours after that, then the minutes past the last full hour. Add the three parts.',
-      'Step 5: For a START time, work backwards from the end time: take off enough minutes to drop to the full hour below it, then take the rest of the interval off from there.',
+      'Step 4: For HOW LONG something lasted, look at the two hour numbers first. If both times are in the SAME hour, just subtract the minutes. If the end time is in a later hour, count in three parts: the minutes from the start time up to the next full hour, then any whole hours after that, then the minutes past the last full hour. Add the three parts.',
+      'Step 5: For a START time, compare the interval with the minutes showing on the END time. If the interval is smaller, just take it off - you never leave the hour. If it is bigger, take off the minutes showing to drop to the full hour below, then take the rest of the interval off from there.',
       'Step 6: Check that no part of your answer holds 60 or more minutes, and check by working the other direction.',
     ],
     commonTraps: [

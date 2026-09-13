@@ -37,11 +37,14 @@ function bandEndpoints(range: string): [string, string] {
   return [m[1], m[2]];
 }
 
-/** Ruling 10.1 binds the SENTENCE carrying the figure, not the field: "Geometry
+/** Ruling 10.1 binds the CLAUSE carrying the figure, not the field: "Geometry
  *  is 23–27%. Measurement and Data is tested alongside it." makes the banned
- *  single-domain claim while the field as a whole names both domains. */
-function sentencesOf(text: string): string[] {
-  return text.split(/(?<=[.!?])\s+/).filter((s) => s.trim().length > 0);
+ *  single-domain claim while the field as a whole names both domains. A
+ *  semicolon joins two independent clauses exactly as a period does, so it
+ *  splits here too - otherwise the same claim slips through one character
+ *  away from the form this guard was written to stop. */
+function clausesOf(text: string): string[] {
+  return text.split(/\s*;\s*|(?<=[.!?])\s+/).filter((s) => s.trim().length > 0);
 }
 
 describe('grade 4 study guides', () => {
@@ -105,13 +108,13 @@ describe('grade 4 study guides', () => {
     for (const [code, g] of Object.entries(GRADE_4_STUDY_GUIDES)) {
       const domain = DOMAIN_OF.get(code);
       if (!domain?.weightGroup) continue;
-      for (const sentence of sentencesOf(g.workedExample.whyItMattersForSSA)) {
-        for (const { matched } of citedPercents(sentence)) {
+      for (const clause of clausesOf(g.workedExample.whyItMattersForSSA)) {
+        for (const { matched } of citedPercents(clause)) {
           expect(
-            /measurement/i.test(sentence) && /geometry/i.test(sentence),
-            `${code} cites "${matched}" in a sentence that does not name both ` +
+            /measurement/i.test(clause) && /geometry/i.test(clause),
+            `${code} cites "${matched}" in a clause that does not name both ` +
               `Measurement and Geometry, which claims a weight for one domain ` +
-              `inside a combined band: "${sentence.trim()}"`,
+              `inside a combined band: "${clause.trim()}"`,
           ).toBe(true);
         }
       }
