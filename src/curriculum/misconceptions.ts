@@ -31,7 +31,18 @@ export type MisconceptionFamily =
    *  'coordinate-plane' - filing a pattern error there would tell a parent
    *  their child has a graphing problem when they have a counting-the-steps
    *  problem, and to a parent a mis-filed tag is worse than no tag. */
-  | 'patterns-and-sequences';
+  | 'patterns-and-sequences'
+  /** Adding and subtracting clock times and elapsed-time intervals: trading
+   *  60 minutes for an hour, and counting across an hour boundary. Added for
+   *  NC.4.MD.8, which is entirely about intervals that CROSS the hour and had
+   *  no family that fit. 'unit-conversion' is the nearest, and it is wrong:
+   *  the hour/minute trade is a conversion, but the error that defines this
+   *  standard - counting the minutes already past the hour instead of the
+   *  minutes left until it - is a reading-the-clock error with no conversion
+   *  in it. 'geometry-and-measurement' would tell a parent their child has a
+   *  shape or measuring problem. Grade 3 measures time too, so this will not
+   *  stay a one-standard family. */
+  | 'time-intervals';
 
 export interface MisconceptionInfo {
   tag: string;
@@ -71,6 +82,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Added the numerators and the denominators straight across instead of finding a common denominator first.',
     ),
     entry(
+      'added-only-the-two-given-sides',
+      'geometry-and-measurement',
+      'Added the length and the width once each, reporting half of a perimeter instead of the perimeter or the area that was asked for.',
+    ),
+    entry(
       'added-the-coordinates',
       'coordinate-plane',
       'Added the two coordinate values together instead of treating them as separate horizontal and vertical moves.',
@@ -96,6 +112,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Added the columns without ever carrying the regrouped ten into the next place.',
     ),
     entry(
+      'added-without-converting',
+      'unit-conversion',
+      'Added the two parts of a mixed-unit measurement together without first converting them into the same unit.',
+    ),
+    entry(
       'additive-instead-of-multiplicative-relationship',
       'operation-choice',
       'Described the relationship between two quantities as an added difference instead of a multiplicative ratio.',
@@ -114,6 +135,26 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'applied-the-unit-fraction-rule-to-unlike-numerators',
       'fraction-operations',
       'Ordered fractions by denominator alone on the rule "bigger denominator, smaller fraction", which holds only when the numerators match, so the number of parts was never counted.',
+    ),
+    entry(
+      'asked-for-a-single-total-not-data',
+      'geometry-and-measurement',
+      'Chose a question that produces one summary number rather than one response from each person surveyed, so there is no data set to represent.',
+    ),
+    entry(
+      'assumed-a-right-angle',
+      'geometry-and-measurement',
+      'Used 90 degrees as the whole angle, reporting how far the given angle falls short of a right angle instead of using the measure the problem states.',
+    ),
+    entry(
+      'assumed-a-straight-angle',
+      'geometry-and-measurement',
+      'Used 180 degrees as the whole angle instead of the measure the problem states, as if two rays that meet always formed a straight line.',
+    ),
+    entry(
+      'assumed-longer-side-means-greater-area',
+      'geometry-and-measurement',
+      'Assumed the rectangle with the longest side encloses the most area, when among rectangles of equal perimeter the most square one encloses the most.',
     ),
     entry(
       'axes-swapped',
@@ -153,6 +194,16 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'checked-only-the-first-step',
       'patterns-and-sequences',
       'Accepted a rule because it worked for the first pair of terms, without checking that it still works for the rest of the pattern.',
+    ),
+    entry(
+      'chose-a-unit-for-the-wrong-attribute',
+      'geometry-and-measurement',
+      'Picked a unit that measures a different attribute — length, mass, or capacity — than the one the object is being measured for.',
+    ),
+    entry(
+      'chose-a-unit-of-the-wrong-size',
+      'geometry-and-measurement',
+      'Picked a unit that measures the right attribute but is far too large or too small for the object being measured.',
     ),
     entry(
       'classified-by-one-property-only',
@@ -204,6 +255,66 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'compared-the-wrong-place-first',
       'place-value-and-decimals',
       'Compared two whole numbers starting from the ones digit instead of from the greatest place, so the comparison came out backwards.',
+    ),
+    entry(
+      'confused-categorical-with-numerical',
+      'geometry-and-measurement',
+      'Chose a survey question whose answers are names or categories when numerical data was asked for, or the reverse.',
+    ),
+    entry(
+      'counted-past-sixty-minutes',
+      'time-intervals',
+      'Let a count of minutes run past 60 instead of trading 60 minutes for one hour, producing a time no clock shows.',
+    ),
+    entry(
+      'doubled-only-one-dimension',
+      'geometry-and-measurement',
+      "Doubled just one of a rectangle's two dimensions when finding its perimeter, instead of doubling both.",
+    ),
+    entry(
+      'extended-the-table-one-row-at-a-time',
+      'unit-conversion',
+      'Continued a conversion table by adding the same amount to the previous row instead of applying the multiplicative rule to the new value.',
+    ),
+    entry(
+      'ignored-the-fixed-perimeter',
+      'geometry-and-measurement',
+      'Chose a rectangle without checking that its perimeter matched the fixed amount of fencing or border the problem allows.',
+    ),
+    entry(
+      'left-the-measurement-unconverted',
+      'unit-conversion',
+      'Reported the original number unchanged, without carrying out the conversion the question asked for.',
+    ),
+    entry(
+      'mislabeled-the-unit',
+      'geometry-and-measurement',
+      'Carried out the arithmetic correctly but labeled the answer with a unit the measurements were never given in.',
+    ),
+    entry(
+      'multiplied-every-side-length-together',
+      'geometry-and-measurement',
+      "Multiplied all of the given side lengths together in one product instead of finding each part's area and adding them.",
+    ),
+    entry(
+      'off-by-one-gridline',
+      'geometry-and-measurement',
+      'Landed one gridline off when reading a scaled graph, by counting the zero line itself as the first mark above zero.',
+    ),
+    entry(
+      'read-the-scale-by-counting-ticks',
+      'geometry-and-measurement',
+      'Reported how many gridlines a bar or point reached instead of the value that gridline stands for on a scaled graph.',
+    ),
+    entry(
+      'read-the-wrong-protractor-scale',
+      'geometry-and-measurement',
+      "Read the protractor's other scale, reporting the angle's supplement instead of the angle itself.",
+    ),
+    entry(
+      'regrouped-the-minutes-but-not-the-hours',
+      'time-intervals',
+      'Traded 60 minutes when regrouping a time but left the hours unchanged, so the calculation never crossed the hour.',
     ),
     entry(
       'stopped-comparing-too-soon',
@@ -671,6 +782,16 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Subtracted the two quantities instead of dividing one by the other.',
     ),
     entry(
+      'subtracted-instead-of-multiplied',
+      'operation-choice',
+      'Subtracted the two numbers when the problem called for multiplying them.',
+    ),
+    entry(
+      'subtracted-the-two-protractor-readings',
+      'geometry-and-measurement',
+      "Subtracted the protractor's two scale readings from each other instead of reading the one scale that starts at zero on the angle's ray.",
+    ),
+    entry(
       'subtracted-the-wrong-coordinates',
       'coordinate-plane',
       'Subtracted the wrong pair of coordinate values instead of the ones that measure the actual distance between the points.',
@@ -696,9 +817,19 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Applied a unit conversion in the wrong direction, dividing by the conversion factor when multiplying was needed (or vice versa).',
     ),
     entry(
+      'used-area-formula-for-perimeter',
+      'geometry-and-measurement',
+      'Multiplied the length by the width, finding the area, when the perimeter was what the question asked for.',
+    ),
+    entry(
       'used-area-not-volume',
       'geometry-and-measurement',
       'Computed the area of one face of the solid instead of its volume.',
+    ),
+    entry(
+      'used-half-the-perimeter-as-each-side',
+      'geometry-and-measurement',
+      'Halved the perimeter and used that as each side length, as if a rectangle had only two sides to fence.',
     ),
     entry(
       'used-perimeter-formula',
@@ -711,6 +842,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       "Reported a digit's place value itself as the scale factor between two numbers instead of computing the actual ratio.",
     ),
     entry(
+      'used-the-data-values-not-their-frequencies',
+      'geometry-and-measurement',
+      'Calculated with the measurements labeled on the graph instead of with how many data points were recorded at each one.',
+    ),
+    entry(
       // Broadened when NC.4.NF.3 decomposition arrived. The error is one
       // substitution - the denominator put where the numerator belongs - and
       // it shows up both when renaming a fraction and when decomposing one
@@ -718,6 +854,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'used-the-denominator-as-the-new-numerator',
       'fraction-operations',
       "Used the denominator's value where the numerator's was needed — as the new numerator when renaming a fraction in smaller parts, or as the amount being split up when decomposing one.",
+    ),
+    entry(
+      'used-the-minutes-past-the-hour-not-the-minutes-left',
+      'time-intervals',
+      'Counted the minutes already past the hour instead of the minutes remaining until the next hour when bridging an hour boundary.',
     ),
     entry(
       'used-the-numerator-as-a-whole-number',
@@ -733,6 +874,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'used-the-step-size-as-the-factor',
       'operation-choice',
       "Used one pattern's own step size as the multiplicative factor between two related patterns, instead of the ratio between their step sizes.",
+    ),
+    entry(
+      'used-the-wrong-given-quantity',
+      'operation-choice',
+      'Picked up a number the question was not about and worked with it instead of the one that was asked for.',
     ),
     entry(
       'used-wrong-conversion-factor',

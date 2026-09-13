@@ -16,6 +16,11 @@ import { nf4MultiplyByWhole } from './nf4-multiply-by-whole';
 import { nf6AddTenthsHundredths } from './nf6-add-tenths-hundredths';
 import { nf6DecimalNotation } from './nf6-decimal-notation';
 import { nf7CompareDecimals } from './nf7-compare-decimals';
+import { md1MetricWordProblem } from './md1-metric-word-problem';
+import { md2MetricConvert } from './md2-metric-convert';
+import { md3RectangleArea } from './md3-rectangle-area';
+import { md3RectanglePerimeter } from './md3-rectangle-perimeter';
+import { md6MissingAnglePart } from './md6-missing-angle-part';
 
 /** Every parameterized Grade 4 template. Generated items cover the
  *  computational standards, where fresh numbers each run are what make
@@ -63,7 +68,23 @@ import { nf7CompareDecimals } from './nf7-compare-decimals';
  *  10 or 100. Writing 47/100 as 0.47 and adding 4/10 to 7/100 are different
  *  procedures that go wrong in different ways.
  *
- *  Tasks 8 and 9 append this grade's MD and G templates here. */
+ *  Measurement & Data adds five, and the splits are the same rule again.
+ *  NC.4.MD.1 (metric word problems) and NC.4.MD.2 (converting a larger unit to
+ *  a smaller one) are SEPARATE templates even though both are "measurement in
+ *  metric units": solving a one-step word problem and applying a conversion
+ *  factor are different skills, and a seedless review key would let a child who
+ *  failed at one be reviewed with the other. NC.4.MD.3 splits into area and
+ *  perimeter for the reason set out in ./md3-rectangle-area.ts, and NC.4.MD.6
+ *  contributes only the decomposition half of its standard - see
+ *  ./md6-missing-angle-part.ts.
+ *
+ *  NC.4.MD.8 (time intervals) and NC.4.MD.4 (representing and interpreting
+ *  data) have NO generator, and deliberately. What they teach lives in the
+ *  wording - what "crosses the hour" means in a real afternoon, and which
+ *  survey question yields numerical data - not in the numbers, so fresh
+ *  numbers would add nothing a hand-written item does not already do better.
+ *
+ *  Task 9 appends this grade's Geometry templates here. */
 export const GRADE_4_TEMPLATES: QuestionTemplate[] = [
   oa1TimesAsMany,
   oa4FactorPairs,
@@ -82,6 +103,11 @@ export const GRADE_4_TEMPLATES: QuestionTemplate[] = [
   nf6AddTenthsHundredths,
   nf6DecimalNotation,
   nf7CompareDecimals,
+  md1MetricWordProblem,
+  md2MetricConvert,
+  md3RectangleArea,
+  md3RectanglePerimeter,
+  md6MissingAnglePart,
 ];
 
 export {
@@ -102,4 +128,9 @@ export {
   nf6AddTenthsHundredths,
   nf6DecimalNotation,
   nf7CompareDecimals,
+  md1MetricWordProblem,
+  md2MetricConvert,
+  md3RectangleArea,
+  md3RectanglePerimeter,
+  md6MissingAnglePart,
 };
