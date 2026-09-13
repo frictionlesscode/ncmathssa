@@ -94,7 +94,7 @@ export const GRADE_4_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       ],
       answer: '5/8 < 2/3',
       whyItMattersForSSA:
-        'Comparison items appear all through the fractions band, which is 30–34% of the Grade 4 EOG, and the same left-to-right place value habit is what carries a child through comparing decimals later in the year.',
+        'Comparison items appear all through the fractions band, which is 30–34% of the Grade 4 EOG, and rewriting two fractions so they share a denominator is the same move Grade 5 needs before it can add them.',
     },
   },
 
@@ -301,7 +301,7 @@ export const GRADE_4_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       ],
       answer: '10 times as much (and the thousands 5 is one tenth of the ten-thousands 5)',
       whyItMattersForSSA:
-        'Base Ten is 25–29% of the Grade 4 EOG, and this relationship is what makes every algorithm in the band - regrouping, partial products, partial quotients - make sense rather than be memorised.',
+        'Base Ten is 25–29% of the Grade 4 EOG, and this relationship is what makes every algorithm in the band - regrouping, partial products, partial quotients - make sense rather than be memorized.',
     },
   },
 
@@ -314,7 +314,7 @@ export const GRADE_4_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       { label: 'Standard form', detail: 'Digits with a comma before the last three: 60,318.' },
       { label: 'Word form', detail: 'Say the thousands, say "thousand", then say the rest. No "and" in a whole number.' },
       { label: 'Expanded form', detail: 'Add the value of each non-zero digit: 60,000 + 300 + 10 + 8.' },
-      { label: 'The zero place', detail: 'A place you do not hear still needs a 0. Sixty thousand, three hundred eighteen has no thousands digit of its own beyond the 60, so the places must be counted, not guessed.' },
+      { label: 'The zero place', detail: 'A place you do not hear still needs a 0. "Sixty thousand, three hundred eighteen" says nothing at all about thousands, so a 0 has to hold that place open.' },
       { label: 'Range', detail: 'Grade 4 works up to and including 100,000.' },
     ],
     stepByStepMethod: [
@@ -461,7 +461,7 @@ export const GRADE_4_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       'Adding the two factors instead of multiplying them.',
     ],
     workedExample: {
-      problem: 'A theatre has 24 rows with 36 seats in each row. How many seats are there in total?',
+      problem: 'A theater has 24 rows with 36 seats in each row. How many seats are there in total?',
       steps: [
         '1. Estimate: 40 x 25 = 1,000, so expect something under about a thousand.',
         '2. Ones digit: 36 x 4 = 144.',
@@ -674,7 +674,7 @@ export const GRADE_4_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       'Assuming a longer side means a greater area. A long pen looks roomier, but 11 by 1 encloses only 11 square meters - less than a third of what the same fencing gives as a 6 by 6 square.',
     ],
     workedExample: {
-      problem: 'A rectangular room measures 13 meters by 9 meters. Mrs Patel wants wooden trim around the edge of the floor, and carpet to cover it. How much trim does she need, and how much carpet?',
+      problem: 'A rectangular room measures 13 meters by 9 meters. Mrs. Patel wants wooden trim around the edge of the floor, and carpet to cover it. How much trim does she need, and how much carpet?',
       steps: [
         '1. "Around the edge" is perimeter; "cover it" is area. This question wants both.',
         '2. Perimeter: 2 x (13 + 9) = 2 x 22 = 44.',
@@ -743,7 +743,7 @@ export const GRADE_4_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       { label: 'A part is never bigger than the whole', detail: 'If your answer for a part exceeds the whole angle, something has gone wrong.' },
     ],
     stepByStepMethod: [
-      'Step 1: Find the vertex - the point where the rays meet - and put the centre of the protractor on it.',
+      'Step 1: Find the vertex - the point where the rays meet - and put the center of the protractor on it.',
       'Step 2: Line one ray up with the zero line of the protractor.',
       'Step 3: Read the scale that starts at 0 on that ray, and follow it round to the second ray.',
       'Step 4: For a missing angle on a diagram, write the part-plus-part-equals-whole equation.',
@@ -996,7 +996,7 @@ export const GRADE_4_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     standardCode: 'NC.4.OA.4',
     title: 'Factor Pairs, Multiples, Prime and Composite',
     coreConcept:
-      'A factor pair is two whole numbers that multiply to give your number exactly, with nothing left over. Finding all of them means testing the divisors in order and not stopping early. A number with exactly one factor pair, 1 and itself, is prime; a number with more than one is composite.',
+      'A factor pair is two whole numbers that multiply to give your number exactly, with nothing left over. Finding all of them means testing the divisors in order and not stopping early. A number bigger than 1 whose only factor pair is 1 and itself is prime; one with more than one factor pair is composite. The number 1 is neither.',
     rulesAndFormulas: [
       { label: 'Factor pair', detail: 'Two numbers whose product is exactly your number: 5 x 9 = 45, so 5 and 9 are a factor pair of 45.' },
       { label: 'Test in order', detail: 'Try 1, 2, 3, 4, 5, 6... and keep going until the two numbers in the pair meet or cross.' },
@@ -1010,7 +1010,7 @@ export const GRADE_4_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       'Step 2: Try 2. Does it divide exactly, with no remainder?',
       'Step 3: Keep going up through 3, 4, 5, 6 and so on, writing down every pair that comes out even.',
       'Step 4: Stop when the two numbers in a pair meet or would cross over - after that you are just repeating pairs backwards.',
-      'Step 5: Count the pairs. One pair means prime; more than one means composite.',
+      'Step 5: Count the pairs. For a number bigger than 1, one pair means prime and more than one means composite.',
       'Step 6: Check each pair by multiplying it back.',
     ],
     commonTraps: [
