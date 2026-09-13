@@ -1,6 +1,25 @@
 import { expect } from 'vitest';
 import type { Question } from '../engine/questionModel';
 import type { DomainInfo } from './types';
+import { MISCONCEPTIONS } from './misconceptions';
+
+/**
+ * Parses an option into the quantity it names ("1 3/4", "0.75", "$1,200",
+ * "6,000 meters"). Returns null for prose options, which are compared by text.
+ * Distinct text is not enough for a numeric item: "4/8" and "1/2" are
+ * different strings but the same quantity, so an item offering both has two
+ * right answers and a child who picks the second is marked wrong unfairly.
+ */
+function numericValue(raw: string): number | null {
+  const s = raw.trim().replace(/^\$/, '').replace(/,/g, '');
+  let m = /^(\d+)\s+(\d+)\/(\d+)(?:\s+[A-Za-z][A-Za-z ]*)?$/.exec(s);
+  if (m) return Number(m[1]) + Number(m[2]) / Number(m[3]);
+  m = /^(\d+)\/(\d+)(?:\s+[A-Za-z][A-Za-z ]*)?$/.exec(s);
+  if (m) return Number(m[1]) / Number(m[2]);
+  m = /^(\d+(?:\.\d+)?)(?:\s+[A-Za-z][A-Za-z ]*)?$/.exec(s);
+  if (m) return Number(m[1]);
+  return null;
+}
 
 /**
  * The invariants every authored bank must hold, asserted in one place so a
@@ -31,6 +50,50 @@ export function assertAuthoredBankSound(
     }
     const texts = q.options.map((o) => o.text.trim());
     expect(new Set(texts).size, `${q.id} has duplicate option text`).toBe(4);
+
+    // Distinct text is not distinct answers. This guard lived only in
+    // grade5/authored.test.ts and did not survive into the shared kit, which
+    // meant the fraction and decimal banks were about to be written without
+    // the one check most likely to catch a genuinely wrong item.
+    const values = q.options
+      .map((o) => numericValue(o.text))
+      .filter((v): v is number => v !== null);
+    for (let i = 0; i < values.length; i++) {
+      for (let j = i + 1; j < values.length; j++) {
+        expect(
+          Math.abs(values[i] - values[j]),
+          `${q.id}: two options both equal ${values[i]}`,
+        ).toBeGreaterThan(1e-9);
+      }
+    }
+
+    expect(q.prompt.trim().length, `${q.id} has an empty prompt`).toBeGreaterThan(0);
+
+    // A tag nothing declares reaches a parent as a blank explanation.
+    for (const o of q.options) {
+      if (o.misconception) {
+        expect(
+          MISCONCEPTIONS[o.misconception],
+          `${q.id} option ${o.label} uses undeclared tag "${o.misconception}"`,
+        ).toBeTruthy();
+      }
+    }
+
+    // assertTemplateSound enforces this for generators; authored items were
+    // held to a lower bar for no reason. A worked solution that never states
+    // the answer leaves a child who got it wrong with nothing to check against.
+    const correct = q.options.find((o) => o.isCorrect)!;
+    const lastStep = q.explanation.stepByStep[q.explanation.stepByStep.length - 1] ?? '';
+    expect(
+      lastStep.includes(correct.text.trim()),
+      `${q.id}: final step "${lastStep}" never states the answer "${correct.text}"`,
+    ).toBe(true);
+
+    expect(
+      q.isStretch === (q.difficulty === 'stretch'),
+      `${q.id}: isStretch=${q.isStretch} disagrees with difficulty="${q.difficulty}"`,
+    ).toBe(true);
+
     expect(q.explanation.stepByStep.length, `${q.id} has no worked solution`).toBeGreaterThan(0);
     expect(q.explanation.conceptSummary.trim().length, `${q.id} concept summary`).toBeGreaterThan(0);
   }

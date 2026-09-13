@@ -17,7 +17,9 @@ import type { QuestionTemplate } from '../engine/template';
  * statement about what content exists. They are different questions.
  *
  * Discovery is by glob so that adding a domain file is enough; nobody has to
- * remember to also list it here.
+ * remember to also list it here. Authored banks must therefore be named
+ * `authored*.ts` and generators must live under `templates/` - the two shapes
+ * the globs below look for.
  */
 
 // The negative pattern is load-bearing, not tidiness. An eager glob IMPORTS
@@ -28,8 +30,12 @@ const authoredModules = import.meta.glob(
   ['./grade*/authored*.ts', '!./grade*/*.test.ts'],
   { eager: true },
 );
+// Every template FILE, not just those re-exported from index.ts. Globbing the
+// index alone would let a generator that someone forgot to register there emit
+// misconception tags no test ever checks - silently, since the bank would still
+// be green. The index is about what the app serves; this is about what exists.
 const templateModules = import.meta.glob(
-  ['./grade*/templates/index.ts', '!./grade*/templates/*.test.ts'],
+  ['./grade*/templates/*.ts', '!./grade*/templates/*.test.ts'],
   { eager: true },
 );
 
@@ -40,6 +46,15 @@ function isQuestionArray(v: unknown): v is Question[] {
     v.every(
       (q) => !!q && typeof q === 'object' && 'options' in q && 'standardCode' in q,
     )
+  );
+}
+
+function isTemplate(v: unknown): v is QuestionTemplate {
+  return (
+    !!v &&
+    typeof v === 'object' &&
+    typeof (v as { generate?: unknown }).generate === 'function' &&
+    typeof (v as { standardCode?: unknown }).standardCode === 'string'
   );
 }
 
@@ -76,7 +91,9 @@ export function everyTemplate(): QuestionTemplate[] {
   for (const [path, mod] of Object.entries(templateModules)) {
     if (path.includes('.test.')) continue;
     for (const value of Object.values(mod as Record<string, unknown>)) {
-      if (isTemplateArray(value)) out.push(...value);
+      // Template files export one template each; index.ts exports the array.
+      if (isTemplate(value)) out.push(value);
+      else if (isTemplateArray(value)) out.push(...value);
     }
   }
   return out;
