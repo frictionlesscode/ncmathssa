@@ -81,6 +81,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Multiplied by the tens digit of the second factor but then added its ones digit instead of multiplying by it.',
     ),
     entry(
+      'added-to-both-parts-instead-of-multiplying',
+      'fraction-operations',
+      'Built an equivalent fraction by adding the same number to the numerator and to the denominator instead of multiplying both by the same factor, which changes the amount the fraction names.',
+    ),
+    entry(
       'added-to-the-denominator-instead-of-multiplying',
       'fraction-operations',
       'Added the whole number into the denominator instead of multiplying to find the divided share.',
@@ -101,9 +106,29 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Applied one extra unit-conversion step beyond what the problem required, over-converting the amount.',
     ),
     entry(
+      // The mirror image of larger-denominator-means-larger-fraction, and a
+      // rule that is perfectly true for unit fractions: 1/8 really is less
+      // than 1/3. The error is carrying it over to fractions whose numerators
+      // differ, where the count of parts can outweigh their size (3/4 > 1/3
+      // even though quarters are smaller than thirds).
+      'applied-the-unit-fraction-rule-to-unlike-numerators',
+      'fraction-operations',
+      'Ordered fractions by denominator alone on the rule "bigger denominator, smaller fraction", which holds only when the numerators match, so the number of parts was never counted.',
+    ),
+    entry(
       'axes-swapped',
       'coordinate-plane',
       'Swapped the x- and y-axes, treating the first coordinate as the vertical move and the second as horizontal.',
+    ),
+    entry(
+      // NC.4.NF.2 lists benchmark fractions as one of its three strategies, so
+      // this is the error the strategy itself invites: the benchmark sorts the
+      // two fractions onto the same side and the comparison is abandoned there.
+      // Distinct from stopped-comparing-too-soon, which is about place value
+      // in whole numbers and lives in another family.
+      'benchmark-comparison-left-unfinished',
+      'fraction-operations',
+      'Checked both fractions against a benchmark such as 1/2, found they fall on the same side of it, and stopped there — calling them equal instead of finishing the comparison.',
     ),
     entry(
       'borrowed-without-reducing-the-whole',
@@ -159,6 +184,21 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'compared-leading-digits-without-place-value',
       'place-value-and-decimals',
       'Compared the leftmost digits of two numbers without first counting how many places each one has, so a shorter number starting with a big digit looked like the larger one.',
+    ),
+    entry(
+      // Both NC.4.NF.2 and NC.4.NF.7 state in their own sourced wording that a
+      // comparison is valid only when the two amounts refer to the same whole,
+      // so the error of ignoring that has to have a name of its own. It is not
+      // a comparison error - the child's rule for the fractions may be
+      // perfectly sound - it is a failure to notice the rule does not apply.
+      'compared-across-different-wholes',
+      'fraction-operations',
+      'Compared two fractions or decimals that refer to different wholes, where the numbers alone cannot decide which amount is larger.',
+    ),
+    entry(
+      'compared-numerators-only',
+      'fraction-operations',
+      'Compared or ordered fractions by their numerators alone, ignoring that the denominators make the parts being counted different sizes.',
     ),
     entry(
       'compared-the-wrong-place-first',
@@ -361,6 +401,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Took the reciprocal of the dividend instead of the divisor when dividing fractions.',
     ),
     entry(
+      'larger-denominator-means-larger-fraction',
+      'fraction-operations',
+      'Treated the larger denominator as the larger fraction — judging 1/8 greater than 1/3 because 8 is greater than 3 — reading the denominator as a count of parts owned rather than as the size of each part.',
+    ),
+    entry(
       'miscounted-the-frequency',
       'geometry-and-measurement',
       'Miscounted how many data points shared a given measurement, undercounting the total.',
@@ -411,6 +456,16 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Multiplied only the whole-number part of a decimal or mixed number and left the fractional part unchanged.',
     ),
     entry(
+      'multiplied-the-denominator-too',
+      'fraction-operations',
+      'Multiplied the denominator by the whole number as well as the numerator, when multiplying a fraction by a whole number only repeats the parts and never changes their size.',
+    ),
+    entry(
+      'multiplied-the-denominators-instead-of-keeping-them',
+      'fraction-operations',
+      'Multiplied the two denominators together when adding or subtracting fractions that already shared one denominator, instead of keeping the common denominator unchanged.',
+    ),
+    entry(
       'multiplied-whole-and-fraction-parts-separately',
       'fraction-operations',
       'Multiplied the whole-number parts and the fraction parts of two mixed numbers separately instead of converting to improper fractions first.',
@@ -434,6 +489,23 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'omitted-placeholder-zero',
       'place-value-and-decimals',
       'Left out a placeholder zero in a decimal place value, shifting the remaining digits into the wrong positions.',
+    ),
+    entry(
+      // Distinct from added-numerators-and-denominators, which names the error
+      // made when the denominators are UNLIKE and the child skips finding a
+      // common one. Here the denominators already match, so there is nothing to
+      // find: the child operates on them anyway, out of the habit of doing
+      // something to every number in sight. Telling a Grade 4 child adding
+      // eighths to eighths that they "forgot to find a common denominator"
+      // would name a step the problem never had.
+      //
+      // Named for the operation on the DENOMINATORS rather than for addition,
+      // because the same instinct fires in both directions: 11/12 - 4/12
+      // written as 7/8 is this error subtracting. A description that said only
+      // "added" would be wrong for some of the items that use it.
+      'operated-on-the-like-denominators-too',
+      'fraction-operations',
+      'Added or subtracted the denominators as well as the numerators even though both fractions were already counted in the same-size parts, so the answer names parts of a different size from the ones being joined or separated.',
     ),
     entry(
       'order-of-operations-left-to-right',
@@ -500,6 +572,16 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'reversed-the-inequality-symbol',
       'place-value-and-decimals',
       'Ordered the two numbers correctly but read the inequality symbol backwards, reversing which side is greater.',
+    ),
+    entry(
+      // Distinct from common-denominator-numerator-not-scaled, which is the
+      // same slip committed DURING an addition, where a common denominator is
+      // being looked for. This one is the whole task: asked to rename a
+      // fraction in larger parts, the child rewrites the denominator and
+      // copies the numerator across unchanged.
+      'scaled-the-denominator-only',
+      'fraction-operations',
+      'Multiplied the denominator by the scaling factor but carried the numerator over unchanged, so the renamed fraction is smaller than the one it was meant to equal.',
     ),
     entry(
       'scaled-the-wrong-addend',
@@ -642,6 +724,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'wrote-the-digit-not-its-value',
       'place-value-and-decimals',
       'Reported a digit itself where the amount that digit stands for in its place was asked for, such as answering 6 instead of 6,000.',
+    ),
+    entry(
+      'wrote-the-product-as-a-mixed-number',
+      'fraction-operations',
+      'Wrote the whole number and the fraction side by side as a mixed number instead of multiplying them, which adds the fraction to the whole number rather than taking that many copies of it.',
     ),
   ].map((info) => [info.tag, info]),
 );
