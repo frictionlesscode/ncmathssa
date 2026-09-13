@@ -94,7 +94,7 @@ export const GRADE_4_DOMAINS: DomainInfo[] = [
     officialWeightMidpoint: 27,
     color: 'blue',
     badgeBg: 'bg-blue-100 text-blue-800 border-blue-300',
-    description: 'The second largest domain at Grade 4. Covers place value to 100,000, reading, writing and comparing multi-digit numbers, the standard addition and subtraction algorithm, multi-digit multiplication, and division with one-digit divisors.',
+    description: 'The second highest-weighted domain at Grade 4, behind Fractions. Covers place value to 100,000, reading, writing and comparing multi-digit numbers, the standard addition and subtraction algorithm, multi-digit multiplication, and division with one-digit divisors.',
     standards: [
       {
         code: 'NC.4.NBT.1',

@@ -17,7 +17,7 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
         domainId: 'NF',
         title: 'Add & Subtract Fractions with Unlike Denominators',
         description: 'Add and subtract fractions and mixed numbers with unlike (related) denominators; use benchmark estimation; solve one- and two-step real-world problems.',
-        weightCategory: 'Highest Priority (~14% of exam)',
+        weightCategory: 'Highest Priority (NF band 39–43%)',
         keyConcepts: [
           'Finding Common Denominators using multiples',
           'Regrouping mixed numbers during subtraction (borrowing a whole)',
@@ -30,7 +30,7 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
         domainId: 'NF',
         title: 'Interpret Fraction as Division (a/b = a ÷ b)',
         description: 'Interpret a fraction as division of numerator by denominator; solve equal-sharing division word problems where answers are fractions or mixed numbers.',
-        weightCategory: 'High Priority (~8% of exam)',
+        weightCategory: 'High Priority (NF band 39–43%)',
         keyConcepts: [
           'Fraction bar represents division: a/b = a ÷ b',
           'Equal sharing word problems (e.g. 7 lbs of food divided equally among 4 dogs = 7/4 = 1 3/4 lbs)',
@@ -42,7 +42,7 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
         domainId: 'NF',
         title: 'Multiply Fractions & Mixed Numbers; Area Models',
         description: 'Multiply a fraction or whole number by a fraction, including mixed numbers; use area and length models; reason about how factors affect the product.',
-        weightCategory: 'Highest Priority (~12% of exam)',
+        weightCategory: 'Highest Priority (NF band 39–43%)',
         keyConcepts: [
           'Multiplying numerators and denominators: (a/b) × (c/d) = (a×c)/(b×d)',
           'Area of rectangles with fractional side lengths (Area = base × height)',
@@ -55,7 +55,7 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
         domainId: 'NF',
         title: 'Divide Unit Fractions & Whole Numbers',
         description: 'Divide unit fractions by non-zero whole numbers and whole numbers by unit fractions; solve real-world problems.',
-        weightCategory: 'High Priority (~8% of exam)',
+        weightCategory: 'High Priority (NF band 39–43%)',
         keyConcepts: [
           'Dividing a whole number by a unit fraction: 4 ÷ (1/3) = 12 (how many 1/3s are in 4?)',
           'Dividing a unit fraction by a whole number: (1/3) ÷ 4 = 1/12 (sharing 1/3 among 4)',
@@ -79,7 +79,7 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
         domainId: 'NBT',
         title: 'Place Value Patterns & Powers of 10',
         description: 'Recognize place value patterns from one million to thousandths; 10x and 1/10 relationships; patterns when multiplying or dividing by powers of 10.',
-        weightCategory: 'Core (~5% of exam)',
+        weightCategory: 'Core (NBT band 25–29%)',
         keyConcepts: [
           'A digit in one place represents 10 times what it represents in the place to its right',
           'A digit represents 1/10 (0.1) of what it represents in the place to its left',
@@ -92,7 +92,7 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
         domainId: 'NBT',
         title: 'Read, Write, and Compare Decimals to Thousandths',
         description: 'Read, write, and compare decimals to thousandths using base-ten numerals, number names, expanded form, and symbols (>, =, <).',
-        weightCategory: 'Core (~5% of exam)',
+        weightCategory: 'Core (NBT band 25–29%)',
         keyConcepts: [
           'Standard form (e.g. 4.305), word form ("four and three hundred five thousandths")',
           'Expanded form: (4 × 1) + (3 × 0.1) + (5 × 0.001)',
@@ -105,7 +105,7 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
         domainId: 'NBT',
         title: 'Fluently Multiply Multi-Digit Whole Numbers',
         description: 'Fluently multiply up to a three-digit by a two-digit number using the standard algorithm.',
-        weightCategory: 'Core (~6% of exam)',
+        weightCategory: 'Core (NBT band 25–29%)',
         keyConcepts: [
           'Standard multiplication algorithm step-by-step',
           'Placeholder zeros when multiplying by tens digit',
@@ -118,7 +118,7 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
         domainId: 'NBT',
         title: 'Divide Whole Numbers with 2-Digit Divisors',
         description: 'Divide up to four-digit dividends by two-digit divisors using arrays, area models, partial quotients, or relationship with multiplication.',
-        weightCategory: 'Core (~6% of exam)',
+        weightCategory: 'Core (NBT band 25–29%)',
         keyConcepts: [
           'Partial quotients and standard long division strategies',
           'Interpreting remainders in context (round up, drop, or express as fraction)',
@@ -130,7 +130,7 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
         domainId: 'NBT',
         title: 'Operations with Decimals to Hundredths',
         description: 'Add, subtract, multiply, and divide multi-digit whole numbers and decimals to hundredths; use estimation to check reasonableness.',
-        weightCategory: 'Core (~6% of exam)',
+        weightCategory: 'Core (NBT band 25–29%)',
         keyConcepts: [
           'Lining up decimal points for addition and subtraction',
           'Multiplying decimals: count total decimal places in both factors',
@@ -157,7 +157,7 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
         domainId: 'MD',
         title: 'Convert Measurement Units (Multiplicative Reasoning)',
         description: 'Convert measurement units within a given measurement system (metric and customary) using multiplicative reasoning.',
-        weightCategory: 'Core (~4% of exam)',
+        weightCategory: 'Core (MD & G share 19–23%)',
         keyConcepts: [
           'Customary length: 12 in = 1 ft, 3 ft = 1 yd, 5,280 ft = 1 mi',
           'Customary capacity: 8 fl oz = 1 cup, 2 c = 1 pt, 2 pt = 1 qt, 4 qt = 1 gal',
@@ -170,7 +170,7 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
         domainId: 'MD',
         title: 'Represent & Interpret Data with Line Graphs & Plots',
         description: 'Represent and interpret data; line graphs; distinguish categorical vs numerical vs over-time data; solve problems with line plots displaying fractional units.',
-        weightCategory: 'Core (~3% of exam)',
+        weightCategory: 'Core (MD & G share 19–23%)',
         keyConcepts: [
           'Line plots displaying measurements in fractions of a unit (1/8, 1/4, 1/2)',
           'Finding total sum or difference between highest and lowest data points',
@@ -182,7 +182,7 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
         domainId: 'MD',
         title: 'Volume as an Attribute; Counting Unit Cubes',
         description: 'Recognize volume as an attribute of solid figures; measure volume by counting unit cubes (cubic cm, cubic in, cubic ft).',
-        weightCategory: 'Core (~3% of exam)',
+        weightCategory: 'Core (MD & G share 19–23%)',
         keyConcepts: [
           'A cube with side length 1 unit has "one cubic unit" of volume',
           'Solid figures packed without gaps or overlaps have volume equal to the number of unit cubes',
@@ -194,7 +194,7 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
         domainId: 'MD',
         title: 'Volume Formulas & Composed Rectangular Prisms',
         description: 'Relate volume to multiplication and addition; apply V = l × w × h and V = B × h; calculate volume of composite non-overlapping rectangular prisms.',
-        weightCategory: 'High Priority (~5% of exam)',
+        weightCategory: 'High Priority (MD & G share 19–23%)',
         keyConcepts: [
           'Formulas: Volume = length × width × height = Base Area × height (V = B × h)',
           'Finding missing dimensions when given total volume and two dimensions',
@@ -218,7 +218,7 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
         domainId: 'OA',
         title: 'Numerical Expressions, Order of Operations & Properties',
         description: 'Write, explain, and evaluate numerical expressions with the four operations (up to two steps); parentheses, brackets; commutative, associative, distributive properties.',
-        weightCategory: 'Core (~6% of exam)',
+        weightCategory: 'Core (OA band 9–13%)',
         keyConcepts: [
           'Order of Operations: Parentheses/brackets first, then multiplication & division (left to right), then addition & subtraction (left to right)',
           'Translating word phrases into expressions: "Add 9 and 7, then multiply by 3" -> 3 × (9 + 7)',
@@ -231,7 +231,7 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
         domainId: 'OA',
         title: 'Generate Two Numerical Patterns & Graph Ordered Pairs',
         description: 'Generate two numerical patterns using two given rules; identify relationships between corresponding terms; form ordered pairs; graph them on a coordinate plane.',
-        weightCategory: 'Core (~5% of exam)',
+        weightCategory: 'Core (OA band 9–13%)',
         keyConcepts: [
           'Generating terms: Rule 1 (add 3 starting at 0: 0, 3, 6, 9) and Rule 2 (add 6 starting at 0: 0, 6, 12, 18)',
           'Identifying the multiplicative relationship: terms in Rule 2 are twice the terms in Rule 1',
@@ -257,7 +257,7 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
         domainId: 'G',
         title: 'Coordinate Plane & Quadrant 1 Coordinates',
         description: 'Graph points in the first quadrant of the coordinate plane; interpret the coordinate values in context of the situation (horizontal x-axis, vertical y-axis, origin).',
-        weightCategory: 'Core (~4% of exam)',
+        weightCategory: 'Core (MD & G share 19–23%)',
         keyConcepts: [
           'Origin (0,0) as starting intersection of x-axis and y-axis',
           'In ordered pair (x, y), first number indicates horizontal move, second number indicates vertical move',
@@ -270,7 +270,7 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
         domainId: 'G',
         title: 'Classify Quadrilaterals by Properties in a Hierarchy',
         description: 'Understand that attributes belonging to a category of 2D figures also belong to all subcategories; classify quadrilaterals by properties in a hierarchy.',
-        weightCategory: 'Core (~4% of exam)',
+        weightCategory: 'Core (MD & G share 19–23%)',
         keyConcepts: [
           'Quadrilateral hierarchy: Polygons -> Quadrilaterals -> Trapezoids (NC definition: at least one pair of parallel sides) / Parallelograms -> Rectangles & Rhombuses -> Squares',
           'All squares are rectangles and rhombuses, but not all rectangles are squares',

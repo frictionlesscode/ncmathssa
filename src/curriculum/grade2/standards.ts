@@ -72,7 +72,7 @@ export const GRADE_2_DOMAINS: DomainInfo[] = [
     officialWeightMidpoint: 0,
     color: 'blue',
     badgeBg: 'bg-blue-100 text-blue-800 border-blue-300',
-    description: 'The largest Grade 2 domain by standard count. Hundreds, tens and ones; counting and skip-counting within 1,000; reading, writing and comparing three-digit numbers; and adding and subtracting within 1,000.',
+    description: 'The second largest Grade 2 domain by standard count, behind Measurement & Data. Hundreds, tens and ones; counting and skip-counting within 1,000; reading, writing and comparing three-digit numbers; and adding and subtracting within 1,000.',
     standards: [
       {
         code: 'NC.2.NBT.1',

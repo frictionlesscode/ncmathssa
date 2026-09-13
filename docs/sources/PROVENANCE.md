@@ -122,3 +122,26 @@ Neither defect touched a standard *code*, which is why the code-level
 cross-verification against the Quick Reference Guides did not surface them. That
 is the same lesson as the fabricated grade 5 weights: a source can be correct in
 one dimension and wrong in another, and each dimension needs its own check.
+
+### Scope of the scan, stated exactly
+
+The scan covered three classes: a bullet equal to another standard's full text
+(1 hit), a bullet equal to a cluster heading or beginning `Standard:` (1 hit),
+and a bullet containing an embedded `NC.<digit>` code (0 hits). It was later
+widened to a fourth — any bullet ending in a colon — which found one more, below.
+"No further instances" means no further instances *of those four classes*. It is
+not a guarantee that the prose is otherwise perfect.
+
+### `NC.2.OA.1`'s bullets are a two-level list flattened to one — not a defect
+
+`bullets[0]` is `"One-Step problems:"` and `bullets[4]` is `"Two-Step problems
+involving single digits"`. Both really are printed in the Quick Reference Guide:
+the standard's own text ends `"...when solving:"` and then opens a nested list,
+three problem types under the first heading and two under the second. So the JSON
+is faithful; what it lost is the nesting, because `bullets` is a flat array.
+
+Left as-is deliberately — deleting them would discard content NCDPI actually
+publishes. But a transcriber who walks this array mechanically will emit
+"One-Step problems:" as though it were a key concept. `grade2/standards.ts`
+handles it correctly, distributing each heading onto its children and keeping all
+five problem types. Any future consumer of this file must do the same.

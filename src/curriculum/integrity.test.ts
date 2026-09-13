@@ -22,6 +22,28 @@ describe.each(listCurricula().map((c) => [c.grade, c] as const))(
       }
     });
 
+    it('quotes no percentage in weightCategory that the blueprint does not publish', () => {
+      // Grade 5 shipped seventeen invented per-standard shares here - "Core
+      // (~3% of exam)" and the like - displayed in the study guide header
+      // beside the standard code. They summed to 104, and their MD and G
+      // figures were the residue of the same fabricated 12-15%/7-10% split
+      // corrected in 6a851cf. NCDPI publishes DOMAIN bands only; no standard
+      // has a share of its own, so the only percentage that may appear here
+      // is the one its own domain officially cites.
+      for (const d of c.domains) {
+        for (const st of d.standards) {
+          const quoted = st.weightCategory.match(/\d+\s*[-–]\s*\d+\s*%|~?\d+\s*%/g) ?? [];
+          for (const q of quoted) {
+            expect(
+              d.officialWeightRange.includes(q.replace(/^~/, '')),
+              `${st.code} cites ${q}, which is not ${d.id}'s published band ` +
+                `(${d.officialWeightRange})`,
+            ).toBe(true);
+          }
+        }
+      }
+    });
+
     it('covers every standard when the grade is marked content-complete', () => {
       // Gated deliberately: asserting coverage unconditionally would leave
       // the suite red from the moment a grade's standards exist until its

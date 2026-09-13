@@ -302,7 +302,7 @@ export const GRADE_1_DOMAINS: DomainInfo[] = [
         keyConcepts: [
           'Building and drawing triangles, rectangles, squares, trapezoids, hexagons, circles',
           'Building cubes, rectangular prisms, cones, spheres, and cylinders',
-          'A defining attribute belongs to the shape itself; color and size do not'
+          'A defining attribute belongs to the shape itself, unlike a non-defining one'
         ]
       },
       {

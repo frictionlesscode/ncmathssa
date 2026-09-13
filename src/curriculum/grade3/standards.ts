@@ -274,7 +274,7 @@ export const GRADE_3_DOMAINS: DomainInfo[] = [
     officialWeightMidpoint: 11,
     color: 'blue',
     badgeBg: 'bg-blue-100 text-blue-800 border-blue-300',
-    description: 'The smallest domain at Grade 3. Covers addition and subtraction within 1,000 and multiplying a one-digit number by a multiple of 10.',
+    description: 'The lowest-weighted domain at Grade 3, though not the smallest by standard count. Covers addition and subtraction within 1,000 and multiplying a one-digit number by a multiple of 10.',
     standards: [
       {
         code: 'NC.3.NBT.2',
