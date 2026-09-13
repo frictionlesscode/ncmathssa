@@ -102,7 +102,9 @@ export function makeQuestionSource(
     },
 
     templates() {
-      return templates;
+      // A copy: the array below is what itemsFor() and hasGenerator() read,
+      // and a caller that sorted or pushed into it would corrupt them.
+      return [...templates];
     },
   };
 }

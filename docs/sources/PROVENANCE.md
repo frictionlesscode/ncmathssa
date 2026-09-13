@@ -99,3 +99,26 @@ sufficient to establish that the grade 5 module was accurate. The codes were
 right and the weights were invented. Any future grade must have its codes,
 its weights, and its `ssa` policy figures each checked against a named
 document.
+
+## Two extraction defects found during the grades 1-4 build (2026-09-13)
+
+Both were caught by a human read of the transcribed data, then confirmed against
+the primary document and corrected in `nc-standards-1-5.json`. A scan of all 108
+standards for the two defect classes found no further instances.
+
+**`NC.2.MD.5` carried a bullet that was verbatim `NC.2.MD.6`'s entire text.**
+NCDPI prints these as two separate standards with no sub-bullets under MD.5; the
+2025 Grade 2 Quick Reference Guide runs MD.5's text directly into the string
+`NC.2.MD.6` with no separator, and the parser read the following standard as a
+bullet of the preceding one. Left in place, a question author working MD.5 would
+have seen MD.6's whole standard listed as one of MD.5's key concepts and written
+items for the wrong standard. Bullet removed from the JSON and from the
+transcribed `keyConcepts` in `src/curriculum/grade2/standards.ts`.
+
+**`NC.1.NBT.7`'s only bullet was the cluster heading "Standard: Understand place
+value."** — a section header, not mathematics. Removed.
+
+Neither defect touched a standard *code*, which is why the code-level
+cross-verification against the Quick Reference Guides did not surface them. That
+is the same lesson as the fabricated grade 5 weights: a source can be correct in
+one dimension and wrong in another, and each dimension needs its own check.

@@ -79,9 +79,7 @@
           "code": "NC.1.NBT.7",
           "cluster": "Extend and recognize patterns in the counting sequence.",
           "text": "Read and write numerals, and represent a number of objects with a written numeral, to 100.",
-          "bullets": [
-            "Standard: Understand place value."
-          ]
+          "bullets": []
         },
         {
           "code": "NC.1.NBT.2",
@@ -348,9 +346,7 @@
           "code": "NC.2.MD.5",
           "cluster": "Relate addition and subtraction to length.",
           "text": "Use addition and subtraction, within 100, to solve word problems involving lengths that are given in the same units, using equations with a symbol for the unknown number to represent the problem.",
-          "bullets": [
-            "Represent whole numbers as lengths from 0 on a number line diagram with equally spaced points and represent whole-number sums and differences, within 100, on a number line."
-          ]
+          "bullets": []
         },
         {
           "code": "NC.2.MD.6",

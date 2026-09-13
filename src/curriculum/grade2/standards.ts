@@ -239,8 +239,7 @@ export const GRADE_2_DOMAINS: DomainInfo[] = [
         weightCategory: 'Core (no state assessment at this grade)',
         keyConcepts: [
           'Lengths given in the same units within one problem',
-          'Equations with a symbol standing for the unknown number',
-          'Represent whole numbers as lengths from 0 on a number line diagram with equally spaced points and represent whole-number sums and differences, within 100, on a number line'
+          'Equations with a symbol standing for the unknown number'
         ]
       },
       {
