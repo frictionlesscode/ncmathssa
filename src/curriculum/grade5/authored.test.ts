@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { GRADE_5_AUTHORED } from './authored';
 import { GRADE_5 } from './index';
 import { correctOption } from '../../engine/questionModel';
-import { STATIC_QUIZZES } from '../../data/quizzes';
+import { GRADE_5_QUIZZES } from './quizzes';
 
 const codes = new Set(GRADE_5.domains.flatMap((d) => d.standards.map((s) => s.code)));
 
@@ -92,7 +92,7 @@ describe('GRADE_5_AUTHORED', () => {
 
   // Ruling F9: the baseline diagnostic must assess all 17 standards.
   it('the baseline diagnostic covers every standard exactly once', () => {
-    const diagnostic = STATIC_QUIZZES.find((q) => q.id === 'diagnostic-01')!;
+    const diagnostic = GRADE_5_QUIZZES.find((q) => q.id === 'diagnostic-01')!;
     const byId = new Map(GRADE_5_AUTHORED.map((q) => [q.id, q]));
     const covered = diagnostic.questionIds.map((id) => byId.get(id)!.standardCode);
     expect(new Set(covered).size).toBe(codes.size);

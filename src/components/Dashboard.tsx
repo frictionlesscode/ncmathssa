@@ -11,7 +11,6 @@ import {
 import { useProgress, useReadinessSummary, domainStatsFor } from '../context/ProgressContext';
 import { standardsOf } from '../curriculum/registry';
 import { dueEntries } from '../engine/scheduler';
-import { STATIC_QUIZZES } from '../data/quizzes';
 import type { NavTab } from './Navbar';
 
 interface DashboardProps {
@@ -35,8 +34,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
   const totalStandardsCount = standardsOf(curriculum).length;
   const dueReviewCount = dueEntries(profile.reviewQueue, new Date()).length;
 
-  const diagnosticQuiz = STATIC_QUIZZES.find(q => q.isDiagnostic);
-  const mockQuiz = STATIC_QUIZZES.find(q => q.id === 'mock-ssa-01');
+  const diagnosticQuiz = curriculum.quizzes.find(q => q.isDiagnostic);
+  const mockQuiz = curriculum.quizzes.find(q => q.id === 'mock-ssa-01');
 
   // Check if diagnostic has been taken
   const hasTakenDiagnostic = profile.attempts.some(a => a.quizId === 'diagnostic-01');
@@ -289,7 +288,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             const isReady = dm.masteryPercent >= passingPercent;
 
             // Find drill quiz for this domain
-            const drillQuiz = STATIC_QUIZZES.find(q => q.domainId === domain.id);
+            const drillQuiz = curriculum.quizzes.find(q => q.domainId === domain.id);
 
             return (
               <div

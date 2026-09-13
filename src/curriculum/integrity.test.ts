@@ -32,5 +32,22 @@ describe.each(listCurricula().map((c) => [c.grade, c] as const))(
         expect(withContent.has(code), `grade ${c.grade} has no content for ${code}`).toBe(true);
       }
     });
+
+    it('defines quizzes that only reference this grade\'s own questions', () => {
+      const ids = new Set(
+        standardsOf(c).flatMap((s) =>
+          c.source.authoredFor(s.code).map((r) => (r as { kind: 'authored'; id: string }).id),
+        ),
+      );
+      for (const quiz of c.quizzes) {
+        for (const qid of quiz.questionIds) {
+          expect(ids.has(qid), `quiz ${quiz.id} references unknown question ${qid}`).toBe(true);
+        }
+      }
+    });
+
+    it('gives every grade at least a diagnostic', () => {
+      expect(c.quizzes.some((q) => q.isDiagnostic), `grade ${c.grade} has no diagnostic`).toBe(true);
+    });
   },
 );

@@ -21,7 +21,7 @@ import {
   createMissedQuestionsDrill,
   createStandardDrill,
   getQuizById
-} from './data/quizzes';
+} from './curriculum/grade5/quizzes';
 
 const MainApp: React.FC = () => {
   const { recordAttempt, curriculum, profile, updateActiveProfile } = useProgress();

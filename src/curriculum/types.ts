@@ -49,6 +49,7 @@ export type Weighting =
   | { kind: 'even-by-standard-count' };
 
 import type { QuestionSource } from '../engine/questionSource';
+import type { QuizDefinition } from '../types';
 
 export interface GradeCurriculum {
   grade: Grade;
@@ -64,5 +65,10 @@ export interface GradeCurriculum {
    *  only when every standard in this grade has at least one source. */
   contentComplete: boolean;
   domains: DomainInfo[];
+  /** The grade's static quizzes: its diagnostic, module drills, and mock
+   *  assessments. Per-grade because their questionIds name that grade's own
+   *  authored items — a Grade 5 quiz served to a Grade 4 profile is a blank
+   *  screen (spec 5.4). */
+  quizzes: QuizDefinition[];
   source: QuestionSource;
 }

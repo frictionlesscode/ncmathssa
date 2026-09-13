@@ -1,8 +1,8 @@
-import type { QuizDefinition } from '../types';
-import type { GradeCurriculum } from '../curriculum/types';
-import { standardsOf } from '../curriculum/registry';
-import type { QuestionRef } from '../engine/questionModel';
-import { questionRefId } from '../engine/questionModel';
+import type { QuizDefinition } from '../../types';
+import type { GradeCurriculum } from '../types';
+import { standardsOf } from '../registry';
+import type { QuestionRef } from '../../engine/questionModel';
+import { questionRefId } from '../../engine/questionModel';
 
 // Named so the subtitle functions below can cite `.length` without
 // depending on `this` inside an object literal.
@@ -23,7 +23,7 @@ const MOCK_SSA_01_QUESTION_IDS = [
   'nbt5-02', 'nbt7-03', 'md1-01', 'md1-02', 'md2-01', 'md4-01', 'md5-01', 'md5-02', 'g1-01', 'g1-02', 'g3-01'
 ];
 
-export const STATIC_QUIZZES: QuizDefinition[] = [
+export const GRADE_5_QUIZZES: QuizDefinition[] = [
   {
     id: 'diagnostic-01',
     title: 'Baseline SSA Diagnostic Assessment',
@@ -119,7 +119,7 @@ export const STATIC_QUIZZES: QuizDefinition[] = [
 ];
 
 export function getQuizById(quizId: string): QuizDefinition | undefined {
-  return STATIC_QUIZZES.find(q => q.id === quizId);
+  return GRADE_5_QUIZZES.find(q => q.id === quizId);
 }
 
 /**

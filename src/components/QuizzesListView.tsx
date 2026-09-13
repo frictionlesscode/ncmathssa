@@ -9,7 +9,6 @@ import {
 } from 'lucide-react';
 import { useProgress } from '../context/ProgressContext';
 import { standardsOf } from '../curriculum/registry';
-import { STATIC_QUIZZES } from '../data/quizzes';
 import type { QuizDefinition } from '../types';
 import { AdaptiveSessionCard } from './AdaptiveSessionCard';
 import type { QuestionRef } from '../engine/questionModel';
@@ -36,9 +35,9 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
     return Math.max(...attempts.map(a => a.scorePercent));
   };
 
-  const diagnosticQuiz = STATIC_QUIZZES.find(q => q.isDiagnostic);
-  const mockQuizzes = STATIC_QUIZZES.filter(q => q.isMockAssessment);
-  const moduleDrills = STATIC_QUIZZES.filter(q => q.domainId && !q.isMockAssessment);
+  const diagnosticQuiz = curriculum.quizzes.find(q => q.isDiagnostic);
+  const mockQuizzes = curriculum.quizzes.filter(q => q.isMockAssessment);
+  const moduleDrills = curriculum.quizzes.filter(q => q.domainId && !q.isMockAssessment);
 
   // A quiz's subtitle is either a plain string or a function of the active
   // curriculum, for the handful of quizzes whose copy cites a standard

@@ -42,6 +42,7 @@ describe('domainWeight', () => {
           { code: 'Y.1', domainId: 'B', title: '', description: '', weightCategory: '', keyConcepts: [] },
         ] },
     ],
+    quizzes: [],
     source: makeQuestionSource([], []),
   };
 
