@@ -49,5 +49,19 @@ describe.each(listCurricula().map((c) => [c.grade, c] as const))(
     it('gives every grade at least a diagnostic', () => {
       expect(c.quizzes.some((q) => q.isDiagnostic), `grade ${c.grade} has no diagnostic`).toBe(true);
     });
+
+    it('keys every study guide to a standard of this grade', () => {
+      for (const [code, guide] of Object.entries(c.studyGuides)) {
+        expect(codes.has(code), `study guide ${code} is not a grade ${c.grade} standard`).toBe(true);
+        expect(guide.standardCode, `study guide ${code} disagrees with its own key`).toBe(code);
+      }
+    });
+
+    it('writes a study guide for every standard when content-complete', () => {
+      if (!c.contentComplete) return;
+      for (const code of codes) {
+        expect(c.studyGuides[code], `grade ${c.grade} has no study guide for ${code}`).toBeTruthy();
+      }
+    });
   },
 );

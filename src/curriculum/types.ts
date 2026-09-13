@@ -49,7 +49,7 @@ export type Weighting =
   | { kind: 'even-by-standard-count' };
 
 import type { QuestionSource } from '../engine/questionSource';
-import type { QuizDefinition } from '../types';
+import type { QuizDefinition, StudyGuideSection } from '../types';
 
 export interface GradeCurriculum {
   grade: Grade;
@@ -70,5 +70,9 @@ export interface GradeCurriculum {
    *  authored items — a Grade 5 quiz served to a Grade 4 profile is a blank
    *  screen (spec 5.4). */
   quizzes: QuizDefinition[];
+  /** Standard-by-standard revision notes, keyed by code. Per-grade for the
+   *  same reason quizzes are: NC.5.NF.1's guide means nothing to a Grade 2
+   *  student (spec 5.4). */
+  studyGuides: Record<StandardCode, StudyGuideSection>;
   source: QuestionSource;
 }

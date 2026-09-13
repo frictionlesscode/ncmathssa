@@ -1,19 +1,6 @@
-export interface StudyGuideSection {
-  standardCode: string;
-  title: string;
-  coreConcept: string;
-  rulesAndFormulas: { label: string; detail: string }[];
-  stepByStepMethod: string[];
-  commonTraps: string[];
-  workedExample: {
-    problem: string;
-    steps: string[];
-    answer: string;
-    whyItMattersForSSA: string;
-  };
-}
+import type { StudyGuideSection } from '../../types';
 
-export const STUDY_GUIDES: Record<string, StudyGuideSection> = {
+export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
   'NC.5.OA.2': {
     standardCode: 'NC.5.OA.2',
     title: 'Order of Operations & Evaluating Numerical Expressions',

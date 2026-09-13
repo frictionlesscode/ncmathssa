@@ -43,6 +43,7 @@ describe('domainWeight', () => {
         ] },
     ],
     quizzes: [],
+    studyGuides: {},
     source: makeQuestionSource([], []),
   };
 

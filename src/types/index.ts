@@ -9,6 +9,21 @@ export type { StandardMastery } from '../engine/mastery';
 
 import type { DomainId, GradeCurriculum } from '../curriculum/types';
 
+export interface StudyGuideSection {
+  standardCode: string;
+  title: string;
+  coreConcept: string;
+  rulesAndFormulas: { label: string; detail: string }[];
+  stepByStepMethod: string[];
+  commonTraps: string[];
+  workedExample: {
+    problem: string;
+    steps: string[];
+    answer: string;
+    whyItMattersForSSA: string;
+  };
+}
+
 export interface QuizDefinition {
   id: string;
   title: string;

@@ -1,6 +1,5 @@
 import React from 'react';
 import { BookOpen, CheckCircle, AlertTriangle, Lightbulb, X, ArrowRight } from 'lucide-react';
-import { STUDY_GUIDES } from '../data/studyGuides';
 import { useProgress } from '../context/ProgressContext';
 import { standardsOf } from '../curriculum/registry';
 
@@ -19,7 +18,7 @@ export const StudyGuideModal: React.FC<StudyGuideModalProps> = ({
 
   if (!standardCode) return null;
 
-  const guide = STUDY_GUIDES[standardCode];
+  const guide = curriculum.studyGuides[standardCode];
   const standard = standardsOf(curriculum).find((s) => s.code === standardCode);
 
   return (
