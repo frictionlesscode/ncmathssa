@@ -14,6 +14,7 @@ import { nf3AddLike } from './nf3-add-like';
 import { nf3SubtractMixed } from './nf3-subtract-mixed';
 import { nf4MultiplyByWhole } from './nf4-multiply-by-whole';
 import { nf6AddTenthsHundredths } from './nf6-add-tenths-hundredths';
+import { nf6DecimalNotation } from './nf6-decimal-notation';
 import { nf7CompareDecimals } from './nf7-compare-decimals';
 
 /** Every parameterized Grade 4 template. Generated items cover the
@@ -56,6 +57,12 @@ import { nf7CompareDecimals } from './nf7-compare-decimals';
  *  reviewed with an addition item and retired as mastered. One template, one
  *  skill - see the docstring on ./nf3-subtract-mixed.ts.
  *
+ *  NC.4.NF.6 gets two for the same reason again, and this time the standard
+ *  itself makes the split: its keyConcepts hold decimal NOTATION for tenths
+ *  and hundredths and, separately, ADDING two fractions with denominators of
+ *  10 or 100. Writing 47/100 as 0.47 and adding 4/10 to 7/100 are different
+ *  procedures that go wrong in different ways.
+ *
  *  Tasks 8 and 9 append this grade's MD and G templates here. */
 export const GRADE_4_TEMPLATES: QuestionTemplate[] = [
   oa1TimesAsMany,
@@ -73,6 +80,7 @@ export const GRADE_4_TEMPLATES: QuestionTemplate[] = [
   nf3SubtractMixed,
   nf4MultiplyByWhole,
   nf6AddTenthsHundredths,
+  nf6DecimalNotation,
   nf7CompareDecimals,
 ];
 
@@ -92,5 +100,6 @@ export {
   nf3SubtractMixed,
   nf4MultiplyByWhole,
   nf6AddTenthsHundredths,
+  nf6DecimalNotation,
   nf7CompareDecimals,
 };

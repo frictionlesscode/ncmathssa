@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   assertAuthoredBankSound,
   assertNoGeneratorDuplicatesAuthored,
+  numericValue,
 } from '../authoredBank.testkit';
 import { GRADE_4_DOMAINS } from './standards';
 import { GRADE_4_NF_AUTHORED } from './authored.nf';
@@ -30,17 +31,13 @@ describe('grade 4 NF authored bank', () => {
   // unguarded. So require every item to be all-numeric or all-prose. A mixed
   // item is the one shape where the kit's guard would quietly cover three
   // options and miss the fourth.
+  //
+  // numericValue is imported, never re-declared: a local copy of those
+  // patterns could drift from the kit's and leave this assertion measuring a
+  // parser nothing else uses.
   it('leaves no item half-guarded against two options naming one quantity', () => {
-    const parses = (raw: string): boolean => {
-      const s = raw.trim();
-      return (
-        /^(\d+)\s+(\d+)\/(\d+)(?:\s+[A-Za-z][A-Za-z ]*)?$/.test(s) ||
-        /^(\d+)\/(\d+)(?:\s+[A-Za-z][A-Za-z ]*)?$/.test(s) ||
-        /^(\d+(?:\.\d+)?)(?:\s+[A-Za-z][A-Za-z ]*)?$/.test(s)
-      );
-    };
     for (const q of GRADE_4_NF_AUTHORED) {
-      const numeric = q.options.filter((o) => parses(o.text)).length;
+      const numeric = q.options.filter((o) => numericValue(o.text) !== null).length;
       expect(
         numeric === 0 || numeric === 4,
         `${q.id}: ${numeric} of 4 options parse as quantities, so the rest are compared by text only`,

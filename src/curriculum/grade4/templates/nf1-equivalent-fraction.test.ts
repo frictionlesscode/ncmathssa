@@ -17,7 +17,12 @@ const PAIRS: [number, number][] = [
   [5, 10],
   [5, 100],
   [6, 12],
+  [10, 100],
 ];
+
+/** Draws barred because `../authored.nf.ts` already asks them with the same
+ *  three distractors — not because their four options would collide. */
+const OWNED_BY_AUTHORED_BANK = new Set(['10,100,6', '3,12,2']);
 
 const valueOf = (text: string): number => {
   const [n, d] = text.split('/').map(Number);
@@ -97,7 +102,8 @@ describe('g4.nf1.equivalent-fraction', () => {
     // space is therefore (b, D, a) in full — there is nothing else that could
     // move a numerator.
     let checked = 0;
-    let barred = 0;
+    let barredByCollision = 0;
+    let barredByAuthoredBank = 0;
     const failures: string[] = [];
     for (const [b, D] of PAIRS) {
       const k = D / b;
@@ -105,13 +111,19 @@ describe('g4.nf1.equivalent-fraction', () => {
       for (let a = 1; a <= b - 1; a++) {
         const numerators = [a * k, a, a + b * (k - 1), b];
         const collides = new Set(numerators).size !== 4;
+        const owned = OWNED_BY_AUTHORED_BANK.has(`${b},${D},${a}`);
         if (!admissible.has(a)) {
-          barred++;
-          // Nothing is excluded for tidiness: each barred value really would
-          // have put two options on the same number.
+          if (owned) {
+            barredByAuthoredBank++;
+            continue;
+          }
+          barredByCollision++;
+          // Nothing is excluded for tidiness: every value barred by the
+          // algebra really would have put two options on the same number.
           if (!collides) failures.push(`barred but sound: b=${b} D=${D} a=${a}`);
           continue;
         }
+        if (owned) failures.push(`authored-bank draw not barred: b=${b} D=${D} a=${a}`);
         if (collides) failures.push(`collision: b=${b} D=${D} a=${a} -> ${numerators}`);
         for (const n of numerators) {
           if (n > 100 || n < 1) failures.push(`out of range: b=${b} D=${D} a=${a} n=${n}`);
@@ -120,7 +132,10 @@ describe('g4.nf1.equivalent-fraction', () => {
       }
     }
     expect(failures.slice(0, 5)).toEqual([]);
-    expect(checked).toBe(29);
-    expect(barred).toBe(2);
+    // 40 in range: 3 barred by the a = b/k collision, 2 more owned by the
+    // authored bank, 35 left.
+    expect(checked).toBe(35);
+    expect(barredByCollision).toBe(3);
+    expect(barredByAuthoredBank).toBe(2);
   });
 });

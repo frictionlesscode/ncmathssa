@@ -266,6 +266,17 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       "Counted the terms of a pattern instead of the steps between them, so the pattern's rule was applied one time too many.",
     ),
     entry(
+      // The exact inverse of operated-on-the-like-denominators-too: that tag
+      // names a child who ADDS denominators when joining fractions, this one
+      // names a child who SPLITS a denominator when breaking one apart
+      // (7/12 given as 3/6 + 4/6). Same misunderstanding of what a
+      // denominator is, opposite direction, and a parent needs to be told
+      // which one their child did.
+      'decomposed-the-denominator-too',
+      'fraction-operations',
+      'Split the denominator as well as the numerator when decomposing a fraction, so the pieces came out a different size from the parts being broken up and no longer add back to the fraction they came from.',
+    ),
+    entry(
       'decimal-point-misplaced',
       'place-value-and-decimals',
       'Placed the decimal point in the wrong position by miscounting how many places it should shift.',
@@ -286,9 +297,13 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Divided the two values instead of multiplying them.',
     ),
     entry(
+      // Broadened when NC.4.NF.3 decomposition arrived: the same omission
+      // happens when a fraction is broken INTO pieces (9/10 given as
+      // 3/10 + 5/10) as when mixed numbers are combined. One error, one tag,
+      // and the description has to cover both uses rather than only the first.
       'dropped-a-fraction-part',
       'fraction-operations',
-      'Left out one of the fractional parts while combining the whole-number parts of a mixed-number problem.',
+      'Left out one of the fractional parts — when combining the whole-number parts of a mixed-number problem, or when breaking a fraction into pieces that have to add back to it.',
     ),
     entry(
       'dropped-partial-product-zero',
@@ -456,9 +471,14 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Multiplied only the whole-number part of a decimal or mixed number and left the fractional part unchanged.',
     ),
     entry(
+      // Worded for repetition rather than for multiplication alone, because
+      // g4-nf3-05 commits the same error while DECOMPOSING: asked for 3/4 as
+      // three pieces, the child writes 1/12 + 1/12 + 1/12, scaling the
+      // denominator by the number of copies. Same error, no multiplication
+      // sign in sight.
       'multiplied-the-denominator-too',
       'fraction-operations',
-      'Multiplied the denominator by the whole number as well as the numerator, when multiplying a fraction by a whole number only repeats the parts and never changes their size.',
+      'Scaled the denominator as well as the numerator when a fraction was being repeated — multiplied by a whole number, or written out as a sum of copies — though taking more parts changes only how many there are, never how big each one is.',
     ),
     entry(
       'multiplied-the-denominators-instead-of-keeping-them',
@@ -536,6 +556,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'remainder-written-as-a-decimal',
       'remainder-handling',
       'Wrote a division remainder directly as a decimal digit instead of converting it correctly into a fraction or decimal amount.',
+    ),
+    entry(
+      'repeated-the-whole-fraction-not-the-unit-fraction',
+      'fraction-operations',
+      'Decomposed a fraction into copies of the whole fraction instead of copies of its unit fraction, so the pieces add up to far more than the fraction they came from.',
     ),
     entry(
       'reported-remainder-without-interpreting',
@@ -663,7 +688,7 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
     entry(
       'swapped-the-decimal-place-values',
       'place-value-and-decimals',
-      'Swapped which decimal place two digits belong in, such as writing tenths where thousandths belong.',
+      'Swapped which decimal place two digits belong in — writing 0.81 where 0.18 belongs, or putting tenths where thousandths go.',
     ),
     entry(
       'unit-conversion-inverted',
@@ -686,9 +711,13 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       "Reported a digit's place value itself as the scale factor between two numbers instead of computing the actual ratio.",
     ),
     entry(
+      // Broadened when NC.4.NF.3 decomposition arrived. The error is one
+      // substitution - the denominator put where the numerator belongs - and
+      // it shows up both when renaming a fraction and when decomposing one
+      // (9/10 split as 5/10 + 5/10, which decomposes the 10 and not the 9).
       'used-the-denominator-as-the-new-numerator',
       'fraction-operations',
-      "When rescaling a fraction to a new denominator, mistakenly used the denominator's value as the new numerator.",
+      "Used the denominator's value where the numerator's was needed — as the new numerator when renaming a fraction in smaller parts, or as the amount being split up when decomposing one.",
     ),
     entry(
       'used-the-numerator-as-a-whole-number',
@@ -721,9 +750,14 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Shifted a value by the wrong number of powers of ten, moving one place too many or too few.',
     ),
     entry(
+      // The example has to run BOTH ways. Its first uses were whole numbers,
+      // where the digit is smaller than the value it stands for; in g4-nf6-04
+      // the same error writes 9.0 where 0.09 belongs, and the digit is a
+      // hundred times larger. A parent reads this string, and an example that
+      // only scales one way describes the opposite of what their child did.
       'wrote-the-digit-not-its-value',
       'place-value-and-decimals',
-      'Reported a digit itself where the amount that digit stands for in its place was asked for, such as answering 6 instead of 6,000.',
+      'Reported a digit itself where the amount that digit stands for in its place was asked for — answering 6 instead of 6,000, or 9.0 instead of 0.09.',
     ),
     entry(
       'wrote-the-product-as-a-mixed-number',

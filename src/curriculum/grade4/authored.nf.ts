@@ -28,9 +28,19 @@ import { labelOptions } from '../../engine/questionModel';
  *   NC.4.NF.7 — compare two decimals to HUNDREDTHS; comparisons are valid only
  *               against the same whole.
  * Nothing here asks beyond that text. In particular no item multiplies two
- * fractions together (NC.5.NF.4), divides by a fraction (NC.5.NF.7), adds
- * unlike denominators outside the 10/100 pair NC.4.NF.6 names (NC.5.NF.1), or
- * reaches thousandths (NC.5.NBT.3) — every one of those is a grade above.
+ * fractions together (NC.5.NF.4), divides by a fraction (NC.5.NF.7), or adds
+ * unlike denominators outside the 10/100 pair NC.4.NF.6 names (NC.5.NF.1) —
+ * every one of those is a grade above. Every fraction printed anywhere in this
+ * bank uses a denominator from NC.4.NF.2's sourced list; NC.4.NF.1 names no
+ * list of its own, and rather than let one standard's items contradict the
+ * generator filed under the same standard, they follow NF.2's.
+ *
+ * No item REQUIRES working in thousandths, which is NC.5.NBT.3. Two items do
+ * PRINT a thousandths distractor — `0.018 m` in g4-nf6-01 and `0.009` in
+ * g4-nf6-04 — and both are deliberate: writing 18/100 with three decimal
+ * places is exactly the shifted-place error NC.4.NF.6 exists to catch, and
+ * ruling it out needs no arithmetic in thousandths at all, only the knowledge
+ * that hundredths live in the second decimal place.
  *
  * THE TRAP THIS DOMAIN SETS. In a fractions bank the likeliest single defect
  * is not a wrong answer, it is a SECOND right one: an unsimplified equivalent
@@ -49,28 +59,36 @@ import { labelOptions } from '../../engine/questionModel';
  * `authored.nf.test.ts` checks this with the shared kit's numericValue() guard
  * rather than trusting this paragraph.
  *
- * Eleven tags used here are new, declared in `../misconceptions.ts`, all in
+ * Thirteen tags used here are new, declared in `../misconceptions.ts`, all in
  * the `fraction-operations` family. The existing fraction vocabulary was
  * written for Grade 5, where every operation has unlike denominators: it has
  * good names for failing to find a common denominator, and no name at all for
  * the errors that define Grade 4 — adding denominators that already match,
- * judging 1/8 greater than 1/3, comparing by numerator alone, or multiplying a
- * fraction's denominator by the whole number. Stretching a Grade 5 tag over
- * those would tell a parent their child has a problem they do not have.
+ * judging 1/8 greater than 1/3, comparing by numerator alone, multiplying a
+ * fraction's denominator by the whole number, or splitting a denominator while
+ * decomposing. Stretching a Grade 5 tag over those would tell a parent their
+ * child has a problem they do not have.
  *
- * Six of these standards also have generators (see ./templates), so the two
- * have to stay out of each other's way: the scheduler keys authored items as
- * {authored, id} and generated ones as {generated, templateId}, and a question
- * reachable both ways is served to a child twice under two identities. Every
- * generator emits one fixed computational stem — 'Which fraction names the
- * same amount, written in smaller parts?', 'These fractions all describe parts
- * of the same size whole. Order them from LEAST to GREATEST.', 'Add the
- * fractions.', 'Subtract the mixed numbers.', 'Multiply the whole number by
- * the fraction.', 'Add the fractions. Write the sum in hundredths.', and
- * 'These decimals all describe parts of the same size whole. Which one is the
+ * Every one of these standards also has at least one generator (see
+ * ./templates), so the two have to stay out of each other's way: the scheduler
+ * keys authored items as {authored, id} and generated ones as {generated,
+ * templateId}, and a question reachable both ways is served to a child twice
+ * under two identities. Every generator emits one fixed computational stem —
+ * 'Which fraction names the same amount, written in smaller parts?', 'These
+ * fractions all describe parts of the same size whole. Order them from LEAST
+ * to GREATEST.', 'Add the fractions.', 'Subtract the mixed numbers.',
+ * 'Multiply the whole number by the fraction.', 'Add the fractions. Write the
+ * sum in hundredths.', 'A 10 by 10 grid represents 1 whole. Which decimal
+ * names the shaded part of the grid?', and 'Which of these decimals is the
  * greatest?'. Every item below is a word problem, an error analysis, or a
  * differently worded stem, so no prompt can coincide; the test checks that
  * against 2,000 seeds of every Grade 4 template rather than trusting it.
+ *
+ * Prompt shape is not the only separation. Where a generator could emit an
+ * authored item's exact option SET as well — g4-nf6-02 and g4-nf1-02, both
+ * renamings the NF.1 generator can also draw — that generator bars the
+ * specific parameters, so the two banks cannot converge on one question by
+ * two routes.
  *
  * The correct option is deliberately placed at a varied position; it is not
  * always A.
@@ -125,22 +143,22 @@ export const GRADE_4_NF_AUTHORED: Question[] = [
     id: 'g4-nf1-02',
     standardCode: 'NC.4.NF.1',
     domainId: 'NF',
-    prompt: 'Which fraction with a denominator of 20 names the same amount as 2/5?',
+    prompt: 'Which fraction with a denominator of 12 names the same amount as 2/3?',
     options: labelOptions([
-      { text: '8/20', isCorrect: true },
-      // 5 × 4 = 20 for the denominator, but the numerator was copied across
-      // unchanged: 2/20.
-      { text: '2/20', isCorrect: false, misconception: 'scaled-the-denominator-only' },
-      // 20 - 5 = 15 added to both parts instead of multiplying both by 4:
-      // 2 + 15 = 17 over 5 + 15 = 20.
+      { text: '8/12', isCorrect: true },
+      // 3 × 4 = 12 for the denominator, but the numerator was copied across
+      // unchanged: 2/12.
+      { text: '2/12', isCorrect: false, misconception: 'scaled-the-denominator-only' },
+      // 12 - 3 = 9 added to both parts instead of multiplying both by 4:
+      // 2 + 9 = 11 over 3 + 9 = 12.
       {
-        text: '17/20',
+        text: '11/12',
         isCorrect: false,
         misconception: 'added-to-both-parts-instead-of-multiplying',
       },
-      // The original denominator, 5, used as the new numerator.
+      // The original denominator, 3, used as the new numerator.
       {
-        text: '5/20',
+        text: '3/12',
         isCorrect: false,
         misconception: 'used-the-denominator-as-the-new-numerator',
       },
@@ -150,15 +168,15 @@ export const GRADE_4_NF_AUTHORED: Question[] = [
     difficulty: 'mastery',
     explanation: {
       stepByStep: [
-        'Step 1: Fifths have to be cut into smaller parts to become twentieths: 20 / 5 = 4, so each fifth splits into 4 equal parts.',
-        'Step 2: Cutting each part into 4 also cuts each of the 2 shaded fifths into 4 pieces: 2 × 4 = 8.',
+        'Step 1: Thirds have to be cut into smaller parts to become twelfths: 12 / 3 = 4, so each third splits into 4 equal parts.',
+        'Step 2: Cutting each part into 4 also cuts each of the 2 shaded thirds into 4 pieces: 2 × 4 = 8.',
         'Step 3: Both parts of the fraction were multiplied by the same factor, 4/4, which is one whole and so changes nothing about the amount.',
-        'Step 4: 2/5 = 8/20.',
+        'Step 4: 2/3 = 8/12.',
       ],
       conceptSummary:
         'Renaming a fraction means multiplying the numerator and the denominator by the SAME number, because that factor is really a form of 1. Doing it to only one of them changes the amount instead of renaming it.',
       commonMisconception:
-        'Adding 15 to both parts gives 17/20, which is nearly a whole; 2/5 is less than half. Adding the same amount to both parts does not preserve a fraction, only multiplying does.',
+        'Adding 9 to both parts gives 11/12, which is nearly a whole, while 2/3 is only a little over half. Adding the same amount to both parts does not preserve a fraction; only multiplying does.',
     },
   },
   {
@@ -216,37 +234,37 @@ export const GRADE_4_NF_AUTHORED: Question[] = [
     domainId: 'NF',
     prompt: 'Which equation is true?',
     options: labelOptions([
-      // 5 × 3 = 15 in the denominator with the numerator copied across.
-      { text: '3/5 = 3/15', isCorrect: false, misconception: 'scaled-the-denominator-only' },
-      // The original denominator, 5, written as the new numerator.
+      // 4 × 3 = 12 in the denominator with the numerator copied across.
+      { text: '3/4 = 3/12', isCorrect: false, misconception: 'scaled-the-denominator-only' },
+      // The original denominator, 4, written as the new numerator.
       {
-        text: '3/5 = 5/15',
+        text: '3/4 = 4/12',
         isCorrect: false,
         misconception: 'used-the-denominator-as-the-new-numerator',
       },
-      // 15 - 5 = 10 added to both parts rather than multiplying both by 3:
-      // 3 + 10 = 13 over 5 + 10 = 15.
+      // 12 - 4 = 8 added to both parts rather than multiplying both by 3:
+      // 3 + 8 = 11 over 4 + 8 = 12.
       {
-        text: '3/5 = 13/15',
+        text: '3/4 = 11/12',
         isCorrect: false,
         misconception: 'added-to-both-parts-instead-of-multiplying',
       },
-      { text: '3/5 = 9/15', isCorrect: true },
+      { text: '3/4 = 9/12', isCorrect: true },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
     explanation: {
       stepByStep: [
-        'Step 1: Every equation offers fifteenths, so ask what each fifth becomes: 15 / 5 = 3, so each fifth splits into 3 fifteenths.',
-        'Step 2: Splitting each part into 3 turns the 3 shaded fifths into 3 × 3 = 9 shaded fifteenths.',
-        'Step 3: Check it on a length model: 3/5 is a little over half a strip, and 9/15 is a little over half the same strip, while 3/15, 5/15 and 13/15 are not.',
-        'Step 4: The true equation is 3/5 = 9/15.',
+        'Step 1: Every equation offers twelfths, so ask what each fourth becomes: 12 / 4 = 3, so each fourth splits into 3 twelfths.',
+        'Step 2: Splitting each part into 3 turns the 3 shaded fourths into 3 × 3 = 9 shaded twelfths.',
+        'Step 3: Check it on a length model: 3/4 is three quarters of a strip, and 9/12 marks the same point on an identical strip, while 3/12, 4/12 and 11/12 mark a quarter, a third, and nearly the whole strip.',
+        'Step 4: The true equation is 3/4 = 9/12.',
       ],
       conceptSummary:
-        'A fraction is renamed by multiplying the top and the bottom by the same factor. The factor comes from the denominators — here 15 / 5 = 3 — and must then be applied to the numerator as well.',
+        'A fraction is renamed by multiplying the top and the bottom by the same factor. The factor comes from the denominators — here 12 / 4 = 3 — and must then be applied to the numerator as well.',
       commonMisconception:
-        'A quick size check catches every wrong option here: 3/5 is more than half, and 3/15, 5/15 and 13/15 are far below half, far below half, and nearly a whole.',
+        'A quick size check catches every wrong option: 3/4 sits three quarters along the strip, while 3/12 and 4/12 are below half and 11/12 is almost the whole thing.',
     },
   },
 
@@ -520,7 +538,7 @@ export const GRADE_4_NF_AUTHORED: Question[] = [
       conceptSummary:
         'Regrouping a mixed number works exactly as it does in the standard algorithm: one whole is traded for its equivalent in fifths, and the whole-number part must drop by one at the same moment the fraction part grows.',
       commonMisconception:
-        'Taking 1/5 from 3/5 to dodge the regrouping gives 3 2/5, which is MORE juice than was poured out of a jug — the answer has to be smaller than 4 1/5 by more than one whole liter.',
+        'Add the answer back to check it: 2 3/5 + 1 3/5 = 4 1/5, exactly what the jug held. The dodge that avoids regrouping gives 3 2/5, and 3 2/5 + 1 3/5 = 5 liters — a liter more juice than was ever in the jug.',
     },
   },
   {
@@ -600,7 +618,104 @@ export const GRADE_4_NF_AUTHORED: Question[] = [
       conceptSummary:
         'Subtracting like denominators separates parts of the same size, so only the count changes. The denominator is a label on what is being counted, not a number in the subtraction.',
       commonMisconception:
-        'Subtracting the denominators too gives 7/8, which is MORE rice than the bag held after the recipe took some — the parts cannot grow when rice is removed.',
+        'Add the answer back to check it: 7/12 + 4/12 = 11/12, exactly what the bag held. Subtracting the denominators too gives 7/8, and 7/8 + 4/12 comes to more than a whole pound — more rice than the bag ever contained.',
+    },
+  },
+
+  // NC.4.NF.3's headline description is "Understand and justify decompositions
+  // of fractions", and its second keyConcept asks for a fraction broken into a
+  // sum of unit fractions AND into a sum of fractions with the same
+  // denominator, "in more than one way". The two items below are that half of
+  // the standard; the four above are the adding and subtracting half.
+  {
+    id: 'g4-nf3-05',
+    standardCode: 'NC.4.NF.3',
+    domainId: 'NF',
+    prompt: 'Which expression shows 3/4 decomposed into a sum of unit fractions?',
+    options: labelOptions([
+      { text: '1/4 + 1/4 + 1/4', isCorrect: true },
+      // Four copies, not three: the denominator was taken as the number of
+      // parts to write down, so the whole was decomposed instead of the 3/4.
+      {
+        text: '1/4 + 1/4 + 1/4 + 1/4',
+        isCorrect: false,
+        misconception: 'used-the-denominator-as-the-new-numerator',
+      },
+      // The right count of pieces, but the denominator multiplied by 3 as
+      // well: 4 × 3 = 12, so each piece was written a third of its real size.
+      {
+        text: '1/12 + 1/12 + 1/12',
+        isCorrect: false,
+        misconception: 'multiplied-the-denominator-too',
+      },
+      // Three copies of the whole fraction rather than of its unit fraction,
+      // which comes to 9/4 — three times too much.
+      {
+        text: '3/4 + 3/4 + 3/4',
+        isCorrect: false,
+        misconception: 'repeated-the-whole-fraction-not-the-unit-fraction',
+      },
+    ]),
+    calculatorAllowed: false,
+    isStretch: false,
+    difficulty: 'mastery',
+    explanation: {
+      stepByStep: [
+        'Step 1: A unit fraction has 1 on top. The unit fraction here is 1/4, because the whole is cut into fourths.',
+        'Step 2: 3/4 means 3 of those fourths, so it takes exactly 3 copies of 1/4 — not 4, which would be the whole thing.',
+        'Step 3: The pieces do not change size when they are written out separately, so every one of them stays a fourth.',
+        'Step 4: 3/4 = 1/4 + 1/4 + 1/4.',
+      ],
+      conceptSummary:
+        'Decomposing a fraction breaks it into pieces that add back to exactly what you started with. The numerator says how many pieces, and the denominator says what size each one is — and only the count is allowed to change.',
+      commonMisconception:
+        'Writing 4 copies of 1/4 decomposes the WHOLE, not the 3/4. The check is always the same: add the pieces up and see whether you get back the fraction you began with.',
+    },
+  },
+  {
+    id: 'g4-nf3-06',
+    standardCode: 'NC.4.NF.3',
+    domainId: 'NF',
+    prompt: 'Which equation correctly decomposes 9/10 into a sum of two fractions?',
+    options: labelOptions([
+      // The denominator was split as well as the numerator: 9 into 4 + 5 and
+      // 10 into 5 + 5, which makes the pieces twice the size they should be
+      // and adds to 9/5.
+      {
+        text: '9/10 = 4/5 + 5/5',
+        isCorrect: false,
+        misconception: 'decomposed-the-denominator-too',
+      },
+      // 3 + 5 = 8, so one tenth of the nine was left out of the decomposition
+      // altogether.
+      {
+        text: '9/10 = 3/10 + 5/10',
+        isCorrect: false,
+        misconception: 'dropped-a-fraction-part',
+      },
+      { text: '9/10 = 4/10 + 5/10', isCorrect: true },
+      // The denominator was the number split up: 10 broken into 5 + 5 and
+      // written as the two numerators, which adds to a whole rather than 9/10.
+      {
+        text: '9/10 = 5/10 + 5/10',
+        isCorrect: false,
+        misconception: 'used-the-denominator-as-the-new-numerator',
+      },
+    ]),
+    calculatorAllowed: false,
+    isStretch: false,
+    difficulty: 'advanced',
+    explanation: {
+      stepByStep: [
+        'Step 1: Decomposing 9/10 means splitting the 9 tenths into groups, so every piece is still counted in tenths.',
+        'Step 2: The two numerators have to add back to 9, because the 9 pieces are only being sorted, never created or lost.',
+        'Step 3: 4 + 5 = 9, and both pieces are tenths, so the sizes are untouched as well as the count.',
+        'Step 4: 9/10 = 4/10 + 5/10. It is one of several correct decompositions — 1/10 + 8/10 and 2/10 + 7/10 work the same way.',
+      ],
+      conceptSummary:
+        'A fraction can be decomposed in more than one way, and every correct way obeys the same two rules: the pieces keep the denominator, and their numerators add back to the original numerator.',
+      commonMisconception:
+        'Splitting the denominator as well turns tenths into fifths, which are twice the size — so 4/5 + 5/5 comes to 9/5, nearly two wholes, from a fraction that was less than one.',
     },
   },
 
@@ -730,7 +845,7 @@ export const GRADE_4_NF_AUTHORED: Question[] = [
       conceptSummary:
         'A whole number times a fraction is repeated addition of that fraction, so the product is the numerator repeated that many times over the same denominator.',
       commonMisconception:
-        'Estimating settles this: 3/8 is a bit less than 1/2, so 7 laps is a bit less than 3 1/2 miles. 3/8 mile and 7 3/8 miles are both nowhere near that.',
+        'Estimating brackets the answer: 3/8 sits between 1/4 and 1/2, so 7 laps must land between 7 × 1/4 = 1 3/4 miles and 7 × 1/2 = 3 1/2 miles. Only 21/8, which is 2 5/8, falls inside that range — 10/8 is below it, and 3/8 and 7 3/8 are nowhere near it.',
     },
   },
   {
@@ -1054,9 +1169,9 @@ export const GRADE_4_NF_AUTHORED: Question[] = [
       // Compared from the right-hand end: the last digit of 0.59 is 9 and the
       // last digit of 0.62 is 2, so 0.62 was called the smaller number.
       { text: '0.62 < 0.59', isCorrect: false, misconception: 'compared-decimals-right-to-left' },
-      // The zero holding the tenths place in 0.07 was ignored, so it was read
-      // as 0.7 and came out ahead of 0.7's equal.
-      { text: '0.7 < 0.07', isCorrect: false, misconception: 'omitted-placeholder-zero' },
+      // The zero holding the tenths place in 0.07 was ignored, so 0.07 was
+      // read as 0.7 — and 0.7 against 0.7 looks like a match.
+      { text: '0.7 = 0.07', isCorrect: false, misconception: 'omitted-placeholder-zero' },
       { text: '0.40 = 0.4', isCorrect: true },
     ]),
     calculatorAllowed: false,
@@ -1066,13 +1181,67 @@ export const GRADE_4_NF_AUTHORED: Question[] = [
       stepByStep: [
         'Step 1: Read 0.40 by place value: 4 tenths and 0 hundredths.',
         'Step 2: Read 0.4 the same way: 4 tenths, with nothing at all in the hundredths place.',
-        'Step 3: Zero hundredths and no hundredths are the same amount, so a zero on the END of a decimal adds nothing to its value.',
+        'Step 3: Zero hundredths and no hundredths are the same amount, so a zero on the END of a decimal adds nothing to its value. The zero in 0.07 is a different zero: it sits BEFORE the 7 and holds the tenths place open, which is why 0.07 is not 0.7.',
         'Step 4: 0.40 = 0.4.',
       ],
       conceptSummary:
         'A zero AFTER the last non-zero digit changes nothing; a zero BEFORE it, holding a place open, changes everything. 0.40 equals 0.4, while 0.04 is a tenth of either.',
       commonMisconception:
         'Extra digits feel like extra value, which is why 0.40 looks bigger than 0.4. Reading each place aloud — "four tenths, zero hundredths" — makes the two obviously identical.',
+    },
+  },
+  {
+    // NC.4.NF.7's sourced text ends with "Recognize that comparisons are valid
+    // only when the two decimals refer to the same whole." No other item in
+    // this domain tests it for decimals, and it is the one part of the
+    // standard a child cannot get right by computing.
+    id: 'g4-nf7-05',
+    standardCode: 'NC.4.NF.7',
+    domainId: 'NF',
+    prompt:
+      'Maya filled 0.6 of a small watering can. Theo filled 0.08 of a large watering can, and the large can holds far more water than the small one. Theo says he must have less water, because 0.08 is less than 0.6. What is wrong with his reasoning?',
+    options: labelOptions([
+      // The zero holding the tenths place in 0.08 was ignored, so 0.08 was read
+      // as 0.8 and 8 tenths beat 6 tenths.
+      {
+        text: 'He should have said 0.08 is the greater number, because 8 is greater than 6.',
+        isCorrect: false,
+        misconception: 'omitted-placeholder-zero',
+      },
+      // The decimal parts read as whole numbers: 8 is one digit and 0.08 shows
+      // two, so the longer one was called the larger.
+      {
+        text: 'He should have said 0.08 is the greater number, because it has more digits than 0.6.',
+        isCorrect: false,
+        misconception: 'compared-by-digit-count',
+      },
+      // Accepts the comparison of the two decimals as if the cans were the same
+      // size. 0.08 IS less than 0.6 - but 0.08 of a large can can still be more
+      // water than 0.6 of a small one.
+      {
+        text: 'Nothing is wrong: 0.08 is less than 0.6, so Theo has less water than Maya.',
+        isCorrect: false,
+        misconception: 'compared-across-different-wholes',
+      },
+      {
+        text: 'The two cans are different sizes, so comparing 0.08 and 0.6 cannot tell you who has more water.',
+        isCorrect: true,
+      },
+    ]),
+    calculatorAllowed: false,
+    isStretch: false,
+    difficulty: 'advanced',
+    explanation: {
+      stepByStep: [
+        'Step 1: Theo has the decimals the right way round: 0.08 is 8 hundredths and 0.6 is 60 hundredths, so 0.08 is much the smaller NUMBER.',
+        'Step 2: But 0.6 and 0.08 are fractions OF something, and here they are fractions of two different cans.',
+        'Step 3: If the large can holds ten times what the small one holds, 0.08 of it is 0.8 of a small can — more water than Maya has, not less.',
+        'Step 4: The two cans are different sizes, so comparing 0.08 and 0.6 cannot tell you who has more water.',
+      ],
+      conceptSummary:
+        'NC.4.NF.7 says it directly: a comparison of two decimals is valid only when they refer to the same whole. A decimal is not an amount of anything until you know what it is a decimal of.',
+      commonMisconception:
+        'The trap is that Theo\'s comparison of the numbers is CORRECT. What he skipped is checking that the comparison answers the question asked — and with two different cans, it does not.',
     },
   },
 ];

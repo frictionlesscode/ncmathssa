@@ -11,8 +11,16 @@ import { makeRng } from '../engine/rng';
  * Distinct text is not enough for a numeric item: "4/8" and "1/2" are
  * different strings but the same quantity, so an item offering both has two
  * right answers and a child who picks the second is marked wrong unfairly.
+ *
+ * Exported so a domain test can ask WHICH of its options this parser can see.
+ * An option it returns null for is compared by text alone and is not
+ * value-guarded, so an item mixing parseable and unparseable options is
+ * silently half-checked. A domain test that re-declared these patterns locally
+ * could drift from this copy without anything going red — which is precisely
+ * the failure the guard exists to prevent — so there is one definition and
+ * everything imports it.
  */
-function numericValue(raw: string): number | null {
+export function numericValue(raw: string): number | null {
   const s = raw.trim().replace(/^\$/, '').replace(/,/g, '');
   let m = /^(\d+)\s+(\d+)\/(\d+)(?:\s+[A-Za-z][A-Za-z ]*)?$/.exec(s);
   if (m) return Number(m[1]) + Number(m[2]) / Number(m[3]);

@@ -65,6 +65,7 @@ describe('g4.nf2.order-fractions', () => {
   // common denominator three of this template's denominators can require, and
   // it appears only in the worked solution.
   it('keeps every number it prints inside Grade 4', () => {
+    const NF2_LIST = new Set([2, 3, 4, 5, 6, 8, 10, 12, 100]);
     for (let seed = 0; seed < 300; seed++) {
       const g = nf2OrderFractions.generate(makeRng(seed));
       for (const o of g.options) {
@@ -74,8 +75,33 @@ describe('g4.nf2.order-fractions', () => {
       }
       const worked = [g.prompt, g.promptDetails!, ...g.explanation.stepByStep,
         g.explanation.conceptSummary, g.explanation.commonMisconception ?? ''].join(' ');
+      // Every denominator printed anywhere - a number written after a slash -
+      // must come from the standard's own list. A worked solution reaching for
+      // 120ths has left the grade, whatever else it gets right.
+      for (const m of worked.matchAll(/\/(\d+)/g)) {
+        expect(NF2_LIST.has(Number(m[1])), `seed ${seed}: denominator ${m[1]}`).toBe(true);
+      }
+      // The only numerals above 12 are the doubled numerators of the benchmark
+      // check, and the largest numerator in the pool is 11.
       for (const numeral of worked.match(/\d+/g) ?? []) {
-        expect(Number(numeral), `seed ${seed}: ${numeral}`).toBeLessThanOrEqual(120);
+        expect(Number(numeral), `seed ${seed}: ${numeral}`).toBeLessThanOrEqual(22);
+      }
+    }
+  });
+
+  // The worked solution has to lead with the benchmark and reach for a common
+  // denominator only to finish a pair the benchmark leaves tied. That is the
+  // order NC.4.NF.2's own keyConcepts put the strategies in.
+  it('leads with benchmark reasoning, correctly classified', () => {
+    for (let seed = 0; seed < 300; seed++) {
+      const g = nf2OrderFractions.generate(makeRng(seed));
+      const first = g.explanation.stepByStep[0];
+      expect(first, `seed ${seed}`).toContain('benchmark 1/2');
+      for (const f of listOf(g.answerText)) {
+        const side = 2 * f.n > f.d ? 'more than' : 2 * f.n === f.d ? 'exactly' : 'less than';
+        expect(first, `seed ${seed}: ${f.n}/${f.d} classified wrongly`).toContain(
+          `${f.n}/${f.d} is ${side} 1/2`,
+        );
       }
     }
   });
@@ -121,10 +147,20 @@ describe('g4.nf2.order-fractions', () => {
       }
       if (new Set(t.map((f) => f.n)).size !== 3) failures.push(`numerators ${where}`);
       if (new Set(t.map((f) => f.d)).size !== 3) failures.push(`denominators ${where}`);
+      // Both adjacent pairs must be settleable by a strategy the standard
+      // names, without an off-list denominator: either one denominator divides
+      // the other, or the benchmark 1/2 separates them.
+      for (const [x, y] of [[t[0], t[1]], [t[1], t[2]]]) {
+        const divides = y.d % x.d === 0 || x.d % y.d === 0;
+        const benchmark = 2 * x.n <= x.d && 2 * y.n >= y.d;
+        if (!divides && !benchmark) failures.push(`unsettleable pair ${where}`);
+      }
     }
     expect(failures.slice(0, 5)).toEqual([]);
     // 23 proper fractions in lowest terms over the eight denominators, so
-    // 23^3 = 12,167 ordered triples were examined to build this table.
-    expect(TRIPLES.length).toBe(81);
+    // 23^3 = 12,167 ordered triples were examined to build this table. 81 make
+    // four distinct orderings; 46 of those can also be worked with the
+    // standard's own strategies and no off-list denominator.
+    expect(TRIPLES.length).toBe(46);
   });
 });

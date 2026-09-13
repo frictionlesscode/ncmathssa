@@ -8,12 +8,9 @@ import { labelOptions } from '../../../engine/questionModel';
  * and 100 — and the second is a multiple of the first, so the rescaling factor
  * k = D / b is a whole number.
  *
- * Two absences are deliberate. (2, 4) is barred because with b = 2 the only
- * proper numerator is 1, and with k = 2 that single value is excluded below,
- * leaving nothing to pick from. (10, 100) is barred because the authored bank
- * already asks exactly that rename, with exactly these three distractors, at
- * g4-nf6-02 — a generated item indistinguishable from an authored one is
- * served to a child twice under two review keys.
+ * One absence is deliberate: (2, 4). With b = 2 the only proper numerator is 1,
+ * and with k = 2 that single value is excluded by the algebra below, so the
+ * pair would leave nothing to pick from.
  */
 const RESCALINGS: readonly (readonly [number, number])[] = [
   [2, 6],
@@ -29,6 +26,31 @@ const RESCALINGS: readonly (readonly [number, number])[] = [
   [5, 10],
   [5, 100],
   [6, 12],
+  [10, 100],
+];
+
+/**
+ * The individual (b, D, a) draws the authored bank already owns.
+ *
+ * These are not collisions between options — they are collisions between this
+ * generator and `../authored.nf.ts`. Each renaming listed here appears there
+ * with the SAME three distractors, so a seed drawing it would hand a child a
+ * question the scheduler also holds under {authored, id}, and the child would
+ * meet it twice under two identities.
+ *
+ * Barred one DRAW at a time, not one pair at a time. An earlier version
+ * dropped the whole (10, 100) pair for the sake of a single clash at a = 6,
+ * which cost seven perfectly good questions for one bad one.
+ *
+ * Note what is NOT listed. g4-nf1-04 renames 3/4 as 9/12 with these same three
+ * distractors, and (4, 12, 3) stays drawable, because that item asks "which
+ * EQUATION is true" and offers four equations — '3/4 = 9/12' and so on. A child
+ * never sees the four strings this template prints, and the task is a
+ * different one.
+ */
+const OWNED_BY_AUTHORED_BANK: readonly string[] = [
+  '10,100,6', // g4-nf6-02: 6/10 = 60/100, distractors 6/100, 10/100, 96/100
+  '3,12,2', //   g4-nf1-02: 2/3 = 8/12,   distractors 2/12, 3/12, 11/12
 ];
 
 /**
@@ -53,15 +75,19 @@ const RESCALINGS: readonly (readonly [number, number])[] = [
  *   a + b(k-1) = b    => a = b(2-k), which is 0 at k = 2 and negative beyond,
  *                        and a >= 1, so impossible
  *
- * A sweep of all 29 admissible (b, D, a) combinations confirms it — see the
- * sibling test, which also checks that the 2 barred combinations, (4, 8) with
- * a = 2 and (6, 12) with a = 3, really would have collided.
+ * Of the 40 (b, D, a) combinations in range, 3 are barred by that collision —
+ * (4, 8) at a = 2, (6, 12) at a = 3 and (10, 100) at a = 1 — and 2 more by
+ * OWNED_BY_AUTHORED_BANK above, leaving 35. The sibling test sweeps all 40 and
+ * checks that each of the 3 algebraically barred ones really would have put
+ * two options on the same number; nothing is excluded for tidiness.
  */
 export function admissibleNumerators(b: number, D: number): number[] {
   const k = D / b;
   const out: number[] = [];
   for (let a = 1; a <= b - 1; a++) {
-    if (a * k !== b) out.push(a);
+    if (a * k === b) continue;
+    if (OWNED_BY_AUTHORED_BANK.includes(`${b},${D},${a}`)) continue;
+    out.push(a);
   }
   return out;
 }

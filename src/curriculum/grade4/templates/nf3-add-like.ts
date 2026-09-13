@@ -119,6 +119,16 @@ export const nf3AddLike: QuestionTemplate = {
           `Step 2: Adding them joins ${a} of those parts to ${b} more of them.`,
           `Step 3: Count the parts: ${a} + ${b} = ${sum}. The parts themselves did not change size, so the denominator stays ${d}.`,
           `Step 4: ${a}/${d} + ${b}/${d} = ${answer}.`,
+          // When the parts fill the whole, the sum is left as d/d rather than
+          // rewritten as 1: NC.4.NF.3 never asks for simplest form, and seeing
+          // that all d of the d parts have been collected is worth more to a
+          // Grade 4 child than the symbol 1. This step says so, so the form is
+          // not mistaken for an unfinished answer.
+          ...(sum === d
+            ? [
+                `Step 5: ${answer} is all ${d} of the ${d} parts that make one whole, so ${answer} is exactly 1.`,
+              ]
+            : []),
         ],
         conceptSummary:
           'Adding fractions with a common denominator is counting. The denominator names WHAT is being counted, so it travels through the addition unchanged while only the count goes up.',

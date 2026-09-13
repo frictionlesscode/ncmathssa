@@ -112,7 +112,12 @@ export const nf7CompareDecimals: QuestionTemplate = {
     });
 
     return {
-      prompt: 'These decimals all describe parts of the same size whole. Which one is the greatest?',
+      // The stem says nothing about wholes. An earlier version claimed these
+      // were "parts of the same size whole", which is false the moment the
+      // whole-number part is 1 or more — most of these values are not parts of
+      // anything. NC.4.NF.7's same-whole requirement is real and is taught
+      // where it can be taught honestly: the authored item g4-nf7-05.
+      prompt: 'Which of these decimals is the greatest?',
       promptDetails: listed.join(', '),
       options: labelOptions(ordered),
       answerText: answer,

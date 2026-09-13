@@ -9,7 +9,30 @@ export interface Frac {
 }
 
 const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
-const lcm = (a: number, b: number): number => (a * b) / gcd(a, b);
+
+/** One of the two denominators is a multiple of the other, so the larger of
+ *  them serves as their common denominator — and since both come from
+ *  NC.4.NF.2's list, so does that common denominator. */
+const oneDivides = (a: number, b: number): boolean => b % a === 0 || a % b === 0;
+
+/** Where a fraction falls against the benchmark 1/2, found by doubling its
+ *  numerator: negative below the benchmark, zero exactly on it, positive
+ *  above. */
+const againstHalf = (f: Frac): number => 2 * f.n - f.d;
+
+/**
+ * A pair can be settled without printing a denominator outside NC.4.NF.2's
+ * list when either one denominator divides the other, or the benchmark 1/2
+ * already separates the two. Requiring that of both ADJACENT pairs is what
+ * keeps the worked solution inside the strategies the standard actually names
+ * — benchmark fractions, common numerators, common denominators — instead of
+ * routing every comparison through an LCM. An earlier version did route
+ * through the LCM and printed 120ths, which is a Grade 5 method applied to
+ * Grade 4 numbers.
+ */
+function pairIsSettled(x: Frac, y: Frac): boolean {
+  return oneDivides(x.d, y.d) || (againstHalf(x) <= 0 && againstHalf(y) >= 0);
+}
 
 /** The denominators NC.4.NF.2 names, less 100 — hundredths against thirds is a
  *  comparison no Grade 4 child is asked to reason about with a model. */
@@ -48,16 +71,20 @@ export function orderingsOf(t: readonly Frac[]): string[] {
  *     denominator" single, unambiguous orderings
  *   - the four orderings — true, by numerator, by denominator ascending, by
  *     denominator descending — are four DISTINCT permutations
+ *   - both ADJACENT pairs are settled either by the benchmark 1/2 or by one
+ *     denominator dividing the other, so the worked solution can be written
+ *     with the strategies NC.4.NF.2 names and never has to print a denominator
+ *     outside its list
  *
- * That last condition is the whole collision argument. The four options are
+ * The fourth condition is the whole collision argument. The four options are
  * four permutations of three fractions that are pairwise distinct in value and
  * in lowest terms, so no two of them can name the same quantity unless they
  * are the same permutation, which this filter forbids. No algebra over the
  * digits is needed and none is possible: the exclusion is structural.
  *
  * The sweep is the construction itself. All 23^3 = 12,167 ordered triples from
- * the pool are examined and 81 are admitted; the sibling test re-runs that
- * sweep and pins both numbers.
+ * the pool are examined; 81 clear the first four conditions and 46 also clear
+ * the fifth. The sibling test re-runs that sweep and pins both numbers.
  */
 function buildTriples(): Frac[][] {
   const out: Frac[][] = [];
@@ -70,6 +97,7 @@ function buildTriples(): Frac[][] {
         if (new Set(t.map((f) => f.n)).size !== 3) continue;
         if (new Set(t.map((f) => f.d)).size !== 3) continue;
         if (new Set(orderingsOf(t)).size !== 4) continue;
+        if (!pairIsSettled(a, b) || !pairIsSettled(b, c)) continue;
         out.push(t);
       }
     }
@@ -104,7 +132,7 @@ function unusedOrderings(t: readonly Frac[]): Frac[][] {
  * Each wrong ordering is what ONE named rule produces, and each rule is one a
  * Grade 4 child really uses:
  *
- *   answer        place the fractions by size, using a common denominator
+ *   answer        place the fractions by size, benchmark first
  *   by numerator  ordered by the count of parts alone
  *   denom asc     ordered by denominator, bigger denominator read as the
  *                 bigger fraction — the 1/8 > 1/3 error
@@ -117,9 +145,14 @@ function unusedOrderings(t: readonly Frac[]): Frac[][] {
  * and a child who mixed up the direction on a fractions item would have been
  * reported to a parent as having a place-value problem.
  *
- * Largest numbers printed: denominator 12 in the question, and up to 120 in
- * the worked solution, which is the largest common denominator three of these
- * denominators can need.
+ * The worked solution leads with the benchmark 1/2 and reaches for a common
+ * denominator only to finish a pair the benchmark leaves tied — which is the
+ * order NC.4.NF.2's own keyConcepts put the strategies in. Every denominator
+ * it prints comes from the standard's list, because buildTriples() only admits
+ * a triple whose adjacent pairs can be settled that way.
+ *
+ * Largest numbers printed: denominators never exceed 12, and the only numbers
+ * above that are the doubled numerators of the benchmark check, at most 22.
  */
 export const nf2OrderFractions: QuestionTemplate = {
   id: 'g4.nf2.order-fractions',
@@ -164,8 +197,28 @@ export const nf2OrderFractions: QuestionTemplate = {
       throw new Error(`g4.nf2.order-fractions: option collision [${texts.join(' | ')}]`);
     }
 
-    const common = lcm(lcm(a.d, b.d), c.d);
-    const scaled = triple.map((f) => `${(f.n * common) / f.d}/${common}`);
+    const side = (f: Frac): string => {
+      const s = againstHalf(f);
+      return s > 0 ? 'more than' : s === 0 ? 'exactly' : 'less than';
+    };
+    const benchmark = triple
+      .map((f) => `${f.n}/${f.d} is ${side(f)} 1/2, because 2 × ${f.n} = ${2 * f.n} against ${f.d}`)
+      .join('; ');
+
+    // One sentence per adjacent pair, using whichever of the standard's
+    // strategies settles that pair. Both are always available by construction.
+    const settle = (x: Frac, y: Frac): string => {
+      // x < y in value, so they cannot both sit exactly ON the benchmark: if
+      // this holds, 1/2 really does separate them.
+      if (againstHalf(x) <= 0 && againstHalf(y) >= 0) {
+        return `${x.n}/${x.d} against ${y.n}/${y.d}: the benchmark has already separated them, so ${x.n}/${x.d} is the smaller.`;
+      }
+      const D = Math.max(x.d, y.d);
+      const sx = (x.n * D) / x.d;
+      const sy = (y.n * D) / y.d;
+      const rescale = x.d === D ? `${y.n}/${y.d} = ${sy}/${D}` : `${x.n}/${x.d} = ${sx}/${D}`;
+      return `${x.n}/${x.d} against ${y.n}/${y.d}: the benchmark leaves these two on the same side, so use the common denominator ${D}, which is a multiple of both. ${rescale}, so compare ${sx}/${D} with ${sy}/${D} — ${x.n}/${x.d} is the smaller.`;
+    };
 
     return {
       prompt: 'These fractions all describe parts of the same size whole. Order them from LEAST to GREATEST.',
@@ -176,13 +229,13 @@ export const nf2OrderFractions: QuestionTemplate = {
       answerText: answer,
       explanation: {
         stepByStep: [
-          `Step 1: The denominators ${a.d}, ${b.d} and ${c.d} all divide ${common}, so rewrite each fraction in ${common}ths and the parts will all be the same size.`,
-          `Step 2: ${a.n}/${a.d} = ${scaled[0]}, ${b.n}/${b.d} = ${scaled[1]}, and ${c.n}/${c.d} = ${scaled[2]}.`,
-          `Step 3: Now the numerators can be compared directly: ${(a.n * common) / a.d} < ${(b.n * common) / b.d} < ${(c.n * common) / c.d}.`,
+          `Step 1: Start with the benchmark 1/2. A fraction passes 1/2 when twice its numerator passes its denominator: ${benchmark}.`,
+          `Step 2: ${settle(a, b)}`,
+          `Step 3: ${settle(b, c)}`,
           `Step 4: From least to greatest: ${answer}.`,
         ],
         conceptSummary:
-          'A fraction carries two numbers and neither orders it alone: the numerator counts the parts and the denominator sizes them. Renaming every fraction in the same-size parts turns the comparison into one between whole numbers.',
+          'A fraction carries two numbers and neither orders it alone: the numerator counts the parts and the denominator sizes them. Sorting against a benchmark such as 1/2 settles most comparisons on sight, and a common denominator finishes the ones it leaves tied.',
         commonMisconception:
           'A bigger denominator means MORE parts in the whole and so SMALLER parts, which is why 1/8 is less than 1/3. But that rule only settles a comparison when the numerators match.',
       },

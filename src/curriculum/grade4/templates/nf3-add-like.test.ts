@@ -34,6 +34,27 @@ describe('g4.nf3.add-like', () => {
     }
   });
 
+  // The key is left as d/d when the parts fill the whole - NC.4.NF.3 never
+  // asks for simplest form - so the worked solution has to say what that means
+  // rather than leave a child wondering whether the answer is finished.
+  it('says what a sum of one whole means, when it reaches one', () => {
+    let wholes = 0;
+    for (let seed = 0; seed < 2000; seed++) {
+      const g = nf3AddLike.generate(makeRng(seed));
+      const [n, d] = g.answerText.split('/').map(Number);
+      const steps = g.explanation.stepByStep;
+      if (n === d) {
+        wholes++;
+        expect(steps.length, `seed ${seed}`).toBe(5);
+        expect(steps[4], `seed ${seed}`).toContain('exactly 1');
+        expect(steps[4], `seed ${seed}`).toContain(g.answerText);
+      } else {
+        expect(steps.length, `seed ${seed}`).toBe(4);
+      }
+    }
+    expect(wholes, 'no seed in 2,000 reached a sum of one whole').toBeGreaterThan(0);
+  });
+
   it('no two options name the same quantity', () => {
     for (let seed = 0; seed < 300; seed++) {
       const g = nf3AddLike.generate(makeRng(seed));
