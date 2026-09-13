@@ -111,6 +111,20 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Regrouped one whole into the fraction part but forgot to reduce the whole-number part by one.',
     ),
     entry(
+      // Distinct from borrowed-without-reducing-the-whole, which is the
+      // fraction version of the same instinct and lives in a different family.
+      // A parent shown that tag would be told their child has a fractions
+      // problem when what they have is a subtraction-algorithm problem.
+      'borrowed-without-reducing-the-next-column',
+      'multi-digit-algorithm',
+      'Took a ten into the ones column of a subtraction but never reduced the tens digit it came from, so the answer came out ten too large.',
+    ),
+    entry(
+      'carried-into-the-wrong-column',
+      'multi-digit-algorithm',
+      'Wrote a carried ten above the wrong column, so one place came out short and the place beyond it came out long.',
+    ),
+    entry(
       'checked-only-the-first-step',
       'patterns-and-sequences',
       'Accepted a rule because it worked for the first pair of terms, without checking that it still works for the rest of the pattern.',
@@ -134,6 +148,27 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'compared-decimals-right-to-left',
       'place-value-and-decimals',
       'Compared the decimals starting from the rightmost digit instead of the leftmost, most significant place.',
+    ),
+    entry(
+      // The three tags below name whole-number comparison errors. The nearest
+      // existing tags - compared-by-digit-count, compared-decimals-right-to-
+      // left, same-digits-read-as-equal - are all about the decimal PART of a
+      // number, which is Grade 5 material a Grade 4 student has not met. A
+      // child comparing 62,408 with 62,480 has not made a decimal error, and
+      // telling a parent they did is worse than telling them nothing.
+      'compared-leading-digits-without-place-value',
+      'place-value-and-decimals',
+      'Compared the leftmost digits of two numbers without first counting how many places each one has, so a shorter number starting with a big digit looked like the larger one.',
+    ),
+    entry(
+      'compared-the-wrong-place-first',
+      'place-value-and-decimals',
+      'Compared two whole numbers starting from the ones digit instead of from the greatest place, so the comparison came out backwards.',
+    ),
+    entry(
+      'stopped-comparing-too-soon',
+      'place-value-and-decimals',
+      'Stopped comparing two numbers before reaching the first place where their digits actually differ, and called them equal.',
     ),
     entry(
       'computed-exactly-instead-of-estimating',
@@ -361,6 +396,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Cross-multiplied the fractions, multiplying the numerator of one by the denominator of the other, instead of multiplying straight across.',
     ),
     entry(
+      'multiplied-each-digit-without-carrying',
+      'multi-digit-algorithm',
+      'Multiplied each digit of the larger factor separately and wrote only the ones digit of each product, never carrying the tens into the next column.',
+    ),
+    entry(
       'multiplied-instead-of-divided',
       'operation-choice',
       'Multiplied the two quantities instead of dividing one by the other.',
@@ -399,6 +439,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'order-of-operations-left-to-right',
       'order-of-operations',
       'Evaluated the expression strictly left to right, ignoring the standard precedence of multiplication and division over addition and subtraction.',
+    ),
+    entry(
+      'ordered-from-the-wrong-end',
+      'place-value-and-decimals',
+      'Put the numbers in the correct order but ran the list the wrong way, giving greatest-to-least where least-to-greatest was asked for, or the reverse.',
     ),
     entry(
       'place-value-shift-wrong-direction',
@@ -482,6 +527,14 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Judged two decimals as equal because they use the same digits, ignoring that place value makes their order different.',
     ),
     entry(
+      // Deliberately broader than "reading": a zero place is skipped just as
+      // often mid-algorithm (405 x 7 worked as 45 x 7) as it is mid-numeral,
+      // and it is the same error to repair either way.
+      'skipped-the-zero-place',
+      'place-value-and-decimals',
+      'Skipped over a place holding a zero, so every digit past it landed one place too low and the number lost a place value.',
+    ),
+    entry(
       'squared-the-base-area',
       'geometry-and-measurement',
       'Multiplied the base area by itself instead of by the height when finding volume.',
@@ -495,6 +548,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'stopped-the-divisor-check-early',
       'factors-and-multiples',
       'Stopped testing divisors too soon, so a factor the number really has was never found and the number was called prime or its list of factor pairs came up short.',
+    ),
+    entry(
+      'subtracted-instead-of-added',
+      'operation-choice',
+      'Subtracted one quantity from the other when the problem called for adding them together.',
     ),
     entry(
       'subtracted-instead-of-divided',
@@ -575,6 +633,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'wrong-power-of-ten',
       'place-value-and-decimals',
       'Shifted a value by the wrong number of powers of ten, moving one place too many or too few.',
+    ),
+    entry(
+      'wrote-the-digit-not-its-value',
+      'place-value-and-decimals',
+      'Reported a digit itself where the amount that digit stands for in its place was asked for, such as answering 6 instead of 6,000.',
     ),
   ].map((info) => [info.tag, info]),
 );
