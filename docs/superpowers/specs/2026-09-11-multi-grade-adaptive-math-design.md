@@ -121,6 +121,24 @@ Grades 1–2 have four domains (OA, NBT, MD, G) — the Fractions domain begins 
 Grades 3–5 have five (OA, NBT, NF, MD, G). This is why domains must be per-grade data:
 a fixed five-member union cannot represent Grades 1–2.
 
+### 5.3 Blueprint bands are not always per-domain
+
+NCDPI weights Measurement & Data together with Geometry as a **single band** at
+grades 3–5 (23–27%, 23–27%, 19–23%). No member of a combined band has a published
+weight of its own, so none may cite one.
+
+This was found only after the first plan shipped: the Grade 5 module claimed MD at
+12–15% and G at 7–10%, figures that appear in no NCDPI document, under the display
+label "NC Blueprint Weight" and in the printed parent report. Their midpoints summed
+to the correct combined midpoint, so the sum-to-100 test passed.
+
+Two rules follow. `DomainInfo` carries an optional `weightGroup`; `domainWeight()`
+divides a shared band among its members rather than giving each the whole band, and
+any total must be computed through `domainWeight()`, never by adding raw midpoints.
+And **verifying a grade's standard codes does not verify the grade.** Codes, weights,
+and `ssa` policy figures are three separate claims against three documents. Grade 5's
+codes were correct while its weights were invented.
+
 ## 6. Question sources
 
 One interface, two implementations. The quiz engine never knows which source produced an
