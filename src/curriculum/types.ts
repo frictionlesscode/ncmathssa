@@ -21,8 +21,18 @@ export interface DomainInfo {
   id: DomainId;
   name: string;
   shortName: string;
+  /** The published band, e.g. '19–23%'. When this domain belongs to a
+   *  weightGroup the band describes the GROUP, not this domain alone -
+   *  render it through weightLabel() so the reader is told so. */
   officialWeightRange: string;
+  /** Midpoint of officialWeightRange. Group-wide when weightGroup is set. */
   officialWeightMidpoint: number;
+  /** NCDPI weights some domains as one band (grades 3-5 combine
+   *  Measurement & Data with Geometry). Domains sharing a weightGroup share
+   *  one published band; no member has a weight of its own to cite. */
+  weightGroup?: string;
+  /** Prose naming the members of the group, for display. */
+  weightGroupLabel?: string;
   description: string;
   color: string;
   badgeBg: string;

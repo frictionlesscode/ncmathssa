@@ -58,3 +58,44 @@ used only for the code lists and not for the standard text.
 NCDPI publishes EOG assessment blueprints starting at grade 3. Grades 1 and 2
 have no official domain weighting, so a grade 1 or 2 curriculum module cannot
 set `weighting.kind` to `'ncdpi-blueprint'`.
+
+---
+
+# Blueprint provenance
+
+`nc-eog-blueprint.json` holds the NCDPI EOG mathematics domain weight bands for
+grades 3, 4 and 5.
+
+## Source
+
+**EOG Mathematics Grades 3-8 Test Specifications**, NCDPI Office of
+Accountability and Testing, April 2026, Table 1. Corroborated against the
+February 11, 2020 edition of the same document, whose Table 1 is identical.
+
+## What this corrected
+
+The app's grade 5 module claimed two weights that appear in no NCDPI
+publication: Measurement & Data at `12-15%` and Geometry at `7-10%`. NCDPI
+weights those two domains as a **single combined band** - 19-23% at grade 5,
+23-27% at grades 3 and 4. The fabricated pair had midpoints of 13 and 8, which
+sum to 21, exactly the combined midpoint, so the app's "weights sum to 100"
+test passed and the invention went unnoticed.
+
+This mattered because `officialWeightRange` is displayed in five places,
+including the printed parent report, under the label "NC Blueprint Weight",
+and `grade5/index.ts` cites the NCDPI blueprint as its source. Two of the five
+figures were not from that blueprint.
+
+`DomainInfo` now carries an optional `weightGroup`, `domainWeight()` divides a
+shared band among its members by standard count rather than handing each member
+the whole band, and `weightLabel()` renders a grouped band as
+"19-23% (Measurement & Data and Geometry combined)" so the reader is told the
+figure is shared.
+
+## Caveat carried forward
+
+Verifying that grade 5's standard *codes* matched the official list was not
+sufficient to establish that the grade 5 module was accurate. The codes were
+right and the weights were invented. Any future grade must have its codes,
+its weights, and its `ssa` policy figures each checked against a named
+document.

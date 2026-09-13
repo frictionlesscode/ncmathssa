@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getCurriculum, listCurricula, standardsOf, domainWeight } from './registry';
+import { getCurriculum, listCurricula, standardsOf, domainWeight, weightLabel } from './registry';
 import type { GradeCurriculum } from './types';
 import { makeQuestionSource } from '../engine/questionSource';
 
@@ -67,5 +67,40 @@ describe('standardsOf', () => {
     const c = getCurriculum(5);
     const total = c.domains.reduce((n, d) => n + d.standards.length, 0);
     expect(standardsOf(c)).toHaveLength(total);
+  });
+});
+
+describe('NCDPI blueprint bands', () => {
+  // NCDPI weights Measurement & Data together with Geometry as a single
+  // band (grade 5: 19-23%). Neither domain has a published weight of its
+  // own, so neither may claim one - the app prints these as "NC Blueprint
+  // Weight", including in the parent report.
+  it('cites the combined band for both domains in the group', () => {
+    const c = getCurriculum(5);
+    const md = c.domains.find((d) => d.id === 'MD')!;
+    const g = c.domains.find((d) => d.id === 'G')!;
+    expect(md.officialWeightRange).toBe('19–23%');
+    expect(g.officialWeightRange).toBe('19–23%');
+    expect(md.weightGroup).toBe('MD+G');
+    expect(g.weightGroup).toBe('MD+G');
+  });
+
+  it('labels a grouped band so the reader knows it is shared', () => {
+    const c = getCurriculum(5);
+    expect(weightLabel(c, 'MD')).toBe('19–23% (Measurement & Data and Geometry combined)');
+    expect(weightLabel(c, 'NF')).toBe('39–43%');
+  });
+
+  it('splits a shared band across its domains by standard count', () => {
+    // Group midpoint 21; MD holds 4 standards, G holds 2.
+    const c = getCurriculum(5);
+    expect(domainWeight(c, 'MD')).toBeCloseTo(14, 6);
+    expect(domainWeight(c, 'G')).toBeCloseTo(7, 6);
+  });
+
+  it('sums every domain weight to 100', () => {
+    const c = getCurriculum(5);
+    const total = c.domains.reduce((n, d) => n + domainWeight(c, d.id), 0);
+    expect(total).toBeCloseTo(100, 6);
   });
 });

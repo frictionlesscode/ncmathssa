@@ -1,7 +1,7 @@
 import React from 'react';
 import { Printer, X, Award, CheckCircle, AlertTriangle, HelpCircle } from 'lucide-react';
 import { useProgress, useReadinessSummary, domainStatsFor } from '../context/ProgressContext';
-import { standardsOf } from '../curriculum/registry';
+import { standardsOf, weightLabel } from '../curriculum/registry';
 import { topMisconceptionFamilies } from '../engine/mastery';
 import { MISCONCEPTIONS, familyLabel } from '../curriculum/misconceptions';
 
@@ -154,7 +154,7 @@ export const PrintReportModal: React.FC<PrintReportModalProps> = ({ isOpen, onCl
                         {domain.name} ({domain.id})
                       </td>
                       <td className="p-2.5 text-slate-600 font-mono">
-                        {domain.officialWeightRange}
+                        {weightLabel(curriculum, domain.id)}
                       </td>
                       <td className="p-2.5 text-slate-600">
                         {dm.totalQuestionsAnswered} ({dm.totalCorrect} correct)

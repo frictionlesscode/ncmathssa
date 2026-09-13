@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { domainWeight } from '../registry';
 import { GRADE_5 } from './index';
 
 describe('GRADE_5', () => {
@@ -36,9 +37,21 @@ describe('GRADE_5', () => {
     }
   });
 
-  it('has blueprint midpoints summing to roughly 100', () => {
-    const sum = GRADE_5.domains.reduce((n, d) => n + d.officialWeightMidpoint, 0);
+  it('has blueprint weights summing to roughly 100', () => {
+    // Summed through domainWeight, not officialWeightMidpoint: domains that
+    // share a published band (MD and G) each carry the whole band's midpoint,
+    // so adding the raw midpoints double-counts the band.
+    const sum = GRADE_5.domains.reduce((n, d) => n + domainWeight(GRADE_5, d.id), 0);
     expect(sum).toBeGreaterThanOrEqual(98);
     expect(sum).toBeLessThanOrEqual(102);
+  });
+
+  it('gives each domain in a shared band a share of it, not the whole band', () => {
+    const md = domainWeight(GRADE_5, 'MD');
+    const g = domainWeight(GRADE_5, 'G');
+    const band = GRADE_5.domains.find((d) => d.id === 'MD')!.officialWeightMidpoint;
+    expect(md + g).toBeCloseTo(band, 6);
+    expect(md).toBeLessThan(band);
+    expect(g).toBeLessThan(band);
   });
 });
