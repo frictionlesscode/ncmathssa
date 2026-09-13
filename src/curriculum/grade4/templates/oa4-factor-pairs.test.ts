@@ -72,7 +72,7 @@ describe('g4.oa4.factor-pairs', () => {
         );
 
         // Exactly one extra entry, and its first factor does not divide n.
-        const bogus = optionText(g, 'ignored-remainder').split(', ');
+        const bogus = optionText(g, 'counted-an-uneven-division-as-a-factor').split(', ');
         expect(bogus.length).toBe(expected.length + 1);
         const extra = bogus.filter((p) => !expected.includes(p));
         expect(extra.length).toBe(1);

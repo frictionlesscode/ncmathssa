@@ -51,6 +51,18 @@ const FACTORS = [2, 3, 4, 5, 6, 7, 8, 9];
  *
  * Every k in 2..9 keeps at least eight admissible multipliers, so the filtered
  * list is never empty.
+ *
+ * An exhaustive sweep of all 97 admissible (k, m) combinations finds no
+ * collision; unconstrained, 67 of the 164 possible combinations collide. The
+ * parameter space is small enough to check in full, so the 300-seed property
+ * test is a regression guard rather than the argument.
+ *
+ * The four CONTEXTS multiply the surface but not the algebra: the option
+ * VALUES depend only on (k, m), so a context never creates or removes a
+ * collision. Note also that b is always two digits here, which is what keeps
+ * the authored item g4-oa1-01 (three digits) out of this generator's reachable
+ * output — authored and generated items carry different review keys, so a
+ * question reachable both ways would reach a child twice under two identities.
  */
 function admissibleMultipliers(k: number): number[] {
   const out: number[] = [];

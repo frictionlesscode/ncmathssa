@@ -111,6 +111,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Regrouped one whole into the fraction part but forgot to reduce the whole-number part by one.',
     ),
     entry(
+      'checked-only-the-first-step',
+      'patterns-and-sequences',
+      'Accepted a rule because it worked for the first pair of terms, without checking that it still works for the rest of the pattern.',
+    ),
+    entry(
       'classified-by-one-property-only',
       'shape-classification',
       "Classified the shape using only one of its properties instead of checking every property needed for the most specific name.",
@@ -169,6 +174,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'coordinates-reversed',
       'coordinate-plane',
       'Reversed the order of the x- and y-coordinates, landing on or naming the mirrored point.',
+    ),
+    entry(
+      'counted-an-uneven-division-as-a-factor',
+      'factors-and-multiples',
+      'Counted a number as a factor even though dividing by it left something over, so the pair does not multiply back to the number they started with.',
     ),
     entry(
       'counted-endpoints-not-intervals',
@@ -246,6 +256,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Found the per-unit amount correctly but never scaled it up by the whole-number quantity in the problem.',
     ),
     entry(
+      'halved-instead-of-dividing',
+      'operation-choice',
+      'Halved the bigger number instead of dividing it by the number the problem actually gave, because halving is the division they can do in their head.',
+    ),
+    entry(
       'hierarchy-inverted',
       'shape-classification',
       'Reversed a shape-category containment relationship, claiming the broader category is a member of the narrower one.',
@@ -268,7 +283,7 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
     entry(
       'ignored-grouping-symbols',
       'order-of-operations',
-      'Evaluated the expression without respecting parentheses or brackets, as if the grouping symbols were not there.',
+      'Treated the expression as if the parentheses were not there — either ignoring them when working it out, or leaving them out when writing an equation that needed them to group the whole quantity.',
     ),
     entry(
       'ignored-remainder',

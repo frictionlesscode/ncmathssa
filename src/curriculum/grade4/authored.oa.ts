@@ -48,33 +48,40 @@ export const GRADE_4_OA_AUTHORED: Question[] = [
     id: 'g4-oa1-01',
     standardCode: 'NC.4.OA.1',
     domainId: 'OA',
+    // Deliberately outside g4.oa1.times-as-many's reachable output: that
+    // generator only ever emits a two-digit starting quantity (10 <= b <= 99,
+    // asserted in its own test at 300 seeds), so a three-digit one cannot
+    // collide. The scheduler keys authored and generated items separately, and
+    // a child served the same question under two identities learns nothing the
+    // second time.
     prompt:
-      'A blue climbing rope at the gym is 24 feet long. A red climbing rope is 6 times as long as the blue rope. How long is the red rope?',
+      'A school garden club planted 132 marigolds. The club planted 4 times as many sunflowers as marigolds. How many sunflowers did the club plant?',
     options: labelOptions([
-      // 24 + 6 = 30: read "6 times as long" as "6 feet longer than".
-      { text: '30 feet', isCorrect: false, misconception: 'confused-times-with-more' },
-      // 24 ÷ 6 = 4: the phrase "as long as" triggered a comparison by division,
-      // even though the blue rope is the shorter one being scaled up.
-      { text: '4 feet', isCorrect: false, misconception: 'divided-instead-of-multiplied' },
-      { text: '144 feet', isCorrect: true },
-      // 24 × 6 with the carry added before multiplying: ones 4 × 6 = 24, write
-      // 4 and carry 2; tens (2 + 2) × 6 = 24, written as 24 tens -> 244.
-      { text: '244 feet', isCorrect: false, misconception: 'added-carry-before-multiplying' },
+      // 132 + 4 = 136: read "4 times as many" as "4 more than".
+      { text: '136 sunflowers', isCorrect: false, misconception: 'confused-times-with-more' },
+      // 132 ÷ 4 = 33: the phrase "as many as" triggered a comparison by
+      // division, even though the marigolds are the smaller group being
+      // scaled up.
+      { text: '33 sunflowers', isCorrect: false, misconception: 'divided-instead-of-multiplied' },
+      { text: '528 sunflowers', isCorrect: true },
+      // 132 × 4 with each carry added before multiplying: ones 2 × 4 = 8;
+      // tens 3 × 4 = 12, write 2 and carry 1; hundreds (1 + 1) × 4 = 8 -> 828.
+      { text: '828 sunflowers', isCorrect: false, misconception: 'added-carry-before-multiplying' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
     explanation: {
       stepByStep: [
-        'Step 1: "6 times as long" is a multiplicative comparison, so the blue rope\'s length is multiplied by 6.',
-        'Step 2: Write the equation with the unknown: r = 6 × 24.',
-        'Step 3: 6 × 24 = 6 × 20 + 6 × 4 = 120 + 24 = 144.',
-        'Step 4: The red rope is 144 feet long.',
+        'Step 1: "4 times as many" is a multiplicative comparison, so the number of marigolds is multiplied by 4.',
+        'Step 2: Write the equation with the unknown: s = 4 × 132.',
+        'Step 3: 4 × 132 = 4 × 100 + 4 × 30 + 4 × 2 = 400 + 120 + 8 = 528.',
+        'Step 4: The club planted 528 sunflowers.',
       ],
       conceptSummary:
-        '"Times as long" scales a length by a factor; "longer than" adds to it. NC.4.OA.1 asks a student to tell the two apart before computing anything.',
+        '"Times as many" scales a quantity by a factor; "more than" adds to it. NC.4.OA.1 asks a student to tell the two apart before computing anything.',
       commonMisconception:
-        'Reading "6 times as long" as "6 feet longer" turns a multiplication into an addition and gives 30 feet instead of 144.',
+        'Reading "4 times as many" as "4 more" turns a multiplication into an addition and gives 136 instead of 528.',
     },
   },
   {
@@ -90,8 +97,11 @@ export const GRADE_4_OA_AUTHORED: Question[] = [
       // 96 × 12 = 1,152: multiplied the two counts instead of dividing to find
       // the unknown factor.
       { text: '1,152 times', isCorrect: false, misconception: 'multiplied-instead-of-divided' },
-      // 96 ÷ 2 = 48: divided by only the 2 of the divisor 12.
-      { text: '48 times', isCorrect: false, misconception: 'divided-by-only-one-digit-of-the-divisor' },
+      // 96 ÷ 2 = 48: fell back on halving, the one division a Grade 4 student
+      // can always do in their head, instead of dividing by the 12 the problem
+      // gave. (Not a long-division slip: dividing by a two-digit divisor is
+      // NC.5.NBT.6, a grade above this item.)
+      { text: '48 times', isCorrect: false, misconception: 'halved-instead-of-dividing' },
       { text: '8 times', isCorrect: true },
     ]),
     calculatorAllowed: false,
@@ -356,9 +366,10 @@ export const GRADE_4_OA_AUTHORED: Question[] = [
       // before reaching 7.
       { text: '49', isCorrect: false, misconception: 'stopped-the-divisor-check-early' },
       { text: '47', isCorrect: true },
-      // 51 = 3 × 17. Checked only "is it even?" and "does it end in 5?", so the
-      // divisor 3 was never tested.
-      { text: '51', isCorrect: false, misconception: 'stopped-the-divisor-check-early' },
+      // 39 = 3 × 13. Checked only "is it even?" and "does it end in 5?", so the
+      // divisor 3 was never tested. (Every number offered here stays at or
+      // below 50, the ceiling NC.4.OA.4 sets in its own wording.)
+      { text: '39', isCorrect: false, misconception: 'stopped-the-divisor-check-early' },
       // 33 = 3 × 11. Same two-check habit: odd and not ending in 5, so it was
       // called prime without dividing by anything.
       { text: '33', isCorrect: false, misconception: 'stopped-the-divisor-check-early' },
@@ -369,7 +380,7 @@ export const GRADE_4_OA_AUTHORED: Question[] = [
     explanation: {
       stepByStep: [
         'Step 1: A prime number has exactly one factor pair: 1 and itself.',
-        'Step 2: 33 = 3 × 11 and 51 = 3 × 17, so both are composite (their digits add to 6, a multiple of 3).',
+        'Step 2: 33 = 3 × 11 and 39 = 3 × 13, so both are composite (3 + 3 = 6 and 3 + 9 = 12 are both multiples of 3).',
         'Step 3: 49 = 7 × 7, so it is composite too — this one is missed by anyone who only tests 2, 3 and 5.',
         'Step 4: 47 has no factor pair other than 1 × 47, so 47 is the prime number.',
       ],
@@ -383,32 +394,38 @@ export const GRADE_4_OA_AUTHORED: Question[] = [
     id: 'g4-oa4-02',
     standardCode: 'NC.4.OA.4',
     domainId: 'OA',
-    prompt: 'Which list shows ALL of the factor pairs of 24?',
+    // Deliberately outside g4.oa4.factor-pairs' reachable output: that
+    // generator draws only from numbers with at least three factor pairs (the
+    // filter that keeps its truncated-list distractor from going empty), and
+    // 49 has two. Using 49 here also lets the item finish the lesson the prime
+    // item above starts — 49 is exactly the number a 2/3/5 divisor check misses.
+    prompt: 'Which list shows ALL of the factor pairs of 49?',
     options: labelOptions([
-      // The search stopped after 3, so 4 × 6 was never found.
-      { text: '1 × 24, 2 × 12, 3 × 8', isCorrect: false, misconception: 'stopped-the-divisor-check-early' },
-      // 24 ÷ 5 = 4 with 4 left over; the leftover was dropped and 5 × 4 was
-      // recorded as if it were a factor pair (5 × 4 is 20, not 24).
-      { text: '1 × 24, 2 × 12, 3 × 8, 4 × 6, 5 × 4', isCorrect: false, misconception: 'ignored-remainder' },
-      { text: '1 × 24, 2 × 12, 3 × 8, 4 × 6', isCorrect: true },
-      // These are the first multiples of 24, not its factors: the two ends of
+      // Tested 2, 3 and 5, found nothing, and stopped before reaching 7, so
+      // 7 × 7 was never found and 49 looked like it had only the trivial pair.
+      { text: '1 × 49', isCorrect: false, misconception: 'stopped-the-divisor-check-early' },
+      // 49 ÷ 3 = 16 with 1 left over; the leftover was dropped and 3 × 16 was
+      // recorded as if it were a factor pair (3 × 16 is 48, not 49).
+      { text: '1 × 49, 3 × 16, 7 × 7', isCorrect: false, misconception: 'counted-an-uneven-division-as-a-factor' },
+      { text: '1 × 49, 7 × 7', isCorrect: true },
+      // These are the first multiples of 49, not its factors: the two ends of
       // the factor/multiple relationship were swapped.
-      { text: '24, 48, 72, 96', isCorrect: false, misconception: 'confused-factor-with-multiple' },
+      { text: '49, 98, 147, 196', isCorrect: false, misconception: 'confused-factor-with-multiple' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
     explanation: {
       stepByStep: [
-        'Step 1: Test each whole number in order: 24 ÷ 1 = 24, so 1 × 24 is a pair.',
-        'Step 2: 24 ÷ 2 = 12 and 24 ÷ 3 = 8, giving 2 × 12 and 3 × 8.',
-        'Step 3: 24 ÷ 4 = 6, giving 4 × 6. 24 ÷ 5 leaves a remainder, so 5 is not a factor.',
-        'Step 4: The next divisor, 6, gives back 6 × 4 — a pair already listed — so the search is finished: 1 × 24, 2 × 12, 3 × 8, 4 × 6.',
+        'Step 1: Test each whole number in order: 49 ÷ 1 = 49, so 1 × 49 is a pair.',
+        'Step 2: 49 is odd, so 2 is not a factor; 49 ÷ 3 and 49 ÷ 5 both leave a remainder, so neither is a factor.',
+        'Step 3: Keep going. 49 ÷ 7 = 7 exactly, giving the pair 7 × 7.',
+        'Step 4: The next divisor would repeat a pair already found, so the search is finished: 1 × 49, 7 × 7.',
       ],
       conceptSummary:
-        'Testing divisors in order guarantees no pair is missed, and the search can stop as soon as the pairs start repeating in the other order.',
+        'Testing divisors in order guarantees no pair is missed, and the search can stop as soon as the pairs start repeating in the other order. Stopping at 5 is what makes 49 look prime.',
       commonMisconception:
-        'Recording 5 × 4 counts a division that did not come out even; a factor pair must multiply back to exactly 24.',
+        'Recording 3 × 16 counts a division that did not come out even; a factor pair must multiply back to exactly 49.',
     },
   },
   {
@@ -426,7 +443,7 @@ export const GRADE_4_OA_AUTHORED: Question[] = [
       { text: '36 is a multiple of 30, because 30 + 6 = 36', isCorrect: false, misconception: 'additive-instead-of-multiplicative-relationship' },
       // 30 ÷ 4 = 7 with 2 left over, so 4 is not a factor at all; the leftover
       // was dropped and the division was called even.
-      { text: '4 is a factor of 30, because 30 ÷ 4 is 7 with 2 left over', isCorrect: false, misconception: 'ignored-remainder' },
+      { text: '4 is a factor of 30, because 30 ÷ 4 is 7 with 2 left over', isCorrect: false, misconception: 'counted-an-uneven-division-as-a-factor' },
       { text: '30 is a multiple of 5, because 5 × 6 = 30', isCorrect: true },
     ]),
     calculatorAllowed: false,
@@ -586,30 +603,39 @@ export const GRADE_4_OA_AUTHORED: Question[] = [
     id: 'g4-oa5-04',
     standardCode: 'NC.4.OA.5',
     domainId: 'OA',
-    prompt: 'A number pattern begins 3, 12, 48, 192. Which rule generates this pattern?',
+    // "Which rule generates this pattern?" would have had two right answers:
+    // "Add 9, then add 36, then add 144" really does produce these four terms.
+    // The stem now asks for the ONE rule that takes each term to the next, so
+    // a changing rule is unambiguously not an answer — and stays a good
+    // distractor for the child who read the gaps instead of the ratio.
+    prompt:
+      'A number pattern begins 3, 12, 48, 192. Which rule takes each term of this pattern to the next one?',
     options: labelOptions([
       { text: 'Multiply by 4', isCorrect: true },
       // 3 + 9 = 12 checks out, so the rule was accepted after testing only the
       // first step. The second step fails: 12 + 9 = 21, not 48.
-      { text: 'Add 9', isCorrect: false, misconception: 'forgot-the-final-step' },
+      { text: 'Add 9', isCorrect: false, misconception: 'checked-only-the-first-step' },
       // Listed the differences between consecutive terms instead of naming the
-      // one multiplicative rule that produces them.
+      // one rule that produces them. Not a single rule at all: it changes at
+      // every step.
       { text: 'Add 9, then add 36, then add 144', isCorrect: false, misconception: 'additive-instead-of-multiplicative-relationship' },
-      // Right factor, wrong direction: dividing by 4 runs the pattern backward.
-      { text: 'Divide by 4', isCorrect: false, misconception: 'divided-instead-of-multiplied' },
+      // Right factor, wrong direction: this is the rule that runs the pattern
+      // backward, so the relationship between each term and the next is
+      // reversed.
+      { text: 'Divide by 4', isCorrect: false, misconception: 'reversed-the-relationship' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'advanced',
     explanation: {
       stepByStep: [
-        'Step 1: A rule must work for EVERY step, so test more than the first one.',
+        'Step 1: One rule has to take EVERY term to the next one, so test more than the first step.',
         'Step 2: 3 × 4 = 12, and 12 × 4 = 48.',
         'Step 3: 48 × 4 = 192, so the same rule holds all the way through.',
-        'Step 4: The rule that generates the pattern is Multiply by 4.',
+        'Step 4: The rule that takes each term to the next is Multiply by 4.',
       ],
       conceptSummary:
-        'Analyzing a pattern means finding the one rule that holds at every step. The gaps between terms (9, 36, 144) are themselves growing, which is the signal that the rule is multiplicative, not additive.',
+        'Analyzing a pattern means finding the one rule that holds at every step. The gaps between terms (9, 36, 144) are themselves growing, which is the signal that the rule is multiplicative, not additive — a rule that changes at every step is not a rule.',
       commonMisconception:
         '"Add 9" fits the very first step and nothing after it — a rule confirmed on one step has not been confirmed at all.',
     },

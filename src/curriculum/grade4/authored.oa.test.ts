@@ -1,8 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { assertAuthoredBankSound } from '../authoredBank.testkit';
-import { MISCONCEPTIONS } from '../misconceptions';
 import { GRADE_4_DOMAINS } from './standards';
 import { GRADE_4_OA_AUTHORED } from './authored.oa';
+import { GRADE_4_TEMPLATES } from './templates';
+import { makeRng } from '../../engine/rng';
 
 describe('grade 4 OA authored bank', () => {
   it('holds every authored-bank invariant', () => {
@@ -10,14 +11,24 @@ describe('grade 4 OA authored bank', () => {
     assertAuthoredBankSound(GRADE_4_OA_AUTHORED, oa);
   });
 
-  // misconceptions.test.ts walks only REGISTERED grades, and grade 4 does not
-  // register until its content is complete several tasks from now. Until then
-  // nothing else would catch an undeclared tag in this bank, so check here.
-  it('uses only declared misconception tags', () => {
-    for (const q of GRADE_4_OA_AUTHORED) {
-      for (const o of q.options) {
-        if (o.isCorrect) continue;
-        expect(MISCONCEPTIONS[o.misconception ?? ''], `${q.id}: ${o.misconception}`).toBeTruthy();
+  // The declared-tag guard that used to live here now lives in the shared kit.
+  //
+  // This one does not, and belongs to the bank rather than to any single item:
+  // a question a generator can also produce reaches the scheduler under two
+  // review keys — {authored, id} and {generated, templateId} — so a child gets
+  // it twice and the second serving teaches nothing. Both generators are held
+  // clear of the authored items by an invariant they already enforce (two-digit
+  // quantities; numbers with three or more factor pairs); this checks that the
+  // invariant is really keeping the two apart.
+  it('shares no question with the generators', () => {
+    const authored = new Set(GRADE_4_OA_AUTHORED.map((q) => q.prompt.trim()));
+    for (const t of GRADE_4_TEMPLATES) {
+      for (let seed = 0; seed < 2000; seed++) {
+        const prompt = t.generate(makeRng(seed)).prompt.trim();
+        expect(
+          authored.has(prompt),
+          `${t.id} at seed ${seed} reproduces an authored item: "${prompt}"`,
+        ).toBe(false);
       }
     }
   });

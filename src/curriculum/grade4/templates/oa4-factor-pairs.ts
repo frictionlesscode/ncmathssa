@@ -50,6 +50,16 @@ function firstNonDivisor(n: number): number {
  *
  * The upper bound of 50 is the standard's own: "Find all factor pairs for
  * whole numbers up to and including 50."
+ *
+ * An exhaustive sweep of the admissible pool — all 15 numbers that survive the
+ * filter (12, 16, 18, 20, 24, 28, 30, 32, 36, 40, 42, 44, 45, 48, 50) — finds
+ * no collision. The pool is small enough to check in full, so the 300-seed
+ * property test is a regression guard rather than the argument.
+ *
+ * 49 is absent from that pool (two factor pairs, not three), and the authored
+ * item g4-oa4-02 uses 49 for exactly that reason: authored and generated items
+ * carry different review keys, so a question reachable both ways would reach a
+ * child twice under two identities.
  */
 const CANDIDATES: number[] = (() => {
   const out: number[] = [];
@@ -93,7 +103,7 @@ export const oa4FactorPairs: QuestionTemplate = {
       {
         text: render(withBogus),
         isCorrect: false,
-        misconception: 'ignored-remainder',
+        misconception: 'counted-an-uneven-division-as-a-factor',
       },
       // The first multiples of n, listed where its factors were asked for:
       // the two ends of the factor/multiple relationship swapped.
