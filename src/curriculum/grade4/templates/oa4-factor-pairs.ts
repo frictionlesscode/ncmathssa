@@ -86,7 +86,7 @@ export const oa4FactorPairs: QuestionTemplate = {
       {
         text: render(pairs.slice(0, -1)),
         isCorrect: false,
-        misconception: 'forgot-the-final-step',
+        misconception: 'stopped-the-divisor-check-early',
       },
       // n ÷ d leaves a remainder, but the leftover was dropped and d × q was
       // written down as if the division had come out even.
@@ -100,7 +100,7 @@ export const oa4FactorPairs: QuestionTemplate = {
       {
         text: `${n}, ${2 * n}, ${3 * n}, ${4 * n}`,
         isCorrect: false,
-        misconception: 'reversed-the-relationship',
+        misconception: 'confused-factor-with-multiple',
       },
     ];
 

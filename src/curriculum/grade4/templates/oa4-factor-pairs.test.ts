@@ -67,7 +67,9 @@ describe('g4.oa4.factor-pairs', () => {
         const expected = pairsOf(n);
 
         // Stopped one divisor short of finishing the search.
-        expect(optionText(g, 'forgot-the-final-step')).toBe(expected.slice(0, -1).join(', '));
+        expect(optionText(g, 'stopped-the-divisor-check-early')).toBe(
+          expected.slice(0, -1).join(', '),
+        );
 
         // Exactly one extra entry, and its first factor does not divide n.
         const bogus = optionText(g, 'ignored-remainder').split(', ');
@@ -78,7 +80,7 @@ describe('g4.oa4.factor-pairs', () => {
         expect(n % d, `${d} should not divide ${n}`).not.toBe(0);
 
         // Multiples of n listed where its factors were asked for.
-        expect(optionText(g, 'reversed-the-relationship')).toBe(
+        expect(optionText(g, 'confused-factor-with-multiple')).toBe(
           `${n}, ${2 * n}, ${3 * n}, ${4 * n}`,
         );
       });

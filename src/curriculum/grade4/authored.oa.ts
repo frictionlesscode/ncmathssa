@@ -30,10 +30,12 @@ import { labelOptions } from '../../engine/questionModel';
  * inside ONE pattern: comparing corresponding terms of two patterns is
  * NC.5.OA.3, a grade above.
  *
- * Every tag below is already declared in `../misconceptions.ts`. That is not
- * an accident of vocabulary — see the task report: the orphan-tag test walks
- * only registered grades, and Grade 4 does not register until its content is
- * complete, so a tag introduced here would be an orphan and fail the suite.
+ * Every tag below is declared in `../misconceptions.ts`. Most are reused from
+ * the shared cross-grade vocabulary on purpose, so that "you did this six
+ * times this week" stays meaningful; four are new, because Grade 4 OA is the
+ * first content to need names for stopping a divisor search too soon, swapping
+ * factor with multiple, counting a pattern's terms instead of its steps, and
+ * dropping the term a pattern started from.
  *
  * The correct option is deliberately placed at a varied position; it is not
  * always A.
@@ -352,14 +354,14 @@ export const GRADE_4_OA_AUTHORED: Question[] = [
     options: labelOptions([
       // 49 = 7 × 7. Tested 2, 3 and 5 as divisors, found none, and stopped
       // before reaching 7.
-      { text: '49', isCorrect: false, misconception: 'forgot-the-final-step' },
+      { text: '49', isCorrect: false, misconception: 'stopped-the-divisor-check-early' },
       { text: '47', isCorrect: true },
       // 51 = 3 × 17. Checked only "is it even?" and "does it end in 5?", so the
       // divisor 3 was never tested.
-      { text: '51', isCorrect: false, misconception: 'forgot-the-final-step' },
+      { text: '51', isCorrect: false, misconception: 'stopped-the-divisor-check-early' },
       // 33 = 3 × 11. Same two-check habit: odd and not ending in 5, so it was
       // called prime without dividing by anything.
-      { text: '33', isCorrect: false, misconception: 'forgot-the-final-step' },
+      { text: '33', isCorrect: false, misconception: 'stopped-the-divisor-check-early' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
@@ -384,14 +386,14 @@ export const GRADE_4_OA_AUTHORED: Question[] = [
     prompt: 'Which list shows ALL of the factor pairs of 24?',
     options: labelOptions([
       // The search stopped after 3, so 4 × 6 was never found.
-      { text: '1 × 24, 2 × 12, 3 × 8', isCorrect: false, misconception: 'forgot-the-final-step' },
+      { text: '1 × 24, 2 × 12, 3 × 8', isCorrect: false, misconception: 'stopped-the-divisor-check-early' },
       // 24 ÷ 5 = 4 with 4 left over; the leftover was dropped and 5 × 4 was
       // recorded as if it were a factor pair (5 × 4 is 20, not 24).
       { text: '1 × 24, 2 × 12, 3 × 8, 4 × 6, 5 × 4', isCorrect: false, misconception: 'ignored-remainder' },
       { text: '1 × 24, 2 × 12, 3 × 8, 4 × 6', isCorrect: true },
-      // These are the first multiples of 24, not its factors: the two
-      // directions of the relationship were swapped.
-      { text: '24, 48, 72, 96', isCorrect: false, misconception: 'reversed-the-relationship' },
+      // These are the first multiples of 24, not its factors: the two ends of
+      // the factor/multiple relationship were swapped.
+      { text: '24, 48, 72, 96', isCorrect: false, misconception: 'confused-factor-with-multiple' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
@@ -418,7 +420,7 @@ export const GRADE_4_OA_AUTHORED: Question[] = [
     options: labelOptions([
       // A factor and a multiple are opposite ends of the same relationship;
       // this names the smaller number as the multiple.
-      { text: '5 is a multiple of 30, because 5 is one of its factors', isCorrect: false, misconception: 'reversed-the-relationship' },
+      { text: '5 is a multiple of 30, because 5 is one of its factors', isCorrect: false, misconception: 'confused-factor-with-multiple' },
       // 30 + 6 = 36: an added difference used where a multiplicative
       // relationship was needed. 36 is not 30 times anything whole.
       { text: '36 is a multiple of 30, because 30 + 6 = 36', isCorrect: false, misconception: 'additive-instead-of-multiplicative-relationship' },
@@ -457,7 +459,7 @@ export const GRADE_4_OA_AUTHORED: Question[] = [
       { text: '4 rows', isCorrect: false, misconception: 'ignored-remainder' },
       // 45 × 2 = 90: a multiple of 45 was named where a factor was needed, so
       // there would be more rows than chairs.
-      { text: '90 rows', isCorrect: false, misconception: 'reversed-the-relationship' },
+      { text: '90 rows', isCorrect: false, misconception: 'confused-factor-with-multiple' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
@@ -559,8 +561,10 @@ export const GRADE_4_OA_AUTHORED: Question[] = [
       { text: '48 squares', isCorrect: true },
       // Read "twice as many" as "2 more": 3, 5, 7, 9, 11.
       { text: '11 squares', isCorrect: false, misconception: 'confused-times-with-more' },
-      // 3 × 2 = 6: doubled once, at Figure 2, and stopped there.
-      { text: '6 squares', isCorrect: false, misconception: 'forgot-the-final-step' },
+      // 3 × 2 × 2 × 2 × 2 × 2 = 96: doubled once for each of the five figures
+      // instead of once for each of the four steps between Figure 1 and
+      // Figure 5.
+      { text: '96 squares', isCorrect: false, misconception: 'counted-terms-not-steps' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
@@ -608,6 +612,40 @@ export const GRADE_4_OA_AUTHORED: Question[] = [
         'Analyzing a pattern means finding the one rule that holds at every step. The gaps between terms (9, 36, 144) are themselves growing, which is the signal that the rule is multiplicative, not additive.',
       commonMisconception:
         '"Add 9" fits the very first step and nothing after it — a rule confirmed on one step has not been confirmed at all.',
+    },
+  },
+  {
+    id: 'g4-oa5-05',
+    standardCode: 'NC.4.OA.5',
+    domainId: 'OA',
+    prompt:
+      'A number pattern follows the rule "add 7". The first term is 4. What is the 10th term?',
+    options: labelOptions([
+      // 4 + 7 × 10 = 74: the rule was applied once for each of the ten terms
+      // instead of once for each of the nine steps between them.
+      { text: '74', isCorrect: false, misconception: 'counted-terms-not-steps' },
+      { text: '67', isCorrect: true },
+      // 7 × 9 = 63: nine steps counted correctly, but the pattern was started
+      // from 0 and the first term of 4 was never included.
+      { text: '63', isCorrect: false, misconception: 'ignored-the-starting-term' },
+      // 4 + 7 × 8 = 60: this is the 9th term, one step short of the one asked
+      // for.
+      { text: '60', isCorrect: false, misconception: 'forgot-the-final-step' },
+    ]),
+    calculatorAllowed: false,
+    isStretch: false,
+    difficulty: 'advanced',
+    explanation: {
+      stepByStep: [
+        'Step 1: List a few terms to see the structure: 4, 11, 18, 25, ...',
+        'Step 2: Count the STEPS, not the terms. Getting from the 1st term to the 10th takes 9 steps, because the 1st term is already there before any adding happens.',
+        'Step 3: Nine steps of 7 add 9 × 7 = 63 to the starting value.',
+        'Step 4: 4 + 63 = 67, so the 10th term is 67.',
+      ],
+      conceptSummary:
+        'The number of times a rule is applied is always one less than the term number, because the first term is given rather than generated. Both parts matter: the steps AND the value the pattern started from.',
+      commonMisconception:
+        'Adding 7 ten times gives 74, and leaving off the starting 4 gives 63. The 10th term needs nine steps added to the 4 the pattern began with.',
     },
   },
 ];

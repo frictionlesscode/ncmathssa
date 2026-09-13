@@ -15,7 +15,23 @@ export type MisconceptionFamily =
   /** Reasoning about what a shape IS - its definition and its place in the
    *  polygon hierarchy (e.g. "is every square a rectangle?") - as distinct
    *  from measuring or computing with a shape once it's identified. */
-  | 'shape-classification';
+  | 'shape-classification'
+  /** Which whole numbers divide which - factor pairs, multiples, prime and
+   *  composite. Added for NC.4.OA.4, an entire standard about this that had
+   *  no home: its errors are neither a choice of operation (the child knows
+   *  to divide) nor a slip in an algorithm (the division is usually right).
+   *  What goes wrong is the divisor SEARCH, or which end of the
+   *  factor/multiple relationship a number sits on. Grades 3 and 5 touch the
+   *  same topic, so this will not stay a one-standard family. */
+  | 'factors-and-multiples'
+  /** Generating and analyzing a sequence from a rule: how many times the rule
+   *  is applied, where the count starts, and whether the rule is additive or
+   *  multiplicative. Added for NC.4.OA.5. The nearest existing tag for its
+   *  commonest error, counted-endpoints-not-intervals, sits in
+   *  'coordinate-plane' - filing a pattern error there would tell a parent
+   *  their child has a graphing problem when they have a counting-the-steps
+   *  problem, and to a parent a mis-filed tag is worse than no tag. */
+  | 'patterns-and-sequences';
 
 export interface MisconceptionInfo {
   tag: string;
@@ -130,6 +146,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Ran two units together as if they were digits of one number, instead of converting each unit separately.',
     ),
     entry(
+      'confused-factor-with-multiple',
+      'factors-and-multiples',
+      'Mixed up factors and multiples, naming a number the pattern counts UP to where a number that divides into it was needed (or the other way round).',
+    ),
+    entry(
       'confused-times-with-more',
       'operation-choice',
       'Read a multiplication relationship ("times as many") as if it were an addition relationship ("more than").',
@@ -153,6 +174,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'counted-endpoints-not-intervals',
       'coordinate-plane',
       'Counted the marks between two points instead of the spaces between them, overstating the distance by one.',
+    ),
+    entry(
+      'counted-terms-not-steps',
+      'patterns-and-sequences',
+      "Counted the terms of a pattern instead of the steps between them, so the pattern's rule was applied one time too many.",
     ),
     entry(
       'decimal-point-misplaced',
@@ -258,6 +284,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'ignored-the-quantity-multipliers',
       'operation-choice',
       'Used one of each item instead of multiplying by the actual quantities given in the problem.',
+    ),
+    entry(
+      'ignored-the-starting-term',
+      'patterns-and-sequences',
+      'Applied the rule the right number of times but started from zero, leaving out the number the pattern actually began with.',
     ),
     entry(
       'incomplete-grouping-evaluation',
@@ -438,6 +469,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'stopped-at-an-intermediate-unit',
       'unit-conversion',
       'Converted partway through a chain of units and reported that intermediate unit instead of continuing to the requested unit.',
+    ),
+    entry(
+      'stopped-the-divisor-check-early',
+      'factors-and-multiples',
+      'Stopped testing divisors too soon, so a factor the number really has was never found and the number was called prime or its list of factor pairs came up short.',
     ),
     entry(
       'subtracted-instead-of-divided',
