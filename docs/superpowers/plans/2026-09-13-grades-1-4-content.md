@@ -578,7 +578,7 @@ describe.each(['1', '2'])('grade %s claims no blueprint', (grade) => {
 Run: `npx vitest run src/curriculum/sourcedStandards.test.ts`
 Expected: FAIL — the four `grade<N>/standards.ts` modules do not exist.
 
-If the JSON imports themselves fail to resolve, add `"resolveJsonModule": true` to `compilerOptions` in `tsconfig.app.json` and re-run.
+The JSON imports need no config change — this was probed on 2026-09-13 against the real repo, and `vitest run`, `tsc -b --force --noEmit`, and `oxlint` all accept a test under `src/` importing `../../docs/sources/*.json` as it stands. If you find otherwise, say so rather than copying the JSON into `src/`: one source of truth is the whole point of this test.
 
 - [ ] **Step 3: Write the four standards modules**
 
