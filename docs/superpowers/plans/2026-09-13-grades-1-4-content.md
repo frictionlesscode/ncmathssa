@@ -38,7 +38,7 @@ Tasks 5–26 all author curriculum content. They differ only in which grade and 
 
 ### Authored items
 
-Each authored file exports `const GRADE_<N>_<DOMAIN>_AUTHORED: Question[]`, typed from `src/engine/questionModel.ts`, built with `labelOptions()`. Per standard, **at least three items**: one at `difficulty: 'mastery'`, one at `'advanced'`, and at least one more at either. Item ids follow the Grade 5 convention — the standard's tail, lowercased, then a two-digit ordinal, prefixed by grade for every grade except 5: `g4.nf1-01`, `g3.oa7-02`. (Grade 5's existing ids stay bare — `nf1-01` — and must not be renamed.)
+Each authored file exports `const GRADE_<N>_<DOMAIN>_AUTHORED: Question[]`, typed from `src/engine/questionModel.ts`, built with `labelOptions()`. Per standard, **at least three items**: one at `difficulty: 'mastery'`, one at `'advanced'`, and at least one more at either. Item ids follow the Grade 5 convention — the standard's tail, lowercased, then a two-digit ordinal, prefixed by grade for every grade except 5: `g4-nf1-01`, `g3-oa7-02`. The separator after the grade prefix is a HYPHEN, not a dot — this sentence said `g4.nf1-01` until Task 9-11 pre-flight found all 84 committed Grade 4 ids using the hyphen and a Task 11 test asserting the dot, which could not have passed. (Grade 5's existing ids stay bare — `nf1-01` — and must not be renamed.)
 
 Every item needs:
 
