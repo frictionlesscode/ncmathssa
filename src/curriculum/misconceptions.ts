@@ -62,6 +62,11 @@ function entry(
 export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntries(
   [
     entry(
+      'accepted-any-crossing-as-perpendicular',
+      'geometry-and-measurement',
+      'Treated any two lines that cross as perpendicular, without checking that they meet at a square corner.',
+    ),
+    entry(
       'added-carry-before-multiplying',
       'multi-digit-algorithm',
       'Added a carried digit into the next column before multiplying, inflating a partial product in a multi-digit multiplication.',
@@ -157,6 +162,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Assumed the rectangle with the longest side encloses the most area, when among rectangles of equal perimeter the most square one encloses the most.',
     ),
     entry(
+      'assumed-square-corners-where-none-were-given',
+      'shape-classification',
+      "Treated a figure's corners as square corners when the problem says they are not, and named it a shape that requires right angles.",
+    ),
+    entry(
       'axes-swapped',
       'coordinate-plane',
       'Swapped the x- and y-axes, treating the first coordinate as the vertical move and the second as horizontal.',
@@ -186,6 +196,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Regrouped into a column of a subtraction but never reduced the digit in the place to its left that the amount was taken from, so the answer came out one unit of that place too large.',
     ),
     entry(
+      'called-a-large-angle-a-right-angle',
+      'geometry-and-measurement',
+      'Called the biggest angle in a figure a right angle instead of checking that it measures exactly 90 degrees.',
+    ),
+    entry(
       'carried-into-the-wrong-column',
       'multi-digit-algorithm',
       'Wrote a carried ten above the wrong column, so one place came out short and the place beyond it came out long.',
@@ -209,6 +224,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'classified-by-one-property-only',
       'shape-classification',
       "Classified the shape using only one of its properties instead of checking every property needed for the most specific name.",
+    ),
+    entry(
+      'classified-by-the-wrong-attribute',
+      'shape-classification',
+      'Answered with a side-length name when the question asked how a figure is classified by its angles, or the other way round.',
     ),
     entry(
       'common-denominator-numerator-not-scaled',
@@ -342,6 +362,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Mixed up factors and multiples, naming a number the pattern counts UP to where a number that divides into it was needed (or the other way round).',
     ),
     entry(
+      'confused-parallel-with-perpendicular',
+      'geometry-and-measurement',
+      'Swapped the two line relationships, calling lines that cross at a square corner parallel or calling lines that never meet perpendicular.',
+    ),
+    entry(
       'confused-times-with-more',
       'operation-choice',
       'Read a multiplication relationship ("times as many") as if it were an addition relationship ("more than").',
@@ -360,6 +385,16 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'coordinates-reversed',
       'coordinate-plane',
       'Reversed the order of the x- and y-coordinates, landing on or naming the mirrored point.',
+    ),
+    entry(
+      'counted-a-diagonal-as-a-line-of-symmetry',
+      'geometry-and-measurement',
+      'Counted a diagonal as a line of symmetry; folding a rectangle that is not a square along its diagonal does not make the halves match.',
+    ),
+    entry(
+      'counted-an-arrow-as-an-endpoint',
+      'geometry-and-measurement',
+      'Read the arrowhead that shows a figure keeps going forever as if it were an endpoint, so a ray was named a line segment.',
     ),
     entry(
       'counted-an-uneven-division-as-a-factor',
@@ -457,6 +492,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Found the per-unit amount correctly but never scaled it up by the whole-number quantity in the problem.',
     ),
     entry(
+      'found-symmetry-in-the-wrong-direction',
+      'geometry-and-measurement',
+      'Chose a figure that is symmetric, but along a fold in a different direction from the one the question asked about.',
+    ),
+    entry(
       'halved-instead-of-dividing',
       'operation-choice',
       'Halved the bigger number instead of dividing it by the number the problem actually gave, because halving is the division they can do in their head.',
@@ -492,6 +532,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Dropped the remainder from a division instead of accounting for the leftover amount.',
     ),
     entry(
+      'ignored-the-endpoints-of-the-figure',
+      'geometry-and-measurement',
+      'Overlooked the endpoints that show where a figure stops, naming a ray or a line segment a line, which runs on forever both ways.',
+    ),
+    entry(
       'ignored-the-multiplier',
       'operation-choice',
       'Noticed a quantity shared between two expressions but overlooked the multiplier that made one actually larger than the other.',
@@ -525,6 +570,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'inverted-wrong-factor',
       'fraction-operations',
       'Took the reciprocal of the dividend instead of the divisor when dividing fractions.',
+    ),
+    entry(
+      'judged-symmetry-by-appearance',
+      'geometry-and-measurement',
+      'Decided a figure was symmetric because it looks balanced, without checking that a fold lands the two halves on each other.',
     ),
     entry(
       'larger-denominator-means-larger-fraction',
@@ -605,6 +655,16 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'named-a-broader-category',
       'shape-classification',
       'Gave a true but less specific shape name instead of the most specific category that fits every given property.',
+    ),
+    entry(
+      'named-a-ray-from-the-wrong-endpoint',
+      'geometry-and-measurement',
+      'Named a ray starting from the point it passes through instead of from its endpoint, which names the ray pointing the opposite way.',
+    ),
+    entry(
+      'named-a-triangle-by-its-smaller-angles',
+      'shape-classification',
+      'Named a triangle from its two smaller angles instead of its largest one, so a triangle with an obtuse or right angle was called acute.',
     ),
     entry(
       'omitted-one-part-of-composite',
@@ -695,6 +755,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Reported a single measurement from the data instead of the total or subtotal the question actually asked for.',
     ),
     entry(
+      'required-all-sides-equal-for-symmetry',
+      'geometry-and-measurement',
+      'Decided a figure cannot have a line of symmetry unless all of its sides are the same length.',
+    ),
+    entry(
       'reused-a-coordinate-from-the-wrong-axis',
       'coordinate-plane',
       'Reused a coordinate value shared between two points on the wrong axis when finding a missing vertex.',
@@ -762,6 +827,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Multiplied the base area by itself instead of by the height when finding volume.',
     ),
     entry(
+      'stopped-after-the-first-line-of-symmetry',
+      'geometry-and-measurement',
+      'Stopped after finding one line of symmetry instead of testing every direction the figure can fold.',
+    ),
+    entry(
       'stopped-at-an-intermediate-unit',
       'unit-conversion',
       'Converted partway through a chain of units and reported that intermediate unit instead of continuing to the requested unit.',
@@ -810,6 +880,26 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'swapped-the-decimal-place-values',
       'place-value-and-decimals',
       'Swapped which decimal place two digits belong in — writing 0.81 where 0.18 belongs, or putting tenths where thousandths go.',
+    ),
+    entry(
+      'treated-adjacent-sides-as-parallel',
+      'geometry-and-measurement',
+      'Took "opposite sides are parallel" to mean every pair of sides is parallel, including two sides that meet at a corner.',
+    ),
+    entry(
+      'treated-any-unequal-sides-as-scalene',
+      'shape-classification',
+      'Called a triangle scalene because its three sides are not all the same length, without checking whether two of them match.',
+    ),
+    entry(
+      'treated-connected-sides-as-not-parallel',
+      'geometry-and-measurement',
+      'Read "parallel lines never meet" as a rule about the whole figure, so sides joined at the corners could not count as parallel.',
+    ),
+    entry(
+      'treated-equal-halves-as-symmetry',
+      'geometry-and-measurement',
+      'Treated any line that cuts a figure into two pieces of the same size as a line of symmetry, without folding to check that the halves match.',
     ),
     entry(
       'unit-conversion-inverted',

@@ -84,7 +84,15 @@ import { md6MissingAnglePart } from './md6-missing-angle-part';
  *  survey question yields numerical data - not in the numbers, so fresh
  *  numbers would add nothing a hand-written item does not already do better.
  *
- *  Task 9 appends this grade's Geometry templates here. */
+ *  Geometry adds NOTHING here, and never will: Grade 4 Geometry is
+ *  authored-only by design. All three of its standards are classification and
+ *  vocabulary - what a ray is, whether a pair of lines is parallel or
+ *  perpendicular, which quadrilateral or triangle a figure is, where a fold
+ *  line falls - and swapping the numbers in such an item changes nothing about
+ *  what it asks. A generator would only vary the letters naming the points,
+ *  producing exactly the interchangeable item this plan set out to get away
+ *  from, so the whole domain lives in ../authored.g.ts and CurriculumView
+ *  badges it "Fixed Question Set". */
 export const GRADE_4_TEMPLATES: QuestionTemplate[] = [
   oa1TimesAsMany,
   oa4FactorPairs,
