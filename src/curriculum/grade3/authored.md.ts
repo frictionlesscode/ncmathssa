@@ -415,7 +415,7 @@ export const GRADE_3_MD_AUTHORED: Question[] = [
     // item can be answered without seeing the picture.
     prompt: 'How many students voted for apples?',
     promptDetails:
-      'Bar graph titled "Our Favorite Fruit". The line up the side is labelled 0, 4, 8, 12, 16, 20, so each gridline stands for 4 votes. The apple bar reaches the 3rd gridline above zero. The banana bar reaches the 5th gridline. The grape bar reaches the 2nd gridline.',
+      'Bar graph titled "Our Favorite Fruit". The line up the side is labeled 0, 4, 8, 12, 16, 20, so each gridline stands for 4 votes. The apple bar reaches the 3rd gridline above zero. The banana bar reaches the 5th gridline. The grape bar reaches the 2nd gridline.',
     options: labelOptions([
       // Reported how many gridlines the bar reached instead of what they stand
       // for.
@@ -454,7 +454,7 @@ export const GRADE_3_MD_AUTHORED: Question[] = [
     // graphs."
     prompt: 'How many more students chose swimming than basketball?',
     promptDetails:
-      'Bar graph titled "Our Favorite Sport". The line up the side is labelled 0, 5, 10, 15, 20, 25, 30, so each gridline stands for 5 students. The soccer bar reaches 25. The basketball bar reaches 15. The swimming bar reaches 30. The tennis bar reaches 10.',
+      'Bar graph titled "Our Favorite Sport". The line up the side is labeled 0, 5, 10, 15, 20, 25, 30, so each gridline stands for 5 students. The soccer bar reaches 25. The basketball bar reaches 15. The swimming bar reaches 30. The tennis bar reaches 10.',
     options: labelOptions([
       // Subtracted the gridline counts, 6 - 3, instead of the values they
       // stand for.
@@ -566,7 +566,7 @@ export const GRADE_3_MD_AUTHORED: Question[] = [
     explanation: {
       stepByStep: [
         'Step 1: A bar graph needs one answer from each person, so the question has to be asked of everybody.',
-        'Step 2: It needs categories, not numbers, because each bar is labelled with an answer.',
+        'Step 2: It needs categories, not numbers, because each bar is labeled with an answer.',
         'Step 3: It needs no more than four different answers, because the graph has four bars.',
         'Step 4: Only "Which of these four snacks is your favorite: pretzels, apples, cheese, or popcorn?" gives one answer per person from exactly four choices.',
       ],
@@ -870,7 +870,7 @@ export const GRADE_3_MD_AUTHORED: Question[] = [
     // on a pentagon there is nothing to lean on but adding every side.
     prompt: 'What is the perimeter of the pentagon?',
     promptDetails:
-      'A pentagon with all five of its sides labelled. Going around the figure, the sides measure 6 inches, 4 inches, 7 inches, 5 inches, and 3 inches.',
+      'A pentagon with all five of its sides labeled. Going around the figure, the sides measure 6 inches, 4 inches, 7 inches, 5 inches, and 3 inches.',
     options: labelOptions([
       // Went around the figure but never added the last side: 6 + 4 + 7 + 5.
       { text: '22 inches', isCorrect: false, misconception: 'left-out-a-side-length' },

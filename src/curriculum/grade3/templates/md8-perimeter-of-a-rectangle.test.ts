@@ -3,7 +3,7 @@ import { assertTemplateSound } from '../../../engine/templateTesting';
 import { makeRng } from '../../../engine/rng';
 import { md8PerimeterOfARectangle, SIDE_PAIRS } from './md8-perimeter-of-a-rectangle';
 
-/** Reads the four labelled sides back out of the figure. */
+/** Reads the four labeled sides back out of the figure. */
 function readFigure(details: string | undefined): { L: number; W: number; unit: string } {
   const lines = (details ?? '').split('\n');
   const values = lines.map((line) => {
@@ -77,7 +77,7 @@ describe('g3.md8.perimeter-of-a-rectangle', () => {
   });
 
   // The figure has to be answerable on its own, because a screen reader is all
-  // some children have: every one of the four sides is labelled, in one
+  // some children have: every one of the four sides is labeled, in one
   // customary unit, and opposite sides agree.
   it('labels all four sides in one customary unit', () => {
     for (let seed = 0; seed < 600; seed++) {
