@@ -1000,6 +1000,104 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'fraction-operations',
       'Wrote the whole number and the fraction side by side as a mixed number instead of multiplying them, which adds the fraction to the whole number rather than taking that many copies of it.',
     ),
+
+    // ── Grade 3 Operations & Algebraic Thinking ──────────────────────────
+    // Grade 3 is the year multiplication and division begin, so its errors are
+    // about what those operations MEAN - which number counts the groups, which
+    // counts what is in a group, and whether the count of groups was kept
+    // straight - rather than about an algorithm going wrong. None of the
+    // existing tags named any of that: the nearest, forgot-the-final-step and
+    // divided-by-wrong-count, describe different mistakes, and a mis-filed tag
+    // tells a parent their child made an error they did not make.
+    entry(
+      'skip-counted-one-group-short',
+      'incomplete-procedure',
+      'Skip-counted the equal groups but left one group out, so the count stopped one whole group short of the full amount.',
+    ),
+    entry(
+      'skip-counted-one-group-too-many',
+      'incomplete-procedure',
+      'Skip-counted the equal groups but counted one group too many, usually by counting the number the count starts from as a group of its own.',
+    ),
+    entry(
+      'counted-only-one-group',
+      'incomplete-procedure',
+      'Counted a single row or group and reported that number, instead of going on to find how many there are in all of the equal groups together.',
+    ),
+    entry(
+      'multiplied-only-part-of-the-decomposed-factor',
+      'incomplete-procedure',
+      'Broke a factor into two smaller pieces, multiplied by the first piece, and then added the second piece on instead of multiplying by it too.',
+    ),
+    entry(
+      'left-out-a-factor',
+      'operation-choice',
+      'Multiplied only two of the three quantities in the problem and left the third one out of the calculation entirely.',
+    ),
+    entry(
+      'swapped-the-number-of-groups-with-the-group-size',
+      'operation-choice',
+      'Swapped the two roles the numbers play in equal groups, reading the count of groups as the amount in each group or the other way round.',
+    ),
+    entry(
+      // Ruling 12-3 retired the "division is commutative" distractor this
+      // replaces: 3 / 12 is 0.25, and a Grade 3 child has no decimals, so it
+      // was never a value a student reaches. This one is - the divisor is
+      // printed right there in the question.
+      'answered-with-the-number-of-groups',
+      'operation-choice',
+      'Answered an equal-sharing question with the number of groups, which the question already gave, instead of working out how many go in each group.',
+    ),
+    entry(
+      'confused-the-quotient-with-the-dividend',
+      'operation-choice',
+      'Read the answer to a division as the total the problem started with, rather than as the share each group receives.',
+    ),
+    entry(
+      'read-the-quotient-as-the-leftover',
+      'remainder-handling',
+      'Read the answer to an equal-sharing problem as the amount left over at the end, rather than as the size of each equal share.',
+    ),
+    entry(
+      'added-instead-of-divided',
+      'operation-choice',
+      'Added the two numbers together when the problem called for dividing one of them by the other.',
+    ),
+    entry(
+      'used-the-addend-as-both-factors',
+      'operation-choice',
+      'Turned a repeated addition into a multiplication by using the repeated number as BOTH factors, so the count of how many times it repeats was never used.',
+    ),
+    entry(
+      // Filed under order-of-operations because that family is "which
+      // operation to carry out first", which is exactly what goes wrong here.
+      // It is NOT a PEMDAS item: NC.3.OA.8 is two-step WORD problems using
+      // addition, subtraction and multiplication, and evaluating a bare
+      // expression such as 3 + 4 x 2 is NC.5.OA.2, two grades on.
+      'did-the-two-steps-in-the-wrong-order',
+      'order-of-operations',
+      'Carried out the second step of a two-step problem before the first, so the wrong quantity was multiplied or taken away.',
+    ),
+    entry(
+      'checked-only-part-of-the-pattern',
+      'patterns-and-sequences',
+      'Formed a rule from only some of the numbers in a pattern, without checking that the rule still holds for the rest of them.',
+    ),
+    entry(
+      'checked-only-one-of-the-two-patterns',
+      'patterns-and-sequences',
+      'Checked a number against only one of the two patterns being compared, and stopped before checking whether it appears in the other one as well.',
+    ),
+    entry(
+      'added-the-two-step-sizes',
+      'patterns-and-sequences',
+      'Added the two counting numbers together to find a number belonging to both counts, instead of looking for a number that actually appears in both.',
+    ),
+    entry(
+      'reversed-the-direction-of-the-pattern',
+      'patterns-and-sequences',
+      'Turned around which of two skip counts contains the other, saying every number counted by the smaller step also appears in the larger step’s count, when it is only true the other way round.',
+    ),
   ].map((info) => [info.tag, info]),
 );
 
