@@ -42,7 +42,31 @@ export type MisconceptionFamily =
    *  in it. 'geometry-and-measurement' would tell a parent their child has a
    *  shape or measuring problem. Grade 3 measures time too, so this will not
    *  stay a one-standard family. */
-  | 'time-intervals';
+  | 'time-intervals'
+  /** Carrying out a problem that takes more than one step: which step goes
+   *  first, and holding the result of the first one while the second is done.
+   *  Added for NC.3.OA.8, whose own third keyConcept is "keeping track of the
+   *  result of the first step before taking the second".
+   *
+   *  Not 'order-of-operations', even though that family is literally "which
+   *  operation first". The family LABEL is the headline a parent reads - it is
+   *  the bold line in WeakSpotsView and in the printed report, with the tag
+   *  description beneath - so filing a Grade 3 step-sequencing error there
+   *  tells a parent their eight-year-old has an order-of-operations problem.
+   *  NC does not introduce order of operations until NC.5.OA.2, and that
+   *  family already holds order-of-operations-left-to-right, a genuine PEMDAS
+   *  tag, so a parent following the label would land two grades away.
+   *
+   *  Not 'incomplete-procedure' either: a child who does both steps in the
+   *  wrong order has not left the procedure unfinished, and telling a parent
+   *  their child stopped early would be just as wrong in the other direction.
+   *  forgot-the-final-step stays where it is for exactly that reason - it
+   *  really is the unfinished case, and the two halves of a two-step failure
+   *  deserve to be told apart.
+   *
+   *  Grades 4 and 5 both carry multi-step word problems, so this will not stay
+   *  a one-standard family. */
+  | 'multi-step-problems';
 
 export interface MisconceptionInfo {
   tag: string;
@@ -1078,13 +1102,12 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Turned a repeated addition into a multiplication by using the repeated number as BOTH factors, so the count of how many times it repeats was never used.',
     ),
     entry(
-      // Filed under order-of-operations because that family is "which
-      // operation to carry out first", which is exactly what goes wrong here.
-      // It is NOT a PEMDAS item: NC.3.OA.8 is two-step WORD problems using
-      // addition, subtraction and multiplication, and evaluating a bare
-      // expression such as 3 + 4 x 2 is NC.5.OA.2, two grades on.
+      // Family chosen for the parent-facing label, not the taxonomy: see the
+      // note on 'multi-step-problems' above. NC.3.OA.8 is two-step WORD
+      // problems using addition, subtraction and multiplication; evaluating a
+      // bare expression such as 3 + 4 x 2 is NC.5.OA.2, two grades on.
       'did-the-two-steps-in-the-wrong-order',
-      'order-of-operations',
+      'multi-step-problems',
       'Carried out the second step of a two-step problem before the first, so the wrong quantity was multiplied or taken away.',
     ),
     entry(

@@ -11,6 +11,11 @@ function parse(prompt: string): { n: number; d: number } {
   return { n: Number(m[1]), d: Number(m[2]) };
 }
 
+/** The whole option list, in order, as plain data a literal pin can compare
+ *  against: label, text, whether it is the key, and its misconception tag. */
+const shape = (g: { options: { label: string; text: string; isCorrect: boolean; misconception?: string }[] }) =>
+  g.options.map((o) => [o.label, o.text, o.isCorrect, o.misconception ?? null]);
+
 const optionValue = (g: ReturnType<typeof oa2EqualShares.generate>, tag: string): number => {
   const opt = g.options.find((o) => o.misconception === tag);
   if (!opt) throw new Error(`no option tagged ${tag}`);
@@ -26,11 +31,43 @@ describe('g3.oa2.equal-shares', () => {
     expect(oa2EqualShares.generate(makeRng(42))).toEqual(oa2EqualShares.generate(makeRng(42)));
   });
 
-  it('produces a known question at a pinned seed', () => {
+  // LITERAL pins. Every other test here reads the numbers back out of the
+  // generator's own prompt, so it would stay green through a change to the
+  // seed -> pair mapping, to CONTEXTS, to rng.pick ordering, or to the entire
+  // wording. These two hold the exact bytes at two seeds. Taken from a real
+  // run, not written out from what the code looks like it should produce.
+  it('emits exactly this question at seed 7', () => {
     const g = oa2EqualShares.generate(makeRng(7));
-    expect(g.options.find((o) => o.isCorrect)!.text).toBe(g.answerText);
-    const { n, d } = parse(g.prompt);
-    expect(g.answerText.startsWith(`${n / d} `)).toBe(true);
+    expect(g.prompt).toBe(
+      '18 counters are shared equally among 6 bags. How many counters go in each bag?',
+    );
+    expect(g.promptDetails).toBe(
+      '18 counters in all\n\n[ bag 1 ]  [ bag 2 ]  [ bag 3 ]  [ bag 4 ]  [ bag 5 ]  [ bag 6 ]',
+    );
+    expect(g.answerText).toBe('3 counters');
+    expect(shape(g)).toEqual([
+      ['A', '3 counters', true, null],
+      ['B', '12 counters', false, 'subtracted-instead-of-divided'],
+      ['C', '6 counters', false, 'answered-with-the-number-of-groups'],
+      ['D', '2 counters', false, 'skip-counted-one-group-short'],
+    ]);
+  });
+
+  it('emits exactly this question at seed 123', () => {
+    const g = oa2EqualShares.generate(makeRng(123));
+    expect(g.prompt).toBe(
+      '20 marbles are shared equally among 5 jars. How many marbles go in each jar?',
+    );
+    expect(g.promptDetails).toBe(
+      '20 marbles in all\n\n[ jar 1 ]  [ jar 2 ]  [ jar 3 ]  [ jar 4 ]  [ jar 5 ]',
+    );
+    expect(g.answerText).toBe('4 marbles');
+    expect(shape(g)).toEqual([
+      ['A', '3 marbles', false, 'skip-counted-one-group-short'],
+      ['B', '5 marbles', false, 'answered-with-the-number-of-groups'],
+      ['C', '4 marbles', true, null],
+      ['D', '15 marbles', false, 'subtracted-instead-of-divided'],
+    ]);
   });
 
   // NC.3.OA.2 says "a one-digit divisor and a one-digit quotient" in so many

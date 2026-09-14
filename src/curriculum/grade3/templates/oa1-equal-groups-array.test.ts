@@ -12,6 +12,11 @@ function readFigure(details: string): { r: number; c: number } {
   return { r: lines.length, c: [...widths][0] };
 }
 
+/** The whole option list, in order, as plain data a literal pin can compare
+ *  against: label, text, whether it is the key, and its misconception tag. */
+const shape = (g: { options: { label: string; text: string; isCorrect: boolean; misconception?: string }[] }) =>
+  g.options.map((o) => [o.label, o.text, o.isCorrect, o.misconception ?? null]);
+
 const optionValue = (
   g: ReturnType<typeof oa1EqualGroupsArray.generate>,
   tag: string,
@@ -32,11 +37,43 @@ describe('g3.oa1.equal-groups-array', () => {
     );
   });
 
-  it('produces a known question at a pinned seed', () => {
+  // LITERAL pins, not self-consistency checks. Every other test in this file
+  // reads the numbers back out of the generator's own output, so a change to
+  // the seed -> pair mapping, to CONTEXTS, to rng.pick ordering, or to the
+  // whole wording of the question would leave them all green. These two hold
+  // the exact bytes at two seeds, so any of those changes goes red and has to
+  // be looked at on purpose. The strings were taken from a real run, not
+  // written out from what the code looks like it should produce.
+  it('emits exactly this question at seed 7', () => {
     const g = oa1EqualGroupsArray.generate(makeRng(7));
-    expect(g.options.find((o) => o.isCorrect)!.text).toBe(g.answerText);
-    const { r, c } = readFigure(g.promptDetails!);
-    expect(g.answerText.startsWith(`${r * c} `)).toBe(true);
+    expect(g.prompt).toBe(
+      'The stickers below are arranged in equal rows. How many stickers are there in all?',
+    );
+    expect(g.promptDetails).toBe('★ ★ ★ ★ ★ ★ ★\n★ ★ ★ ★ ★ ★ ★\n★ ★ ★ ★ ★ ★ ★');
+    expect(g.answerText).toBe('21 stickers');
+    expect(shape(g)).toEqual([
+      ['A', '21 stickers', true, null],
+      ['B', '10 stickers', false, 'added-instead-of-multiplied'],
+      ['C', '14 stickers', false, 'skip-counted-one-group-short'],
+      ['D', '7 stickers', false, 'counted-only-one-group'],
+    ]);
+  });
+
+  it('emits exactly this question at seed 123', () => {
+    const g = oa1EqualGroupsArray.generate(makeRng(123));
+    expect(g.prompt).toBe(
+      'The tiles below are arranged in equal rows. How many tiles are there in all?',
+    );
+    expect(g.promptDetails).toBe(
+      '▲ ▲ ▲ ▲ ▲ ▲ ▲\n▲ ▲ ▲ ▲ ▲ ▲ ▲\n▲ ▲ ▲ ▲ ▲ ▲ ▲\n▲ ▲ ▲ ▲ ▲ ▲ ▲',
+    );
+    expect(g.answerText).toBe('28 tiles');
+    expect(shape(g)).toEqual([
+      ['A', '7 tiles', false, 'counted-only-one-group'],
+      ['B', '21 tiles', false, 'skip-counted-one-group-short'],
+      ['C', '28 tiles', true, null],
+      ['D', '11 tiles', false, 'added-instead-of-multiplied'],
+    ]);
   });
 
   it('draws the picture the prompt describes, inside the standard 1-10 range', () => {

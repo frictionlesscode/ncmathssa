@@ -10,6 +10,11 @@ function parse(prompt: string): { a: number; b: number } {
   return { a: Number(m[1]), b: Number(m[2]) };
 }
 
+/** The whole option list, in order, as plain data a literal pin can compare
+ *  against: label, text, whether it is the key, and its misconception tag. */
+const shape = (g: { options: { label: string; text: string; isCorrect: boolean; misconception?: string }[] }) =>
+  g.options.map((o) => [o.label, o.text, o.isCorrect, o.misconception ?? null]);
+
 const optionValue = (
   g: ReturnType<typeof oa7MultiplicationFact.generate>,
   tag: string,
@@ -30,11 +35,35 @@ describe('g3.oa7.multiplication-fact', () => {
     );
   });
 
-  it('produces a known question at a pinned seed', () => {
+  // LITERAL pins. Every other test here reads the fact back out of the
+  // generator's own prompt, so it would stay green through a change to the
+  // seed -> pair mapping, to rng.pick ordering, or to the entire wording.
+  // These two hold the exact bytes at two seeds. Taken from a real run, not
+  // written out from what the code looks like it should produce.
+  it('emits exactly this question at seed 7', () => {
     const g = oa7MultiplicationFact.generate(makeRng(7));
-    expect(g.options.find((o) => o.isCorrect)!.text).toBe(g.answerText);
-    const { a, b } = parse(g.prompt);
-    expect(g.answerText).toBe(`${a * b}`);
+    expect(g.prompt).toBe('What is 2 × 3?');
+    expect(g.promptDetails).toBeUndefined();
+    expect(g.answerText).toBe('6');
+    expect(shape(g)).toEqual([
+      ['A', '9', false, 'skip-counted-one-group-too-many'],
+      ['B', '5', false, 'added-instead-of-multiplied'],
+      ['C', '3', false, 'skip-counted-one-group-short'],
+      ['D', '6', true, null],
+    ]);
+  });
+
+  it('emits exactly this question at seed 123', () => {
+    const g = oa7MultiplicationFact.generate(makeRng(123));
+    expect(g.prompt).toBe('What is 9 × 3?');
+    expect(g.promptDetails).toBeUndefined();
+    expect(g.answerText).toBe('27');
+    expect(shape(g)).toEqual([
+      ['A', '24', false, 'skip-counted-one-group-short'],
+      ['B', '30', false, 'skip-counted-one-group-too-many'],
+      ['C', '12', false, 'added-instead-of-multiplied'],
+      ['D', '27', true, null],
+    ]);
   });
 
   // NC.3.OA.7 caps factors at 10. A fact outside that is another grade's.

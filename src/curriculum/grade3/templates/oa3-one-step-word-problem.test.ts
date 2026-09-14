@@ -12,6 +12,11 @@ function parse(prompt: string): { k: number; m: number } {
   return { k: Number(k[1]), m: Number(m[1]) };
 }
 
+/** The whole option list, in order, as plain data a literal pin can compare
+ *  against: label, text, whether it is the key, and its misconception tag. */
+const shape = (g: { options: { label: string; text: string; isCorrect: boolean; misconception?: string }[] }) =>
+  g.options.map((o) => [o.label, o.text, o.isCorrect, o.misconception ?? null]);
+
 const optionValue = (
   g: ReturnType<typeof oa3OneStepWordProblem.generate>,
   tag: string,
@@ -32,11 +37,39 @@ describe('g3.oa3.one-step-word-problem', () => {
     );
   });
 
-  it('produces a known question at a pinned seed', () => {
+  // LITERAL pins. Every other test here reads the numbers back out of the
+  // generator's own story, so it would stay green through a change to the
+  // seed -> pair mapping, to CONTEXTS, to rng.pick ordering, or to the entire
+  // wording. These two hold the exact bytes at two seeds. Taken from a real
+  // run, not written out from what the code looks like it should produce.
+  it('emits exactly this question at seed 7', () => {
     const g = oa3OneStepWordProblem.generate(makeRng(7));
-    expect(g.options.find((o) => o.isCorrect)!.text).toBe(g.answerText);
-    const { k, m } = parse(g.prompt);
-    expect(g.answerText.startsWith(`${k * m} `)).toBe(true);
+    expect(g.prompt).toBe(
+      'Mr. Patel has 8 shelves. Each shelf holds 2 books. How many books are there in all?',
+    );
+    expect(g.promptDetails).toBeUndefined();
+    expect(g.answerText).toBe('16 books');
+    expect(shape(g)).toEqual([
+      ['A', '16 books', true, null],
+      ['B', '10 books', false, 'added-instead-of-multiplied'],
+      ['C', '6 books', false, 'subtracted-instead-of-multiplied'],
+      ['D', '14 books', false, 'skip-counted-one-group-short'],
+    ]);
+  });
+
+  it('emits exactly this question at seed 123', () => {
+    const g = oa3OneStepWordProblem.generate(makeRng(123));
+    expect(g.prompt).toBe(
+      'Dev has 8 trays. Each tray holds 3 muffins. How many muffins are there in all?',
+    );
+    expect(g.promptDetails).toBeUndefined();
+    expect(g.answerText).toBe('24 muffins');
+    expect(shape(g)).toEqual([
+      ['A', '21 muffins', false, 'skip-counted-one-group-short'],
+      ['B', '5 muffins', false, 'subtracted-instead-of-multiplied'],
+      ['C', '24 muffins', true, null],
+      ['D', '11 muffins', false, 'added-instead-of-multiplied'],
+    ]);
   });
 
   it('stays a ONE-step problem with factors inside 1-10', () => {
