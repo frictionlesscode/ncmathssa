@@ -11,13 +11,16 @@ describe('registry', () => {
   });
 
   it('throws for a grade with no curriculum module', () => {
-    // Grades 1-3 are a later batch; asking for one must fail loudly,
-    // not return an empty curriculum that renders as a blank app.
-    expect(() => getCurriculum(3)).toThrow(/no curriculum/i);
+    // Grade 1 is a later batch; asking for one must fail loudly, not
+    // return an empty curriculum that renders as a blank app. This pin
+    // moves down as each grade registers - it was grade 3 until Task 16
+    // and must name a grade that still has no module, so grade 2 (which
+    // registers in Task 21) would only move it again one task later.
+    expect(() => getCurriculum(1)).toThrow(/no curriculum/i);
   });
 
   it('lists only grades that actually have modules', () => {
-    expect(listCurricula().map((c) => c.grade)).toEqual([4, 5]);
+    expect(listCurricula().map((c) => c.grade)).toEqual([3, 4, 5]);
   });
 });
 

@@ -1,8 +1,20 @@
 import type { QuizDefinition } from '../../types';
-import type { GradeCurriculum } from '../types';
-import { standardsOf } from '../registry';
+import type { GradeCurriculum, StandardInfo } from '../types';
 import type { QuestionRef } from '../../engine/questionModel';
 import { questionRefId } from '../../engine/questionModel';
+
+/** This grade's standards, flattened.
+ *
+ *  Counted off `c.domains` rather than imported as `standardsOf` from
+ *  ../registry on purpose: the registry imports ./grade5, which imports this
+ *  file, so importing the registry here closes a cycle. It was green only by
+ *  import order, and `registry.ts` now imports ./grade3 and ./grade4 first -
+ *  so if grade5/index ever became the graph's entry point, `CURRICULA` would
+ *  evaluate with `5: undefined`, a partially working registry that fails
+ *  worse than a clean throw. `grade4/quizzes.ts` counts the same way. */
+function standardsOf(c: GradeCurriculum): StandardInfo[] {
+  return c.domains.flatMap((d) => d.standards);
+}
 
 // Named so the subtitle functions below can cite `.length` without
 // depending on `this` inside an object literal.
