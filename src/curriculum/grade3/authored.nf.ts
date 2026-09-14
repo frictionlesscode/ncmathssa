@@ -47,10 +47,10 @@ import { labelOptions } from '../../engine/questionModel';
  * a real and common first-year error, but it has NO NUMERIC VALUE — there is
  * no number a child who makes it arrives at. So it is tagged only on options
  * that are MODELS or STATEMENTS ABOUT WHAT THE SYMBOL MEANS, where a child can
- * actually pick it: `g3-nf1-01`, `g3-nf3-04` and `g3-nf4-02`. On a numeric
- * item it could only ever be filed against a number some other mistake made,
- * and a mis-filed tag tells a parent their child made a mistake they did not
- * make. The sibling test holds that line.
+ * actually pick it: `g3-nf1-01`, `g3-nf2-03`, `g3-nf3-04` and `g3-nf4-02`. On
+ * a numeric item it could only ever be filed against a number some other error
+ * made, and a mis-filed tag tells a parent their child made a mistake they did
+ * not make. The sibling test holds that line.
  *
  * Equivalent fractions name the same number, so every option list here is
  * checked by VALUE and not by form: 4/8 and 1/2 are different strings and one
@@ -69,30 +69,41 @@ export const GRADE_3_NF_AUTHORED: Question[] = [
     standardCode: 'NC.3.NF.1',
     domainId: 'NF',
     // The standard's third keyConcept is "the whole is partitioned into EQUAL
-    // parts", so the item is about which picture is even a fraction at all.
-    // This is also one of the three items where "one and four" is reachable:
-    // the last option is what a child who reads 1/3 as two separate whole
-    // numbers would draw.
-    prompt: 'Which picture shows 1/3 of one whole circle?',
+    // parts". This is deliberately NOT the model-matching shape that
+    // ./templates/nf1-unit-fraction-model.ts generates: it is a judgement about
+    // one particular cut, and the child has to say whether a fraction has been
+    // made at all. A picture-picking item here would be that generator's
+    // question in different words, which puts one question under two review
+    // keys just as surely as an identical prompt would — and the duplicate
+    // guard, which compares prompts, would not see it.
+    //
+    // It is also one of the four items where "one and four" is reachable: the
+    // third option is the reasoning of a child who reads 1/4 as two separate
+    // whole numbers.
+    prompt:
+      'Kai cuts a sandwich into 4 pieces, but one piece is much bigger than the other three. Can one of the small pieces be called 1/4 of the sandwich?',
     options: labelOptions([
-      { text: 'One circle cut into 3 equal pieces, with 1 piece shaded.', isCorrect: true },
-      // Three pieces, but not equal ones — so no single piece is a third.
       {
-        text: 'One circle cut into 3 pieces of different sizes, with 1 piece shaded.',
+        text: 'No. The 4 pieces have to be the same size before any one of them is 1/4 of the sandwich.',
+        isCorrect: true,
+      },
+      // Four pieces counted, without checking that they are equal ones.
+      {
+        text: 'Yes. There are 4 pieces, so each piece is 1/4 of the sandwich.',
         isCorrect: false,
         misconception: 'counted-parts-without-checking-they-are-equal',
       },
-      // The 3 read as three whole circles instead of three parts of one.
+      // 1/4 read as the two numbers 1 and 4 rather than as one amount.
       {
-        text: '3 whole circles, with 1 of them shaded.',
-        isCorrect: false,
-        misconception: 'treated-the-denominator-as-a-count-of-wholes',
-      },
-      // 1/3 read as "one and three": one whole thing, and then three more.
-      {
-        text: '1 whole circle shaded, and 3 more circles beside it.',
+        text: 'Yes, because there is 1 piece and there are 4 pieces, which is what 1/4 says.',
         isCorrect: false,
         misconception: 'read-the-fraction-as-two-whole-numbers',
+      },
+      // The 4 read as four whole sandwiches instead of four parts of one.
+      {
+        text: 'No. 1/4 would have to mean 4 whole sandwiches with 1 of them eaten.',
+        isCorrect: false,
+        misconception: 'treated-the-denominator-as-a-count-of-wholes',
       },
     ]),
     calculatorAllowed: false,
@@ -100,15 +111,15 @@ export const GRADE_3_NF_AUTHORED: Question[] = [
     difficulty: 'mastery',
     explanation: {
       stepByStep: [
-        'Step 1: The bottom number, 3, tells how many equal pieces ONE whole circle is cut into.',
-        'Step 2: The pieces have to be the same size, or no single piece is a third of the circle.',
-        'Step 3: The top number, 1, tells how many of those pieces are counted.',
-        'Step 4: So the picture is One circle cut into 3 equal pieces, with 1 piece shaded.',
+        'Step 1: 1/4 means one of 4 EQUAL pieces of one whole sandwich.',
+        'Step 2: Kai’s pieces are not equal — one of them is much bigger than the other three.',
+        'Step 3: So none of his pieces is a fourth. They are just four pieces, and each small one is less than a fourth.',
+        'Step 4: No. The 4 pieces have to be the same size before any one of them is 1/4 of the sandwich.',
       ],
       conceptSummary:
-        'A unit fraction is one piece of a whole that has been cut into equal pieces. The bottom number says how many equal pieces the whole was cut into, and the top number says how many of them are counted.',
+        'A unit fraction is one piece of a whole that has been cut into EQUAL pieces. Counting the pieces is not enough: until they are all the same size, no single piece has a fraction name at all.',
       commonMisconception:
-        'Three pieces of different sizes are still three pieces, but they are not thirds — nothing is a third until every piece is the same size.',
+        'Four pieces of different sizes are still four pieces, but they are not fourths — nothing is a fourth until every piece is the same size.',
     },
   },
   {
