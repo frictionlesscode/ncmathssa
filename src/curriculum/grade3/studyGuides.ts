@@ -35,7 +35,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     coreConcept:
       'Multiplication is a fast way to count equal groups. In 8 × 6, the two numbers do two different jobs: one says how many groups there are, and the other says how many things are in each group. The groups must all be the same size - that is what makes it multiplication instead of plain adding.',
     rulesAndFormulas: [
-      { label: 'Groups × size of each group', detail: '8 trays with 6 muffins on each tray is 8 × 6. The first number counts the trays; the second counts what is on one tray.' },
+      { label: 'Groups × size of each group', detail: '8 trays with 6 muffins on each tray is 8 × 6. The FIRST number always counts the groups and the SECOND always says how many are in one group. Keep that order every time and the two jobs never get swapped.' },
       { label: 'Repeated addition', detail: '8 × 6 is the same as 6 + 6 + 6 + 6 + 6 + 6 + 6 + 6. Multiplication just saves you writing it out.' },
       { label: 'Arrays', detail: 'Rows of dots show it best: 8 rows with 6 dots in each row is 8 × 6 dots altogether.' },
       { label: 'Order does not change the answer', detail: '8 × 6 and 6 × 8 both give 48. That is the commutative property, and it means you may turn a hard fact round into an easier one.' },
@@ -75,8 +75,8 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     coreConcept:
       'Division splits a total into equal groups. The total always goes first. The other number tells you one of two things - either how many groups to make, or how many to put in each group - and the answer tells you the one you were not told. In Grade 3 the divisor and the answer are both single digits, 10 or less.',
     rulesAndFormulas: [
-      { label: 'Total ÷ number of groups = size of each group', detail: '42 stickers shared fairly between 6 friends is 42 ÷ 6 = 7 stickers each.' },
-      { label: 'Total ÷ size of each group = number of groups', detail: '42 stickers packed 6 to a bag is 42 ÷ 6 = 7 bags.' },
+      { label: 'Total ÷ number of groups = size of each group', detail: '42 stickers shared fairly between 6 friends is 42 ÷ 6 = 7 stickers each. As a multiplication that is 6 × 7 = 42: 6 groups of 7.' },
+      { label: 'Total ÷ size of each group = number of groups', detail: '42 stickers packed 6 to a bag is 42 ÷ 6 = 7 bags. As a multiplication that is 7 × 6 = 42: 7 groups of 6.' },
       { label: 'Division undoes multiplication', detail: 'Because 6 × 7 = 42, you already know 42 ÷ 6 = 7 and 42 ÷ 7 = 6.' },
       { label: 'Repeated subtraction', detail: 'Take 6 away from 42 again and again: 36, 30, 24, 18, 12, 6, 0. You did it 7 times, so the answer is 7.' },
       { label: 'Fair shares', detail: 'Sharing only counts as division when every group ends up with exactly the same amount.' },
@@ -84,7 +84,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     stepByStepMethod: [
       'Step 1: Find the total - the whole amount that is being split up. It goes first in the division.',
       'Step 2: Read what the other number tells you: the number of GROUPS, or the number in EACH group.',
-      'Step 3: Turn it into a multiplication with a missing number. "6 friends" gives ? × 6 = 42; "6 in each bag" gives 6 × ? = 42.',
+      'Step 3: Turn it into a multiplication with a missing number, keeping groups first and group size second. "6 friends" means 6 groups, so 6 × ? = 42. "6 in each bag" means groups OF 6, so ? × 6 = 42.',
       'Step 4: Use a fact you know, or skip count, to fill the missing number.',
       'Step 5: Check by multiplying back, then say what your answer counts - friends, stickers, bags.',
     ],
@@ -99,9 +99,9 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       steps: [
         '1. The total is 42 stickers.',
         '2. The 6 tells us how many GROUPS - one group for each friend.',
-        '3. So we need ? × 6 = 42, which is 42 ÷ 6.',
+        '3. Groups first: 6 groups of something make 42, so 6 × ? = 42, which is 42 ÷ 6.',
         '4. Count by 6s: 6, 12, 18, 24, 30, 36, 42 - that is 7 jumps.',
-        '5. Check: 7 × 6 = 42, and every friend got the same amount.',
+        '5. Check: 6 × 7 = 42 - six friends with seven each - and every friend got the same amount.',
       ],
       answer: '7 stickers each',
       whyItMattersForSSA:
@@ -116,9 +116,9 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       'A one-step word problem hides one multiplication or one division inside a story. Your job is to find the equal groups, work out which number is missing - the total, the number of groups, or the size of a group - and then choose the operation that finds it.',
     rulesAndFormulas: [
       { label: 'Total missing → multiply', detail: '7 tanks with 9 fish in each: the total is missing, so 7 × 9 = 63.' },
-      { label: 'Number of groups missing → divide', detail: '56 rolls packed 8 to a bag: 56 ÷ 8 = 7 bags.' },
-      { label: 'Size of group missing → divide', detail: '56 rolls shared into 8 bags: 56 ÷ 8 = 7 rolls in each bag.' },
-      { label: 'Use a symbol for the unknown', detail: 'Write 7 × 9 = f, or 8 × b = 56. The letter or box stands for the number you are looking for.' },
+      { label: 'Number of groups missing → divide', detail: '56 rolls packed 8 to a bag: 56 ÷ 8 = 7 bags. Groups first, so the equation is b × 8 = 56.' },
+      { label: 'Size of group missing → divide', detail: '56 rolls shared into 8 bags: 56 ÷ 8 = 7 rolls in each bag. Groups first, so the equation is 8 × r = 56.' },
+      { label: 'Use a symbol for the unknown', detail: 'Write 7 × 9 = f, or b × 8 = 56. The letter or box stands for the number you are looking for, and the groups still come first.' },
       { label: 'Draw it', detail: 'An array, a picture of the groups, or a bar split into equal parts turns the words into something you can count.' },
     ],
     stepByStepMethod: [
@@ -157,14 +157,14 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     coreConcept:
       'Sometimes the equation shows you the answer and hides one of the factors: 6 × ? = 42. The box is asking "how many groups of 6 make 42?" You can find it by dividing, or by skip counting up to the total and counting your jumps. Multiplication and division are two ways of looking at the very same fact.',
     rulesAndFormulas: [
-      { label: 'Missing factor → divide', detail: 'In 6 × ? = 42, divide the total by the factor you can see: 42 ÷ 6 = 7.' },
+      { label: 'Missing factor → divide', detail: 'In 6 × ? = 42, divide the total by the factor you can see: 42 ÷ 6 = 7. Read it groups first: 6 groups of 7 make 42.' },
       { label: 'Rewrite a division as a multiplication', detail: '56 ÷ ? = 8 means ? × 8 = 56, so divide the total by 8: 56 ÷ 8 = 7.' },
-      { label: 'Skip counting counts the jumps', detail: 'Count 6, 12, 18, 24, 30, 36, 42. Seven numbers were said, so seven groups of 6 make 42.' },
+      { label: 'Skip counting counts the jumps', detail: 'Count 6, 12, 18, 24, 30, 36, 42. You said seven numbers, so the missing factor is 7. (Counting by 6 finds it because 6 sevens and 7 sixes both make 42 - that is the commutative property at work.)' },
       { label: 'Fact families', detail: '6 × 7 = 42, 7 × 6 = 42, 42 ÷ 6 = 7 and 42 ÷ 7 = 6 are all the same fact wearing different clothes.' },
       { label: 'Always check by multiplying', detail: 'Put your answer in the box and multiply. If you do not get the total back, it is not the missing factor.' },
     ],
     stepByStepMethod: [
-      'Step 1: Find the box and say the equation out loud: "how many groups of 6 make 42?"',
+      'Step 1: Find the box and say the equation out loud, groups first: 6 × ? = 42 is "6 groups of how many make 42?"',
       'Step 2: If the box is inside a division, rewrite it as a multiplication first - 56 ÷ ? = 8 becomes ? × 8 = 56.',
       'Step 3: Divide the total by the factor you can see.',
       'Step 4: If you do not know that fact yet, skip count by the visible factor until you reach the total, counting the jumps as you go.',
@@ -179,11 +179,11 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     workedExample: {
       problem: 'Find the missing number: 6 × ? = 42.',
       steps: [
-        '1. Read it as: how many groups of 6 make 42?',
+        '1. Read it groups first: 6 groups of how many make 42?',
         '2. The box is a missing factor, so divide the total by the factor I can see: 42 ÷ 6.',
         '3. Skip count by 6 and count the jumps: 6, 12, 18, 24, 30, 36, 42 - seven jumps.',
         '4. So the box is 7.',
-        '5. Check: 6 × 7 = 42. It matches the total, so 7 is right.',
+        '5. Check: 6 × 7 = 42 - six groups of seven. It matches the total, so 7 is right.',
       ],
       answer: '7',
       whyItMattersForSSA:
@@ -453,7 +453,8 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       'Step 2: Look for the match: is it the top numbers that are the same, or the bottom numbers?',
       'Step 3: If the BOTTOMS match, the pieces are the same size, so the fraction with more pieces is bigger.',
       'Step 4: If the TOPS match, the number of pieces is the same, so the fraction with the SMALLER bottom number is bigger, because its pieces are bigger.',
-      'Step 5: Write >, < or = so that it opens toward the bigger fraction, then read the whole thing out loud to check it.',
+      'Step 5: If BOTH numbers match, the two fractions are the same fraction, so the answer is =.',
+      'Step 6: Otherwise write > or < so that it opens toward the bigger fraction, then read the whole thing out loud to check it.',
     ],
     commonTraps: [
       'Reading 3/8 as bigger because 8 is bigger than 4. With whole numbers 8 really is more than 4, and that habit is what makes 3/8 look bigger than 3/4. The bottom number is not a count; it is a size.',
@@ -503,7 +504,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     commonTraps: [
       'Reading the number the long hand points at as the minutes. At 2:50 the long hand is on the 10, and on a clock the 10 means 50 minutes.',
       'Writing the answer as "2:35". Thirty-five is how LONG the club lasted, not a time of day - the club was already over by 2:50.',
-      'Treating the times like ordinary numbers and doing 250 − 215. Times are not written in tens; work with the minutes only, and here the 2 o\'clock hour cancels out.',
+      'Counting the numbers on the clock face instead of the minutes. The long hand travels from the 3 round to the 10, which is 7 steps, so the answer looks like 7 minutes - but each step is worth five minutes, and seven fives are 35.',
       'Comparing two starting times when the question asks which activity lasted longer. Starting later does not mean lasting longer, because when each one ended matters too.',
     ],
     workedExample: {
@@ -517,7 +518,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       ],
       answer: '35 minutes',
       whyItMattersForSSA:
-        'Measurement and Data is weighted together with Geometry as one band worth 23–27% of the Grade 3 EOG, and time questions are on practically every form, usually asking how long something lasted rather than just what the clock says.',
+        'Measurement and Data is weighted together with Geometry as one band worth 23–27% of the Grade 3 EOG, and time questions are on practically every form — usually asking how long something lasted rather than just what the clock says.',
     },
   },
 
@@ -598,7 +599,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       ],
       answer: 'Lin read 42 books, which is 18 more than Ravi',
       whyItMattersForSSA:
-        'Graph questions turn up every year inside the band that Measurement and Data shares with Geometry, worth 23–27% of the Grade 3 EOG, and nearly every lost mark comes from counting the pictures instead of using the key.',
+        'Measurement and Data and Geometry share one 23–27% band on the Grade 3 EOG, and graph questions turn up in it every year — nearly every lost mark comes from counting the pictures instead of using the key.',
     },
   },
 
@@ -638,7 +639,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       ],
       answer: '24 square units',
       whyItMattersForSSA:
-        'Area is brand new in Grade 3, and it lives in the band that Measurement and Data shares with Geometry, worth 23–27% of the Grade 3 EOG - counting tiles is the picture that has to be solid before area becomes a multiplication.',
+        'Area is brand new in Grade 3, and it sits in the 23–27% band that Measurement and Data shares with Geometry on the EOG — counting tiles is the picture that has to be solid before area becomes a multiplication.',
     },
   },
 
@@ -680,7 +681,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       ],
       answer: '52 square feet',
       whyItMattersForSSA:
-        'Splitting a shape into two rectangles is the hardest thing in the band that Measurement and Data shares with Geometry, worth 23–27% of the Grade 3 EOG, and it is also the idea Grade 4 and Grade 5 build every area formula on top of.',
+        'Splitting a shape into two rectangles is the hardest thing in the 23–27% band that Measurement and Data shares with Geometry on the Grade 3 EOG, and it is the idea Grade 4 and Grade 5 build every area formula on top of.',
     },
   },
 
@@ -720,7 +721,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       ],
       answer: '8 inches',
       whyItMattersForSSA:
-        'Finding a missing side is the version of perimeter the Grade 3 EOG asks about most often inside the band Measurement and Data shares with Geometry, worth 23–27%, because it needs both the adding and the subtracting rather than one lap round a shape.',
+        'Finding a missing side is the version of perimeter the Grade 3 EOG asks about most often inside the 23–27% band that Measurement and Data shares with Geometry, because it needs both the adding and the subtracting rather than one lap round a shape.',
     },
   },
 
@@ -766,7 +767,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       ],
       answer: 'Jo is wrong: every square is a rectangle. Two squares joined along a full side make a rectangle.',
       whyItMattersForSSA:
-        'Geometry is a single standard at Grade 3, and it is weighted together with Measurement and Data in one 23–27% band on the EOG, so quadrilateral naming carries real marks even though it takes up the least class time.',
+        'Geometry is a single standard at Grade 3 and it is weighted together with Measurement and Data in one 23–27% band on the EOG, so quadrilateral naming carries real marks even though it takes up the least class time.',
     },
   },
 
@@ -782,32 +783,34 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       { label: 'Estimate first', detail: 'Swap each number for a friendly number close to it that ends in 0: 347 + 289 is about 350 + 290 = 640.' },
       { label: 'Expanded form', detail: '347 = 300 + 40 + 7. Splitting both numbers this way turns one hard sum into three easy ones.' },
       { label: 'Trading up', detail: '40 + 80 = 120, which is one hundred and two tens. The extra hundred moves along to the hundreds.' },
-      { label: 'Trading down', detail: 'To subtract when a part is too small, trade one hundred for ten tens, or one ten for ten ones.' },
+      { label: 'Trading down', detail: 'To subtract when a part is too small, trade before you start. 402 has no tens to take from, so trade a hundred into the tens and a ten into the ones: 402 = 300 + 90 + 12. Now 402 − 176 = 200 + 20 + 6 = 226.' },
       { label: 'Addition and subtraction undo each other', detail: 'If 347 + 289 = 636, then 636 − 289 must give 347 back. That is how you check.' },
     ],
     stepByStepMethod: [
       'Step 1: Estimate first. Swap each number for a friendly number close to it that ends in 0, add or subtract those, and keep the estimate where you can see it.',
       'Step 2: Break both numbers into hundreds, tens and ones.',
-      'Step 3: Add or subtract the hundreds, then the tens, then the ones, keeping the three parts separate.',
-      'Step 4: Put the parts back together, trading whenever a part reaches ten or more - or, in a subtraction, whenever a part is too small to take from.',
-      'Step 5: Compare the result with your estimate. If they are far apart, find the mistake before going on.',
-      'Step 6: Check with the opposite operation: check an addition by subtracting, and a subtraction by adding.',
+      'Step 3: If it is a SUBTRACTION, check each part before you take anything away: is the ones part big enough? Is the tens part? Wherever it is not, trade first - one ten becomes ten ones, and one hundred becomes ten tens - and rewrite the expanded form before you go on. (If the tens part is 0, the hundred has to stop there on its way to the ones.)',
+      'Step 4: Now add or subtract the hundreds, then the tens, then the ones, keeping the three parts separate. After Step 3 every part is big enough to take from.',
+      'Step 5: Put the parts back together, trading UP whenever a part reaches ten or more: twelve tens is one hundred and two tens.',
+      'Step 6: Compare the result with your estimate. If they are far apart, find the mistake before going on.',
+      'Step 7: Check with the opposite operation: check an addition by subtracting, and a subtraction by adding.',
     ],
     commonTraps: [
       'Estimating by keeping only the hundreds digit. Turning 347 into 300 and 289 into 200 gives 500, which is more than 130 below the real answer of 636, while 350 + 290 = 640 sits right beside it.',
       'Writing the 16 ones as a 6 and moving on. That loses the ten hiding inside them, and it is exactly the ten that turns 626 into 636.',
       'Checking by adding the same two numbers again. Doing 347 + 289 a second time never uses the answer at all, so it cannot tell you whether the answer is right - subtract instead, and 636 − 289 should give 347.',
-      'In a subtraction with a 0 in the tens, trading a hundred straight into the ones and leaving the 0 alone. That skips a step: the hundred has to stop in the tens on its way.',
+      'In a subtraction with a 0 in the tens, trading a hundred straight into the ones and leaving the 0 alone. That skips a step: the hundred has to stop in the tens on its way, which is exactly what turns the 0 in 402 into the 90 you take the 70 from.',
     ],
     workedExample: {
       problem: 'Estimate 347 + 289 first, then work out the exact answer and check that your estimate was close.',
       steps: [
         '1. Estimate: 347 is close to 350 and 289 is close to 290, so the answer should be near 350 + 290 = 640.',
         '2. Expanded form: 347 = 300 + 40 + 7, and 289 = 200 + 80 + 9.',
-        '3. Hundreds: 300 + 200 = 500. Tens: 40 + 80 = 120. Ones: 7 + 9 = 16.',
-        '4. Put them back: 500 + 120 = 620, and 620 + 16 = 636.',
-        '5. Compare with the estimate: 636 is very close to 640, so it is reasonable.',
-        '6. Check by subtracting: 636 − 289 = 347, the number we started with.',
+        '3. This is an addition, not a subtraction, so there is nothing to trade down before starting.',
+        '4. Hundreds: 300 + 200 = 500. Tens: 40 + 80 = 120. Ones: 7 + 9 = 16.',
+        '5. Put them back, trading up: 500 + 120 = 620, and 620 + 16 = 636.',
+        '6. Compare with the estimate: 636 is very close to 640, so it is reasonable.',
+        '7. Check by subtracting: 636 − 289 = 347, the number we started with.',
       ],
       answer: '636 (estimated at about 640)',
       whyItMattersForSSA:
@@ -851,7 +854,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       ],
       answer: '350 pencils',
       whyItMattersForSSA:
-        'This is one of only two standards in the 9–13% Base Ten band on the Grade 3 EOG, so it carries half of that band - and it is the first taste of the place-value reasoning that Grade 4 multiplication is built on.',
+        'Base Ten is the smallest band on the Grade 3 EOG at 9–13%, and this is the standard that turns a fact you already know into a three-digit answer - the place-value reasoning every bit of Grade 4 multiplication is built on.',
     },
   },
 };

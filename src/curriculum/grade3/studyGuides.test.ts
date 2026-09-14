@@ -43,10 +43,21 @@ function bandEndpoints(range: string): [string, string] {
 /** Ruling 15-1 binds the CLAUSE carrying the figure, not the field: "Geometry
  *  is 23–27% of the EOG. Measurement and Data is tested alongside it." makes
  *  the banned single-domain claim while the field as a whole names both
- *  domains. A semicolon joins two independent clauses exactly as a period
- *  does, so it splits here too. */
+ *  domains.
+ *
+ *  Splitting on sentence enders and semicolons alone is not enough, and that
+ *  gap is not theoretical: "Geometry alone is worth 23–27% of the Grade 3 EOG,
+ *  and Measurement and Data is counted somewhere else." makes exactly the
+ *  banned claim, and a COMMA is the commonest join in this file's own prose.
+ *  So a clause ends at any of , ; : . ! ? or at a spaced dash.
+ *
+ *  The dash must be SPACED. An unspaced en dash is the one inside a band -
+ *  "23–27%" - and splitting there would tear every legitimate citation into
+ *  "23" and "27%", turning the guard into a generator of false failures. */
 function clausesOf(text: string): string[] {
-  return text.split(/\s*;\s*|(?<=[.!?])\s+/).filter((s) => s.trim().length > 0);
+  return text
+    .split(/\s*[,;:]\s*|\s+[-–—]+\s+|(?<=[.!?])\s+/)
+    .filter((s) => s.trim().length > 0);
 }
 
 /** Every string a guide prints, for the sweeps that must see all of it. */
