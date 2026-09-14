@@ -101,6 +101,18 @@ describe('GRADE_3_TEMPLATES', () => {
       'g3.nf2.fraction-on-a-number-line': /^Which fraction does point P name\?$/,
       'g3.nf3.equivalent-fraction': /^Which fraction names the same amount as \d+\/\d+\?$/,
       'g3.nf4.compare-like-parts': /^Which comparison is true\?$/,
+      'g3.md1.elapsed-time-within-the-hour':
+        /^[A-Z][a-z]+(?: [a-z]+)? started at \d{1,2}:\d\d and ended at \d{1,2}:\d\d\. How many minutes long was it\?$/,
+      'g3.md2.customary-capacity-word-problem':
+        /^A [a-z ]+ holds \d+ \w+ of [a-z ]+\. [A-Z][a-z]+ pours out \d+ \w+\. How many \w+ of [a-z ]+ are left in the [a-z ]+\?$/,
+      'g3.md5.tile-and-count-unit-squares':
+        /^The rectangle below is covered with unit squares that do not overlap\. How many unit squares cover it\?$/,
+      'g3.md7.area-by-multiplying-side-lengths':
+        /^[A-Z][a-z]+'s [a-z ]+ is a rectangle \d+ \w+ long and \d+ \w+ wide\. What is its area\?$/,
+      'g3.md8.perimeter-of-a-rectangle':
+        /^The rectangle below has all four of its sides labeled\. What is its perimeter\?$/,
+      'g3.md8.unknown-side-length':
+        /^A rectangle has a perimeter of \d+ \w+\. Its long side is \d+ \w+\. How long is its short side\?$/,
     };
     expect(Object.keys(sentinels).sort()).toEqual(GRADE_3_TEMPLATES.map((t) => t.id).sort());
     for (const t of GRADE_3_TEMPLATES) {

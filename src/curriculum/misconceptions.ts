@@ -1268,6 +1268,146 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'fraction-operations',
       'Compared two fractions of different-sized wholes as if the wholes were the same, treating 1/2 of a small pizza as equal to 1/2 of a large one.',
     ),
+
+    // -- Grade 3 Measurement & Data: telling time (NC.3.MD.1) ------------
+    // NC.3.MD.1 is time to the NEAREST MINUTE and intervals WITHIN THE SAME
+    // HOUR. The existing 'time-intervals' tags were all written for NC.4.MD.8,
+    // which is entirely about crossing the hour - counted-past-sixty-minutes,
+    // used-the-minutes-past-the-hour-not-the-minutes-left and
+    // regrouped-the-minutes-but-not-the-hours all describe an hour boundary
+    // that a Grade 3 question never has. Filing a Grade 3 clock-reading error
+    // under one of them would tell a parent their child cannot trade 60
+    // minutes for an hour when their child has never been asked to.
+    entry(
+      'read-the-clock-time-as-the-interval',
+      'time-intervals',
+      'Reported the clock reading at the end of an activity as how long the activity lasted, so "it ended at 47 minutes past" became "it took 47 minutes".',
+    ),
+    entry(
+      'read-the-clock-to-the-nearest-five-minutes',
+      'time-intervals',
+      'Read the clock only to the nearest five-minute mark instead of to the nearest minute, losing the few extra minutes past that mark.',
+    ),
+    entry(
+      'read-the-minute-hand-as-the-number-it-points-to',
+      'time-intervals',
+      'Read the number the minute hand points at as the minutes themselves, so a minute hand at the 8 was read as 8 minutes rather than 40.',
+    ),
+    entry(
+      'swapped-the-hour-and-minute-hands',
+      'time-intervals',
+      'Took the short hand for the minute hand and the long hand for the hour hand, so the two parts of the time changed places.',
+    ),
+    entry(
+      'used-the-duration-as-the-end-time',
+      'time-intervals',
+      'Wrote how long something lasted as the minutes of the ending time, ignoring the minutes that had already gone by when it started.',
+    ),
+    entry(
+      'compared-the-start-times-not-the-lengths',
+      'time-intervals',
+      'Compared two activities by how far apart they started rather than by how long each one lasted.',
+    ),
+
+    // -- Grade 3 Measurement & Data: customary measurement (NC.3.MD.2) ---
+    entry(
+      'estimated-ten-times-too-large',
+      'geometry-and-measurement',
+      'Picked the right unit but a number about ten times bigger than the object really measures, so the estimate is not a sensible size.',
+    ),
+
+    // -- Grade 3 Measurement & Data: scaled graphs (NC.3.MD.3) -----------
+    entry(
+      'counted-the-symbols-instead-of-using-the-key',
+      'geometry-and-measurement',
+      'Counted the pictures in a picture graph as if each one stood for a single item, instead of multiplying by the amount the key gives each picture.',
+    ),
+    entry(
+      'left-the-categories-open',
+      'geometry-and-measurement',
+      'Chose a survey question whose answers cannot be sorted into the few categories the graph has room for, so the data will not fit the bars.',
+    ),
+
+    // -- Grade 3 Measurement & Data: area by tiling (NC.3.MD.5) ----------
+    // The standard's own first keyConcept is "tiling a rectangle WITHOUT GAPS
+    // OR OVERLAPS", so each of the three ways a covering can fail that rule is
+    // its own error rather than one lumped "bad tiling" tag.
+    entry(
+      'left-gaps-between-the-tiles',
+      'geometry-and-measurement',
+      'Covered the shape with tiles that had spaces left between them, so counting the tiles misses the parts the gaps cover.',
+    ),
+    entry(
+      'overlapped-the-tiles',
+      'geometry-and-measurement',
+      'Covered the shape with tiles that sat on top of one another, so some of the space was counted more than once.',
+    ),
+    entry(
+      'used-tiles-of-different-sizes',
+      'geometry-and-measurement',
+      'Covered the shape with tiles that were not all the same size, so counting them does not measure anything - area counts how many of ONE size of square fit.',
+    ),
+    entry(
+      'compared-the-side-lengths-not-the-tile-counts',
+      'geometry-and-measurement',
+      'Compared two shapes by how far their longest sides reach instead of by how many unit squares cover each one.',
+    ),
+    entry(
+      'counted-the-figure-as-a-full-rectangle',
+      'geometry-and-measurement',
+      'Counted the squares of the whole rectangle the figure sits inside, including the corner squares the figure does not actually cover.',
+    ),
+    entry(
+      'counted-the-rows-not-the-squares',
+      'geometry-and-measurement',
+      'Reported how many rows of tiles there are instead of how many tiles there are altogether.',
+    ),
+
+    // -- Grade 3 Measurement & Data: perimeter (NC.3.MD.8) ---------------
+    entry(
+      'left-out-a-side-length',
+      'geometry-and-measurement',
+      'Went around the figure adding side lengths but missed one side out of the total.',
+    ),
+    entry(
+      'subtracted-one-side-from-the-whole-perimeter',
+      'geometry-and-measurement',
+      'Took one known side away from the whole perimeter and called what was left a single side, as if only one side of the figure remained.',
+    ),
+
+    // -- Grade 3 Geometry (NC.3.G.1) ------------------------------------
+    // NC.3.G.1 is composing and decomposing triangles and quadrilaterals, and
+    // examples and non-examples of the named quadrilaterals. The errors it
+    // actually produces are about JUDGING BY APPEARANCE rather than by
+    // properties, and about what happens to a name when shapes are joined or
+    // cut. Partitioning a shape into equal parts and calling each part a
+    // quarter is CCSS 3.G.A.2, which NC does not have at this grade in any
+    // domain, so no tag here names it.
+    entry(
+      'classified-the-shape-by-how-it-looks',
+      'shape-classification',
+      'Decided what a shape is by whether it looks like the usual picture of one, instead of checking the properties its name requires.',
+    ),
+    entry(
+      'judged-the-shape-by-its-orientation',
+      'shape-classification',
+      'Refused a shape its name because it was tilted or standing on a corner, as though turning a shape could change what it is.',
+    ),
+    entry(
+      'expected-the-new-shape-to-keep-the-old-name',
+      'shape-classification',
+      'Expected a shape built from two smaller shapes, or cut out of a bigger one, to have the same name as the shapes it came from.',
+    ),
+    entry(
+      'added-the-sides-of-both-shapes',
+      'shape-classification',
+      'Added up the sides of both shapes being joined, without noticing that the two sides pressed together stop being sides of the new shape.',
+    ),
+    entry(
+      'cut-the-shape-along-the-wrong-line',
+      'shape-classification',
+      'Pictured the cut running corner to corner when the problem describes a cut straight across between two sides, or the other way round.',
+    ),
   ].map((info) => [info.tag, info]),
 );
 

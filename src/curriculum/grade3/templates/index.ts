@@ -11,6 +11,12 @@ import { nf1UnitFractionModel } from './nf1-unit-fraction-model';
 import { nf2FractionOnANumberLine } from './nf2-fraction-on-a-number-line';
 import { nf3EquivalentFraction } from './nf3-equivalent-fraction';
 import { nf4CompareLikeParts } from './nf4-compare-like-parts';
+import { md1ElapsedTimeWithinTheHour } from './md1-elapsed-time-within-the-hour';
+import { md2CustomaryCapacityWordProblem } from './md2-customary-capacity-word-problem';
+import { md5TileAndCountUnitSquares } from './md5-tile-and-count-unit-squares';
+import { md7AreaByMultiplyingSideLengths } from './md7-area-by-multiplying-side-lengths';
+import { md8PerimeterOfARectangle } from './md8-perimeter-of-a-rectangle';
+import { md8UnknownSideLength } from './md8-unknown-side-length';
 
 /** Every parameterized Grade 3 template. Generated items cover the standards
  *  whose practice value is in fresh numbers; reasoning standards and
@@ -117,7 +123,50 @@ import { nf4CompareLikeParts } from './nf4-compare-like-parts';
  *  standard is not marked covered by three equivalence items.
  *
  *  ---------------------------------------------------------------------------
- *  Task 14 appends MD and Geometry generators to this array. */
+ *  MEASUREMENT & DATA (Task 14). Four of the six MD standards have a
+ *  generator, and NC.3.MD.8 has two.
+ *
+ *    NC.3.MD.1  TWO CLOCK TIMES in one sentence, the interval asked for
+ *    NC.3.MD.2  a CAPACITY WORD PROBLEM, one customary unit throughout
+ *    NC.3.MD.5  a TILED FIGURE with no numbers in the question at all
+ *    NC.3.MD.7  TWO SIDE LENGTHS as numerals, no figure, area asked for
+ *    NC.3.MD.8  a LABELLED RECTANGLE, perimeter asked for
+ *    NC.3.MD.8  a PERIMETER given, the unknown short side asked for
+ *
+ *  Three boundaries bind this block, and all three are places where another
+ *  curriculum's or another grade's mathematics is one line away.
+ *
+ *  NC.3.MD.2 IS CUSTOMARY MEASUREMENT (ruling 14-1). Cups, pints, quarts,
+ *  gallons, ounces, pounds; inches to the quarter- and half-inch, feet and
+ *  yards. Grams, kilograms and liters belong to Common Core 3.MD.A.2; NC's
+ *  metric work is Grade 4 NC.4.MD.1 and already ships as
+ *  ../../grade4/templates/md2-metric-convert.ts. Every MD generator here draws
+ *  its unit from a customary list, and ../authored.md.test.ts sweeps 400 seeds
+ *  of each one for a metric word. The standard also says "in the SAME
+ *  customary units", so no generator here converts between two of them.
+ *
+ *  NC.3.MD.1'S INTERVALS STAY INSIDE ONE HOUR (ruling 14-4). Crossing the hour
+ *  is NC.4.MD.8, which has its own shipped Grade 4 content. The generator
+ *  substitutes ONE hour into both printed times and bounds the end minute at
+ *  59 on the draw, so no seed can cross; the algebra is in its file comment,
+ *  and it does not resample.
+ *
+ *  NC.3.MD.5 AND NC.3.MD.7 ARE DIFFERENT SKILLS (ruling 14-5). "6 x 4 = 24
+ *  square units" satisfies both as a string and neither as a skill. MD.5's
+ *  generator prints NO NUMBERS in its question - the tiles are the only data,
+ *  and counting them is the only route. MD.7's prints the two side lengths as
+ *  numerals and draws no tiles. Neither can emit the other's question because
+ *  neither contains the other's data, and the sentinel test below pins that.
+ *
+ *  NC.3.MD.3 (scaled picture and bar graphs) has NO generator, deliberately: a
+ *  graph is a figure to be read, not a number to be varied, and its first
+ *  keyConcept is about asking a good survey question. It is authored in full.
+ *
+ *  ---------------------------------------------------------------------------
+ *  GEOMETRY (Task 14) has no generator at all. NC.3.G.1 is composing and
+ *  decomposing shapes and naming quadrilaterals by their properties; the
+ *  mathematics is entirely in the wording, and swapping a number changes
+ *  nothing. It is authored in ../authored.g.ts. */
 export const GRADE_3_TEMPLATES: QuestionTemplate[] = [
   oa1EqualGroupsArray,
   oa2EqualShares,
@@ -131,6 +180,12 @@ export const GRADE_3_TEMPLATES: QuestionTemplate[] = [
   nf2FractionOnANumberLine,
   nf3EquivalentFraction,
   nf4CompareLikeParts,
+  md1ElapsedTimeWithinTheHour,
+  md2CustomaryCapacityWordProblem,
+  md5TileAndCountUnitSquares,
+  md7AreaByMultiplyingSideLengths,
+  md8PerimeterOfARectangle,
+  md8UnknownSideLength,
 ];
 
 export {
@@ -146,4 +201,10 @@ export {
   nf2FractionOnANumberLine,
   nf3EquivalentFraction,
   nf4CompareLikeParts,
+  md1ElapsedTimeWithinTheHour,
+  md2CustomaryCapacityWordProblem,
+  md5TileAndCountUnitSquares,
+  md7AreaByMultiplyingSideLengths,
+  md8PerimeterOfARectangle,
+  md8UnknownSideLength,
 };

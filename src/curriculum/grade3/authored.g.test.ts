@@ -1,0 +1,116 @@
+import { describe, it, expect } from 'vitest';
+import { assertAuthoredBankSound, numericValue } from '../authoredBank.testkit';
+import { GRADE_3_DOMAINS } from './standards';
+import { GRADE_3_G_AUTHORED } from './authored.g';
+
+const g = GRADE_3_DOMAINS.find((d) => d.id === 'G')!;
+
+function textOf(q: (typeof GRADE_3_G_AUTHORED)[number]): string {
+  return [
+    q.prompt,
+    q.promptDetails ?? '',
+    ...q.options.map((o) => o.text),
+    ...q.explanation.stepByStep,
+    q.explanation.conceptSummary,
+    q.explanation.commonMisconception ?? '',
+  ].join(' ');
+}
+
+describe('grade 3 G authored bank', () => {
+  it('holds every authored-bank invariant', () => {
+    assertAuthoredBankSound(GRADE_3_G_AUTHORED, g);
+  });
+
+  it('names every item g3-g<tail>-NN', () => {
+    for (const q of GRADE_3_G_AUTHORED) {
+      expect(q.id, `${q.id} is not a g3- hyphenated id`).toMatch(/^g3-g\d-\d{2}$/);
+    }
+  });
+
+  // Geometry is a ONE-STANDARD domain carrying half of a 23–27% band with
+  // Measurement & Data, so three items is a floor and not a target.
+  it('carries more than the bare floor', () => {
+    expect(GRADE_3_G_AUTHORED.length).toBeGreaterThanOrEqual(5);
+  });
+
+  it('leaves no item half-guarded against two options naming one quantity', () => {
+    for (const q of GRADE_3_G_AUTHORED) {
+      const numeric = q.options.filter((o) => numericValue(o.text) !== null).length;
+      expect(
+        numeric === 0 || numeric === 4,
+        `${q.id}: ${numeric} of 4 options parse as quantities, so the rest are compared by text only`,
+      ).toBe(true);
+    }
+  });
+
+  // ── Ruling 14-3 ──────────────────────────────────────────────────────────
+  // NC.3.G.1 is composing and decomposing triangles and quadrilaterals, and
+  // examples/non-examples of the named quadrilaterals. Partitioning a shape
+  // into equal parts and naming each part a half, a third or a quarter is
+  // CCSS 3.G.A.2, which NC has at NO grade in this plan's range and certainly
+  // not in Grade 3 Geometry. Geometry has ONE standard, so a single
+  // off-standard item is a third of the domain — on-code, and green.
+  it('partitions no shape into fractional parts', () => {
+    for (const q of GRADE_3_G_AUTHORED) {
+      const t = textOf(q);
+      expect(
+        /\b(one[- ]fourth|a fourth of|quarters?|one[- ]third|a third of|one[- ]half of|partition)\b/i.test(
+          t,
+        ),
+        `${q.id} names a fractional part of a shape — that is CCSS 3.G.A.2, not NC.3.G.1`,
+      ).toBe(false);
+      expect(/\d+\s*\/\s*\d+/.test(t), `${q.id} writes a fraction; NC.3.G.1 has none`).toBe(false);
+    }
+  });
+
+  // Both of NC.3.G.1's keyConcepts, not just the vocabulary one.
+  it('covers composing and decomposing as well as naming quadrilaterals', () => {
+    const blob = GRADE_3_G_AUTHORED.map((q) => textOf(q));
+    expect(
+      blob.some((t) => /slides them together|puts .* together|join/i.test(t)),
+      'no composing item',
+    ).toBe(true);
+    expect(blob.some((t) => /\bcuts?\b/i.test(t)), 'no decomposing item').toBe(true);
+    expect(
+      blob.some((t) => /\btrapezoid\b/i.test(t)),
+      'no trapezoid item, and NC names trapezoids in the standard',
+    ).toBe(true);
+    expect(blob.some((t) => /\brhombus|rhombuses\b/i.test(t)), 'no rhombus item').toBe(true);
+    expect(blob.some((t) => /\bparallelogram\b/i.test(t)), 'no parallelogram item').toBe(true);
+  });
+
+  // NC uses the INCLUSIVE definition of a trapezoid — at least one pair of
+  // parallel sides — so under it every parallelogram is a trapezoid. An item
+  // written from the exclusive definition would have a second correct answer.
+  it('never asserts the exclusive trapezoid definition as correct', () => {
+    for (const q of GRADE_3_G_AUTHORED) {
+      const correct = q.options.find((o) => o.isCorrect)!;
+      expect(
+        /exactly one pair of parallel sides/i.test(correct.text),
+        `${q.id}'s key uses the exclusive trapezoid definition, which NC does not`,
+      ).toBe(false);
+    }
+  });
+
+  // Shape hierarchies overlap — every square is a rectangle AND a rhombus, and
+  // under NC's inclusive definition a parallelogram is a trapezoid. A prose
+  // classification bank is therefore one careless option away from two right
+  // answers, and the shared kit cannot see it because prose has no value to
+  // compare. Every option text in this bank is pinned here so that adding one
+  // means restating, in the review, what makes it false.
+  it('offers exactly one true statement per item', () => {
+    // Every incorrect option, with the reason it is false, restated
+    // independently of the option's own explanation.
+    const falseBecause: Record<string, string> = {
+      'g3-g1-01': 'a square, a long rectangle and a tilted rectangle are all rectangles',
+      'g3-g1-02': 'two squares joined on a full side make a 1-by-2 rectangle, nothing else',
+      'g3-g1-03': 'a straight cut between the midpoints of two opposite sides makes two rectangles',
+      'g3-g1-04': 'only "every square is also a rectangle" holds',
+      'g3-g1-05': 'a square is a rhombus and, inclusively, a trapezoid',
+    };
+    for (const q of GRADE_3_G_AUTHORED) {
+      expect(falseBecause[q.id], `${q.id} is not pinned in the second-true-answer review`).toBeTruthy();
+      expect(q.options.filter((o) => o.isCorrect).length, q.id).toBe(1);
+    }
+  });
+});
