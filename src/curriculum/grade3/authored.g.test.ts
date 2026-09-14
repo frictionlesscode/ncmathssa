@@ -96,9 +96,17 @@ describe('grade 3 G authored bank', () => {
   // under NC's inclusive definition a parallelogram is a trapezoid. A prose
   // classification bank is therefore one careless option away from two right
   // answers, and the shared kit cannot see it because prose has no value to
-  // compare. Every option text in this bank is pinned here so that adding one
-  // means restating, in the review, what makes it false.
-  it('offers exactly one true statement per item', () => {
+  // compare.
+  //
+  // BE CLEAR ABOUT WHAT THIS DOES AND DOES NOT DO. It does NOT decide whether
+  // an option is true — nothing in this repo can, short of a shape-hierarchy
+  // model, and a test named as though it could would be exactly the kind of
+  // guard this plan has twice shipped and had to fix. What it does is force
+  // every item through the human review: adding one means writing down, here,
+  // why its three wrong options are false. The one-correct-option check below
+  // is already made by assertAuthoredBankSound; it is repeated only so this
+  // test fails loudly rather than vacuously if the bank is ever restructured.
+  it('pins every item in the second-true-answer review', () => {
     // Every incorrect option, with the reason it is false, restated
     // independently of the option's own explanation.
     const falseBecause: Record<string, string> = {

@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { assertTemplateSound } from '../../../engine/templateTesting';
 import { makeRng } from '../../../engine/rng';
+import { METRIC_UNIT } from '../metricGuard';
 import { md8PerimeterOfARectangle, SIDE_PAIRS } from './md8-perimeter-of-a-rectangle';
 
 /** Reads the four labeled sides back out of the figure. */
@@ -32,7 +33,6 @@ const optionValue = (
   return Number(opt.text.split(' ')[0]);
 };
 
-const METRIC = /\b(gram|grams|kilogram|kilograms|kg|liter|liters|litre|litres|centimeter|centimeters|meter|meters|metre|metres|milliliter|milliliters|mL)\b/i;
 
 describe('g3.md8.perimeter-of-a-rectangle', () => {
   it('is sound at every seed', () => {
@@ -84,7 +84,7 @@ describe('g3.md8.perimeter-of-a-rectangle', () => {
       const g = md8PerimeterOfARectangle.generate(makeRng(seed));
       const { L, W, unit } = readFigure(g.promptDetails);
       expect(['inches', 'feet', 'yards']).toContain(unit);
-      expect(METRIC.exec(`${g.prompt} ${g.promptDetails}`)?.[0], `seed ${seed}`).toBe(undefined);
+      expect(METRIC_UNIT.exec(`${g.prompt} ${g.promptDetails}`)?.[0], `seed ${seed}`).toBe(undefined);
       expect(L, `seed ${seed}: the long side is not longer`).toBeGreaterThan(W);
       expect(Number(g.answerText.split(' ')[0]), `seed ${seed}`).toBe(2 * (L + W));
       for (const o of g.options) expect(o.text).toMatch(new RegExp(`^\\d+ ${unit}$`));

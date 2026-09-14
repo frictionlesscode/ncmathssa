@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { assertTemplateSound } from '../../../engine/templateTesting';
 import { makeRng } from '../../../engine/rng';
+import { METRIC_UNIT } from '../metricGuard';
 import {
   md2CustomaryCapacityWordProblem,
   POUR_PAIRS,
@@ -27,9 +28,6 @@ const optionValue = (
   return Number(opt.text.split(' ')[0]);
 };
 
-/** RULING 14-1. NC's Grade 3 measurement is CUSTOMARY; grams, kilograms and
- *  liters are Common Core 3.MD.A.2, and NC's metric work is Grade 4. */
-const METRIC = /\b(gram|grams|kilogram|kilograms|kg|liter|liters|litre|litres|centimeter|centimeters|meter|meters|metre|metres|milliliter|milliliters|mL)\b/i;
 
 /** The only capacity units this generator may print. */
 const ALLOWED = new Set(['gallons', 'quarts', 'pints', 'cups', 'gallon', 'quart', 'pint', 'cup']);
@@ -90,7 +88,7 @@ describe('g3.md2.customary-capacity-word-problem', () => {
         g.explanation.conceptSummary,
         g.explanation.commonMisconception ?? '',
       ].join(' ');
-      expect(METRIC.exec(blob)?.[0], `seed ${seed}`).toBe(undefined);
+      expect(METRIC_UNIT.exec(blob)?.[0], `seed ${seed}`).toBe(undefined);
     }
   });
 

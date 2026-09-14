@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { assertTemplateSound } from '../../../engine/templateTesting';
 import { makeRng } from '../../../engine/rng';
+import { METRIC_UNIT } from '../metricGuard';
 import { md7AreaByMultiplyingSideLengths, RECTANGLES } from './md7-area-by-multiplying-side-lengths';
 
 /** Reads the two side lengths and the unit back out of the prompt. */
@@ -24,8 +25,6 @@ const optionValue = (
   return Number(opt.text.split(' ')[0]);
 };
 
-/** RULING 14-1: Grade 3 measurement is customary. */
-const METRIC = /\b(gram|grams|kilogram|kilograms|kg|liter|liters|litre|litres|centimeter|centimeters|meter|meters|metre|metres|milliliter|milliliters|mL)\b/i;
 const CUSTOMARY = new Set(['inches', 'feet', 'yards']);
 
 describe('g3.md7.area-by-multiplying-side-lengths', () => {
@@ -80,7 +79,7 @@ describe('g3.md7.area-by-multiplying-side-lengths', () => {
         g.explanation.conceptSummary,
         g.explanation.commonMisconception ?? '',
       ].join(' ');
-      expect(METRIC.exec(blob)?.[0], `seed ${seed}`).toBe(undefined);
+      expect(METRIC_UNIT.exec(blob)?.[0], `seed ${seed}`).toBe(undefined);
       const { unit } = parse(g.prompt);
       expect(CUSTOMARY.has(unit), `seed ${seed}: ${unit}`).toBe(true);
       for (const o of g.options) {

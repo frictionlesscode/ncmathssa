@@ -1310,6 +1310,18 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
     ),
 
     // -- Grade 3 Measurement & Data: customary measurement (NC.3.MD.2) ---
+    // NOT 'added-without-converting', whose description fits this error but
+    // whose FAMILY is 'unit-conversion'. The family label is the bold headline
+    // a parent reads in WeakSpotsView, and converting between customary units
+    // is exactly what ruling 14-1 establishes is NC.4.MD.1 - next year. Filing
+    // a Grade 3 ruler-reading error there would tell a parent their
+    // eight-year-old is weak at a skill NC does not teach yet. Same resolution
+    // as Task 12 took with 'order-of-operations'.
+    entry(
+      'counted-each-ruler-mark-as-a-whole-unit',
+      'geometry-and-measurement',
+      'Counted each small mark on the ruler as a whole unit and added it to the whole inches, so three quarter-inch marks past the 4 were read as three more inches.',
+    ),
     entry(
       'estimated-ten-times-too-large',
       'geometry-and-measurement',

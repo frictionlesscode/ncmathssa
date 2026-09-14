@@ -77,7 +77,7 @@ export const GRADE_3_MD_AUTHORED: Question[] = [
     // misread before any arithmetic starts.
     prompt: 'What time does the clock show?',
     promptDetails:
-      'A clock with two hands. The short hour hand is a little way past the 2. The long minute hand is pointing at the third small mark after the 8. Each small mark on this clock is one minute, and there are five small marks between one number and the next.',
+      'A clock with two hands. The short hour hand is a little way past the 2. The long minute hand is pointing at the third small mark after the 8. Each small mark on this clock is one minute, and four small marks sit between one number and the next, splitting that gap into five minutes.',
     options: labelOptions([
       // The minute hand at the 8 is 8 fives, which is 40 minutes; three small
       // marks more is 43. The hour hand is past the 2, so the hour is 2.
@@ -228,9 +228,15 @@ export const GRADE_3_MD_AUTHORED: Question[] = [
         isCorrect: false,
         misconception: 'started-the-count-at-the-first-tick-not-at-zero',
       },
-      // Added the 4 whole inches and the 3 small marks as if they were the
-      // same kind of thing: 4 + 3 = 7.
-      { text: '7 inches', isCorrect: false, misconception: 'added-without-converting' },
+      // Counted each of the 3 small marks as a whole inch and added them to
+      // the 4: 4 + 3 = 7. NOT tagged added-without-converting - that tag's
+      // family is 'unit-conversion', and converting between customary units is
+      // NC.4.MD.1, a grade on. The family label is what a parent reads.
+      {
+        text: '7 inches',
+        isCorrect: false,
+        misconception: 'counted-each-ruler-mark-as-a-whole-unit',
+      },
       // Three of the four equal parts past 4 inches is 4 and 3/4 inches.
       { text: '4 3/4 inches', isCorrect: true },
     ]),

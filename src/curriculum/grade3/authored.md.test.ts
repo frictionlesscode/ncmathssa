@@ -8,30 +8,24 @@ import { GRADE_3_DOMAINS } from './standards';
 import { GRADE_3_MD_AUTHORED } from './authored.md';
 import { GRADE_3_TEMPLATES } from './templates';
 import { makeRng } from '../../engine/rng';
+import { METRIC_UNIT, CUSTOMARY_UNIT } from './metricGuard';
 
 /**
  * RULING 14-1, the most serious finding in the Grade 3 pre-flight.
  *
- * NC.3.MD.2 is CUSTOMARY measurement — "cups, pints, quarts, gallons, ounces,
- * and pounds", and lengths "to the quarter-inch and half-inch, and feet and
- * yards". Grams, kilograms and liters are Common Core 3.MD.A.2's vocabulary.
- * NC's metric work is Grade 4 (NC.4.MD.1) and already shipped as
- * grade4/templates/md2-metric-convert.ts.
+ * NC.3.MD.2 is CUSTOMARY measurement. A metric unit anywhere in this domain is
+ * another curriculum's content printed under an NC code, in a 23–27% band, and
+ * every other test in this suite would stay green. So this guard reads EVERY
+ * string a child can see — the prompt, the figure, the options and the worked
+ * solution — of every authored MD item AND of everything the MD generators can
+ * emit.
  *
- * A metric unit anywhere in this domain is another curriculum's content printed
- * under an NC code, in a 23–27% band, and every other test in this suite would
- * stay green. So this guard reads EVERY string a child can see — the prompt,
- * the figure, the options and the worked solution — of every authored MD item
- * AND of everything the MD generators can emit.
- *
- * Note \b around "meter": "perimeter" and "diameter" have a word character
- * before the m, so neither trips this. That is checked below.
+ * The patterns themselves live in ./metricGuard.ts, shared with the four MD
+ * template tests. Five copies of a regex drift, and a copy that quietly stops
+ * matching anything is exactly the failure this guard exists to prevent.
  */
-const METRIC = /\b(gram|grams|kilogram|kilograms|kg|liter|liters|litre|litres|centimeter|centimeters|metre|metres|meter|meters|milliliter|milliliters|mL)\b/i;
-
-/** The only measurement units Grade 3 MD may print. */
-const CUSTOMARY =
-  /\b(inch|inches|foot|feet|yard|yards|cup|cups|pint|pints|quart|quarts|gallon|gallons|ounce|ounces|pound|pounds)\b/i;
+const METRIC = METRIC_UNIT;
+const CUSTOMARY = CUSTOMARY_UNIT;
 
 const md = GRADE_3_DOMAINS.find((d) => d.id === 'MD')!;
 const mdTemplates = GRADE_3_TEMPLATES.filter((t) => t.domainId === 'MD');
@@ -120,14 +114,50 @@ describe('grade 3 MD authored bank', () => {
     }
   });
 
-  // The guard is only trustworthy if it is known not to fire on the words this
-  // domain genuinely needs, and "perimeter" contains "meter".
-  it('does not mistake perimeter or diameter for a metric unit', () => {
-    expect(METRIC.test('What is the perimeter of the rectangle?')).toBe(false);
-    expect(METRIC.test('the diameter of the circle')).toBe(false);
-    expect(METRIC.test('The mass is 4 grams.')).toBe(true);
-    expect(METRIC.test('a 2 liter bottle')).toBe(true);
-    expect(METRIC.test('12 centimeters')).toBe(true);
+  // A guard is only worth having if it is tested in BOTH directions. Half of
+  // this test is the false negatives - the whole metric vocabulary a Grade 3
+  // MD bank could reach for, spelled every way NC's Grade 4 standards and
+  // Common Core spell it, so that a future edit which narrows the pattern into
+  // one that matches nothing goes red here. The other half is the false
+  // positives: Measurement & Data cannot be written without "perimeter" and
+  // "diameter", and both contain "meter".
+  it('catches every metric unit and no word this domain needs', () => {
+    for (const caught of [
+      'The mass is 4 grams.',
+      'a 3 gram weight',
+      'It weighs 2 kilograms.',
+      'a 5 kg bag',
+      'a 2 liter bottle',
+      'two liters of water',
+      'a 2 litre bottle',
+      'It holds 250 milliliters.',
+      'It holds 250 millilitres.',
+      'a 250 mL cup',
+      '12 centimeters',
+      '12 centimetres',
+      'a 30 cm ruler',
+      '4 millimeters',
+      '4 millimetres',
+      'a 7 mm mark',
+      'It is 3 kilometers away.',
+      'It is 3 kilometres away.',
+      'a 5 km run',
+      'The rope is 6 meters long.',
+      'The rope is 6 metres long.',
+    ]) {
+      expect(METRIC.test(caught), `missed the metric unit in "${caught}"`).toBe(true);
+    }
+    for (const allowed of [
+      'What is the perimeter of the rectangle?',
+      'the diameter of the circle',
+      'A pentagon with all five of its sides labeled.',
+      'Each bag of apples weighs 3 pounds.',
+      'The cooler holds 24 quarts of water.',
+      'The ribbon is 4 3/4 inches long.',
+      'a running lane 68 yards long',
+    ]) {
+      expect(METRIC.test(allowed), `wrongly flagged "${allowed}"`).toBe(false);
+    }
   });
 
   // Ruling 14-2. NC.3.MD.2 has a LENGTH strand as well as capacity and weight,

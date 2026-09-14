@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { assertTemplateSound } from '../../../engine/templateTesting';
 import { makeRng } from '../../../engine/rng';
+import { METRIC_UNIT } from '../metricGuard';
 import { md8UnknownSideLength, UNKNOWN_SIDE_CASES } from './md8-unknown-side-length';
 import { md8PerimeterOfARectangle } from './md8-perimeter-of-a-rectangle';
 
@@ -25,7 +26,6 @@ const optionValue = (
   return Number(opt.text.split(' ')[0]);
 };
 
-const METRIC = /\b(gram|grams|kilogram|kilograms|kg|liter|liters|litre|litres|centimeter|centimeters|meter|meters|metre|metres|milliliter|milliliters|mL)\b/i;
 
 describe('g3.md8.unknown-side-length', () => {
   it('is sound at every seed', () => {
@@ -78,7 +78,7 @@ describe('g3.md8.unknown-side-length', () => {
       const g = md8UnknownSideLength.generate(makeRng(seed));
       const { P, L, unit } = parse(g.prompt);
       expect(['inches', 'feet', 'yards']).toContain(unit);
-      expect(METRIC.exec(g.prompt)?.[0], `seed ${seed}`).toBe(undefined);
+      expect(METRIC_UNIT.exec(g.prompt)?.[0], `seed ${seed}`).toBe(undefined);
       expect(P % 2, `seed ${seed}: ${P} is not twice a whole half-perimeter`).toBe(0);
       const W = P / 2 - L;
       expect(W, `seed ${seed}: short side ${W} is not shorter than ${L}`).toBeLessThan(L);
