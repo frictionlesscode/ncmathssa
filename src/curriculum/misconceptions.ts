@@ -1049,6 +1049,15 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Answered an equal-sharing question with the number of groups, which the question already gave, instead of working out how many go in each group.',
     ),
     entry(
+      // Not used-the-wrong-given-quantity, which is about working with a
+      // number the question was not about. Here the division may be chosen
+      // perfectly well; what goes wrong is which of the two factors gets
+      // reported as the missing one, and that is the whole of NC.3.OA.6.
+      'reported-the-factor-that-was-already-given',
+      'operation-choice',
+      'Answered an unknown-factor problem with the factor the equation already showed, instead of the one hidden in the box.',
+    ),
+    entry(
       'confused-the-quotient-with-the-dividend',
       'operation-choice',
       'Read the answer to a division as the total the problem started with, rather than as the share each group receives.',

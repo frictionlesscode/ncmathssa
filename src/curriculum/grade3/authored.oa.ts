@@ -422,11 +422,13 @@ export const GRADE_3_OA_AUTHORED: Question[] = [
     options: labelOptions([
       { text: '42 ÷ 6, and the missing number is 7', isCorrect: true },
       // 42 / 7 = 6 is a true fact, but 6 is the factor the equation already
-      // showed, not the one in the box.
+      // showed, not the one hidden in the box. Reached either by dividing by
+      // the wrong one of the two factors, or by finding 7 correctly and then
+      // reporting the other end of the fact family.
       {
         text: '42 ÷ 7, and the missing number is 6',
         isCorrect: false,
-        misconception: 'used-the-wrong-given-quantity',
+        misconception: 'reported-the-factor-that-was-already-given',
       },
       // 42 - 6 = 36: undid the multiplication by subtracting once.
       {
