@@ -623,34 +623,60 @@ export const GRADE_3_NF_AUTHORED: Question[] = [
     id: 'g3-nf4-04',
     standardCode: 'NC.3.NF.4',
     domainId: 'NF',
-    // SAME DENOMINATOR, which is the standard's other half. Every option
-    // shares a top number or a bottom number with 4/6, so nothing here asks
-    // for the general comparison NC.4.NF.2 owns.
-    prompt: 'Which fraction is greater than 4/6?',
+    // SAME DENOMINATOR, which is the standard's other half and the half no
+    // other authored NF.4 item carries.
+    //
+    // This was first written as "which fraction is greater than 4/6?" with a
+    // 1/6 distractor tagged named-the-unit-fraction-not-the-count. That tag was
+    // wrong: nothing in that item asks a child to NAME a fraction, so no child
+    // reached 1/6 by that error, and a parent whose child picked it would have
+    // been told about a mistake their child did not make. Nor was it a retag,
+    // because every fraction greater than 4/6 and sharing a part with it (5/6,
+    // 6/6, 4/4, 4/3) is a correct answer and so unusable as a distractor. The
+    // item is reshaped instead: a word problem, where the three wrong answers
+    // are three different ways of reading the same two fractions, and each one
+    // is a thing a child says out loud.
+    prompt:
+      'Raj and Sam have sandwiches that are exactly the same size. Raj eats 5/6 of his sandwich and Sam eats 2/6 of his. Who ate more?',
     options: labelOptions([
-      // 2/6: fewer sixths, so less — the comparison was answered backwards.
-      { text: '2/6', isCorrect: false, misconception: 'compared-in-the-wrong-direction' },
-      // 4/8: same count, smaller pieces, so less — picked because 8 is the
-      // bigger number.
-      { text: '4/8', isCorrect: false, misconception: 'larger-denominator-means-larger-fraction' },
-      { text: '5/6', isCorrect: true },
-      // 1/6: named a single sixth instead of counting how many are needed.
-      { text: '1/6', isCorrect: false, misconception: 'named-the-unit-fraction-not-the-count' },
+      // Worked out correctly which is smaller, then answered with that one.
+      {
+        text: 'Sam, because 2 is less than 5.',
+        isCorrect: false,
+        misconception: 'compared-in-the-wrong-direction',
+      },
+      // Matching bottom numbers read as matching amounts.
+      {
+        text: 'They ate the same, because both sandwiches were cut into 6 equal pieces.',
+        isCorrect: false,
+        misconception: 'compared-denominators-only',
+      },
+      {
+        text: 'Raj, because 5 sixths is more sixths than 2 sixths, and every sixth is the same size.',
+        isCorrect: true,
+      },
+      // Counted the pieces still on the plate instead of the pieces eaten: 4
+      // are left of Sam's sandwich and 1 of Raj's, so the leftovers say Sam.
+      {
+        text: 'Sam, because 4 pieces are left of Sam’s sandwich and only 1 piece is left of Raj’s.',
+        isCorrect: false,
+        misconception: 'named-the-unshaded-part',
+      },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
     explanation: {
       stepByStep: [
-        'Step 1: 4/6 is 4 sixths, so anything greater than it must be more than 4 sixths.',
-        'Step 2: 2/6 and 1/6 are fewer sixths than 4/6, so both are smaller.',
-        'Step 3: 4/8 counts 4 pieces too, but eighths are smaller pieces than sixths, so 4/8 is smaller than 4/6.',
-        'Step 4: 5/6 is 5 sixths, one more sixth than 4/6, so 5/6 is the greater fraction.',
+        'Step 1: The sandwiches are the same size and both are cut into 6 equal pieces, so one piece of Raj’s is the same amount as one piece of Sam’s.',
+        'Step 2: The question is about what was EATEN, so count the pieces eaten: Raj ate 5 of his and Sam ate 2 of his.',
+        'Step 3: The pieces are all the same size, so whoever ate more of them ate more sandwich, and 5 is more than 2.',
+        'Step 4: Raj, because 5 sixths is more sixths than 2 sixths, and every sixth is the same size.',
       ],
       conceptSummary:
-        'Two fractions with the same bottom number are counting pieces of the same size, so whichever counts more pieces is greater. Two fractions with the same top number are counting the same number of pieces, so whichever has the bigger pieces is greater.',
+        'When two fractions have the same bottom number they are counting pieces of exactly the same size, so the comparison is just a comparison of the two top numbers. That only works when both fractions are of the same whole, which is why the sandwiches are said to be the same size.',
       commonMisconception:
-        'Picking 4/8 uses the whole-number habit that 8 beats 6. With the same count on top, the bigger bottom number makes the smaller fraction.',
+        'Two different slips lead to Sam. One is working out correctly that 2 is the smaller number and then answering with that one anyway. The other is counting what is LEFT — 4 pieces against 1 — when the question asked what was eaten.',
     },
   },
 ];

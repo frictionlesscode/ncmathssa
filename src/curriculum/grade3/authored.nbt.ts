@@ -89,7 +89,7 @@ export const GRADE_3_NBT_AUTHORED: Question[] = [
         'Step 4: Lena should get the estimate 800.',
       ],
       conceptSummary:
-        'An estimate is for checking, so it has to be made of numbers that are easy to add in your head. Each number is swapped for the nearest hundred first, and then the two hundreds are added.',
+        'An estimate is for checking, so it has to be made of numbers that are easy to add in your head. Each number is swapped for the hundred it sits closest to, and then the two hundreds are added.',
       commonMisconception:
         'Keeping only the hundreds digit turns 289 into 200 and loses almost a whole hundred, so the estimate lands 100 below the real sum instead of beside it.',
     },

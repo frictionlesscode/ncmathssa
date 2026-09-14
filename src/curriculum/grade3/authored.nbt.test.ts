@@ -79,9 +79,21 @@ describe('grade 3 NBT authored bank', () => {
   // "use estimation strategies to assess reasonableness of answers", so the
   // bank estimates by reasoning about which hundred a number is CLOSE TO,
   // which is the standard's mathematics, and never by invoking a rounding rule.
+  //
+  // WHAT THIS GUARD ACTUALLY CATCHES, stated exactly, because a guard weaker
+  // than its own description is false assurance and this plan has shipped one
+  // of those already: it is LEXICAL. It catches the word "round" and its
+  // inflections, and the phrase "nearest ten/hundred/thousand" — which is how
+  // the rounding rule is stated when the word itself is avoided, and which an
+  // earlier draft of g3-nbt2-01's conceptSummary did state. It cannot catch a
+  // rounding item written in some third form of words. That boundary is held
+  // by reading the sourced text, not by this regex; the regex holds the two
+  // phrasings a rounding item written from recall actually arrives in.
   it('never asks a Grade 3 child to round', () => {
+    const ROUNDING = /\bround(s|ed|ing)?\b|\bnearest (ten|hundred|thousand)s?\b/i;
     for (const q of GRADE_3_NBT_AUTHORED) {
-      expect(/\bround(s|ed|ing)?\b/i.test(textOf(q)), `${q.id} asks for rounding`).toBe(false);
+      const hit = ROUNDING.exec(textOf(q));
+      expect(hit?.[0] ?? null, `${q.id} states the rounding rule: "${hit?.[0]}"`).toBeNull();
     }
   });
 
