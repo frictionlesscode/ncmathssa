@@ -1130,6 +1130,144 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'patterns-and-sequences',
       'Turned around which of two skip counts contains the other, saying every number counted by the smaller step also appears in the larger step’s count, when it is only true the other way round.',
     ),
+    // Grade 3 Base Ten. NC.3.NBT.2 is estimation for reasonableness, the
+    // addition/subtraction inverse relationship and expanded-form decomposition;
+    // NC.3.NBT.3 is a one-digit number times a multiple of 10 in the range 10-90.
+    entry(
+      'dropped-the-zero-from-the-multiple-of-ten',
+      'multi-digit-algorithm',
+      'Multiplied by the tens digit of a multiple of 10 but dropped its place, answering 6 x 40 as 24 instead of 240.',
+    ),
+    entry(
+      'lost-the-regrouping-across-a-zero',
+      'multi-digit-algorithm',
+      'Regrouped straight from the hundreds into the ones past a 0 in the tens, leaving the tens digit untouched instead of trading it down to 9.',
+    ),
+    entry(
+      'used-only-the-hundreds-digit',
+      'place-value-and-decimals',
+      'Kept just the hundreds digit of each number when estimating and threw the rest away, so the estimate always comes out too small.',
+    ),
+    entry(
+      'took-both-numbers-up-to-the-next-hundred',
+      'place-value-and-decimals',
+      'Moved both numbers up to the next hundred when estimating, instead of to the hundred each one is actually closest to, so the estimate came out too big.',
+    ),
+    entry(
+      'gave-the-exact-sum-instead-of-an-estimate',
+      'incomplete-procedure',
+      'Worked out the exact answer when the question asked for an estimate, so the reasonableness check the estimate was for never happened.',
+    ),
+    // Grade 3 Fractions - a child's FIRST year of fractions, so these are
+    // foundational: what the two numbers in the symbol mean, what counts as an
+    // equal part, and which whole the fraction is a fraction OF.
+    entry(
+      'read-the-fraction-as-two-whole-numbers',
+      'fraction-operations',
+      'Read a fraction as two separate whole numbers - 1/4 as "one and four" - rather than as one number naming one of four equal parts.',
+    ),
+    entry(
+      'treated-the-denominator-as-a-count-of-wholes',
+      'fraction-operations',
+      'Read the denominator as a number of whole things rather than the number of equal parts one whole is cut into, so 1/3 became one of three whole circles.',
+    ),
+    entry(
+      'counted-parts-without-checking-they-are-equal',
+      'fraction-operations',
+      'Counted how many pieces a whole was cut into without checking that the pieces are the same size, which is what makes any one of them a fraction of the whole.',
+    ),
+    entry(
+      'wrote-the-fraction-upside-down',
+      'fraction-operations',
+      'Wrote the number of equal parts on top and the number of parts counted underneath, turning 1/8 into 8/1.',
+    ),
+    entry(
+      'named-the-unshaded-part',
+      'fraction-operations',
+      'Named the part that was left over instead of the part the question asked about, counting the pieces still there rather than the pieces taken.',
+    ),
+    entry(
+      'named-the-whole-not-one-part',
+      'fraction-operations',
+      'Named the whole thing instead of one of its equal parts, writing 8/8 where 1/8 was asked for.',
+    ),
+    entry(
+      'named-the-unit-fraction-not-the-count',
+      'fraction-operations',
+      'Named one single part instead of counting how many of those parts the question was about, answering 1/6 where 6/6 was asked for.',
+    ),
+    entry(
+      'used-the-denominator-as-the-count',
+      'fraction-operations',
+      'Used the denominator as the number of unit fractions being counted, instead of as the size of each one, so 5/8 was read as eight eighths.',
+    ),
+    entry(
+      'compared-the-part-to-the-rest',
+      'fraction-operations',
+      'Wrote the fraction as the parts counted against the parts left over instead of against the whole, so 4 of 6 pieces became 4/2 rather than 4/6.',
+    ),
+    entry(
+      'read-the-numerator-as-the-whole-number-value',
+      'fraction-operations',
+      'Read the number on top as the value of the whole fraction, so 3/3 was read as 3 rather than as one whole.',
+    ),
+    entry(
+      'wrote-the-whole-number-over-the-denominator',
+      'fraction-operations',
+      'Wrote a whole number as that number over the parts in one whole - 3 as 3/2 - instead of counting how many of those parts make the whole number.',
+    ),
+    // Number-line errors. NC.3.NF.2 asks a child to read a fraction as a number
+    // of unit-fraction LENGTHS from 0, and each of these counts the wrong thing
+    // along the line.
+    entry(
+      'counted-tick-marks-not-intervals',
+      'fraction-operations',
+      'Counted the tick marks on a number line, including the one at 0, instead of the equal spaces between them, so the fraction came out one part too big.',
+    ),
+    entry(
+      'started-the-count-at-the-first-tick-not-at-zero',
+      'fraction-operations',
+      'Began counting the equal parts on a number line at the first tick mark after 0 instead of at 0 itself, so the fraction came out one part too small.',
+    ),
+    entry(
+      'counted-back-from-the-whole',
+      'fraction-operations',
+      'Counted the equal parts between the point and 1 instead of the parts from 0 up to the point, naming the part of the whole that is left over.',
+    ),
+    // Equivalence errors (NC.3.NF.3).
+    entry(
+      'changed-the-denominator-but-not-the-numerator',
+      'fraction-operations',
+      'Rewrote a fraction with a new denominator but left the numerator alone, so the new fraction names a smaller amount than the one it was supposed to match.',
+    ),
+    entry(
+      'scaled-the-numerator-but-not-the-denominator',
+      'fraction-operations',
+      'Multiplied the numerator to build an equivalent fraction but left the denominator alone, so the new fraction names a larger amount than the one it came from.',
+    ),
+    // Comparison errors (NC.3.NF.4). larger-denominator-means-larger-fraction and
+    // compared-numerators-only already exist and carry the two headline errors;
+    // these are the ones the sourced Grade 3 text adds on top of them.
+    entry(
+      'compared-denominators-only',
+      'fraction-operations',
+      'Called two fractions equal because their denominators match, ignoring that the numerators count different numbers of those parts.',
+    ),
+    entry(
+      'compared-in-the-wrong-direction',
+      'fraction-operations',
+      'Worked out correctly which of two fractions is bigger, then answered with the other one - or pointed the > or < symbol at the wrong fraction.',
+    ),
+    entry(
+      'treated-different-cuts-as-different-wholes',
+      'fraction-operations',
+      'Decided two fractions could not be compared because the wholes were cut into different numbers of parts, even though the wholes themselves were the same size.',
+    ),
+    entry(
+      'ignored-the-size-of-the-whole',
+      'fraction-operations',
+      'Compared two fractions of different-sized wholes as if the wholes were the same, treating 1/2 of a small pizza as equal to 1/2 of a large one.',
+    ),
   ].map((info) => [info.tag, info]),
 );
 

@@ -94,6 +94,13 @@ describe('GRADE_3_TEMPLATES', () => {
       'g3.oa3.one-step-word-problem': /^[\w. ]+ has \d+ \w+\. Each \w+ (?:holds|seats) \d+ /,
       'g3.oa6.missing-factor': /^What number goes in the box to make the equation /,
       'g3.oa7.multiplication-fact': /^What is \d+ × \d+\?$/,
+      'g3.nbt2.add-within-1000': /^Add\.$/,
+      'g3.nbt2.subtract-within-1000': /^Subtract\.$/,
+      'g3.nbt3.multiply-by-multiple-of-ten': /^Each group below shows \d+ tens?\. What is \d+ × \d+\?$/,
+      'g3.nf1.unit-fraction-model': /^Which one shows 1\/\d of a whole [a-z ]+\?$/,
+      'g3.nf2.fraction-on-a-number-line': /^Which fraction does point P name\?$/,
+      'g3.nf3.equivalent-fraction': /^Which fraction names the same amount as \d+\/\d+\?$/,
+      'g3.nf4.compare-like-parts': /^Which comparison is true\?$/,
     };
     expect(Object.keys(sentinels).sort()).toEqual(GRADE_3_TEMPLATES.map((t) => t.id).sort());
     for (const t of GRADE_3_TEMPLATES) {
