@@ -1420,6 +1420,83 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'shape-classification',
       'Pictured the cut running corner to corner when the problem describes a cut straight across between two sides, or the other way round.',
     ),
+
+    // -- Grade 2 Operations & Algebraic Thinking (NC.2.OA.1-4) -----------
+    // Grade 2's errors are about the counting PROCESS, not an algorithm going
+    // wrong - the existing operation-choice and incomplete-procedure tags were
+    // built for multi-digit and multiplicative work and have nothing for a
+    // seven-year-old counting on by ones and losing the count by one.
+    entry(
+      'counted-on-by-ones-and-stopped-one-short',
+      'incomplete-procedure',
+      'Counted on or back by ones to solve a fact within 20 and stopped one count short of the correct total.',
+    ),
+    entry(
+      'counted-on-by-ones-one-too-many',
+      'incomplete-procedure',
+      'Counted on or back by ones to solve a fact within 20 and took one extra count past the correct total.',
+    ),
+    entry(
+      'restated-a-known-number-instead-of-solving',
+      'incomplete-procedure',
+      'Answered a missing-number equation with one of the numbers the problem already gave, instead of solving for the unknown.',
+    ),
+    entry(
+      'miscounted-while-pairing-the-objects',
+      'incomplete-procedure',
+      'Lost track while pairing up a group of objects to check for odd or even, and reported the opposite of what the group actually pairs into.',
+    ),
+    entry(
+      'judged-the-total-by-the-count-of-pairs',
+      'incomplete-procedure',
+      "Decided odd or even from whether the number of PAIRS is odd or even, instead of from whether any object is left without a partner.",
+    ),
+    entry(
+      'added-rows-and-columns-instead-of-repeated-addition',
+      'operation-choice',
+      'Added the number of rows to the number of columns instead of writing the array as one row size repeated once for every row.',
+    ),
+
+    // -- Grade 2 Geometry (NC.2.G.1, NC.2.G.3) ----------------------------
+    // G.1 spans flat shapes named by side count AND the faces/edges/corners of
+    // rectangular prisms and cubes; G.3 is partitioning into equal shares. Both
+    // are new topics for this vocabulary - Grade 5 never counts a solid's faces
+    // or names a fraction of a whole from a picture instead of a number.
+    entry(
+      'confused-the-shape-name-with-its-side-count',
+      'shape-classification',
+      'Matched a shape to the wrong name for its number of sides, such as calling a five-sided shape a hexagon or a six-sided shape a pentagon.',
+    ),
+    entry(
+      'counted-only-the-visible-faces',
+      'shape-classification',
+      'Counted only the faces of a solid that are visible in a picture of it, instead of counting the faces hidden from view as well.',
+    ),
+    entry(
+      'counted-the-corners-instead-of-the-faces',
+      'shape-classification',
+      "Counted a solid's corners (vertices) and reported that count as its number of faces.",
+    ),
+    entry(
+      'counted-the-edges-instead-of-the-faces',
+      'shape-classification',
+      "Counted a solid's edges and reported that count as its number of faces.",
+    ),
+    entry(
+      'called-unequal-parts-equal-shares',
+      'geometry-and-measurement',
+      'Split a shape into parts of different sizes but named them halves, thirds, or fourths anyway, because the shape was cut into the right number of pieces.',
+    ),
+    entry(
+      'miscounted-the-number-of-equal-shares',
+      'geometry-and-measurement',
+      'Miscounted how many equal parts a shape was split into, and so used the wrong share word (halves, thirds, or fourths) for it.',
+    ),
+    entry(
+      'expected-equal-shares-to-look-alike',
+      'geometry-and-measurement',
+      'Assumed that two equal shares of the same whole must be the same shape, and rejected a correct, equally-sized split because its pieces look different.',
+    ),
   ].map((info) => [info.tag, info]),
 );
 
