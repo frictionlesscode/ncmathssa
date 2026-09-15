@@ -82,9 +82,11 @@ describe('GRADE_2_TEMPLATES', () => {
       'g2.nbt2.skip-count': /^Skip-count\. What are the next three numbers\?$/,
       'g2.nbt3.expanded-form': /^Which one shows this number in expanded form\?$/,
       'g2.nbt4.compare-three-digit': /^Which sentence is true\?$/,
-      'g2.nbt5.within-100': /^Work this out in your head\.$/,
+      'g2.nbt5.add-within-100': /^Add these numbers in your head\.$/,
+      'g2.nbt5.subtract-within-100': /^Subtract these numbers in your head\.$/,
       'g2.nbt6.three-addend-sum': /^Add all of the numbers\.$/,
-      'g2.nbt7.within-1000': /^Line the numbers up by place value, then work it out\.$/,
+      'g2.nbt7.add-within-1000': /^Line the numbers up by place value, then add\.$/,
+      'g2.nbt7.subtract-within-1000': /^Line the numbers up by place value, then subtract\.$/,
       'g2.nbt8.ten-or-hundred': /^Do this in your head\. No counting on\.$/,
     };
     expect(Object.keys(sentinels).sort()).toEqual(GRADE_2_TEMPLATES.map((t) => t.id).sort());

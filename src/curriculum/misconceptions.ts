@@ -1676,9 +1676,14 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
 
     // NC.2.NBT.8 — mentally adding or subtracting 10 or 100, which the sourced
     // text requires be done WITHOUT counting on.
+    // Same underlying habit as `counted-on-by-ones-instead-of-using-place-value`
+    // above — reaching for a count by ones where place value was available — so
+    // it sits in the SAME family. Splitting the two across families would report
+    // one habit to a parent under two different headlines depending on which
+    // item happened to catch it.
     entry(
       'counted-by-ones-and-lost-the-count',
-      'incomplete-procedure',
+      'place-value-and-decimals',
       'Counted on or back by ones instead of taking the whole ten or hundred at once, and lost the count along the way, landing a step short of the right number.',
     ),
   ].map((info) => [info.tag, info]),

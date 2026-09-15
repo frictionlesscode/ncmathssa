@@ -126,10 +126,14 @@ describe('g2.nbt6.three-addend-sum', () => {
       }
     }
     expect(failures.slice(0, 10)).toEqual([]);
-    expect(drawn, 'combined draw space').toBe(
-      TENS_PAIRS.length * ONES_PAIRS.length + TENS_TRIPLES.length * ONES_TRIPLES.length,
-    );
-    expect(TENS_PAIRS.length).toBeGreaterThan(0);
-    expect(TENS_TRIPLES.length).toBeGreaterThan(0);
+    // LITERAL pinned counts, like every sibling template test in this task. An
+    // expected total recomputed from the same four lengths the loops iterate
+    // cannot fail, so it is written out: 44 x 45 = 1,980 two-addend draws and
+    // 480 x 525 = 252,000 three-addend draws.
+    expect(TENS_PAIRS.length, 'two-addend tens lists').toBe(44);
+    expect(ONES_PAIRS.length, 'two-addend ones lists').toBe(45);
+    expect(TENS_TRIPLES.length, 'three-addend tens lists').toBe(480);
+    expect(ONES_TRIPLES.length, 'three-addend ones lists').toBe(525);
+    expect(drawn, 'combined draw space').toBe(253980);
   });
 });

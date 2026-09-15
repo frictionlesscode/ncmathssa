@@ -46,6 +46,24 @@ describe('grade 2 NBT authored bank', () => {
     }
   });
 
+  // NC.2.NBT.4's sourced text is "using >, =, and < symbols" — all three. The
+  // generator's construction always makes one number strictly greater, so = can
+  // only ever be a distractor there; if it were only a distractor here too, a
+  // child could answer every NC.2.NBT.4 item in the app by never picking the
+  // one with an = in it.
+  it('keys at least one NC.2.NBT.4 item on =', () => {
+    const items = GRADE_2_NBT_AUTHORED.filter((q) => q.standardCode === 'NC.2.NBT.4');
+    expect(items.length, 'NC.2.NBT.4 needs all three symbols covered').toBeGreaterThanOrEqual(4);
+    // > and < are covered between these items and the generator, which draws
+    // both orientations. = is the one no generator can produce, because its
+    // construction always makes one number strictly greater.
+    const keyedOnEquals = items.filter((q) => /=/.test(q.options.find((o) => o.isCorrect)!.text));
+    expect(
+      keyedOnEquals.length,
+      'no NC.2.NBT.4 item is keyed on =, so "never pick the = option" answers them all',
+    ).toBeGreaterThanOrEqual(1);
+  });
+
   // NC.2.NBT.8 is "10 OR 100", not "10 and 100" (ruling 18-6): every item names
   // one amount at a time, and at least one of them makes the child tell the two
   // apart within a single question.

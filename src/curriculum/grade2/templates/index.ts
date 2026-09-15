@@ -7,9 +7,11 @@ import { nbt1VariousGroupings } from './nbt1-various-groupings';
 import { nbt2SkipCount } from './nbt2-skip-count';
 import { nbt3ExpandedForm } from './nbt3-expanded-form';
 import { nbt4CompareThreeDigit } from './nbt4-compare-three-digit';
-import { nbt5Within100 } from './nbt5-within-100';
+import { nbt5AddWithin100 } from './nbt5-add-within-100';
+import { nbt5SubtractWithin100 } from './nbt5-subtract-within-100';
 import { nbt6ThreeAddendSum } from './nbt6-three-addend-sum';
-import { nbt7Within1000 } from './nbt7-within-1000';
+import { nbt7AddWithin1000 } from './nbt7-add-within-1000';
+import { nbt7SubtractWithin1000 } from './nbt7-subtract-within-1000';
 import { nbt8TenOrHundred } from './nbt8-ten-or-hundred';
 
 /** Every parameterized Grade 2 template, from Task 17 (OA and Geometry) and
@@ -43,7 +45,8 @@ import { nbt8TenOrHundred } from './nbt8-ten-or-hundred';
  *
  *  ── Base Ten ──────────────────────────────────────────────────────────────
  *
- *  Every one of the eight NC.2.NBT standards has a generator here, because
+ *  Every one of the eight NC.2.NBT standards has a generator here — ten
+ *  templates in all, because NC.2.NBT.5 and NC.2.NBT.7 each get two — because
  *  Base Ten is where Grade 2's procedures live and a procedure is learned on
  *  numbers a child has not seen before. Each one takes the half of its
  *  standard that changing the numbers actually changes, and leaves the rest to
@@ -55,11 +58,16 @@ import { nbt8TenOrHundred } from './nbt8-ten-or-hundred';
  *                unitizing and "100 … 900 are N hundreds with 0 tens and 0
  *                ones", are single facts that fresh numbers do not exercise,
  *                and are authored (g2-nbt1-01, g2-nbt1-02).
- *    NC.2.NBT.2  SKIP-COUNTING by 5s, 10s or 100s from a start that is never
- *                a multiple of the step. Plain counting within 1,000 is
- *                authored (g2-nbt2-01), because the only interesting case is
- *                the moment a hundred rolls over and a random start almost
- *                never lands on it.
+ *    NC.2.NBT.2  SKIP-COUNTING by 5s, 10s or 100s. A count by 10s starts on a
+ *                number whose ones digit is non-zero and a count by 100s on one
+ *                whose tens AND ones digits are both non-zero, so neither can
+ *                be answered by reciting 10, 20, 30 or 100, 200, 300 — the
+ *                count has to carry the lower digits along. A count by 5s does
+ *                start on a multiple of 5, because that is what counting by
+ *                fives means. Plain counting within 1,000 is authored
+ *                (g2-nbt2-01), because the only interesting case is the moment
+ *                a hundred rolls over and a random start almost never lands
+ *                on it.
  *    NC.2.NBT.3  EXPANDED FORM. The standard's other two representations,
  *                base-ten numerals and number NAMES, turn on English number
  *                words — "four hundred seven" heard as forty-seven — and a
@@ -71,12 +79,14 @@ import { nbt8TenOrHundred } from './nbt8-ten-or-hundred';
  *                its reason, because the standard says "based on the VALUE of
  *                the hundreds, tens, and ones digits" and a bare symbol is
  *                answerable by guessing.
- *    NC.2.NBT.5  addition and subtraction WITHIN 100, one regrouping each.
+ *    NC.2.NBT.5  addition WITHIN 100 and subtraction WITHIN 100, as TWO
+ *                templates, one regrouping each.
  *    NC.2.NBT.6  two or three TWO-DIGIT addends — never four, whatever the
  *                Common Core standard of the same number says (ruling 18-1) —
  *                with the total held above 100 so the item is not something
  *                NC.2.NBT.5 already owns.
- *    NC.2.NBT.7  addition and subtraction WITHIN 1,000.
+ *    NC.2.NBT.7  addition WITHIN 1,000 and subtraction WITHIN 1,000, as TWO
+ *                templates.
  *    NC.2.NBT.8  10 OR 100 more or less, mentally, on a number 100–900. All
  *                four combinations are drawn, and the amount NOT asked for is
  *                always a distractor, because using one where the other
@@ -99,10 +109,27 @@ import { nbt8TenOrHundred } from './nbt8-ten-or-hundred';
  *  division Grade 4 records for its own procedure standards in
  *  `../../grade4/templates/index.ts`.
  *
- *  Unlike Grade 4 (and Grade 3's NC.3.NBT.2), no standard here splits into two
- *  templates. Grade 2's house style, set by `./oa2-fluency-fact.ts` in Task
- *  17, is one generator per standard with both operations drawn inside it, and
- *  Base Ten follows it. */
+ *  BOTH OF THOSE STANDARDS SPLIT INTO TWO TEMPLATES, one per operation, and
+ *  this is not a stylistic choice. A review key is seedless — it is
+ *  `{kind:'generated', templateId}` and carries no seed
+ *  (`../../../engine/questionModel.ts`) — so a single template drawing
+ *  addition or subtraction by coin flip lets a child who failed a subtraction
+ *  item be re-served an addition item under the IDENTICAL key, answer it, and
+ *  have a real borrowing failure retired as mastered with the borrowing never
+ *  retested. The two operations also emit disjoint misconception sets (carry
+ *  errors against borrow errors, with an empty intersection in both standards),
+ *  which is the design spec's own test for when one template id is really two
+ *  skills. This follows the precedent already set on either side of Grade 2:
+ *  Grade 3 splits NC.3.NBT.2 into `../../grade3/templates/nbt2-add-within-1000.ts`
+ *  and `nbt2-subtract-within-1000.ts`, and Grade 4 splits NC.4.NBT.4 into
+ *  `../../grade4/templates/nbt4-add.ts` and `nbt4-subtract.ts`, both citing
+ *  exactly this seedless-review-key argument.
+ *
+ *  `./oa2-fluency-fact.ts` still draws both operations from one template, and
+ *  that stays: it is single-digit fact recall within 20, where there is no
+ *  regrouping procedure to fail at, and its two directions SHARE two of their
+ *  three misconception tags (both count on by ones, one short and one too many)
+ *  instead of partitioning into disjoint sets. */
 export const GRADE_2_TEMPLATES: QuestionTemplate[] = [
   oa1ChangeUnknown,
   oa2FluencyFact,
@@ -112,9 +139,11 @@ export const GRADE_2_TEMPLATES: QuestionTemplate[] = [
   nbt2SkipCount,
   nbt3ExpandedForm,
   nbt4CompareThreeDigit,
-  nbt5Within100,
+  nbt5AddWithin100,
+  nbt5SubtractWithin100,
   nbt6ThreeAddendSum,
-  nbt7Within1000,
+  nbt7AddWithin1000,
+  nbt7SubtractWithin1000,
   nbt8TenOrHundred,
 ];
 
@@ -127,8 +156,10 @@ export {
   nbt2SkipCount,
   nbt3ExpandedForm,
   nbt4CompareThreeDigit,
-  nbt5Within100,
+  nbt5AddWithin100,
+  nbt5SubtractWithin100,
   nbt6ThreeAddendSum,
-  nbt7Within1000,
+  nbt7AddWithin1000,
+  nbt7SubtractWithin1000,
   nbt8TenOrHundred,
 };

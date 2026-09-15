@@ -229,8 +229,9 @@ export const GRADE_2_NBT_AUTHORED: Question[] = [
       // Bumped the hundreds digit instead of counting on one: 599 + 100.
       { text: '699', isCorrect: false, misconception: 'wrong-power-of-ten' },
       { text: '600', isCorrect: true },
-      // Said "five hundred, one hundred" and wrote it down that way instead of
-      // trading up to the next hundred.
+      // Counted the hundreds instead of trading up: wrote the hundreds-digit
+      // count "5" and then wrote the next hundred, "100", beside it — two
+      // counts concatenated rather than one numeral.
       { text: '5,100', isCorrect: false, misconception: 'wrote-the-next-hundred-beside-the-old-one' },
     ]),
     calculatorAllowed: false,
@@ -525,9 +526,10 @@ export const GRADE_2_NBT_AUTHORED: Question[] = [
       { text: 'No. 419 < 462, because 1 ten is less than 6 tens', isCorrect: true },
       // Agreed with Deja: compared the ones digits and ignored the tens.
       { text: 'Yes. 419 > 462, because 9 ones is more than 2 ones', isCorrect: false, misconception: 'compared-the-wrong-place-first' },
-      // Counted digits instead of comparing places — and both numbers have
-      // three digits, so there is nothing to count.
-      { text: 'Yes. 419 > 462, because 419 has more digits than 462', isCorrect: false, misconception: 'compared-by-digit-count-not-place-value' },
+      // Counted digits instead of comparing places, found a tie at three
+      // digits each, and called the numbers equal — the same shape the
+      // generator gives this error in `./templates/nbt4-compare-three-digit.ts`.
+      { text: 'No. 419 = 462, because both numbers have three digits', isCorrect: false, misconception: 'compared-by-digit-count-not-place-value' },
       // Stopped after the hundreds place, where the digits match.
       { text: 'No. 419 = 462, because both numbers have 4 hundreds', isCorrect: false, misconception: 'stopped-comparing-too-soon' },
     ]),
@@ -576,6 +578,45 @@ export const GRADE_2_NBT_AUTHORED: Question[] = [
         'The hundreds place outranks everything to its right. A number with 5 hundreds beats every number with 4 hundreds, no matter what its tens and ones digits look like.',
       commonMisconception:
         'The 9 in 509 and the 7 in 472 are the biggest single digits on the page, and neither one matters. A digit is only worth as much as the place it sits in.',
+    },
+  },
+  {
+    id: 'g2-nbt4-04',
+    standardCode: 'NC.2.NBT.4',
+    domainId: 'NBT',
+    // The standard names ">, =, AND <", and = is the symbol nothing else in
+    // this standard's content ever keys: the generator's construction always
+    // makes one number strictly greater, and g2-nbt4-01/02/03 all answer with
+    // > or <. Without this item a child could learn that an option containing
+    // "=" is never the answer, which is a rule about the test rather than
+    // about mathematics. Two representations of the SAME number are the
+    // honest way to make = true.
+    prompt: 'Which sentence about 500 + 30 + 7 and 537 is TRUE?',
+    options: labelOptions([
+      // Counted how many digits are written on each side instead of comparing
+      // what the two sides are worth.
+      { text: '500 + 30 + 7 > 537, because 500 + 30 + 7 is written with more digits than 537', isCorrect: false, misconception: 'compared-by-digit-count-not-place-value' },
+      { text: '500 + 30 + 7 = 537, because 5 hundreds, 3 tens, and 7 ones is 537', isCorrect: true },
+      // Added the first two parts, compared, and never came back for the 7.
+      { text: '500 + 30 + 7 < 537, because 500 + 30 is 530, and 530 is less than 537', isCorrect: false, misconception: 'forgot-the-final-step' },
+      // Wrote the three parts down next to each other instead of adding what
+      // each one is worth, so the expanded form became 5,307.
+      { text: '500 + 30 + 7 > 537, because 500, 30, and 7 written side by side make 5,307', isCorrect: false, misconception: 'wrote-the-digits-side-by-side-instead-of-adding-the-values' },
+    ]),
+    calculatorAllowed: false,
+    isStretch: false,
+    difficulty: 'mastery',
+    explanation: {
+      stepByStep: [
+        'Step 1: 500 + 30 + 7 is 537 written out one place at a time: 5 hundreds, 3 tens, and 7 ones.',
+        'Step 2: Add the parts back together. 500 + 30 = 530.',
+        'Step 3: 530 + 7 = 537, which is exactly the number on the other side.',
+        'Step 4: 500 + 30 + 7 = 537, because 5 hundreds, 3 tens, and 7 ones is 537.',
+      ],
+      conceptSummary:
+        'The = symbol says the two sides are worth the same, not that they look the same. 500 + 30 + 7 and 537 are two ways of writing one number, so neither > nor < can be true of them.',
+      commonMisconception:
+        'A longer-looking side is not a bigger one. 500 + 30 + 7 takes more room on the page than 537 and counts more digits, and it is still the very same number.',
     },
   },
 
