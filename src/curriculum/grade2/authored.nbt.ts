@@ -599,9 +599,10 @@ export const GRADE_2_NBT_AUTHORED: Question[] = [
       { text: '500 + 30 + 7 = 537, because 5 hundreds, 3 tens, and 7 ones is 537', isCorrect: true },
       // Added the first two parts, compared, and never came back for the 7.
       { text: '500 + 30 + 7 < 537, because 500 + 30 is 530, and 530 is less than 537', isCorrect: false, misconception: 'forgot-the-final-step' },
-      // Wrote the three parts down next to each other instead of adding what
-      // each one is worth, so the expanded form became 5,307.
-      { text: '500 + 30 + 7 > 537, because 500, 30, and 7 written side by side make 5,307', isCorrect: false, misconception: 'wrote-the-digits-side-by-side-instead-of-adding-the-values' },
+      // Wrote the counts of hundreds, tens, and ones down next to each other
+      // instead of adding what each one is worth: 5, 30, and 7 concatenated
+      // read as 5,307.
+      { text: '500 + 30 + 7 > 537, because 5, 30, and 7 written side by side make 5,307', isCorrect: false, misconception: 'wrote-the-digits-side-by-side-instead-of-adding-the-values' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
