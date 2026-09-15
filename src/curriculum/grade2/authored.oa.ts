@@ -70,8 +70,8 @@ export const GRADE_2_OA_AUTHORED: Question[] = [
       { text: '23', isCorrect: false, misconception: 'added-instead-of-subtracted' },
       // Restated the 8 that was already given instead of solving for ☐.
       { text: '8', isCorrect: false, misconception: 'restated-a-known-number-instead-of-solving' },
-      // Counted back from 15 by ones but stopped one count short: 6 instead of 7.
-      { text: '6', isCorrect: false, misconception: 'counted-on-by-ones-and-stopped-one-short' },
+      // Counted back from 15 by ones but took one extra count: 6 instead of 7.
+      { text: '6', isCorrect: false, misconception: 'counted-on-by-ones-one-too-many' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
