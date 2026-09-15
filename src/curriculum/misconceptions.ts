@@ -1497,6 +1497,190 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'geometry-and-measurement',
       'Assumed that two equal shares of the same whole must be the same shape, and rejected a correct, equally-sized split because its pieces look different.',
     ),
+
+    // -- Grade 2 Number & Operations in Base Ten (NC.2.NBT.1-8) -----------
+    // Grade 2 is the year place value begins, and almost none of the existing
+    // place-value vocabulary fits it. Those tags were written for DECIMALS
+    // (compared-by-digit-count, same-digits-read-as-equal, word-form-place-
+    // value-shifted all name the decimal part of a number) or for Grade 3
+    // estimation and multiples of ten. A seven-year-old who loses a hundred
+    // inside a trade, restarts a count at the top of a hundred, or reads
+    // "four hundred seven" as forty-seven has made none of those mistakes, and
+    // the family label is the bold headline a parent reads.
+    //
+    // A handful of existing tags DO fit exactly and are reused rather than
+    // duplicated: skipped-the-zero-place, wrote-the-digit-not-its-value,
+    // wrong-power-of-ten, compared-the-wrong-place-first,
+    // stopped-comparing-too-soon, added-without-carrying,
+    // carried-into-the-wrong-column, subtracted-without-regrouping,
+    // borrowed-without-reducing-the-next-column and forgot-the-final-step.
+
+    // NC.2.NBT.1 — hundreds, tens and ones; unitizing and various groupings.
+    entry(
+      'counted-the-tens-as-ones',
+      'place-value-and-decimals',
+      'Reported how many groups of ten there are when the question asked how many single ones they make altogether, so the tens were never unitized back into ones.',
+    ),
+    entry(
+      'added-the-two-tens-instead-of-unitizing',
+      'place-value-and-decimals',
+      'Added the two tens printed in the problem — 10 bundles and 10 in each — instead of taking ten groups OF ten, so ten tens came out as 20 rather than 100.',
+    ),
+    entry(
+      'copied-the-digit-into-every-place',
+      'place-value-and-decimals',
+      'Read a number whose other places hold zeros as if its one non-zero digit filled every place, so 400 was read as 4 hundreds, 4 tens, and 4 ones.',
+    ),
+    entry(
+      // The two halves of a hundreds/tens trade, told apart on purpose. A
+      // parent needs to know whether their child dropped a hundred or counted
+      // one twice; both are "regrouping", and they need opposite repairs.
+      'lost-the-hundred-in-the-trade',
+      'place-value-and-decimals',
+      'Traded between hundreds and tens when regrouping a number, but counted only one side of the trade, so a whole hundred went missing from the number.',
+    ),
+    entry(
+      'kept-the-hundred-and-the-ten-tens-both',
+      'place-value-and-decimals',
+      'Traded one hundred for ten tens but kept the hundred as well, counting the same hundred twice and making the number 100 too large.',
+    ),
+    entry(
+      'traded-a-hundred-for-one-ten',
+      'place-value-and-decimals',
+      'Traded one hundred for a single ten instead of for ten tens, so the number lost 90 in a trade that should have changed nothing.',
+    ),
+    entry(
+      'wrote-the-digits-side-by-side-instead-of-adding-the-values',
+      'place-value-and-decimals',
+      'Wrote the counts of hundreds, tens and ones next to each other as digits instead of adding what each group is worth, so 4 hundreds and 12 tens was written 412 rather than 520.',
+    ),
+
+    // NC.2.NBT.2 — counting and skip-counting within 1,000. The three
+    // sequence-shaped errors below are filed under patterns-and-sequences,
+    // whose own note describes it as "how many times the rule is applied,
+    // where the count starts, and whether the rule is additive" — which is
+    // exactly what goes wrong in a skip count. The two that are really about
+    // a hundred rolling over stay in place value.
+    entry(
+      'restarted-the-count-at-the-start-of-the-hundred',
+      'place-value-and-decimals',
+      'Reached the end of a hundred while counting and went back to the start of that same hundred instead of moving on into the next one, so 599 was followed by 500.',
+    ),
+    entry(
+      'wrote-the-next-hundred-beside-the-old-one',
+      'place-value-and-decimals',
+      'Counted past the end of a hundred by writing another hundred next to the one already there — 599 followed by 5,100 — instead of trading up to 600.',
+    ),
+    entry(
+      'counted-by-ones-instead-of-the-given-step',
+      'patterns-and-sequences',
+      'Counted on by ones when the question asked for a skip count, so the numbers went up by 1 each time instead of by the step named.',
+    ),
+    entry(
+      'skip-counted-by-the-wrong-step',
+      'patterns-and-sequences',
+      'Skip-counted by a different amount from the one asked for, such as stepping by 10s when the question said 5s.',
+    ),
+    entry(
+      'listed-the-starting-number-as-the-first-count',
+      'patterns-and-sequences',
+      'Wrote the number the count starts FROM as the first number counted, so every number in the list came out one step early.',
+    ),
+    entry(
+      'changed-the-hundreds-digit-and-dropped-the-rest',
+      'place-value-and-decimals',
+      'Counted by hundreds by reciting 100, 200, 300 instead of adding 100 to the number given, so the tens and ones were thrown away — 380 counted on as 400, 500, 600 rather than 480, 580, 680.',
+    ),
+    entry(
+      'jumped-to-the-next-ten-instead-of-adding-ten',
+      'place-value-and-decimals',
+      'Jumped to the next number ending in 0 instead of adding 10 to the number given, so the first step was short and the whole count sat on the wrong numbers.',
+    ),
+
+    // NC.2.NBT.3 — reading and writing within 1,000 in numerals, number names
+    // and expanded form.
+    entry(
+      // Broad on direction on purpose: the same substitution happens writing a
+      // numeral from its name (470 for four hundred seven) and reading a
+      // numeral out (521 for 512). Naming one direction would describe the
+      // opposite of what half the children who make it actually did.
+      'put-a-digit-in-the-wrong-place',
+      'place-value-and-decimals',
+      'Wrote a digit in the wrong place-value column when moving between a number and its name or its expanded form, so the digits are all right and the number is not.',
+    ),
+    entry(
+      'left-off-part-of-the-number-name',
+      'place-value-and-decimals',
+      'Left part of a number out when moving between its digits and its name — writing 400 for four hundred seven, or reading 512 as five hundred two.',
+    ),
+    entry(
+      'read-the-digits-one-at-a-time',
+      'place-value-and-decimals',
+      'Read the digits of a number out separately, the way a phone number is read, so 512 became "five hundred one two" instead of five hundred twelve.',
+    ),
+
+    // NC.2.NBT.4 — comparing three-digit numbers by the VALUE of each place.
+    entry(
+      // Not same-digits-read-as-equal, which is that tag's decimal sibling and
+      // whose description names decimals outright. A Grade 2 child comparing
+      // 638 with 683 has never met a decimal.
+      'same-digits-read-as-the-same-number',
+      'place-value-and-decimals',
+      'Called two whole numbers equal because they are written with the same digits, without checking what each digit is worth in the place it sits.',
+    ),
+    entry(
+      // Not compared-by-digit-count, which is likewise about a decimal part.
+      'compared-by-digit-count-not-place-value',
+      'place-value-and-decimals',
+      'Settled a comparison by counting how many digits each number has instead of comparing the hundreds, then the tens, then the ones.',
+    ),
+    entry(
+      'answered-with-the-least-instead-of-the-greatest',
+      'place-value-and-decimals',
+      'Ordered the numbers correctly but answered with the smallest one where the greatest was asked for, or the other way round.',
+    ),
+    entry(
+      // compared-the-wrong-place-first already names starting from the ONES.
+      // This is the same instinct one column over, and it is the commoner of
+      // the two once three-digit numbers arrive.
+      'compared-the-tens-before-the-hundreds',
+      'place-value-and-decimals',
+      'Compared the tens digits and stopped there, without first comparing the hundreds, which decide a three-digit comparison before the tens get a turn.',
+    ),
+
+    // NC.2.NBT.5 and NC.2.NBT.7 — the strategy standards. These name what goes
+    // wrong in CHOOSING or ADJUSTING a strategy, which is what those standards
+    // actually ask for, rather than a slip inside an algorithm.
+    entry(
+      'counted-on-by-ones-instead-of-using-place-value',
+      'place-value-and-decimals',
+      'Reached for counting on or back by ones when a place-value strategy was available, which is slow and loses the count on numbers this size.',
+    ),
+    entry(
+      'compensated-in-the-wrong-direction',
+      'multi-digit-algorithm',
+      'Rounded a number to a friendly ten or hundred and then adjusted the wrong way — adding the extra on instead of taking it back off, or taking it off twice — so the answer moved further from the true one.',
+    ),
+    entry(
+      'did-not-balance-the-move-between-the-addends',
+      'multi-digit-algorithm',
+      'Made one addend friendlier without taking the same amount off the other one, so the total changed instead of staying put.',
+    ),
+
+    // NC.2.NBT.6 — up to three two-digit numbers.
+    entry(
+      'left-one-of-the-addends-out',
+      'incomplete-procedure',
+      'Added only some of the numbers in the problem and left at least one addend out of the total entirely.',
+    ),
+
+    // NC.2.NBT.8 — mentally adding or subtracting 10 or 100, which the sourced
+    // text requires be done WITHOUT counting on.
+    entry(
+      'counted-by-ones-and-lost-the-count',
+      'incomplete-procedure',
+      'Counted on or back by ones instead of taking the whole ten or hundred at once, and lost the count along the way, landing a step short of the right number.',
+    ),
   ].map((info) => [info.tag, info]),
 );
 
