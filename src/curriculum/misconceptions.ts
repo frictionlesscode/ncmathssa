@@ -66,7 +66,14 @@ export type MisconceptionFamily =
    *
    *  Grades 4 and 5 both carry multi-step word problems, so this will not stay
    *  a one-standard family. */
-  | 'multi-step-problems';
+  | 'multi-step-problems'
+  /** Counting a collection of coins by value, and writing amounts of money
+   *  with the ¢ and $ signs. Added for NC.2.MD.8, a whole standard about money
+   *  that had no family: counting the coins instead of their values is not a
+   *  place-value error, and 'geometry-and-measurement' would tell a parent
+   *  their child has a measuring problem when the child is mixing up a dime
+   *  and a nickel. The family label is the headline a parent reads. */
+  | 'money';
 
 export interface MisconceptionInfo {
   tag: string;
@@ -1685,6 +1692,183 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'counted-by-ones-and-lost-the-count',
       'place-value-and-decimals',
       'Counted on or back by ones instead of taking the whole ten or hundred at once, and lost the count along the way, landing a step short of the right number.',
+    ),
+
+    // -- Grade 2 Measurement & Data (NC.2.MD.1-8, NC.2.MD.10) --------------
+    // Grade 2 is the year a child first reads a ruler, a clock and a handful
+    // of coins, and almost none of the existing measurement vocabulary names
+    // those first errors. The tick-mark tags that exist are about FRACTIONS on
+    // a number line (counted-tick-marks-not-intervals names a fraction coming
+    // out one part too big) or about coordinate grids; a seven-year-old
+    // reading a ruler from the 3 mark has met neither.
+    //
+    // Existing tags that DO name exactly the Grade 2 error are reused rather
+    // than duplicated: chose-a-unit-of-the-wrong-size and
+    // estimated-ten-times-too-large (estimating), mislabeled-the-unit,
+    // read-the-minute-hand-as-the-number-it-points-to and
+    // swapped-the-hour-and-minute-hands (Grade 3 filed those clock-reading
+    // errors under time-intervals, and the new clock tags below follow them
+    // there so one habit reaches a parent under one headline),
+    // skip-counted-by-the-wrong-step, summed-all-data-points,
+    // used-the-wrong-given-quantity, forgot-the-final-step, and the
+    // operation-choice and regrouping tags.
+
+    // NC.2.MD.1 — reading a ruler, and choosing a tool.
+    entry(
+      // The brief's "measuring from the end of a ruler rather than from zero".
+      'read-the-end-mark-without-starting-at-zero',
+      'geometry-and-measurement',
+      'Read the ruler number at the far end of an object as its length even though the object did not start at the 0 mark, so every unit before its starting mark was counted too.',
+    ),
+    entry(
+      // The two directions of counting marks instead of spaces, told apart:
+      // one counts a mark too many, the other a mark too few, and a parent
+      // checking their child's ruler needs to know which.
+      'counted-the-ruler-marks-not-the-spaces',
+      'geometry-and-measurement',
+      'Counted the marks on a ruler between two points, including the mark the count starts on, instead of the unit spaces between them, so the length came out one unit too long.',
+    ),
+    entry(
+      'counted-only-the-marks-between-the-ends',
+      'geometry-and-measurement',
+      'Counted only the ruler marks lying between the two ends of an object, leaving out the mark at its far end, instead of the unit spaces, so the length came out one unit too short.',
+    ),
+    entry(
+      'chose-a-tool-too-short-for-the-job',
+      'geometry-and-measurement',
+      'Chose a measuring tool far shorter than the thing being measured, so it would have to be picked up and moved again and again and the count would be easy to lose.',
+    ),
+    entry(
+      // Not chose-a-unit-for-the-wrong-attribute, whose description is about
+      // picking a UNIT (length, mass or capacity). This is picking a TOOL, and
+      // the tools a Grade 2 child reaches for include a clock.
+      'chose-a-tool-that-measures-something-else',
+      'geometry-and-measurement',
+      'Chose a tool that measures something other than length — a scale for weight, a measuring cup for how much a container holds, a clock for time — to find how long something is.',
+    ),
+    entry(
+      'chose-a-tool-marked-in-the-wrong-unit',
+      'geometry-and-measurement',
+      'Chose a length tool marked in a different unit from the one asked for, such as a yardstick marked in inches for a length wanted in centimeters.',
+    ),
+    entry(
+      'measured-with-a-non-standard-unit',
+      'geometry-and-measurement',
+      'Measured with something whose size changes from person to person, such as hand spans, footsteps or paper clips, instead of a standard unit that is the same for everyone.',
+    ),
+
+    // NC.2.MD.2 — one object measured twice, in units of different lengths.
+    entry(
+      // Ruling 19-5's named MD.2 error: the inverse relationship run forwards.
+      'expected-a-longer-unit-to-give-a-bigger-count',
+      'geometry-and-measurement',
+      'Expected the longer unit to give the bigger number when the same object is measured twice, when a longer unit fits fewer times — the shorter unit always gives the bigger count.',
+    ),
+    entry(
+      'expected-the-count-to-stay-the-same-in-a-new-unit',
+      'geometry-and-measurement',
+      'Expected the same object to measure the same number whichever unit was used, as if the count belonged to the object rather than to the size of the unit.',
+    ),
+    entry(
+      'thought-the-object-changed-length-with-the-unit',
+      'geometry-and-measurement',
+      'Took a bigger count in a smaller unit to mean the object itself had become longer, when changing the unit changes only the number, never the length.',
+    ),
+
+    // NC.2.MD.3 — estimating in inches, feet, yards, centimeters and meters.
+    entry(
+      // The mirror of the existing estimated-ten-times-too-large.
+      'estimated-ten-times-too-small',
+      'geometry-and-measurement',
+      'Picked the right unit but a number about ten times smaller than the object really measures, so the estimate is not a sensible size.',
+    ),
+    entry(
+      'measured-length-with-a-unit-of-time',
+      'geometry-and-measurement',
+      'Answered a question about how long an object is with a unit of time, such as minutes, because "how long" is asked about time as well as length.',
+    ),
+
+    // NC.2.MD.4 and NC.2.MD.5 — comparing lengths and length word problems.
+    entry(
+      'reversed-which-one-is-longer',
+      'geometry-and-measurement',
+      'Turned a length comparison around, treating the shorter object as the longer one, so the difference was stated or written into an equation the wrong way round.',
+    ),
+    entry(
+      'added-every-number-in-the-story',
+      'operation-choice',
+      'Added together every number printed in a word problem instead of choosing the ones the question is actually about.',
+    ),
+
+    // NC.2.MD.6 — whole numbers as lengths, and sums and differences, on a
+    // number line. Ruling 19-5: counting the number line's marks rather than
+    // its jumps is this standard's own error, distinct from MD.1's ruler.
+    entry(
+      'counted-the-number-line-marks-not-the-jumps',
+      'geometry-and-measurement',
+      'Counted the mark a number line starts on as the first jump, so the count of jumps ran out one jump early and landed one jump short.',
+    ),
+    entry(
+      'counted-each-jump-as-one-not-its-size',
+      'geometry-and-measurement',
+      'Counted each jump on a number line as 1 when the jumps were 5s or 10s, so the number of jumps was used instead of how far they go.',
+    ),
+    entry(
+      'left-out-the-number-line-starting-point',
+      'geometry-and-measurement',
+      'Left the starting number out of a number-line problem, so the answer showed only how far the jumps went, as if they had begun at 0.',
+    ),
+
+    // NC.2.MD.7 — time to the nearest five minutes, with a.m. and p.m.
+    entry(
+      'read-the-next-hour-from-the-hour-hand',
+      'time-intervals',
+      'Read the hour from the number the hour hand is moving toward instead of the number it has already passed, so a time late in the hour was read as the next hour.',
+    ),
+    entry(
+      'mixed-up-a-m-and-p-m',
+      'time-intervals',
+      'Wrote a.m. for a time in the afternoon or evening, or p.m. for a time in the morning — a.m. runs from midnight to noon and p.m. from noon to midnight.',
+    ),
+
+    // NC.2.MD.8 — money: coins within 99¢ and whole dollars.
+    entry(
+      // The brief's "counting a coin collection by coin rather than by value".
+      'counted-the-coins-not-their-value',
+      'money',
+      'Counted how many coins there are instead of what each one is worth, so a handful of quarters and dimes came out as only a few cents.',
+    ),
+    entry(
+      'mixed-up-the-values-of-a-nickel-and-a-dime',
+      'money',
+      'Counted a nickel as 10¢ or a dime as 5¢ — the dime is the smaller coin, but it is worth more.',
+    ),
+    entry(
+      'kept-counting-by-the-last-coins-value',
+      'money',
+      'Kept counting on by 5s or 10s after reaching the pennies, instead of switching to counting each penny as 1¢.',
+    ),
+    entry(
+      'used-the-wrong-money-symbol',
+      'money',
+      'Wrote an amount with the wrong money sign — cents with a $ or whole dollars with a ¢ — so the amount written is a hundred times too big or too small.',
+    ),
+
+    // NC.2.MD.10 — organizing data into a picture or bar graph.
+    entry(
+      'counted-a-tally-bundle-as-four',
+      'geometry-and-measurement',
+      'Counted a bundle of tally marks as 4, missing the fifth mark drawn across the other four.',
+    ),
+    entry(
+      'counted-a-tally-bundle-as-one-mark',
+      'geometry-and-measurement',
+      'Counted a whole bundle of five tally marks as if it were a single mark.',
+    ),
+    entry(
+      'put-a-count-on-the-wrong-bar',
+      'geometry-and-measurement',
+      "Counted the data correctly but drew one category's count on another category's bar, so two bars traded places.",
     ),
   ].map((info) => [info.tag, info]),
 );

@@ -38,9 +38,18 @@ describe('GRADE_2_TEMPLATES', () => {
     expect(missing, `template files not listed in index.ts: ${missing.join(', ')}`).toEqual([]);
   });
 
+  // `\d+`, not `\d`: NC.2.MD.10 has a two-digit tail, and its generator is
+  // g2.md10.<slug> by ruling 19-7's convention.
   it('names every template g2.<tail>.<slug>', () => {
     for (const t of GRADE_2_TEMPLATES) {
-      expect(t.id, `${t.id} is not a dotted g2 template id`).toMatch(/^g2\.[a-z]+\d\.[a-z0-9-]+$/);
+      expect(t.id, `${t.id} is not a dotted g2 template id`).toMatch(/^g2\.[a-z]+\d+\.[a-z0-9-]+$/);
+    }
+  });
+
+  it('names every template after the standard it is filed under', () => {
+    for (const t of GRADE_2_TEMPLATES) {
+      const tail = t.standardCode.split('.').slice(2).join('').toLowerCase();
+      expect(t.id.split('.')[1], `${t.id} is filed under ${t.standardCode}`).toBe(tail);
     }
   });
 
@@ -88,6 +97,15 @@ describe('GRADE_2_TEMPLATES', () => {
       'g2.nbt7.add-within-1000': /^Line the numbers up by place value, then add\.$/,
       'g2.nbt7.subtract-within-1000': /^Line the numbers up by place value, then subtract\.$/,
       'g2.nbt8.ten-or-hundred': /^Do this in your head\. No counting on\.$/,
+      'g2.md1.read-a-ruler': /^Use the ruler\. How long is the [a-z ]+\?$/,
+      'g2.md2.two-units': /^[A-Z][a-z]+ measures the same [a-z]+ two times\./,
+      'g2.md5.shorter-length-unknown':
+        /^The [a-z]+ [a-z ]+ is \d+ [a-z]+ long\. It is \d+ [a-z]+ longer than the [a-z]+ [a-z ]+\./,
+      'g2.md7.clock-to-five-minutes':
+        /^It is (?:morning|afternoon|evening)\. [A-Z][a-z]+ looks at the clock\. What time is it\?$/,
+      'g2.md8.count-coins': /^[A-Z][a-z]+ has [\w ,]+\. How much money does (?:he|she) have\?$/,
+      'g2.md10.bar-graph-how-many-more':
+        /^Use the bar graph\. How many more [a-z]+ chose [a-z ]+ than [a-z ]+\?$/,
     };
     expect(Object.keys(sentinels).sort()).toEqual(GRADE_2_TEMPLATES.map((t) => t.id).sort());
     for (const t of GRADE_2_TEMPLATES) {

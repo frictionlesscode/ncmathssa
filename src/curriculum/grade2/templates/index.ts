@@ -13,9 +13,15 @@ import { nbt6ThreeAddendSum } from './nbt6-three-addend-sum';
 import { nbt7AddWithin1000 } from './nbt7-add-within-1000';
 import { nbt7SubtractWithin1000 } from './nbt7-subtract-within-1000';
 import { nbt8TenOrHundred } from './nbt8-ten-or-hundred';
+import { md1ReadARuler } from './md1-read-a-ruler';
+import { md2TwoUnits } from './md2-two-units';
+import { md5ShorterLengthUnknown } from './md5-shorter-length-unknown';
+import { md7ClockToFiveMinutes } from './md7-clock-to-five-minutes';
+import { md8CountCoins } from './md8-count-coins';
+import { md10BarGraphHowManyMore } from './md10-bar-graph-how-many-more';
 
-/** Every parameterized Grade 2 template, from Task 17 (OA and Geometry) and
- *  Task 18 (Base Ten).
+/** Every parameterized Grade 2 template, from Task 17 (OA and Geometry),
+ *  Task 18 (Base Ten) and Task 19 (Measurement & Data).
  *
  *  One generator per NC.2.OA standard, each covering a DIFFERENT problem
  *  shape from the authored bank in `../authored.oa.ts` so a review key never
@@ -129,7 +135,46 @@ import { nbt8TenOrHundred } from './nbt8-ten-or-hundred';
  *  that stays: it is single-digit fact recall within 20, where there is no
  *  regrouping procedure to fail at, and its two directions SHARE two of their
  *  three misconception tags (both count on by ones, one short and one too many)
- *  instead of partitioning into disjoint sets. */
+ *  instead of partitioning into disjoint sets.
+ *
+ *  ── Measurement & Data ────────────────────────────────────────────────────
+ *
+ *  RULING 19-1 DECIDES WHICH CODE EACH OF THESE CARRIES. The Task 19 brief
+ *  cycled three codes by one — time under MD.6, money under MD.7, the number
+ *  line under MD.8 — and a clock generator filed as NC.2.MD.6 passes every
+ *  test that only asks whether its code exists in the grade. The sourced text
+ *  in `../standards.ts` is the ground truth: MD.6 is the NUMBER LINE, MD.7 is
+ *  TIME, MD.8 is MONEY. `./index.test.ts` now checks every template id's
+ *  middle against the code it is filed under, and `../authored.md.test.ts`
+ *  reads the topic of every question back out of its own text.
+ *
+ *  Six of the nine NC.2.MD standards have a generator, each drilling ONE
+ *  skill with ONE set of named errors, so a seedless review key re-tests
+ *  exactly what was failed:
+ *
+ *    NC.2.MD.1   READING A RULER in inches or centimeters, the object never
+ *                starting at 0. Choosing the tool is authored (g2-md1-01..03).
+ *    NC.2.MD.2   the SAME OBJECT MEASURED IN TWO UNITS — which count is
+ *                bigger. Its own template, never merged with MD.1 (ruling
+ *                19-2): MD.2 is the inverse relationship, not a fixed unit.
+ *    NC.2.MD.5   a COMPARE, SMALLER-UNKNOWN length problem within 100, with
+ *                its ☐ + n = m equation printed. Put-together, start-unknown
+ *                and choose-the-equation items are authored.
+ *    NC.2.MD.7   TIME late in the hour (:35 to :55) to the nearest five
+ *                minutes, a.m. or p.m. from the part of the day. Earlier in
+ *                the hour, and choosing a.m. against p.m., are authored.
+ *    NC.2.MD.8   COUNTING COINS within 99¢. Whole dollars, spending, and the
+ *                ¢ and $ signs themselves are authored.
+ *    NC.2.MD.10  "HOW MANY MORE" off a four-bar graph on a scale of one.
+ *                Organizing a data set into a graph (ruling 19-4), and the
+ *                put-together and take-apart problems, are authored.
+ *
+ *  NC.2.MD.3, NC.2.MD.4 and NC.2.MD.6 have NO generator, as ruling 19-1
+ *  allows: estimating is a question about a real object and a benchmark, and
+ *  fresh numbers turn it into guessing; comparing two lengths is the MD.1
+ *  ruler twice plus MD.5's subtraction; and the number line is authored in
+ *  four shapes (counting on, counting back, choosing a diagram, a length from
+ *  0 on a line marked in 5s) whose errors differ from shape to shape. */
 export const GRADE_2_TEMPLATES: QuestionTemplate[] = [
   oa1ChangeUnknown,
   oa2FluencyFact,
@@ -145,6 +190,12 @@ export const GRADE_2_TEMPLATES: QuestionTemplate[] = [
   nbt7AddWithin1000,
   nbt7SubtractWithin1000,
   nbt8TenOrHundred,
+  md1ReadARuler,
+  md2TwoUnits,
+  md5ShorterLengthUnknown,
+  md7ClockToFiveMinutes,
+  md8CountCoins,
+  md10BarGraphHowManyMore,
 ];
 
 export {
@@ -162,4 +213,10 @@ export {
   nbt7AddWithin1000,
   nbt7SubtractWithin1000,
   nbt8TenOrHundred,
+  md1ReadARuler,
+  md2TwoUnits,
+  md5ShorterLengthUnknown,
+  md7ClockToFiveMinutes,
+  md8CountCoins,
+  md10BarGraphHowManyMore,
 };
