@@ -121,7 +121,7 @@ describe('grade 2 curriculum', () => {
     // Grade 3/4 precedent: floor/ceil is exact integer arithmetic and still
     // rejects e.g. G=0 or G=3.
     for (const [domainId, n] of Object.entries(counts)) {
-      const ideal = (domainWeight(GRADE_2, domainId as never) / 100) * 25;
+      const ideal = (domainWeight(GRADE_2, domainId) / 100) * 25;
       expect(
         n >= Math.floor(ideal) && n <= Math.ceil(ideal),
         `${domainId} carries ${n} of 25 items; its share wants ${ideal}`,

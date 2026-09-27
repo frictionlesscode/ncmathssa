@@ -81,7 +81,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
           <span className="font-semibold text-white">Wake County (WCPSS) Single Subject Acceleration:</span>
           <span className="hidden sm:inline text-slate-300">
-            {curriculum.label} Blueprint (targets Grade {curriculum.ssa.targetsGrade})
+            {curriculum.weighting.kind === 'ncdpi-blueprint'
+              ? `${curriculum.label} Blueprint (targets Grade ${curriculum.ssa.targetsGrade})`
+              : `${curriculum.label} Standards (targets Grade ${curriculum.ssa.targetsGrade})`}
           </span>
         </div>
         <div className="flex items-center gap-3 text-[11px]">

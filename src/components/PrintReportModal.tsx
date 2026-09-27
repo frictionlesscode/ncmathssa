@@ -17,6 +17,20 @@ export const PrintReportModal: React.FC<PrintReportModalProps> = ({ isOpen, onCl
   const standards = standardsOf(curriculum);
   const misconceptions = topMisconceptionFamilies(mastery, 5);
 
+  // Finding F4: recommendation 3 used to hardcode grade 5's own "two full
+  // mock exams within a 60-minute window" for every grade. Derive both the
+  // count and the minutes from the active curriculum's actual mock quizzes -
+  // grade 5 has two (60 and 65 minutes), every other registered grade has
+  // one, and the sentence must read correctly for either.
+  const mockQuizzes = curriculum.quizzes.filter(q => q.isMockAssessment);
+  const mockCount = mockQuizzes.length;
+  const mockCountWord = mockCount === 1 ? 'one' : mockCount === 2 ? 'two' : `${mockCount}`;
+  const mockNoun = mockCount === 1 ? 'mock exam' : 'mock exams';
+  const mockMinuteValues = mockQuizzes
+    .map(q => q.timeLimitMinutes)
+    .filter((m): m is number => typeof m === 'number');
+  const mockWindowMinutes = mockMinuteValues.length > 0 ? Math.min(...mockMinuteValues) : 60;
+
   if (!isOpen) return null;
 
   const handlePrint = () => {
@@ -113,7 +127,7 @@ export const PrintReportModal: React.FC<PrintReportModalProps> = ({ isOpen, onCl
               <p className="text-xs mt-1 font-medium max-w-lg">
                 {readiness.isAccelerationReady
                   ? `Candidate has achieved the ${passingPercent}% acceleration threshold across tested standards. Continue maintaining readiness with timed full mock exams.`
-                  : `Currently ${passingPercent - readiness.weightedScore}% below the ${passingPercent}% WCPSS qualifying bar. Focused drill on high-weight domains is recommended.`}
+                  : `Currently ${passingPercent - readiness.weightedScore}% below the ${passingPercent}% WCPSS qualifying bar. ${curriculum.weighting.kind === 'ncdpi-blueprint' ? 'Focused drill on high-weight domains is recommended.' : 'Focused drill on the domains furthest below the bar is recommended.'}`}
               </p>
             </div>
             <div className="text-right flex flex-col items-end">
@@ -270,7 +284,7 @@ export const PrintReportModal: React.FC<PrintReportModalProps> = ({ isOpen, onCl
           <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-700 space-y-1.5">
             <h4 className="font-bold text-slate-900">Next Steps & Testing Recommendation:</h4>
             <p className="leading-relaxed">
-              1. <strong>{curriculum.weighting.kind === 'ncdpi-blueprint' ? 'Focus by Blueprint Weight:' : 'Focus by Standards Share:'}</strong>{' '}
+              1. <strong>{curriculum.weighting.kind === 'ncdpi-blueprint' ? 'Focus by Blueprint Weight:' : 'Focus on the Biggest Gaps:'}</strong>{' '}
               {curriculum.weighting.kind === 'ncdpi-blueprint'
                 ? `Prioritize the domains with the highest NC EOG blueprint weight above, especially any still below the ${passingPercent}% qualifying bar.`
                 : `There is no official state blueprint at this grade to rank by weight. Prioritize the domains furthest below the ${passingPercent}% qualifying bar above.`}
@@ -279,7 +293,7 @@ export const PrintReportModal: React.FC<PrintReportModalProps> = ({ isOpen, onCl
               2. <strong>Address Recurring Misconceptions:</strong> Review the misconceptions listed above with the student before their next practice session.
             </p>
             <p className="leading-relaxed">
-              3. <strong>Timed Mock Testing:</strong> Have the student complete at least two full mock exams within a 60-minute window before the Wake County test day.
+              3. <strong>Timed Mock Testing:</strong> Have the student complete at least {mockCountWord} full {mockNoun} within a {mockWindowMinutes}-minute window before the Wake County test day.
             </p>
           </div>
         </div>

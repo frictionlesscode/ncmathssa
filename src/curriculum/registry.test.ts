@@ -7,6 +7,7 @@ import {
   weightLabel,
   weightHeading,
   weightValue,
+  weightCompactLabel,
 } from './registry';
 import type { GradeCurriculum } from './types';
 import { makeQuestionSource } from '../engine/questionSource';
@@ -21,12 +22,14 @@ describe('registry', () => {
   it('throws for a grade with no curriculum module', () => {
     // Grade 1 is the only grade still without a module after Task 21
     // registers grade 2. Asking for one must fail loudly, not return an
-    // empty curriculum that renders as a blank app. This pin moves down as
-    // each grade registers - it was grade 3 until Task 16, then grade 2
-    // until this task (Ruling 21-1). After Task 26 no member of `Grade` is
-    // unregistered, so this assertion becomes a type-level impossibility
-    // and is re-expressed there as `getCurriculum(6 as Grade)`, never
-    // deleted outright.
+    // empty curriculum that renders as a blank app. This pin has been grade
+    // 1 since Task 16's deliberate choice - NOT grade 2, whatever an earlier
+    // version of this comment claimed (Finding F10) - and this task's grade
+    // 2 registration does not move it, because grade 1 is still the only
+    // unregistered grade (Ruling 21-1). After Task 26 registers grade 1
+    // itself, no member of `Grade` is unregistered, so this assertion
+    // becomes a type-level impossibility and is re-expressed there as
+    // `getCurriculum(6 as Grade)`, never deleted outright.
     expect(() => getCurriculum(1)).toThrow(/no curriculum/i);
   });
 
@@ -158,5 +161,44 @@ describe('weightValue', () => {
     const g2 = getCurriculum(2);
     const total = g2.domains.reduce((n, d) => n + Number(weightValue(g2, d.id).replace('%', '')), 0);
     expect(total).toBe(100);
+  });
+
+  it('agrees with weightLabel on an unknown domain: both empty, not a fabricated 0% (Finding F9)', () => {
+    const g5 = getCurriculum(5);
+    const g2 = getCurriculum(2);
+    expect(weightValue(g5, 'ZZZ')).toBe(weightLabel(g5, 'ZZZ'));
+    expect(weightValue(g5, 'ZZZ')).toBe('');
+    expect(weightValue(g2, 'ZZZ')).toBe(weightLabel(g2, 'ZZZ'));
+    expect(weightValue(g2, 'ZZZ')).toBe('');
+  });
+});
+
+describe('weightCompactLabel (Finding F1)', () => {
+  it('marks a grouped blueprint band as shared, one line, no nested parens', () => {
+    const g5 = getCurriculum(5);
+    expect(weightCompactLabel(g5, 'MD')).toBe('19–23% with G');
+    expect(weightCompactLabel(g5, 'G')).toBe('19–23% with MD');
+    expect(weightCompactLabel(g5, 'MD')).not.toMatch(/\(.*\(/); // no nested parens
+    expect(weightCompactLabel(g5, 'MD')).not.toMatch(/\n/);
+  });
+
+  it('leaves an ungrouped blueprint domain exactly as weightValue renders it', () => {
+    const g5 = getCurriculum(5);
+    expect(weightCompactLabel(g5, 'NF')).toBe(weightValue(g5, 'NF'));
+    expect(weightCompactLabel(g5, 'NF')).toBe('39–43%');
+  });
+
+  it("leaves grade 2's values exactly as they are ('17%'), unweighted grades have no group", () => {
+    const g2 = getCurriculum(2);
+    for (const d of g2.domains) {
+      expect(weightCompactLabel(g2, d.id)).toBe(weightValue(g2, d.id));
+    }
+    const oa = g2.domains.find((d) => d.id === 'OA')!;
+    expect(weightCompactLabel(g2, 'OA')).toBe(`${Math.round((oa.standards.length / standardsOf(g2).length) * 100)}%`);
+  });
+
+  it('returns empty for an unknown domain, agreeing with weightValue', () => {
+    const g5 = getCurriculum(5);
+    expect(weightCompactLabel(g5, 'ZZZ')).toBe('');
   });
 });

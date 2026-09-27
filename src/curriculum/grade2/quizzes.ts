@@ -70,19 +70,17 @@ const MOD_G_QUESTION_IDS = [
 ];
 
 /** The full simulation, allocated to each domain's share of the 23
- *  standards - there is no blueprint to allocate against (Ruling 21-6):
+ *  standards - there is no blueprint to allocate against (Ruling 21-6).
+ *  Plainly stated (Finding F11): nearest-integer rounding of each domain's
+ *  share of 25 items -
  *
- *    OA  4/23 = 17.4%  -> 4.3 of 25 items  -> 4  (floor)
- *    NBT 8/23 = 34.8%  -> 8.7 of 25 items  -> 9  (ceil)
- *    MD  9/23 = 39.1%  -> 9.8 of 25 items  -> 10 (ceil)
- *    G   2/23 =  8.7%  -> 2.2 of 25 items  -> 2  (floor)
+ *    OA  4/23 = 17.4%  -> 4.3 of 25 items  -> rounds to 4
+ *    NBT 8/23 = 34.8%  -> 8.7 of 25 items  -> rounds to 9
+ *    MD  9/23 = 39.1%  -> 9.8 of 25 items  -> rounds to 10
+ *    G   2/23 =  8.7%  -> 2.2 of 25 items  -> rounds to 2
  *
- *  4 + 9 + 10 + 2 = 25. Geometry is rounded UP from 2.2's floor only in the
- *  sense that 2 is already its own floor and ceiling would be 3; picking the
- *  floor here (2, never 0) is what keeps the total at 25 once NBT and MD
- *  round up from their own fractions - Geometry does not disappear the way
- *  it would under naive rounding of an 8.7% share to the nearest whole
- *  percent of a smaller form. None of these 25 items appears in the
+ *  - gives 4 + 9 + 10 + 2 = 25 exactly, with Geometry keeping its 2 items
+ *  rather than rounding away to 0. None of these 25 items appears in the
  *  diagnostic: a child who has just sat the baseline should meet fresh items
  *  in the simulation, not be re-scored on the ones that set the baseline. */
 const MOCK_SSA_01_QUESTION_IDS = [

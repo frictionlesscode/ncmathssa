@@ -8,7 +8,7 @@ import {
   HelpCircle
 } from 'lucide-react';
 import { useProgress, domainStatsFor } from '../context/ProgressContext';
-import { weightHeading, weightValue } from '../curriculum/registry';
+import { weightHeading, weightValue, weightCompactLabel } from '../curriculum/registry';
 
 interface CurriculumViewProps {
   onStartStandardDrill: (standardCode: string) => void;
@@ -41,10 +41,16 @@ export const CurriculumView: React.FC<CurriculumViewProps> = ({
             <span className="font-mono text-xs font-bold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-200">
               NC STANDARD COURSE OF STUDY (NCSCOS)
             </span>
-            <span className="text-xs font-semibold text-slate-500">Grade {curriculum.grade} Content Blueprint</span>
+            <span className="text-xs font-semibold text-slate-500">
+              {curriculum.weighting.kind === 'ncdpi-blueprint'
+                ? `Grade ${curriculum.grade} Content Blueprint`
+                : `Grade ${curriculum.grade} Content Standards`}
+            </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-            Curriculum Structure & Standard Blueprints
+            {curriculum.weighting.kind === 'ncdpi-blueprint'
+              ? 'Curriculum Structure & Standard Blueprints'
+              : 'Curriculum Structure & Standards'}
           </h1>
           <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl">
             Standards with a generator (marked below) are tested with non-routine word problems, multi-step math, and above-grade stretch items across an effectively unlimited pool; authored-only standards draw from a smaller fixed set that will repeat sooner. Achieving {passingPercent}%+ on each is a strong signal of SSA acceleration readiness, not a guarantee of the actual WCPSS result.
@@ -65,11 +71,12 @@ export const CurriculumView: React.FC<CurriculumViewProps> = ({
             <button
               key={d.id}
               onClick={() => setSelectedDomain(d.id)}
+              title={d.weightGroupLabel}
               className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
                 selectedDomain === d.id ? 'bg-white text-blue-700 shadow-xs' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              {d.id} ({weightValue(curriculum, d.id)})
+              {d.id} ({weightCompactLabel(curriculum, d.id)})
             </button>
           ))}
         </div>

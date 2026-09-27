@@ -9,7 +9,7 @@ import {
   TrendingUp
 } from 'lucide-react';
 import { useProgress, useReadinessSummary, domainStatsFor } from '../context/ProgressContext';
-import { standardsOf, weightValue } from '../curriculum/registry';
+import { standardsOf, weightCompactLabel } from '../curriculum/registry';
 import { dueEntries } from '../engine/scheduler';
 import type { NavTab } from './Navbar';
 
@@ -62,7 +62,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               Target: Master Grade {curriculum.grade} to Skip to Grade {curriculum.ssa.targetsGrade + 1} Math
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-              Wake County administers a secure, above-grade-level assessment built by CASE. The actual item bank is confidential, so this platform builds complete mastery against the public, authoritative <strong className="text-white">North Carolina Standard Course of Study (NCSCOS) Grade {curriculum.grade} Mathematics</strong> blueprint with multi-step reasoning, non-routine word problems, and above-grade stretch challenges.
+              Wake County administers a secure, above-grade-level assessment built by CASE. The actual item bank is confidential, so this platform builds complete mastery against the public, authoritative <strong className="text-white">North Carolina Standard Course of Study (NCSCOS) Grade {curriculum.grade} Mathematics</strong> {curriculum.weighting.kind === 'ncdpi-blueprint' ? 'blueprint' : 'standards'} with multi-step reasoning, non-routine word problems, and above-grade stretch challenges.
             </p>
           </div>
 
@@ -232,7 +232,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
               ? `Step 1: Take the ${diagnosticQuiz?.questionIds.length ?? totalStandardsCount}-Question Baseline Diagnostic`
               : readiness.weightedScore >= passingPercent
               ? 'Acceleration Ready! Complete a Full 60-Minute Mock Exam'
-              : `Drill High-Weight Domains to Reach the ${passingPercent}% Benchmark`}
+              : curriculum.weighting.kind === 'ncdpi-blueprint'
+              ? `Drill High-Weight Domains to Reach the ${passingPercent}% Benchmark`
+              : `Drill the Domains Furthest Below the ${passingPercent}% Benchmark`}
           </h2>
           <p className="text-xs sm:text-sm text-blue-100 leading-relaxed">
             {!hasTakenDiagnostic
@@ -308,8 +310,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   {/* Domain Header */}
                   <div className="flex items-start justify-between gap-2 mb-3">
                     <div>
-                      <span className={`inline-block font-mono text-[11px] font-bold px-2 py-0.5 rounded-md border ${domain.badgeBg}`}>
-                        {domain.id} • {weightValue(curriculum, domain.id)} Weight
+                      <span
+                        className={`inline-block font-mono text-[11px] font-bold px-2 py-0.5 rounded-md border ${domain.badgeBg}`}
+                        title={domain.weightGroupLabel}
+                      >
+                        {domain.id} • {weightCompactLabel(curriculum, domain.id)} Weight
                       </span>
                       <h3 className="text-base font-extrabold text-slate-900 mt-1.5 leading-snug">
                         {domain.name}

@@ -73,8 +73,34 @@ export function weightHeading(c: GradeCurriculum): string {
  *  string verbatim - a parent reading "Share of Grade Standards: No state
  *  assessment at this grade" (Ruling 21-3). This renders domainWeight()'s
  *  computed share instead, so the value always answers the heading's
- *  question with a real number. */
+ *  question with a real number.
+ *
+ *  Agrees with weightLabel() on an unknown domain: both return '' rather
+ *  than one of them inventing a "0%" that reads as a real, if tiny, weight
+ *  (Finding F9). */
 export function weightValue(c: GradeCurriculum, domainId: DomainId): string {
+  const domain = c.domains.find((d) => d.id === domainId);
+  if (!domain) return '';
   if (c.weighting.kind === 'ncdpi-blueprint') return weightLabel(c, domainId);
   return `${Math.round(domainWeight(c, domainId))}%`;
+}
+
+/** The compact, one-line form for tight spots that cannot fit weightLabel()'s
+ *  full "(Measurement & Data and Geometry combined)" wording without
+ *  breaking layout: CurriculumView's domain filter pills, Dashboard's domain
+ *  card badges, and QuizzesListView's module-drill badges (Finding F1). A
+ *  domain outside a weightGroup renders exactly what weightValue() already
+ *  gives ("17%", "39–43%") - Grade 1-2 values are unaffected. A grouped
+ *  domain still marks the band as shared ("with G"/"with MD") instead of
+ *  repeating the bare band as if it belonged to this domain alone; the full
+ *  wording stays available via weightLabel()/weightValue() wherever there is
+ *  room, and may be surfaced here as a `title` attribute by the caller. */
+export function weightCompactLabel(c: GradeCurriculum, domainId: DomainId): string {
+  const domain = c.domains.find((d) => d.id === domainId);
+  if (!domain) return '';
+  if (!domain.weightGroup) return weightValue(c, domainId);
+  const otherIds = c.domains
+    .filter((d) => d.weightGroup === domain.weightGroup && d.id !== domain.id)
+    .map((d) => d.id);
+  return `${domain.officialWeightRange} with ${otherIds.join(' & ')}`;
 }

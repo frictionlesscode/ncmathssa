@@ -108,7 +108,7 @@ export const StudyGuideModal: React.FC<StudyGuideModalProps> = ({
                 <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
                   <h4 className="text-xs font-bold uppercase tracking-wider text-amber-900 mb-2 flex items-center gap-1.5">
                     <AlertTriangle className="w-4 h-4 text-amber-600" />
-                    Common 4th/5th Grade Traps to Avoid
+                    Common Grade {curriculum.grade} Traps to Avoid
                   </h4>
                   <ul className="space-y-1.5 text-xs text-amber-950 list-disc list-inside">
                     {guide.commonTraps.map((trap, idx) => (

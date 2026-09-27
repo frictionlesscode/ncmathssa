@@ -22,8 +22,12 @@ export interface DomainInfo {
   name: string;
   shortName: string;
   /** The published band, e.g. '19–23%'. When this domain belongs to a
-   *  weightGroup the band describes the GROUP, not this domain alone -
-   *  render it through weightLabel() so the reader is told so. */
+   *  weightGroup the band describes the GROUP, not this domain alone. Grades
+   *  1-2 have no published band at all: this field holds a placeholder
+   *  string ("No state assessment at this grade") that must never reach a
+   *  parent. Render it through weightValue() - correct at every grade,
+   *  unlike weightLabel(), which reprints that placeholder verbatim for an
+   *  unweighted grade (Finding F9). */
   officialWeightRange: string;
   /** Midpoint of officialWeightRange. Group-wide when weightGroup is set. */
   officialWeightMidpoint: number;

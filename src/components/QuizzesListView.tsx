@@ -8,10 +8,11 @@ import {
   Target
 } from 'lucide-react';
 import { useProgress } from '../context/ProgressContext';
-import { standardsOf, weightValue } from '../curriculum/registry';
+import { standardsOf, weightCompactLabel } from '../curriculum/registry';
 import type { QuizDefinition } from '../types';
 import { AdaptiveSessionCard } from './AdaptiveSessionCard';
 import type { QuestionRef } from '../engine/questionModel';
+import { parseQuestionRef } from '../engine/questionModel';
 
 interface QuizzesListViewProps {
   onStartQuiz: (quizId: string) => void;
@@ -38,6 +39,31 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
   const diagnosticQuiz = curriculum.quizzes.find(q => q.isDiagnostic);
   const mockQuizzes = curriculum.quizzes.filter(q => q.isMockAssessment);
   const moduleDrills = curriculum.quizzes.filter(q => q.domainId && !q.isMockAssessment);
+
+  // Finding F3: the mock header used to hardcode grade 5's own "60-65
+  // Minutes... Calculator Inactive & Active" wording for every grade. Both
+  // clauses are derived from the active curriculum's actual mock quizzes,
+  // never assumed - grades 2-4 have exactly one mock apiece and no
+  // calculator split, so both facts must come from the real content.
+  const mockMinutes = mockQuizzes
+    .map(q => q.timeLimitMinutes)
+    .filter((m): m is number => typeof m === 'number');
+  const mockMinutesLabel = mockMinutes.length === 0
+    ? ''
+    : Math.min(...mockMinutes) === Math.max(...mockMinutes)
+    ? `${mockMinutes[0]}`
+    : `${Math.min(...mockMinutes)}-${Math.max(...mockMinutes)}`;
+  const mockCalculatorFlags = mockQuizzes
+    .flatMap(q => q.questionIds)
+    .map(id => {
+      try {
+        return curriculum.source.resolve(parseQuestionRef(id)).calculatorAllowed;
+      } catch {
+        return undefined;
+      }
+    })
+    .filter((v): v is boolean => typeof v === 'boolean');
+  const mockHasCalculatorSplit = mockCalculatorFlags.includes(true) && mockCalculatorFlags.includes(false);
 
   // A quiz's subtitle is either a plain string or a function of the active
   // curriculum, for the handful of quizzes whose copy cites a standard
@@ -121,7 +147,7 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
             Full NC SSA Mock Assessment Simulations
           </h2>
           <span className="text-xs text-slate-500 font-semibold">
-            Timed 60-65 Minutes • Divided into Calculator Inactive & Active
+            Timed {mockMinutesLabel} Minutes{mockHasCalculatorSplit ? ' • Divided into Calculator Inactive & Active' : ''}
           </span>
         </div>
 
@@ -196,8 +222,11 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
               >
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className={`font-mono text-[10px] font-bold px-2 py-0.5 rounded border ${domain?.badgeBg}`}>
-                      {quiz.domainId} • {weightValue(curriculum, quiz.domainId ?? '')}
+                    <span
+                      className={`font-mono text-[10px] font-bold px-2 py-0.5 rounded border ${domain?.badgeBg}`}
+                      title={domain?.weightGroupLabel}
+                    >
+                      {quiz.domainId} • {weightCompactLabel(curriculum, quiz.domainId ?? '')}
                     </span>
                     <span className="text-xs text-slate-500 font-semibold">
                       {quiz.questionIds.length} Qs
