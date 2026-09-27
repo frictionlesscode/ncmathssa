@@ -24,16 +24,19 @@ import { labelOptions } from '../../engine/questionModel';
  *   NC.1.OA.3  the commutative and associative properties AS STRATEGIES.
  *              RULING 22-5: g1-oa3-03 regroups three addends, and no item
  *              asks a child to name a property.
- *   NC.1.OA.4  unknown addend within 20 (ruling 22-8), solved by adding on or
- *              by turning it into a take-away.
+ *   NC.1.OA.4  an unknown addend within 20 (ruling 22-8), solved as the
+ *              standard says: by CHANGING IT TO A TAKE-AWAY (g1-oa4-01,
+ *              8 + ☐ = 13 as 13 − 8) or by adding on (g1-oa4-02 and
+ *              g1-oa4-03, each making a ten).
  *   NC.1.OA.9  FLUENCY WITHIN 10. RULING 22-1: this is NC.1.OA.9, not OA.6,
  *              whatever Common Core numbers it. The generators drill bare
  *              facts; these items take the pairs that make 10, a fact family,
  *              and 0 as an answer.
  *   NC.1.OA.6  add and subtract within 20 USING STRATEGIES. RULING 22-4: every
  *              worked solution names its strategy in its first step — counting
- *              on, making ten, a doubles fact — and both "making ten" and
- *              "counting on" appear.
+ *              on, making ten, a doubles fact, getting to 10 — and both
+ *              "making ten" and "counting on" appear. Every wrong option
+ *              is a slip made inside the strategy the item names.
  *   NC.1.OA.7  the meaning of the equal sign. RULING 22-6: a true/false
  *              standard asked as "Which equation is true?", four candidate
  *              equations, each false one false for a named reason. g1-oa7-04
@@ -47,6 +50,14 @@ import { labelOptions } from '../../engine/questionModel';
  * counting slip — saying the number you start FROM as the first count, so
  * "8, 9, 10" for 8 + 3 — is `counted-the-start-number-as-a-hop`, and its
  * value is worked out in the comment above every option that uses it.
+ *
+ * NO ANSWER-SHAPE TELL (review finding M4). A counting slip always lands
+ * next to the key, so an item offering one puts the key in a ±1 pair. The
+ * bank spreads its slips across counting the start number, stopping one
+ * short and counting one too many, so the key is the lower of its pair as
+ * often as the upper; and where an honest error sits beside the slip, or
+ * no slip is offered, there is no lone ±1 pair to pick from at all.
+ * `./authored.oa.test.ts` holds both counts.
  */
 export const GRADE_1_OA_AUTHORED: Question[] = [
   // ==========================================
@@ -56,30 +67,31 @@ export const GRADE_1_OA_AUTHORED: Question[] = [
     id: 'g1-oa1-01',
     standardCode: 'NC.1.OA.1',
     domainId: 'OA',
-    // Take from, Change Unknown: 12 − ☐ = 5.
-    prompt: 'Mia had 12 grapes and ate some, so 5 are left. How many did she eat?',
+    // Take from, Change Unknown: 12 − ☐ = 5. One setup (before and now), one
+    // question (what happened in between).
+    prompt: 'Mia had 12 grapes and now has 5. How many did she eat?',
     options: labelOptions([
       // 12 + 5 = 17: added the two numbers in the story.
       { text: '17', isCorrect: false, misconception: 'added-instead-of-subtracted' },
       { text: '7', isCorrect: true },
-      // Counting up from 5 to 12 and saying the 5: 5, 6, 7, 8, 9, 10, 11, 12
-      // is 8 counts.
-      { text: '8', isCorrect: false, misconception: 'counted-the-start-number-as-a-hop' },
-      // 5: the grapes left, given back as the grapes eaten.
+      // 5: the grapes she has now, given back as the grapes eaten.
       { text: '5', isCorrect: false, misconception: 'restated-a-known-number-instead-of-solving' },
+      // Counting up from 5 and stopping one number before 12: 6, 7, 8, 9, 10,
+      // 11 is 6 counts.
+      { text: '6', isCorrect: false, misconception: 'counted-on-by-ones-and-stopped-one-short' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
     explanation: {
       stepByStep: [
-        'Step 1: Mia started with 12 grapes. She ate some, and 5 were left.',
+        'Step 1: Mia started with 12 grapes and has 5 now. The grapes she ate are the difference.',
         'Step 2: Write it as 12 − ☐ = 5.',
         'Step 3: Count on from 5 up to 12: 6, 7, 8, 9, 10, 11, 12. That is 7 counts.',
         'Step 4: Mia ate 7 grapes.',
       ],
       conceptSummary:
-        'When a story tells how many there were at the start and how many are left, the missing number is how many were taken. Counting on from what is left up to the start finds it.',
+        'When a story tells how many there were at the start and how many there are now, the missing number is how many were taken. Counting on from the number now up to the start finds it.',
       commonMisconception: 'Adding 12 and 5 gives 17, which is more grapes than Mia ever had.',
     },
   },
@@ -87,14 +99,14 @@ export const GRADE_1_OA_AUTHORED: Question[] = [
     id: 'g1-oa1-02',
     standardCode: 'NC.1.OA.1',
     domainId: 'OA',
-    // Take Apart, Addend Unknown: 9 + ☐ = 15.
-    prompt: 'Kim has 15 fish, some red and some blue. If 9 are red, how many are blue?',
+    // Take Apart, Addend Unknown: 8 + ☐ = 14.
+    prompt: 'Kim has 14 fish, some red and some blue. If 8 are red, how many are blue?',
     options: labelOptions([
-      // 15 + 9 = 24: added the two numbers in the story.
-      { text: '24', isCorrect: false, misconception: 'added-instead-of-subtracted' },
-      // 9: the red fish, given back as the blue ones.
-      { text: '9', isCorrect: false, misconception: 'restated-a-known-number-instead-of-solving' },
-      // Counting up from 9 to 15 and saying the 9: 9, 10, ..., 15 is 7 counts.
+      // 14 + 8 = 22: added the two numbers in the story.
+      { text: '22', isCorrect: false, misconception: 'added-instead-of-subtracted' },
+      // 8: the red fish, given back as the blue ones.
+      { text: '8', isCorrect: false, misconception: 'restated-a-known-number-instead-of-solving' },
+      // Counting up from 8 to 14 and saying the 8: 8, 9, ..., 14 is 7 counts.
       { text: '7', isCorrect: false, misconception: 'counted-the-start-number-as-a-hop' },
       { text: '6', isCorrect: true },
     ]),
@@ -103,15 +115,15 @@ export const GRADE_1_OA_AUTHORED: Question[] = [
     difficulty: 'mastery',
     explanation: {
       stepByStep: [
-        'Step 1: The 15 fish are made of two parts: 9 red fish and the blue fish.',
-        'Step 2: Write it as 9 + ☐ = 15.',
-        'Step 3: Count on from 9 up to 15: 10, 11, 12, 13, 14, 15. That is 6 counts.',
+        'Step 1: The 14 fish are made of two parts: 8 red fish and the blue fish.',
+        'Step 2: Write it as 8 + ☐ = 14.',
+        'Step 3: Count on from 8 up to 14: 9, 10, 11, 12, 13, 14. That is 6 counts.',
         'Step 4: 6 of the fish are blue.',
       ],
       conceptSummary:
         'When a total is made of two parts and one part is known, the missing part is the total take away the part you know.',
       commonMisconception:
-        'Adding 15 and 9 gives 24, but the blue fish are only part of the 15, so there must be fewer than 15 of them.',
+        'Adding 14 and 8 gives 22, but the blue fish are only part of the 14, so there must be fewer than 14 of them.',
     },
   },
   {
@@ -124,11 +136,10 @@ export const GRADE_1_OA_AUTHORED: Question[] = [
       { text: '5', isCorrect: true },
       // 14 + 9 = 23: "more" read as "put together".
       { text: '23', isCorrect: false, misconception: 'added-instead-of-subtracted' },
-      // Counting up from 9 to 14 and saying the 9: 9, 10, 11, 12, 13, 14 is
-      // 6 counts.
-      { text: '6', isCorrect: false, misconception: 'counted-the-start-number-as-a-hop' },
       // 14: how many books Ana read, not how many MORE.
       { text: '14', isCorrect: false, misconception: 'gave-an-amount-instead-of-the-difference' },
+      // 9: how many books Ben read — the other amount given back.
+      { text: '9', isCorrect: false, misconception: 'gave-an-amount-instead-of-the-difference' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
@@ -136,7 +147,7 @@ export const GRADE_1_OA_AUTHORED: Question[] = [
     explanation: {
       stepByStep: [
         'Step 1: Ana read 14 books. Ben read 9 books.',
-        "Step 2: Line them up: 9 of Ana's books match Ben's 9. The rest are extra.",
+        'Step 2: Write it as 9 + ☐ = 14. The ☐ is how many more Ana read.',
         'Step 3: Count on from 9 up to 14: 10, 11, 12, 13, 14. That is 5 counts, so 14 − 9 = 5.',
         'Step 4: Ana read 5 more books than Ben.',
       ],
@@ -161,8 +172,8 @@ export const GRADE_1_OA_AUTHORED: Question[] = [
       // 5 + 5 = 10, then 10 + 3 + 5 = 18: one 5 used in the ten and again.
       { text: '18', isCorrect: false, misconception: 'added-one-number-twice' },
       { text: '13', isCorrect: true },
-      // 5 + 5 = 10, then counting on 3 and saying the 10: 10, 11, 12.
-      { text: '12', isCorrect: false, misconception: 'counted-the-start-number-as-a-hop' },
+      // 5 + 5 = 10, then counting on 3 with one count too many: 11, 12, 13, 14.
+      { text: '14', isCorrect: false, misconception: 'counted-on-by-ones-one-too-many' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
@@ -183,29 +194,29 @@ export const GRADE_1_OA_AUTHORED: Question[] = [
     id: 'g1-oa2-02',
     standardCode: 'NC.1.OA.2',
     domainId: 'OA',
-    prompt: 'There are 2 cats, 7 dogs, and 8 birds. How many pets are there in all?',
+    prompt: 'There are 6 cats, 8 dogs, and 2 birds. How many pets are there in all?',
     options: labelOptions([
-      // 2 + 7 = 9: the birds never added.
-      { text: '9', isCorrect: false, misconception: 'left-one-of-the-addends-out' },
-      { text: '17', isCorrect: true },
-      // 2 + 8 = 10, then 10 + 7 + 8 = 25: the 8 used in the ten and again.
-      { text: '25', isCorrect: false, misconception: 'added-one-number-twice' },
-      // 2 + 8 = 10, then counting on 7 and saying the 10: 10, 11, ..., 16.
-      { text: '16', isCorrect: false, misconception: 'counted-the-start-number-as-a-hop' },
+      // 6 + 8 = 14: the birds never added.
+      { text: '14', isCorrect: false, misconception: 'left-one-of-the-addends-out' },
+      { text: '16', isCorrect: true },
+      // 8 + 2 = 10, then 10 + 6 + 2 = 18: the 2 used in the ten and again.
+      { text: '18', isCorrect: false, misconception: 'added-one-number-twice' },
+      // 8 + 2 = 10, then counting on 6 and saying the 10: 10, 11, ..., 15.
+      { text: '15', isCorrect: false, misconception: 'counted-the-start-number-as-a-hop' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
     explanation: {
       stepByStep: [
-        'Step 1: Write it as 2 + 7 + 8 = ☐.',
-        'Step 2: 2 + 8 = 10, so add those two first.',
-        'Step 3: 10 + 7 = 17.',
-        'Step 4: There are 17 pets in all.',
+        'Step 1: Write it as 6 + 8 + 2 = ☐.',
+        'Step 2: 8 + 2 = 10, so add those two first.',
+        'Step 3: 10 + 6 = 16.',
+        'Step 4: There are 16 pets in all.',
       ],
       conceptSummary:
         'Three numbers can be grouped in any way and the total stays the same. Putting two that make 10 together first makes the adding easier.',
-      commonMisconception: 'Adding only the cats and dogs, 2 + 7 = 9, leaves out the 8 birds.',
+      commonMisconception: 'Adding only the cats and dogs, 6 + 8 = 14, leaves out the 2 birds.',
     },
   },
   {
@@ -219,8 +230,8 @@ export const GRADE_1_OA_AUTHORED: Question[] = [
       { text: '13', isCorrect: false, misconception: 'left-one-of-the-addends-out' },
       // 4 + 6 = 10, then 10 + 9 + 6 = 25: the 6 used in the ten and again.
       { text: '25', isCorrect: false, misconception: 'added-one-number-twice' },
-      // 4 + 6 = 10, then counting on 9 and saying the 10: 10, 11, ..., 18.
-      { text: '18', isCorrect: false, misconception: 'counted-the-start-number-as-a-hop' },
+      // 4 + 6 = 10, then counting on 9 with one count too many: 11, ..., 20.
+      { text: '20', isCorrect: false, misconception: 'counted-on-by-ones-one-too-many' },
       { text: '19', isCorrect: true },
     ]),
     calculatorAllowed: false,
@@ -254,8 +265,8 @@ export const GRADE_1_OA_AUTHORED: Question[] = [
       { text: '12', isCorrect: false, misconception: 'counted-the-start-number-as-a-hop' },
       // 9 − 4 = 5.
       { text: '5', isCorrect: false, misconception: 'subtracted-instead-of-added' },
-      // Counting on 9 from 4 and taking one count too many: 14.
-      { text: '14', isCorrect: false, misconception: 'counted-on-by-ones-one-too-many' },
+      // 9: started at the 9 and never counted the 4 on.
+      { text: '9', isCorrect: false, misconception: 'restated-a-known-number-instead-of-solving' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
@@ -269,7 +280,7 @@ export const GRADE_1_OA_AUTHORED: Question[] = [
       conceptSummary:
         'Two numbers can be added in either order and the total is the same. Knowing 9 + 4 means knowing 4 + 9, and starting from the bigger number is usually quicker.',
       commonMisconception:
-        'Starting at 4 and counting on 9 is a long count, and it is easy to land on 12 or 14 instead of 13.',
+        'Starting at 4 and counting on 9 is a long count, and saying the 4 as the first count lands on 12 instead of 13.',
     },
   },
   {
@@ -283,9 +294,9 @@ export const GRADE_1_OA_AUTHORED: Question[] = [
       // 2 + 9 + 9 = 20.
       { text: '20', isCorrect: false, misconception: 'added-every-number-in-the-equation' },
       { text: '2', isCorrect: true },
-      // 2 + 9 = 11, then counting up from 9 to 11 and saying the 9: 9, 10, 11
-      // is 3 counts.
-      { text: '3', isCorrect: false, misconception: 'counted-the-start-number-as-a-hop' },
+      // 2 + 9 = 11, then counting up from 9 and stopping one number before
+      // 11: just "10", 1 count.
+      { text: '1', isCorrect: false, misconception: 'counted-on-by-ones-and-stopped-one-short' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
@@ -342,15 +353,19 @@ export const GRADE_1_OA_AUTHORED: Question[] = [
     id: 'g1-oa4-01',
     standardCode: 'NC.1.OA.4',
     domainId: 'OA',
-    // A take-away solved as an unknown addend.
-    prompt: 'What is 13 − 8? Think: 8 + ☐ = 13.',
+    // An unknown-addend problem rewritten as a take-away: the sourced
+    // keyConcept "Rewriting an unknown-addend problem as a subtraction
+    // problem". The "Think:" sentence keeps it off the missing-part
+    // generator's prompt shape.
+    prompt: 'What number makes 8 + ☐ = 13 true? Think: 13 − 8.',
     options: labelOptions([
-      // 13 + 8 = 21.
+      // 13 + 8 = 21: the take-away added instead.
       { text: '21', isCorrect: false, misconception: 'added-instead-of-subtracted' },
-      // Counting up from 8 to 13 and saying the 8: 8, 9, ..., 13 is 6 counts.
-      { text: '6', isCorrect: false, misconception: 'counted-the-start-number-as-a-hop' },
       // 8: the part already given, written into the box.
       { text: '8', isCorrect: false, misconception: 'restated-a-known-number-instead-of-solving' },
+      // Counting back 8 from 13 with one count too many: 12, 11, 10, 9, 8, 7,
+      // 6, 5, 4.
+      { text: '4', isCorrect: false, misconception: 'counted-on-by-ones-one-too-many' },
       { text: '5', isCorrect: true },
     ]),
     calculatorAllowed: false,
@@ -358,14 +373,14 @@ export const GRADE_1_OA_AUTHORED: Question[] = [
     difficulty: 'mastery',
     explanation: {
       stepByStep: [
-        'Step 1: 13 − 8 asks the same thing as 8 + ☐ = 13: what goes with 8 to make 13?',
-        'Step 2: Count on from 8: 9, 10, 11, 12, 13. That is 5 counts.',
-        'Step 3: So 8 + 5 = 13.',
-        'Step 4: 13 − 8 = 5.',
+        'Step 1: 8 + ☐ = 13 asks what goes with 8 to make 13.',
+        'Step 2: Change it to a take-away: the ☐ is 13 − 8.',
+        'Step 3: Take 8 away in two jumps: 13 − 3 = 10, and 10 − 5 = 5.',
+        'Step 4: The number in the ☐ is 5.',
       ],
       conceptSummary:
-        'Every take-away is an adding problem with a missing part. Finding what goes with 8 to make 13 answers 13 − 8.',
-      commonMisconception: 'Adding 13 and 8 gives 21, but taking 8 away from 13 has to leave less than 13.',
+        'An adding problem with a missing part can be turned into a take-away: the missing part is the total take away the part you know.',
+      commonMisconception: 'Adding 13 and 8 gives 21, but the ☐ is part of 13, so it has to be less than 13.',
     },
   },
   {
@@ -379,8 +394,8 @@ export const GRADE_1_OA_AUTHORED: Question[] = [
       { text: '25', isCorrect: false, misconception: 'added-instead-of-subtracted' },
       // Counting up from 9 to 16 and saying the 9: 9, 10, ..., 16 is 8 counts.
       { text: '8', isCorrect: false, misconception: 'counted-the-start-number-as-a-hop' },
-      // 16: the number Leo wants, given back as the number he needs.
-      { text: '16', isCorrect: false, misconception: 'restated-a-known-number-instead-of-solving' },
+      // 9: the cars Leo already has, given back as the cars he needs.
+      { text: '9', isCorrect: false, misconception: 'restated-a-known-number-instead-of-solving' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
@@ -408,8 +423,8 @@ export const GRADE_1_OA_AUTHORED: Question[] = [
       // 7 + 16 = 23.
       { text: '23', isCorrect: false, misconception: 'added-every-number-in-the-equation' },
       { text: '9', isCorrect: true },
-      // Counting up from 7 to 16 and saying the 7: 7, 8, ..., 16 is 10 counts.
-      { text: '10', isCorrect: false, misconception: 'counted-the-start-number-as-a-hop' },
+      // 6: the jump from 10 up to 16, with the jump up to 10 left out.
+      { text: '6', isCorrect: false, misconception: 'left-out-the-jump-to-ten' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
@@ -423,7 +438,8 @@ export const GRADE_1_OA_AUTHORED: Question[] = [
       ],
       conceptSummary:
         'A missing part can be found by adding on in two jumps, first up to 10 and then to the total. The answer is both jumps together.',
-      commonMisconception: 'Stopping after the first jump gives 3. The jump from 10 up to 16 is part of the answer too.',
+      commonMisconception:
+        'Stopping after the first jump gives 3, and giving only the second jump gives 6. The answer is both jumps: 3 + 6 = 9.',
     },
   },
 
@@ -442,8 +458,8 @@ export const GRADE_1_OA_AUTHORED: Question[] = [
       { text: '4', isCorrect: true },
       // Counting up from 6 to 10 and saying the 6: 6, 7, 8, 9, 10 is 5 counts.
       { text: '5', isCorrect: false, misconception: 'counted-the-start-number-as-a-hop' },
-      // 10: the target, given back as the number needed.
-      { text: '10', isCorrect: false, misconception: 'restated-a-known-number-instead-of-solving' },
+      // 6: the number it starts from, given back as the number needed.
+      { text: '6', isCorrect: false, misconception: 'restated-a-known-number-instead-of-solving' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
@@ -468,8 +484,8 @@ export const GRADE_1_OA_AUTHORED: Question[] = [
     options: labelOptions([
       // 8 + 3 = 11.
       { text: '11', isCorrect: false, misconception: 'added-instead-of-subtracted' },
-      // Counting back 3 from 8 and saying the 8: 8, 7, 6.
-      { text: '6', isCorrect: false, misconception: 'counted-the-start-number-as-a-hop' },
+      // Counting back 3 from 8 with one count too many: 7, 6, 5, 4.
+      { text: '4', isCorrect: false, misconception: 'counted-on-by-ones-one-too-many' },
       // 3: the number taken away, given back as the answer.
       { text: '3', isCorrect: false, misconception: 'restated-a-known-number-instead-of-solving' },
       { text: '5', isCorrect: true },
@@ -485,7 +501,7 @@ export const GRADE_1_OA_AUTHORED: Question[] = [
       ],
       conceptSummary:
         'An adding fact and a take-away fact that use the same three numbers belong together. Knowing one gives the other with no counting.',
-      commonMisconception: 'Counting back from 8 and saying 8 as the first count lands on 6. The first number to say is 7.',
+      commonMisconception: 'Counting back 3 from 8 is 7, 6, 5. One count too many lands on 4.',
     },
   },
   {
@@ -529,8 +545,8 @@ export const GRADE_1_OA_AUTHORED: Question[] = [
     // Strategy: counting on.
     prompt: 'What is 15 + 3? Count on from 15.',
     options: labelOptions([
-      // Counting on 3 and saying the 15: 15, 16, 17.
-      { text: '17', isCorrect: false, misconception: 'counted-the-start-number-as-a-hop' },
+      // Counting on 3 from 15 with one count too many: 16, 17, 18, 19.
+      { text: '19', isCorrect: false, misconception: 'counted-on-by-ones-one-too-many' },
       // 15 − 3 = 12.
       { text: '12', isCorrect: false, misconception: 'subtracted-instead-of-added' },
       { text: '18', isCorrect: true },
@@ -548,7 +564,7 @@ export const GRADE_1_OA_AUTHORED: Question[] = [
       ],
       conceptSummary:
         'Counting on from the bigger number is quick when the other number is small. The number you start on is not counted: the first count is one more.',
-      commonMisconception: 'Saying 15 as the first count, "15, 16, 17", lands on 17, one short.',
+      commonMisconception: 'It is easy to say one number too many — 16, 17, 18, 19 — and land on 19. Count on exactly 3.',
     },
   },
   {
@@ -616,31 +632,33 @@ export const GRADE_1_OA_AUTHORED: Question[] = [
     id: 'g1-oa6-04',
     standardCode: 'NC.1.OA.6',
     domainId: 'OA',
-    // Strategy: counting on to take away (the adding-taking-away link).
-    prompt: 'Max counts on from 9 to find 14 − 9. What does he get?',
+    // Strategy: getting to 10 first ("decomposing a number leading to a
+    // ten"), asked about the strategy itself. Every wrong option is a slip
+    // made INSIDE that strategy.
+    prompt: 'Max gets to 10 first to find 14 − 9. Which is the same as 14 − 9?',
     options: labelOptions([
-      // Counting up from 9 to 14 and saying the 9: 9, 10, ..., 14 is 6 counts.
-      { text: '6', isCorrect: false, misconception: 'counted-the-start-number-as-a-hop' },
-      { text: '5', isCorrect: true },
-      // 14 + 9 = 23.
-      { text: '23', isCorrect: false, misconception: 'added-instead-of-subtracted' },
-      // 9 − 4 = 5 taken the wrong way round, and the ten kept: 15.
-      { text: '15', isCorrect: false, misconception: 'subtracted-without-regrouping' },
+      // 15: 14 − 4 = 10, then the other 5 added instead of taken away.
+      { text: '10 + 5', isCorrect: false, misconception: 'added-the-rest-after-getting-to-ten' },
+      { text: '10 − 5', isCorrect: true },
+      // 1: got to 10, then took all 9 away again.
+      { text: '10 − 9', isCorrect: false, misconception: 'used-the-whole-number-after-breaking-it-apart' },
+      // 6: took away the 4 that already got 14 down to 10, not the 5 left.
+      { text: '10 − 4', isCorrect: false, misconception: 'used-the-wrong-part-after-making-ten' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'advanced',
     explanation: {
       stepByStep: [
-        'Step 1: Use counting on: 14 − 9 is the same as 9 + ☐ = 14.',
-        'Step 2: Start at 9. The first number to say is 10: 10, 11, 12, 13, 14.',
-        'Step 3: That is 5 counts.',
-        'Step 4: 14 − 9 = 5.',
+        'Step 1: Get to 10 first. Break the 9 into 4 and 5.',
+        'Step 2: 14 − 4 = 10.',
+        'Step 3: The 5 still has to come away.',
+        'Step 4: So 14 − 9 is the same as 10 − 5.',
       ],
       conceptSummary:
-        'Taking away and adding are linked: 14 − 9 asks what goes with 9 to make 14. When the two numbers are close, counting on from the smaller one is quicker than counting back.',
+        'Getting to 10 first splits a hard take-away into two easy ones: 14 − 4 = 10, then 10 − 5 = 5.',
       commonMisconception:
-        'Counting "9, 10, 11, 12, 13, 14" and including the 9 gives 6. The 9 is where Max starts, not one of the counts.',
+        'Once 4 of the 9 have been used to get to 10, only 5 are left, and they are taken AWAY: 10 − 5, not 10 + 5.',
     },
   },
 
@@ -653,8 +671,9 @@ export const GRADE_1_OA_AUTHORED: Question[] = [
     domainId: 'OA',
     prompt: 'Which equation is true?',
     options: labelOptions([
-      // False (9 is not 10): counting on 4 from 5 with one count too many.
-      { text: '5 + 4 = 10', isCorrect: false, misconception: 'counted-on-by-ones-one-too-many' },
+      // False (10 is not 9): counting on 4 from 5 with one count too many.
+      // Written answer-first, like the key, so the shape gives nothing away.
+      { text: '10 = 5 + 4', isCorrect: false, misconception: 'counted-on-by-ones-one-too-many' },
       // False (9 is not 10): 5 + 4 = 9 is checked and the + 1 ignored.
       { text: '5 + 4 = 9 + 1', isCorrect: false, misconception: 'read-the-equal-sign-as-the-answer-comes-next' },
       { text: '9 = 5 + 4', isCorrect: true },
@@ -667,7 +686,7 @@ export const GRADE_1_OA_AUTHORED: Question[] = [
     explanation: {
       stepByStep: [
         'Step 1: An equation is true when both sides are the same amount.',
-        'Step 2: 5 + 4 is 9, not 10. 9 + 1 is 10, not 9. 5 − 4 is 1, not 9.',
+        'Step 2: 5 + 4 is 9, so 10 = 5 + 4 is false, and so is 5 + 4 = 9 + 1, because 9 + 1 is 10. And 5 − 4 is 1, not 9.',
         'Step 3: In 9 = 5 + 4 both sides are 9. The answer can come first.',
         'Step 4: The true equation is 9 = 5 + 4.',
       ],
@@ -749,8 +768,8 @@ export const GRADE_1_OA_AUTHORED: Question[] = [
       { text: '8', isCorrect: true },
       // 6 + 5 + 3 = 14.
       { text: '14', isCorrect: false, misconception: 'added-every-number-in-the-equation' },
-      // 11 found, then counting back 3 and saying the 11: 11, 10, 9.
-      { text: '9', isCorrect: false, misconception: 'counted-the-start-number-as-a-hop' },
+      // 11 found, then counting back 3 with one count too many: 10, 9, 8, 7.
+      { text: '7', isCorrect: false, misconception: 'counted-on-by-ones-one-too-many' },
     ]),
     calculatorAllowed: false,
     isStretch: false,

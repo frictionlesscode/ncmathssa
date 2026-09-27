@@ -108,7 +108,7 @@ describe('g1.oa8.missing-whole', () => {
       expect(x).toBeGreaterThan(b);
       expect(x).toBeGreaterThan(c);
       expect(g.explanation.commonMisconception).toBe(
-        `The minus sign makes taking away feel right, but ${Math.max(b, c)} − ${Math.min(b, c)} = ${Math.abs(b - c)} cannot be the start: the ☐ has to be bigger than both ${b} and ${c}.`,
+        `The minus sign makes taking away feel right, but ${Math.max(b, c)} − ${Math.min(b, c)} = ${Math.abs(b - c)} cannot be the start: the ☐ has to be bigger than ${b === c ? `${b}` : `both ${b} and ${c}`}.`,
       );
     }
   });

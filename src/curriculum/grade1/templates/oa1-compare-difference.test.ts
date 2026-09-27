@@ -54,7 +54,13 @@ describe('g1.oa1.compare-difference', () => {
       ['C', '36', false, 'added-instead-of-subtracted'],
       ['D', '4', true, null],
     ]);
-    expect(g.explanation.stepByStep[3]).toBe('Step 4: Max has 4 more beads than Kim.');
+    expect(g.explanation.stepByStep).toEqual([
+      'Step 1: Max has 20 beads. Kim has 16 beads.',
+      'Step 2: Write it as 16 + ☐ = 20.',
+      'Step 3: Count on from 16 up to 20. The first number to say is 17.',
+      'Step 4: That is 4 counts, so 20 − 16 = 4.',
+      'Step 5: Max has 4 more beads than Kim.',
+    ]);
   });
 
   it('emits exactly this question at seed 2024 ("fewer", short count)', () => {
@@ -67,7 +73,13 @@ describe('g1.oa1.compare-difference', () => {
       ['C', '24', false, 'added-instead-of-subtracted'],
       ['D', '6', true, null],
     ]);
-    expect(g.explanation.stepByStep[3]).toBe('Step 4: Mia has 6 fewer beads than Max.');
+    expect(g.explanation.stepByStep).toEqual([
+      'Step 1: Max has 15 beads. Mia has 9 beads.',
+      'Step 2: Write it as 9 + ☐ = 15.',
+      'Step 3: Count on from 9 up to 15. The first number to say is 10.',
+      'Step 4: That is 6 counts, so 15 − 9 = 6.',
+      'Step 5: Mia has 6 fewer beads than Max.',
+    ]);
   });
 
   it('keeps every prompt readable for a six-year-old, at every seed', () => {
@@ -138,16 +150,19 @@ describe('g1.oa1.compare-difference', () => {
       const otherN = p.amounts.get(p.other)!;
       const big = Math.max(askedN, otherN);
       const small = Math.min(askedN, otherN);
-      const [s1, s2, s3, s4] = g.explanation.stepByStep;
+      const [s1, s2, s3, s4, s5] = g.explanation.stepByStep;
       const bigName = askedN === big ? p.asked : p.other;
       const smallName = askedN === big ? p.other : p.asked;
       expect(s1).toBe(`Step 1: ${bigName} has ${big} ${p.noun}. ${smallName} has ${small} ${p.noun}.`);
-      expect(s2).toBe(`Step 2: Count on from ${small} up to ${big}. The first number to say is ${small + 1}.`);
-      expect(s3).toBe(`Step 3: That is ${big - small} counts, so ${big} − ${small} = ${big - small}.`);
-      expect(s4).toBe(
+      // M6: the ☐ equation is written, and it is true for the answer.
+      expect(s2).toBe(`Step 2: Write it as ${small} + ☐ = ${big}.`);
+      expect(small + Number(g.answerText), `seed ${seed}: ${s2}`).toBe(big);
+      expect(s3).toBe(`Step 3: Count on from ${small} up to ${big}. The first number to say is ${small + 1}.`);
+      expect(s4).toBe(`Step 4: That is ${big - small} counts, so ${big} − ${small} = ${big - small}.`);
+      expect(s5).toBe(
         p.mode === 'more'
-          ? `Step 4: ${bigName} has ${big - small} more ${p.noun} than ${smallName}.`
-          : `Step 4: ${smallName} has ${big - small} fewer ${p.noun} than ${bigName}.`,
+          ? `Step 5: ${bigName} has ${big - small} more ${p.noun} than ${smallName}.`
+          : `Step 5: ${smallName} has ${big - small} fewer ${p.noun} than ${bigName}.`,
       );
       expect(g.explanation.commonMisconception).toBe(
         `Adding ${small} + ${big} = ${small + big} finds how many ${p.noun} there are in all, not how many ${p.mode} one child has than the other.`,

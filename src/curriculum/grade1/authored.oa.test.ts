@@ -7,43 +7,12 @@ import {
 import { GRADE_1_DOMAINS } from './standards';
 import { GRADE_1_OA_AUTHORED } from './authored.oa';
 import { GRADE_1_TEMPLATES } from './templates';
+import { evaluate, holds, solutions } from './equations.testkit';
 
 const oa = GRADE_1_DOMAINS.find((d) => d.id === 'OA')!;
 const itemsFor = (code: string) => GRADE_1_OA_AUTHORED.filter((q) => q.standardCode === code);
 const correctText = (q: (typeof GRADE_1_OA_AUTHORED)[number]) => q.options.find((o) => o.isCorrect)!.text;
 const numbersIn = (text: string) => (text.match(/\d+/g) ?? []).map(Number);
-
-/** Evaluates a Grade 1 expression: whole numbers joined by + and −, nothing
- *  else. Throws on anything it does not recognise, so a typo in an option
- *  cannot quietly evaluate to something. */
-function evaluate(expr: string): number {
-  const tokens = expr.trim().split(/\s+/);
-  if (tokens.length % 2 === 0) throw new Error(`not an expression: "${expr}"`);
-  let total = Number(tokens[0]);
-  for (let i = 1; i < tokens.length; i += 2) {
-    const n = Number(tokens[i + 1]);
-    if (!/^\d+$/.test(tokens[i + 1])) throw new Error(`not a number in "${expr}"`);
-    if (tokens[i] === '+') total += n;
-    else if (tokens[i] === '−') total -= n;
-    else throw new Error(`unknown operator "${tokens[i]}" in "${expr}"`);
-  }
-  if (!/^\d+$/.test(tokens[0])) throw new Error(`not a number in "${expr}"`);
-  return total;
-}
-
-/** True if an equation's two sides name the same amount. */
-function holds(equation: string): boolean {
-  const sides = equation.split('=');
-  if (sides.length !== 2) throw new Error(`not an equation: "${equation}"`);
-  return evaluate(sides[0]) === evaluate(sides[1]);
-}
-
-/** Every whole number 0-40 that makes an equation with one ☐ true. */
-function solutions(equation: string): number[] {
-  const out: number[] = [];
-  for (let n = 0; n <= 40; n++) if (holds(equation.replace('☐', `${n}`))) out.push(n);
-  return out;
-}
 
 describe('grade 1 OA authored bank', () => {
   it('holds every authored-bank invariant', () => {
@@ -110,15 +79,27 @@ describe('grade 1 OA authored bank', () => {
     }
     // LITERAL: the count of items the solver can read. A prompt reworded out
     // of these shapes drops out of the check, and this number says so.
-    expect(checked).toBe(17);
+    expect(checked).toBe(18);
   });
 
   // Ruling 22-2: the three named problem types ARE the standard.
   it('gives NC.1.OA.1 one item of each named problem type', () => {
     const prompts = itemsFor('NC.1.OA.1').map((q) => q.prompt);
-    expect(prompts.some((p) => /and ate some, so \d+ are left/.test(p)), 'Take from, Change Unknown').toBe(true);
+    expect(prompts.some((p) => /had \d+ [a-z]+ and now has \d+\. How many did [a-z]+ eat\?/.test(p)), 'Take from, Change Unknown').toBe(true);
     expect(prompts.some((p) => /some red and some blue/.test(p)), 'Take Apart, Addend Unknown').toBe(true);
     expect(prompts.some((p) => /How many more .+ than/.test(p)), 'Compare, Difference Unknown').toBe(true);
+  });
+
+  // Review finding M6: NC.1.OA.1 is solved "using ... equations with a symbol
+  // for the unknown number", so every worked solution writes one — and it has
+  // to be an equation whose only solution is the key.
+  it('writes a ☐ equation in every NC.1.OA.1 worked solution, solved by the key', () => {
+    for (const q of itemsFor('NC.1.OA.1')) {
+      const step = q.explanation.stepByStep.find((st) => /Write it as .+☐/.test(st));
+      expect(step, `${q.id} never writes its equation`).toBeDefined();
+      const equation = /Write it as ([\d ☐+−=]+)\./.exec(step!)![1];
+      expect(solutions(equation), `${q.id}: ${equation}`).toEqual([Number(correctText(q))]);
+    }
   });
 
   // Ruling 22-3: three addends, sum at most 20, and the key is that sum.
@@ -150,6 +131,20 @@ describe('grade 1 OA authored bank', () => {
     }
   });
 
+  // Review finding I1: NC.1.OA.4's second keyConcept, "Rewriting an
+  // unknown-addend problem as a subtraction problem". The item has to START
+  // as an unknown addend (K + ☐ = W) and be solved as W − K — the other way
+  // round is NC.1.OA.6's addition-and-subtraction link, not this standard.
+  it('rewrites an NC.1.OA.4 unknown addend as a take-away', () => {
+    const rewrites = itemsFor('NC.1.OA.4').filter((q) => {
+      const m = /(\d+) \+ ☐ = (\d+)/.exec(q.prompt);
+      if (!m) return false;
+      const [known, whole] = [m[1], m[2]];
+      return q.explanation.stepByStep.some((st) => /take-away/.test(st) && st.includes(`${whole} − ${known}`));
+    });
+    expect(rewrites.map((q) => q.id)).toEqual(['g1-oa4-01']);
+  });
+
   // Ruling 22-4: the standard IS its strategies, so each explanation names the
   // one it uses, in the words of the sourced keyConcepts.
   it('names a strategy in every NC.1.OA.6 explanation, including making ten and counting on', () => {
@@ -176,5 +171,47 @@ describe('grade 1 OA authored bank', () => {
     for (const q of shaped) {
       for (const o of q.options) expect(o.text, `${q.id}`).toMatch(/^[\d +−]+=[\d +−]+$/);
     }
+  });
+
+  // Review finding M5: "9 = 5 + 4" was the only option written answer-first,
+  // so its shape alone gave it away. The key's shape — how many numbers sit on
+  // each side of the equal sign — must be shared by at least one false option.
+  it('never keys the only equation of its shape', () => {
+    const shapeOf = (eq: string) => eq.split('=').map((side) => side.trim().split(/\s+/).length).join('|');
+    for (const q of itemsFor('NC.1.OA.7').filter((i) => i.prompt === 'Which equation is true?')) {
+      const key = shapeOf(correctText(q));
+      const alike = q.options.filter((o) => !o.isCorrect && shapeOf(o.text) === key);
+      expect(alike.length, `${q.id}: no false option shaped like the key (${key})`).toBeGreaterThan(0);
+    }
+  });
+
+  // Review finding M4. A counting slip always lands next to the key, so every
+  // item offering one puts the key in a ±1 pair; before this fix the key sat
+  // in the ONLY ±1 pair in 20 of 21 numeric items, and was the LOWER of it in
+  // 14. A child who learned "pick the lower of the two neighbours" scored 68%
+  // on the numeric half of the bank. The slips are now spread across counting
+  // the start number, stopping short and counting one too many, and several
+  // items put another honest error beside the slip or offer none at all.
+  it('does not key the numeric items by answer shape', () => {
+    let numeric = 0;
+    let lower = 0;
+    let upper = 0;
+    for (const q of GRADE_1_OA_AUTHORED) {
+      if (!q.options.every((o) => /^\d+$/.test(o.text))) continue;
+      numeric++;
+      const values = q.options.map((o) => Number(o.text)).sort((a, b) => a - b);
+      const key = Number(correctText(q));
+      const pairs = values.slice(1).map((v, i) => [values[i], v]).filter(([a, b]) => b - a === 1);
+      if (pairs.length !== 1) continue;
+      if (pairs[0][0] === key) lower++;
+      if (pairs[0][1] === key) upper++;
+    }
+    // Lower and upper within one of each other, so "pick the lower" or "pick
+    // the upper" of a lone ±1 pair does no better than a coin toss on it...
+    expect(Math.abs(lower - upper), `lower ${lower}, upper ${upper}`).toBeLessThanOrEqual(1);
+    // ...and the key sits in a lone ±1 pair in at most 3 numeric items in 5.
+    expect(lower + upper, `${lower + upper} of ${numeric} keyed in a lone ±1 pair`).toBeLessThanOrEqual(
+      Math.floor((3 * numeric) / 5),
+    );
   });
 });

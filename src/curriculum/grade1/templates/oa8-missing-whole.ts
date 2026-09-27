@@ -105,7 +105,7 @@ export const oa8MissingWhole: QuestionTemplate = {
         ],
         conceptSummary:
           'When the number a take-away starts from is missing, adding the part taken away back to the part that is left finds it.',
-        commonMisconception: `The minus sign makes taking away feel right, but ${hi} − ${lo} = ${hi - lo} cannot be the start: the ☐ has to be bigger than both ${b} and ${c}.`,
+        commonMisconception: `The minus sign makes taking away feel right, but ${hi} − ${lo} = ${hi - lo} cannot be the start: the ☐ has to be bigger than ${b === c ? `${b}` : `both ${b} and ${c}`}.`,
       },
     };
   },

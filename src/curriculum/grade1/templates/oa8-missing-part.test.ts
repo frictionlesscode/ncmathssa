@@ -3,6 +3,7 @@ import { assertTemplateSound } from '../../../engine/templateTesting';
 import { makeRng } from '../../../engine/rng';
 import { assertGradeOneReadable } from '../../authoredBank.testkit';
 import { oa8MissingPart, PART_DRAWS, ALL_PART_PAIRS } from './oa8-missing-part';
+import { solutions } from '../equations.testkit';
 
 type G = ReturnType<typeof oa8MissingPart.generate>;
 
@@ -23,22 +24,6 @@ function parse(prompt: string) {
   const known = Math.min(...nums);
   const form = equation.replace(`${whole}`, 'W').replace(new RegExp(`\\b${known}\\b`), 'K');
   return { equation, whole, known, missing: whole - known, form };
-}
-
-/** Every whole number 0-40 that makes the equation true. */
-function solutions(equation: string): number[] {
-  const side = (s: string) => {
-    const t = s.trim().split(' ');
-    let v = Number(t[0]);
-    for (let i = 1; i < t.length; i += 2) v = t[i] === '+' ? v + Number(t[i + 1]) : v - Number(t[i + 1]);
-    return v;
-  };
-  const out: number[] = [];
-  for (let n = 0; n <= 40; n++) {
-    const [l, r] = equation.replace('☐', `${n}`).split('=');
-    if (side(l) === side(r)) out.push(n);
-  }
-  return out;
 }
 
 const gen = (seed: number) => oa8MissingPart.generate(makeRng(seed));

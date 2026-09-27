@@ -1929,12 +1929,27 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
     entry(
       'used-the-wrong-part-after-making-ten',
       'addition-and-subtraction-strategies',
-      'Broke a number into two parts to make a ten, then added the part that had already gone into the ten instead of the part left over — so 8 + 5 became 10 + 2 = 12.',
+      'Broke a number into two parts to make or get to a ten, then used the part that had already gone into the ten instead of the part left over — so 8 + 5 became 10 + 2 = 12, or 14 − 9 became 10 − 4.',
     ),
     entry(
       'used-the-wrong-partner-to-make-ten',
       'addition-and-subtraction-strategies',
       'Filled a number up to 10 with the wrong partner — treating 8 as needing 1 more instead of 2 — so the part left over, and the answer, came out wrong.',
+    ),
+    // The error INSIDE a get-to-10 take-away. It lands on the same number as
+    // taking the smaller ones digit from the bigger one (14 − 6 -> 12), but
+    // that is `subtracted-without-regrouping`, a column-algorithm tag in
+    // 'multi-digit-algorithm', and a first-grader told to get to 10 first is
+    // not doing the column algorithm.
+    entry(
+      'added-the-rest-after-getting-to-ten',
+      'addition-and-subtraction-strategies',
+      'Took part of a number away to get down to 10, then ADDED the rest instead of taking it away too — so 14 − 6 became 14 − 4 = 10, then 10 + 2 = 12.',
+    ),
+    entry(
+      'left-out-the-jump-to-ten',
+      'addition-and-subtraction-strategies',
+      'Added on in two jumps, up to 10 and then past it, but answered with only the jump past 10 and left out the jump up to 10 — so 7 + ☐ = 16 was answered 6 instead of 3 + 6 = 9.',
     ),
     entry(
       'left-the-ten-out-of-a-teen-number',

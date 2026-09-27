@@ -138,11 +138,15 @@ export const oa1CompareDifference: QuestionTemplate = {
       explanation: {
         stepByStep: [
           `Step 1: ${bigName} has ${big} ${noun}. ${smallName} has ${small} ${noun}.`,
-          `Step 2: Count on from ${small} up to ${big}. The first number to say is ${small + 1}.`,
-          `Step 3: That is ${d} counts, so ${big} − ${small} = ${d}.`,
+          // NC.1.OA.1 is solved "using ... equations with a symbol for the
+          // unknown number": the gap is what goes with the smaller amount to
+          // make the bigger one, for "more" and "fewer" alike.
+          `Step 2: Write it as ${small} + ☐ = ${big}.`,
+          `Step 3: Count on from ${small} up to ${big}. The first number to say is ${small + 1}.`,
+          `Step 4: That is ${d} counts, so ${big} − ${small} = ${d}.`,
           mode === 'more'
-            ? `Step 4: ${bigName} has ${d} more ${noun} than ${smallName}.`
-            : `Step 4: ${smallName} has ${d} fewer ${noun} than ${bigName}.`,
+            ? `Step 5: ${bigName} has ${d} more ${noun} than ${smallName}.`
+            : `Step 5: ${smallName} has ${d} fewer ${noun} than ${bigName}.`,
         ],
         conceptSummary:
           '"How many more" and "how many fewer" both ask for the difference between two amounts, and it is the same number either way. Counting on from the smaller amount up to the bigger one finds it.',

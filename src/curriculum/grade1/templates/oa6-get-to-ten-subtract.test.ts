@@ -43,7 +43,7 @@ describe('g1.oa6.get-to-ten-subtract', () => {
     expect(g.answerText).toBe('7');
     expect(shape(g)).toEqual([
       ['A', '7', true, null],
-      ['B', '13', false, 'subtracted-without-regrouping'],
+      ['B', '13', false, 'added-the-rest-after-getting-to-ten'],
       ['C', '6', false, 'used-the-whole-number-after-breaking-it-apart'],
       ['D', '8', false, 'counted-the-start-number-as-a-hop'],
     ]);
@@ -63,7 +63,7 @@ describe('g1.oa6.get-to-ten-subtract', () => {
       ['A', '4', false, 'counted-on-by-ones-one-too-many'],
       ['B', '3', false, 'used-the-whole-number-after-breaking-it-apart'],
       ['C', '5', true, null],
-      ['D', '15', false, 'subtracted-without-regrouping'],
+      ['D', '15', false, 'added-the-rest-after-getting-to-ten'],
     ]);
   });
 
@@ -106,7 +106,7 @@ describe('g1.oa6.get-to-ten-subtract', () => {
       expect(ones + rest, `seed ${seed}`).toBe(b);
       expect(rest, `seed ${seed}`).toBeGreaterThanOrEqual(1);
       expect(g.explanation.commonMisconception).toBe(
-        `${10 + rest} comes from doing ${b} − ${ones} = ${rest} and keeping the ten. But it is ${b} that comes away from ${a}: take ${ones} to get to 10, then ${rest} more.`,
+        `Getting to 10 and then adding the ${rest} gives ${10 + rest}. The ${rest} is part of the ${b} being taken away, so it comes off too: 10 − ${rest} = ${diff}.`,
       );
     }
   });
@@ -123,7 +123,7 @@ describe('g1.oa6.get-to-ten-subtract', () => {
     for (let seed = 0; seed < 600; seed++) {
       const g = gen(seed);
       const { b, rest, diff } = parse(g.prompt);
-      expect(Number(byTag(g, 'subtracted-without-regrouping')!.text), `seed ${seed}`).toBe(10 + rest);
+      expect(Number(byTag(g, 'added-the-rest-after-getting-to-ten')!.text), `seed ${seed}`).toBe(10 + rest);
       expect(Number(byTag(g, 'used-the-whole-number-after-breaking-it-apart')!.text), `seed ${seed}`).toBe(10 - b);
       const hop = byTag(g, 'counted-the-start-number-as-a-hop');
       const over = byTag(g, 'counted-on-by-ones-one-too-many');
@@ -133,8 +133,8 @@ describe('g1.oa6.get-to-ten-subtract', () => {
     }
   });
 
-  // No size tell: taking all of b from 10 always undershoots and the no-regroup
-  // answer always overshoots, but the counting slip lands on either side.
+  // No size tell: taking all of b from 10 always undershoots and adding the
+  // rest always overshoots, but the counting slip lands on either side.
   it('does not always put the correct answer at the same rank', () => {
     const ranks = new Set<number>();
     for (let seed = 0; seed < 400; seed++) {

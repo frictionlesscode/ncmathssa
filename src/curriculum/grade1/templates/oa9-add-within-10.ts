@@ -96,13 +96,16 @@ export const oa9AddWithin10: QuestionTemplate = {
       answerText,
       explanation: {
         stepByStep: [
-          `Step 1: Start at the bigger number, ${big}.`,
+          // A double (2 + 2 ... 5 + 5) has no bigger number to start from.
+          a === b ? `Step 1: Both numbers are ${a}. Start at ${a}.` : `Step 1: Start at the bigger number, ${big}.`,
           `Step 2: Count on ${small} more: ${counts.join(', ')}.`,
           `Step 3: ${a} + ${b} = ${sum}.`,
         ],
         conceptSummary:
-          'Facts within 10 are worth knowing by heart, so the answer comes without counting. Until then, start at the bigger number and count on: the first number to say is one more than where you start.',
-        commonMisconception: `Saying ${big} as the first count lands on ${sum - 1}. The first number to say is ${big + 1}.`,
+          a === b
+            ? 'Facts within 10 are worth knowing by heart, so the answer comes without counting. Until then, start at one of the numbers and count on the other: the first number to say is one more than where you start.'
+            : 'Facts within 10 are worth knowing by heart, so the answer comes without counting. Until then, start at the bigger number and count on: the first number to say is one more than where you start.',
+        commonMisconception: `Saying ${big} as the first count lands on ${sum - 1}, one short. The first number to say is ${big + 1}.`,
       },
     };
   },

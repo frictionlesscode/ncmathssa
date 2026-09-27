@@ -18,9 +18,8 @@ import { labelOptions } from '../../../engine/questionModel';
  * 36 facts.
  *
  *   answer                                          a − b = 10 − rest
- *   subtracted-without-regrouping                   10 + rest   (b − ones
- *                                                   taken the wrong way round,
- *                                                   the ten kept)
+ *   added-the-rest-after-getting-to-ten             10 + rest   (got to 10,
+ *                                                   then ADDED the rest)
  *   used-the-whole-number-after-breaking-it-apart   10 − b      (got to 10,
  *                                                   then took all of b again)
  *   counted-the-start-number-as-a-hop               a − b + 1   (counting back
@@ -77,9 +76,8 @@ export const oa6GetToTenSubtract: QuestionTemplate = {
     const answerText = `${diff}`;
     const candidates = [
       { text: answerText, isCorrect: true },
-      // b − ones = rest, the ten kept: the smaller ones digit taken from the
-      // bigger one instead of getting to 10.
-      { text: `${10 + rest}`, isCorrect: false, misconception: 'subtracted-without-regrouping' },
+      // Got to 10, then added the rest instead of taking it away too.
+      { text: `${10 + rest}`, isCorrect: false, misconception: 'added-the-rest-after-getting-to-ten' },
       // Got to 10, then took all of b away again instead of just the rest.
       { text: `${10 - b}`, isCorrect: false, misconception: 'used-the-whole-number-after-breaking-it-apart' },
       slip === 'hop'
@@ -106,7 +104,7 @@ export const oa6GetToTenSubtract: QuestionTemplate = {
         ],
         conceptSummary:
           'Taking away in two jumps, first down to 10 and then the rest, turns a hard take-away into two easy ones.',
-        commonMisconception: `${10 + rest} comes from doing ${b} − ${ones} = ${rest} and keeping the ten. But it is ${b} that comes away from ${a}: take ${ones} to get to 10, then ${rest} more.`,
+        commonMisconception: `Getting to 10 and then adding the ${rest} gives ${10 + rest}. The ${rest} is part of the ${b} being taken away, so it comes off too: 10 − ${rest} = ${diff}.`,
       },
     };
   },

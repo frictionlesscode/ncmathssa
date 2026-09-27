@@ -34,8 +34,8 @@ import { oa9SubtractWithin10 } from './oa9-subtract-within-10';
  *    NC.1.OA.6  MAKING TEN to add, and GETTING TO 10 FIRST to take away — two
  *               templates, each naming its strategy in its worked solution
  *               (ruling 22-4). Counting on, a doubles fact, and making ten
- *               asked about directly ("which is the same as 8 + 5?") are
- *               authored, where the strategy is the question.
+ *               and getting to 10 asked about directly ("which is the same
+ *               as 8 + 5?") are authored, where the strategy is the question.
  *    NC.1.OA.8  a missing PART (six positions, either side of the equal sign)
  *               and a missing WHOLE (☐ − b = c) — two templates, because one
  *               is solved by taking away and the other by adding, and the
@@ -56,8 +56,9 @@ import { oa9SubtractWithin10 } from './oa9-subtract-within-10';
  *
  *  NC.1.OA.3, NC.1.OA.4 and NC.1.OA.7 have NO generator, deliberately.
  *  NC.1.OA.3 is using the commutative and associative properties as a
- *  STRATEGY (and never naming them, ruling 22-5); NC.1.OA.4 is turning an
- *  unknown-addend problem into a subtraction; NC.1.OA.7 is deciding which
+ *  STRATEGY (and never naming them, ruling 22-5); NC.1.OA.4 is solving an
+ *  unknown addend by the METHOD the standard names — adding on, or changing
+ *  it to a take-away (8 + ☐ = 13 as 13 − 8); NC.1.OA.7 is deciding which
  *  equation is true (ruling 22-6). In all three the mathematics is in how the
  *  question is built, not in which numbers it uses, so fresh numbers add
  *  nothing. They are authored in full in `../authored.oa.ts`.
@@ -66,9 +67,9 @@ import { oa9SubtractWithin10 } from './oa9-subtract-within-10';
  *  generator, the authored bank takes shapes the generators do not make: the
  *  other two NC.1.OA.1 problem types; three-addend stories that are not the
  *  generator's red, blue and green groups; counting on, a doubles fact, and
- *  making ten asked about as a strategy; 0 as an unknown or an answer; a
- *  result with the box on the left (☐ = 9 − 3); the pairs that make 10; and a
- *  fact family. `../authored.oa.test.ts` runs
+ *  making ten and getting to 10 asked about as a strategy; 0 as an unknown
+ *  or an answer; a result with the box on the left (☐ = 9 − 3); the pairs
+ *  that make 10; and a fact family. `../authored.oa.test.ts` runs
  *  `assertNoGeneratorDuplicatesAuthored` over these templates to hold that. */
 export const GRADE_1_TEMPLATES: QuestionTemplate[] = [
   oa1CompareDifference,

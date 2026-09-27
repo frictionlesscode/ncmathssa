@@ -110,6 +110,21 @@ describe('g1.oa6.make-ten-add', () => {
     }
   });
 
+  // The same class as review finding I2: a double (6 + 6 ... 9 + 9) is
+  // drawable here, and has no "bigger" number for any sentence to name.
+  it('never calls a number "bigger" when both numbers are the same', () => {
+    let doubles = 0;
+    for (let seed = 0; seed < 2000; seed++) {
+      const g = gen(seed);
+      const { a, b } = parse(g.prompt);
+      if (a !== b) continue;
+      doubles++;
+      const text = [...g.explanation.stepByStep, g.explanation.conceptSummary, g.explanation.commonMisconception ?? ''];
+      for (const s of text) expect(s, `seed ${seed}: ${g.prompt}`).not.toMatch(/bigger/i);
+    }
+    expect(doubles).toBeGreaterThan(0);
+  });
+
   it('draws the bigger number first and second, and both counting slips', () => {
     const seen = new Set<string>();
     for (let seed = 0; seed < 300; seed++) {

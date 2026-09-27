@@ -126,7 +126,7 @@ export const oa6MakeTenAdd: QuestionTemplate = {
           `Step 4: ${a} + ${b} = ${sum}.`,
         ],
         conceptSummary:
-          'Making ten turns a hard fact into an easy one: fill the bigger number up to 10, then add what is left. Ten plus a number is quick to know.',
+          'Making ten turns a hard fact into an easy one: fill one number up to 10 with part of the other, then add what is left. Ten plus a number is quick to know.',
         commonMisconception: `Making the ten uses ${need} of the ${small}, so only ${rest} is left to add. Adding all ${small} again gives ${10 + small}.`,
       },
     };
