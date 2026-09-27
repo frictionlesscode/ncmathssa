@@ -1,9 +1,11 @@
 import type { Grade, GradeCurriculum, DomainId, StandardInfo } from './types';
+import { GRADE_2 } from './grade2';
 import { GRADE_3 } from './grade3';
 import { GRADE_4 } from './grade4';
 import { GRADE_5 } from './grade5';
 
 const CURRICULA: Partial<Record<Grade, GradeCurriculum>> = {
+  2: GRADE_2,
   3: GRADE_3,
   4: GRADE_4,
   5: GRADE_5,
@@ -53,4 +55,26 @@ export function weightLabel(c: GradeCurriculum, domainId: DomainId): string {
     return `${domain.officialWeightRange} (${domain.weightGroupLabel})`;
   }
   return domain.officialWeightRange;
+}
+
+/** What to call the weight column for this grade. NCDPI publishes EOG
+ *  blueprints for grades 3-8 only, so below grade 3 the figure is our own
+ *  even split by standard count and must not be labelled official. */
+export function weightHeading(c: GradeCurriculum): string {
+  return c.weighting.kind === 'ncdpi-blueprint'
+    ? 'NC Blueprint Weight'
+    : 'Share of Grade Standards';
+}
+
+/** The weight VALUE to print beside weightHeading(). A blueprint grade cites
+ *  its published band via weightLabel(). An unweighted grade has no band to
+ *  cite, so replacing only the heading (weightHeading) and leaving the value
+ *  as weightLabel() would print domain.officialWeightRange's placeholder
+ *  string verbatim - a parent reading "Share of Grade Standards: No state
+ *  assessment at this grade" (Ruling 21-3). This renders domainWeight()'s
+ *  computed share instead, so the value always answers the heading's
+ *  question with a real number. */
+export function weightValue(c: GradeCurriculum, domainId: DomainId): string {
+  if (c.weighting.kind === 'ncdpi-blueprint') return weightLabel(c, domainId);
+  return `${Math.round(domainWeight(c, domainId))}%`;
 }

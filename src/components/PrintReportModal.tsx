@@ -1,7 +1,7 @@
 import React from 'react';
 import { Printer, X, Award, CheckCircle, AlertTriangle, HelpCircle } from 'lucide-react';
 import { useProgress, useReadinessSummary, domainStatsFor } from '../context/ProgressContext';
-import { standardsOf, weightLabel } from '../curriculum/registry';
+import { standardsOf, weightHeading, weightValue } from '../curriculum/registry';
 import { topMisconceptionFamilies } from '../engine/mastery';
 import { MISCONCEPTIONS, familyLabel } from '../curriculum/misconceptions';
 
@@ -139,7 +139,7 @@ export const PrintReportModal: React.FC<PrintReportModalProps> = ({ isOpen, onCl
               <thead>
                 <tr className="bg-slate-100 border-b border-slate-300 text-slate-700">
                   <th className="p-2.5 font-bold">Domain</th>
-                  <th className="p-2.5 font-bold">NC Blueprint Weight</th>
+                  <th className="p-2.5 font-bold">{weightHeading(curriculum)}</th>
                   <th className="p-2.5 font-bold">Questions Practiced</th>
                   <th className="p-2.5 font-bold">Mastery Score</th>
                   <th className="p-2.5 font-bold text-right">SSA Status (Bar: {passingPercent}%)</th>
@@ -154,7 +154,7 @@ export const PrintReportModal: React.FC<PrintReportModalProps> = ({ isOpen, onCl
                         {domain.name} ({domain.id})
                       </td>
                       <td className="p-2.5 text-slate-600 font-mono">
-                        {weightLabel(curriculum, domain.id)}
+                        {weightValue(curriculum, domain.id)}
                       </td>
                       <td className="p-2.5 text-slate-600">
                         {dm.totalQuestionsAnswered} ({dm.totalCorrect} correct)
@@ -270,7 +270,10 @@ export const PrintReportModal: React.FC<PrintReportModalProps> = ({ isOpen, onCl
           <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-700 space-y-1.5">
             <h4 className="font-bold text-slate-900">Next Steps & Testing Recommendation:</h4>
             <p className="leading-relaxed">
-              1. <strong>Focus by Blueprint Weight:</strong> Prioritize the domains with the highest NC EOG blueprint weight above, especially any still below the {passingPercent}% qualifying bar.
+              1. <strong>{curriculum.weighting.kind === 'ncdpi-blueprint' ? 'Focus by Blueprint Weight:' : 'Focus by Standards Share:'}</strong>{' '}
+              {curriculum.weighting.kind === 'ncdpi-blueprint'
+                ? `Prioritize the domains with the highest NC EOG blueprint weight above, especially any still below the ${passingPercent}% qualifying bar.`
+                : `There is no official state blueprint at this grade to rank by weight. Prioritize the domains furthest below the ${passingPercent}% qualifying bar above.`}
             </p>
             <p className="leading-relaxed">
               2. <strong>Address Recurring Misconceptions:</strong> Review the misconceptions listed above with the student before their next practice session.

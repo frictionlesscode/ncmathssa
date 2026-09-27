@@ -9,7 +9,7 @@ import {
   TrendingUp
 } from 'lucide-react';
 import { useProgress, useReadinessSummary, domainStatsFor } from '../context/ProgressContext';
-import { standardsOf } from '../curriculum/registry';
+import { standardsOf, weightValue } from '../curriculum/registry';
 import { dueEntries } from '../engine/scheduler';
 import type { NavTab } from './Navbar';
 
@@ -93,7 +93,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
               </span>
               <div>
                 <h3 className="text-sm font-bold text-slate-900">Overall SSA Readiness Gauge</h3>
-                <p className="text-xs text-slate-500">Weighted by official NC EOG blueprint domain weights</p>
+                <p className="text-xs text-slate-500">
+                  {curriculum.weighting.kind === 'ncdpi-blueprint'
+                    ? 'Weighted by official NC EOG blueprint domain weights'
+                    : `Weighted by each domain's share of Grade ${curriculum.grade} standards — no state test exists at this grade`}
+                </p>
               </div>
             </div>
             <span className={`text-xs font-extrabold px-3 py-1 rounded-full border ${
@@ -305,7 +309,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   <div className="flex items-start justify-between gap-2 mb-3">
                     <div>
                       <span className={`inline-block font-mono text-[11px] font-bold px-2 py-0.5 rounded-md border ${domain.badgeBg}`}>
-                        {domain.id} • {domain.officialWeightRange} Weight
+                        {domain.id} • {weightValue(curriculum, domain.id)} Weight
                       </span>
                       <h3 className="text-base font-extrabold text-slate-900 mt-1.5 leading-snug">
                         {domain.name}

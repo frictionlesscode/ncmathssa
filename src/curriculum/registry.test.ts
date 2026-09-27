@@ -1,5 +1,13 @@
 import { describe, it, expect } from 'vitest';
-import { getCurriculum, listCurricula, standardsOf, domainWeight, weightLabel } from './registry';
+import {
+  getCurriculum,
+  listCurricula,
+  standardsOf,
+  domainWeight,
+  weightLabel,
+  weightHeading,
+  weightValue,
+} from './registry';
 import type { GradeCurriculum } from './types';
 import { makeQuestionSource } from '../engine/questionSource';
 
@@ -11,16 +19,19 @@ describe('registry', () => {
   });
 
   it('throws for a grade with no curriculum module', () => {
-    // Grade 1 is a later batch; asking for one must fail loudly, not
-    // return an empty curriculum that renders as a blank app. This pin
-    // moves down as each grade registers - it was grade 3 until Task 16
-    // and must name a grade that still has no module, so grade 2 (which
-    // registers in Task 21) would only move it again one task later.
+    // Grade 1 is the only grade still without a module after Task 21
+    // registers grade 2. Asking for one must fail loudly, not return an
+    // empty curriculum that renders as a blank app. This pin moves down as
+    // each grade registers - it was grade 3 until Task 16, then grade 2
+    // until this task (Ruling 21-1). After Task 26 no member of `Grade` is
+    // unregistered, so this assertion becomes a type-level impossibility
+    // and is re-expressed there as `getCurriculum(6 as Grade)`, never
+    // deleted outright.
     expect(() => getCurriculum(1)).toThrow(/no curriculum/i);
   });
 
   it('lists only grades that actually have modules', () => {
-    expect(listCurricula().map((c) => c.grade)).toEqual([3, 4, 5]);
+    expect(listCurricula().map((c) => c.grade)).toEqual([2, 3, 4, 5]);
   });
 });
 
@@ -107,5 +118,45 @@ describe('NCDPI blueprint bands', () => {
     const c = getCurriculum(5);
     const total = c.domains.reduce((n, d) => n + domainWeight(c, d.id), 0);
     expect(total).toBeCloseTo(100, 6);
+  });
+});
+
+describe('weight headings', () => {
+  it('calls a blueprint a blueprint only where one exists', () => {
+    const g5 = getCurriculum(5);
+    expect(weightHeading(g5)).toBe('NC Blueprint Weight');
+  });
+
+  it('calls an unweighted grade what it is', () => {
+    const g2 = getCurriculum(2);
+    expect(weightHeading(g2)).toBe('Share of Grade Standards');
+    expect(weightHeading(g2)).not.toMatch(/blueprint/i);
+  });
+});
+
+describe('weightValue', () => {
+  it('cites the published band for a blueprint grade, same as weightLabel', () => {
+    const g5 = getCurriculum(5);
+    expect(weightValue(g5, 'NF')).toBe(weightLabel(g5, 'NF'));
+    expect(weightValue(g5, 'MD')).toBe(weightLabel(g5, 'MD'));
+  });
+
+  it("renders domainWeight's computed share for an unweighted grade, never the placeholder string", () => {
+    // Pairing weightHeading('Share of Grade Standards') with the raw
+    // officialWeightRange placeholder would read "Share of Grade Standards:
+    // No state assessment at this grade" - a heading promising a share
+    // followed by a non-answer (Ruling 21-3).
+    const g2 = getCurriculum(2);
+    for (const d of g2.domains) {
+      const value = weightValue(g2, d.id);
+      expect(value, `${d.id} value is "${value}"`).toMatch(/^\d+%$/);
+      expect(value).not.toMatch(/no state assessment/i);
+    }
+  });
+
+  it('sums the unweighted grade\'s rendered values to 100', () => {
+    const g2 = getCurriculum(2);
+    const total = g2.domains.reduce((n, d) => n + Number(weightValue(g2, d.id).replace('%', '')), 0);
+    expect(total).toBe(100);
   });
 });

@@ -8,7 +8,7 @@ import {
   Target
 } from 'lucide-react';
 import { useProgress } from '../context/ProgressContext';
-import { standardsOf } from '../curriculum/registry';
+import { standardsOf, weightValue } from '../curriculum/registry';
 import type { QuizDefinition } from '../types';
 import { AdaptiveSessionCard } from './AdaptiveSessionCard';
 import type { QuestionRef } from '../engine/questionModel';
@@ -197,7 +197,7 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <span className={`font-mono text-[10px] font-bold px-2 py-0.5 rounded border ${domain?.badgeBg}`}>
-                      {quiz.domainId} • {domain?.officialWeightRange}
+                      {quiz.domainId} • {weightValue(curriculum, quiz.domainId ?? '')}
                     </span>
                     <span className="text-xs text-slate-500 font-semibold">
                       {quiz.questionIds.length} Qs

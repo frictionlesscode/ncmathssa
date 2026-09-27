@@ -8,7 +8,7 @@ import {
   HelpCircle
 } from 'lucide-react';
 import { useProgress, domainStatsFor } from '../context/ProgressContext';
-import { weightLabel } from '../curriculum/registry';
+import { weightHeading, weightValue } from '../curriculum/registry';
 
 interface CurriculumViewProps {
   onStartStandardDrill: (standardCode: string) => void;
@@ -69,7 +69,7 @@ export const CurriculumView: React.FC<CurriculumViewProps> = ({
                 selectedDomain === d.id ? 'bg-white text-blue-700 shadow-xs' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              {d.id} ({d.officialWeightRange})
+              {d.id} ({weightValue(curriculum, d.id)})
             </button>
           ))}
         </div>
@@ -91,7 +91,7 @@ export const CurriculumView: React.FC<CurriculumViewProps> = ({
                       {domain.id} DOMAIN
                     </span>
                     <span className="text-xs font-extrabold text-slate-700">
-                      NC Blueprint Weight: {weightLabel(curriculum, domain.id)}
+                      {weightHeading(curriculum)}: {weightValue(curriculum, domain.id)}
                     </span>
                   </div>
                   <h2 className="text-xl font-black text-slate-900">
