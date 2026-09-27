@@ -4,6 +4,12 @@ import { GRADE_2_STUDY_GUIDES } from './studyGuides';
 
 const STANDARDS = GRADE_2_DOMAINS.flatMap((d) => d.standards);
 
+/** The domain a standard belongs to, for checking its whyItMattersForSSA
+ *  cites that domain's own share of the grade's 23 standards. */
+const DOMAIN_OF = new Map(
+  GRADE_2_DOMAINS.flatMap((d) => d.standards.map((s) => [s.code, d] as const)),
+);
+
 describe('grade 2 study guides', () => {
   it('writes one guide per standard, keyed by its own code', () => {
     for (const s of STANDARDS) {
@@ -60,12 +66,30 @@ describe('grade 2 study guides', () => {
   // percentage anywhere — not even outside whyItMattersForSSA — and none may
   // claim one exists via the word "blueprint". Ruling 20-3: the percentage
   // check scans the WHOLE guide via JSON.stringify, not one field, so a
-  // fabricated weight hiding in coreConcept or a trap is caught too.
+  // fabricated weight hiding in coreConcept or a trap is caught too. M2: the
+  // guard also catches a spelled-out weight like "about 35 percent", which a
+  // bare /%/ test would miss.
   it('cites no assessment weight, because grade 2 has no state assessment', () => {
     for (const [code, g] of Object.entries(GRADE_2_STUDY_GUIDES)) {
       const whole = JSON.stringify(g);
-      expect(/%/.test(whole), `${code} cites a percentage somewhere in the guide`).toBe(false);
+      expect(/%|per\s?cent/i.test(whole), `${code} cites a percentage somewhere in the guide`).toBe(false);
       expect(/blueprint/i.test(whole), `${code} mentions a blueprint`).toBe(false);
+    }
+  });
+
+  // M1 (Task 20 fix round 1): ruling 20-1's own figure was unguarded — a
+  // guide could drop "N of 23" or cite the wrong domain's count and every
+  // other test would stay green. Each guide must state its own domain's
+  // exact share of the grade's 23 standards.
+  it('states its own domain’s share of the 23 standards in whyItMattersForSSA', () => {
+    for (const [code, g] of Object.entries(GRADE_2_STUDY_GUIDES)) {
+      const domain = DOMAIN_OF.get(code);
+      expect(domain, `${code} is not a grade 2 standard`).toBeTruthy();
+      const expected = `${domain!.standards.length} of the ${STANDARDS.length}`;
+      expect(
+        g.workedExample.whyItMattersForSSA.includes(expected),
+        `${code} whyItMattersForSSA does not contain "${expected}"`,
+      ).toBe(true);
     }
   });
 });

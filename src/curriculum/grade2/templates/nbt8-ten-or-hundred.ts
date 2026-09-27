@@ -70,6 +70,23 @@ export const nbt8TenOrHundred: QuestionTemplate = {
     const answer = n + sign * delta;
     const answerText = `${answer}`;
 
+    // The "only the tens/hundreds change" rule needs a direction-aware hedge:
+    // adding overflows a tens digit of 9 up into a new hundred, but
+    // subtracting underflows a tens digit of 0, borrowing DOWN from the
+    // hundreds instead — a different mechanism, not just the reverse of the
+    // same one. A bare "fills up and trades on" describes only the add case
+    // and is silent (arguably misleading) about the borrow case, which this
+    // generator draws in real seeds (n in [200,800] regularly lands on a
+    // multiple of 10). The hundreds place never rolls over in this
+    // generator's range, so no hedge is needed there. (Task 20 fix round,
+    // I1/X1.)
+    const rollover =
+      place === 'tens'
+        ? isMore
+          ? ` — unless the tens digit is already 9, which rolls the count into a new hundred`
+          : ` — unless the tens digit is already 0, which borrows a ten from the hundreds instead`
+        : '';
+
     const candidates = [
       { text: answerText, isCorrect: true },
       // Moved the wrong place: used 100 where 10 was asked for, or the reverse.
@@ -103,7 +120,7 @@ export const nbt8TenOrHundred: QuestionTemplate = {
         stepByStep: [
           `Step 1: ${delta} ${word} means one ${delta === 10 ? 'ten' : 'hundred'} ${isMore ? 'added to' : 'taken from'} the number, so look at the ${place} place.`,
           `Step 2: ${n} is ${plural(Math.floor(n / 100), 'hundred')}, ${plural(Math.floor(n / 10) % 10, 'ten')}, and ${plural(n % 10, 'one')}.`,
-          `Step 3: Only the ${place} change. The ${otherPlace} and the ones stay exactly where they are, unless the ${place} place fills up and trades on.`,
+          `Step 3: Only the ${place} change. The ${otherPlace} and the ones stay exactly where they are${rollover}.`,
           `Step 4: ${delta} ${word} ${n} is ${answerText}.`,
         ],
         conceptSummary:

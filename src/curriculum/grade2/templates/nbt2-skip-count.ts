@@ -101,11 +101,22 @@ export const nbt2SkipCount: QuestionTemplate = {
       throw new Error(`g2.nbt2.skip-count: option collision [${texts.join(' | ')}]`);
     }
 
+    // Whether any of the three counts (start + step, +2*step, +3*step) rolls
+    // over into a new hundred. Adding 10 repeatedly never touches the ones
+    // digit either way, but "only the tens change" is false once the tens
+    // digit passes 9 — a real ~30% of this template's own 10s draws, per the
+    // Task 20 fix-round review (I2/X1). Comparing the hundreds of `start`
+    // against the hundreds of the last count catches every case, because the
+    // three +10 steps move monotonically and 30 < 100.
+    const crossesHundred = step === 10 && Math.floor(start / 100) !== Math.floor((start + 3 * step) / 100);
+
     const placeMoved =
       step === 100
         ? 'Only the hundreds digit changes; the tens and the ones ride along unchanged.'
         : step === 10
-          ? 'Only the tens change; the ones digit rides along unchanged.'
+          ? crossesHundred
+            ? 'The tens digit counts up until it passes 9, and then it rolls over into a new hundred — the hundreds digit goes up by one while the ones digit rides along unchanged.'
+            : 'Only the tens digit changes across these three counts; the ones digit rides along unchanged.'
           : 'Every number counted by 5s from here ends in the same two digits, over and over.';
 
     return {

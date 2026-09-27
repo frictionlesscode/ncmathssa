@@ -3,12 +3,13 @@ import type { StudyGuideSection } from '../../types';
 /** One revision guide per Grade 2 standard.
  *
  *  AUDIENCE (Ruling 20-4): `coreConcept` and `stepByStepMethod` are written
- *  to be read ALOUD TO A SEVEN-YEAR-OLD — short sentences, second person
- *  ("you"), no vocabulary the standard itself does not introduce. Every
- *  other field — `title`, `rulesAndFormulas`, `commonTraps`, and every part
- *  of `workedExample` — addresses the ADULT sitting beside the child: it
- *  names the error a real child makes, in the words that error shows up in,
- *  so a parent recognizes it the moment it happens again.
+ *  to be read ALOUD TO A SEVEN-YEAR-OLD — short sentences, plain narrated or
+ *  direct-address wording (not every sentence literally says "you"), no
+ *  vocabulary the standard itself does not introduce. Every other field —
+ *  `title`, `rulesAndFormulas`, `commonTraps`, and every part of
+ *  `workedExample` — addresses the ADULT sitting beside the child: it names
+ *  the error a real child makes, in the words that error shows up in, so a
+ *  parent recognizes it the moment it happens again.
  *
  *  Four more rules bind every entry:
  *
@@ -31,7 +32,7 @@ import type { StudyGuideSection } from '../../types';
  *     step by step.
  *  4. Every number in a `workedExample` sits inside the range the standard
  *     and this grade's authored/template content actually use — NBT.6 never
- *     adds a fourth addend, MD arrays never exceed 5-by-5, and so on.
+ *     adds a fourth addend, OA.4 arrays never exceed 5-by-5, and so on.
  */
 export const GRADE_2_STUDY_GUIDES: Record<string, StudyGuideSection> = {
   // ----------------------------------------------------------------------
@@ -57,7 +58,7 @@ export const GRADE_2_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     ],
     commonTraps: [
       'Adding the two known numbers together when the story actually calls for subtracting — a child spots two numbers and reaches for "add" out of habit instead of reading the comparing words.',
-      'Restating a number the problem already gave instead of solving for the box — answering 8 because the story already said 8, not because 8 answers the question.',
+      'Restating a number the problem already gave instead of solving for the box — answering 6 because the story already said "6 more," not because 6 answers how many plums Jayla started with.',
       'Counting on or back by ones and losing the count by one, landing one number too high or one too low.',
       'In a two-step problem, stopping after the first step and reporting the middle number instead of carrying on to the second step.',
     ],
@@ -90,7 +91,7 @@ export const GRADE_2_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       'Step 1: Look at the two numbers. Is one of them close to 10, or close to a double you know?',
       'Step 2: If it is close to 10, break the other number apart to fill it up to 10.',
       'Step 3: Add or subtract what is left onto or from the 10.',
-      'Step 4: If the numbers are close to a double, use the double and adjust by the difference.',
+      'Step 4: If the numbers are close to a double, use the double and then add or subtract the small leftover amount.',
     ],
     commonTraps: [
       'Counting on or back by ones one number at a time, which is slow and easy to lose — landing one number too high or one too low is the most common result.',
@@ -229,15 +230,16 @@ export const GRADE_2_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     coreConcept:
       'Counting by ones past a number like 599 takes two trades at once: ten ones become a ten, and ten tens become a hundred, so the very next number is 600. Skip-counting by 5s, 10s or 100s means adding that same amount again and again.',
     rulesAndFormulas: [
-      { label: 'Counting past 99 inside a hundred', detail: '599, 600 — not 500. The hundreds digit goes up by one and the count carries straight on.' },
+      { label: 'Counting into the next hundred', detail: '599, 600 — not 500. The hundreds digit goes up by one and the count carries straight on.' },
       { label: 'Skip-count by 5s', detail: 'Every number ends in a 0 or a 5: 245, 250, 255, 260.' },
-      { label: 'Skip-count by 10s', detail: 'Only the tens digit changes: 462, 472, 482, 492 — the ones digit rides along unchanged.' },
+      { label: 'Skip-count by 10s', detail: 'The ones digit never changes, and the tens digit goes up by one each time: 462, 472, 482, 492.' },
+      { label: 'Skip-counting by 10s can roll into a new hundred', detail: 'If the tens digit reaches 9, the next count of 10 rolls it back to 0 and bumps the hundreds digit by one: 475, 485, 495, 505.' },
       { label: 'Skip-count by 100s', detail: 'Only the hundreds digit changes: 380, 480, 580 — the tens and ones ride along unchanged too.' },
     ],
     stepByStepMethod: [
       'Step 1: Decide the step size: 1, 5, 10, or 100.',
       'Step 2: Add that step size to the number you are on.',
-      'Step 3: Say the new number, and check only the place that should change actually changed.',
+      'Step 3: Say the new number. Usually only one place changes. But if a digit passes 9, the next place over goes up by one too.',
       'Step 4: Repeat for as many numbers as you need.',
     ],
     commonTraps: [
@@ -245,6 +247,7 @@ export const GRADE_2_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       'Counting by ones when the step is 5, 10, or 100, or switching to the wrong step size partway through.',
       'Listing the starting number as if it were the first number counted, which pushes the whole list one step too early.',
       'Jumping to the next number ending in 0 instead of adding exactly 10 to a number that does not already end in 0.',
+      'When counting by 10s crosses a hundred, rolling the tens digit back to 0 but forgetting to bump the hundreds digit up — saying 405 instead of 505 right after 495.',
     ],
     workedExample: {
       problem: 'Lia begins at 462 and skip-counts by 10s. What are the next three numbers she says?',
@@ -291,7 +294,7 @@ export const GRADE_2_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       ],
       answer: '300 + 60 + 4',
       whyItMattersForSSA:
-        'Number & Operations in Base Ten is 8 of the 23 Grade 2 standards, and knowing what each digit is worth — not just which digit it is — is what makes comparing numbers and adding within 1,000, the next two standards in this domain, possible at all.',
+        'Number & Operations in Base Ten is 8 of the 23 Grade 2 standards, and knowing what each digit is worth — not just which digit it is — is what makes comparing three-digit numbers and adding within 100, the next two standards in this domain, possible at all.',
     },
   },
 
@@ -304,7 +307,7 @@ export const GRADE_2_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       { label: 'Start at the greatest place', detail: 'Compare hundreds first, then tens, then ones — never the other way around.' },
       { label: 'The first different place wins', detail: 'Once you find a place where the digits differ, stop — nothing further right can change the answer.' },
       { label: 'Same digits, different order', detail: '638 and 683 use the same three digits, but they are not equal: 638 < 683 because 3 tens is less than 8 tens.' },
-      { label: 'Digit count is not value', detail: 'Two numbers can both have three digits without being equal, and can be worth the same even when they look different on the page.' },
+      { label: 'Digit count is not value', detail: 'Two numbers can both have three digits without being equal — always compare digit by digit, never just count how many digits each one has.' },
     ],
     stepByStepMethod: [
       'Step 1: Line up the two numbers by place: hundreds, tens, ones.',
@@ -320,7 +323,7 @@ export const GRADE_2_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       'Counting how many digits each number has instead of comparing what each digit is worth, place by place.',
     ],
     workedExample: {
-      problem: 'Which sentence about 638 and 683 is true?',
+      problem: 'Compare 638 and 683. Which is true: 638 > 683, 638 < 683, or 638 = 683?',
       steps: [
         '1. Start at the greatest place. Both numbers have 6 hundreds, so the hundreds cannot decide it.',
         '2. Move right to the tens. 638 has 3 tens and 683 has 8 tens.',
@@ -328,7 +331,7 @@ export const GRADE_2_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       ],
       answer: '638 < 683, because 3 tens is less than 8 tens',
       whyItMattersForSSA:
-        'Number & Operations in Base Ten is 8 of the 23 Grade 2 standards, and comparing place by place instead of digit by digit is the same left-to-right habit that makes adding and subtracting within 1,000 come out right.',
+        'Number & Operations in Base Ten is 8 of the 23 Grade 2 standards, and comparing three-digit numbers place by place uses the same "what is each digit worth" thinking that makes adding and subtracting within 1,000 — worked ones, then tens, then hundreds — come out right, even though the two skills scan the places in opposite directions.',
     },
   },
 
@@ -364,7 +367,7 @@ export const GRADE_2_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       ],
       answer: '65',
       whyItMattersForSSA:
-        'Number & Operations in Base Ten is 8 of the 23 Grade 2 standards, and choosing between these mental strategies is what turns into the written regrouping method the very next standard in this domain, adding and subtracting within 1,000, asks a child to explain.',
+        'Number & Operations in Base Ten is 8 of the 23 Grade 2 standards, and choosing between these mental strategies is exactly what NBT.6 (adding three two-digit numbers) and then NBT.7 (adding and subtracting within 1,000) build on next, turning mental strategies into a written regrouping method.',
     },
   },
 
@@ -377,6 +380,7 @@ export const GRADE_2_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       { label: 'Ones column first', detail: 'Add all three ones digits together before touching the tens.' },
       { label: 'Carry into the tens', detail: 'If the ones add to 10 or more, write the leftover ones and carry the ten(s) into the tens column.' },
       { label: 'Then add the tens', detail: 'Add all three tens digits together, plus any tens you carried.' },
+      { label: 'Add in a convenient order', detail: 'You can add three numbers in any order. In 27 + 35 + 13, adding 27 and 13 first is easier because they make a friendly 40: 40 + 35 = 75.' },
       { label: 'Up to three addends', detail: 'This standard adds up to THREE two-digit numbers in one problem — never four.' },
     ],
     stepByStepMethod: [
@@ -430,13 +434,13 @@ export const GRADE_2_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     workedExample: {
       problem: 'What is 412 − 158?',
       steps: [
-        '1. Ones: 2 − 8 will not go, so trade a ten. The ones become 12: 12 − 8 = 4.',
-        '2. Tens: 0 − 5 will not go either, so trade a hundred. The tens become 10: 10 − 5 = 5.',
+        '1. Ones: 2 − 8 will not go, so trade a ten. That leaves 0 tens (the 1 ten is gone), and the ones become 12: 12 − 8 = 4.',
+        '2. Tens: 0 − 5 will not go either, so trade a hundred. That leaves 3 hundreds (the 4 hundreds lost one), and the tens become 10: 10 − 5 = 5.',
         '3. Hundreds: 3 − 1 = 2.',
       ],
       answer: '254',
       whyItMattersForSSA:
-        'Number & Operations in Base Ten is 8 of the 23 Grade 2 standards, and trading between places up to the hundreds is the last step before Grade 3’s multi-digit addition and subtraction, which uses exactly the same trades one place further.',
+        'Number & Operations in Base Ten is 8 of the 23 Grade 2 standards, and trading between places up to the hundreds is exactly the skill Grade 3’s NC.3.NBT.2 keeps practicing — addition and subtraction within 1,000 again, this time paired with estimating whether the answer is reasonable.',
     },
   },
 
@@ -444,22 +448,25 @@ export const GRADE_2_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     standardCode: 'NC.2.NBT.8',
     title: 'Adding or Subtracting 10 or 100 in Your Head',
     coreConcept:
-      'Adding or subtracting 10 changes only the tens digit — unless that digit is already 9, when it rolls into the hundreds. Adding or subtracting 100 changes only the hundreds digit. Knowing which place moves means you can do it in your head, no counting needed.',
+      'Adding or subtracting 10 changes only the tens digit most of the time. But if you are adding and the tens digit is already 9, it rolls into a new hundred. If you are subtracting and the tens digit is already 0, it borrows from the hundreds instead. Adding or subtracting 100 changes only the hundreds digit, every time.',
     rulesAndFormulas: [
-      { label: '10 more or less', detail: 'Only the tens digit moves — up by one for more, down by one for less — unless it rolls over into a new hundred.' },
+      { label: '10 more or less', detail: 'The tens digit moves up by one for more, down by one for less — unless it rolls over into, or borrows from, a hundred.' },
       { label: '100 more or less', detail: 'Only the hundreds digit moves. The tens and ones never change.' },
-      { label: 'Rolling over a hundred', detail: '395 + 10: the tens digit is 9, so 9 tens + 1 ten = 10 tens, which trades up into 1 more hundred: 405.' },
+      { label: 'Rolling over a hundred (adding)', detail: '395 + 10: the tens digit is 9, so 9 tens + 1 ten = 10 tens, which trades up into 1 more hundred: 405.' },
+      { label: 'Borrowing across a hundred (subtracting)', detail: '305 − 10: the tens digit is 0, so borrow a ten from the hundreds — 3 hundreds become 2, and the tens becomes 9: 295.' },
       { label: 'The range', detail: 'This standard works with numbers from 100 to 900.' },
     ],
     stepByStepMethod: [
       'Step 1: Decide whether you are changing by 10 or by 100.',
       'Step 2: For 10, look at the tens digit; for 100, look at the hundreds digit.',
-      'Step 3: Move that one digit up or down by one — unless the tens digit is already 9 and rolls into the hundreds.',
-      'Step 4: Leave the other digits exactly where they were.',
+      'Step 3: Move that one digit up or down by one.',
+      'Step 4: If you are adding and the tens digit was already 9, it rolls into a new hundred. If you are subtracting and the tens digit was already 0, it borrows from the hundreds instead.',
+      'Step 5: Leave the other digits exactly where they were.',
     ],
     commonTraps: [
       'Changing the wrong place — moving the tens digit when the problem asks for 100 more or less, or the hundreds digit when it asks for 10.',
       'Adding 10 to a number with 9 tens and writing 0 tens without trading the new ten tens up into another hundred.',
+      'Subtracting 10 from a number with 0 tens and writing 9 tens without lowering the hundreds digit by one — turning 305 − 10 into 395 instead of 295.',
       'Counting on or back one at a time instead of moving straight to the one digit that changes, and losing the count along the way.',
       'Mixing up which amount, 10 or 100, goes with which step when a problem asks for both, one after the other.',
     ],
@@ -563,7 +570,7 @@ export const GRADE_2_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     ],
     stepByStepMethod: [
       'Step 1: Decide roughly how big the object is: tiny, medium, or big.',
-      'Step 2: Pick the unit that fits that size — inches or centimeters for small things, feet or meters for medium things, yards for bigger things.',
+      'Step 2: Pick the unit that fits that size — inches or centimeters for small things, feet for medium things, yards or meters for bigger things.',
       'Step 3: Picture the benchmark for that unit and count roughly how many would fit.',
       'Step 4: Say the estimate with "about" and the unit.',
     ],
@@ -769,16 +776,16 @@ export const GRADE_2_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     standardCode: 'NC.2.MD.10',
     title: 'Picture Graphs and Bar Graphs: Organize, Then Read',
     coreConcept:
-      'A picture graph or bar graph organizes data into up to four categories so it is easy to compare. Before reading any answer off the graph, check what one picture or one space on the scale stands for — it is not always exactly 1.',
+      'A picture graph or bar graph organizes data into up to four categories so it is easy to compare. In Grade 2, each picture and each space on the scale stands for exactly 1 — so you can read a count straight off the graph, once you have counted or organized it correctly.',
     rulesAndFormulas: [
       { label: 'Organize the data first', detail: 'Sort what was counted into its categories before drawing a single bar or picture.' },
-      { label: 'Read the scale', detail: 'Each picture or space might stand for more than 1 — check before counting.' },
+      { label: 'The scale in Grade 2', detail: 'Every picture and every space on a Grade 2 graph stands for exactly 1. (In Grade 3, a picture can stand for more than 1 — but not yet.)' },
       { label: 'Put together / take apart', detail: 'Add two categories for "in all," or subtract to find a missing category when the total is known.' },
       { label: 'Compare', detail: '"How many more" or "how many fewer" means subtract the smaller bar from the larger one.' },
     ],
     stepByStepMethod: [
       'Step 1: Read the title to know what the graph is counting.',
-      'Step 2: Check what one picture, tally bundle, or space is worth.',
+      'Step 2: For a picture graph or bar graph, each picture or space counts as 1. For a tally chart, a bundle of marks with one line drawn across it counts as 5.',
       'Step 3: Count each category using that value, not by counting marks one at a time.',
       'Step 4: Add, subtract, or compare the categories the question actually asks about.',
     ],
@@ -789,15 +796,15 @@ export const GRADE_2_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       'Comparing the wrong two bars — picking the tallest bar instead of the one the question actually names.',
     ],
     workedExample: {
-      problem: 'A tally chart titled "Our Class Pet" shows: Dog, a bundle of 5 tally marks and 2 more marks; Cat, 4 tally marks; Fish, a bundle of 5 tally marks; Bird, 3 tally marks. How many votes did Dog get?',
+      problem: 'The tally chart "Our Class Pet" shows: Dog, a bundle of 5 tally marks and 2 more marks; Cat, 4 tally marks; Fish, a bundle of 5 tally marks; Bird, 3 tally marks. Draw a bar graph to match. How tall should each bar be?',
       steps: [
         '1. A bundle of tally marks is 5: four marks with a fifth drawn across them.',
-        '2. Dog has one full bundle of 5, plus 2 more single marks.',
-        '3. 5 + 2 = 7.',
+        '2. Count each animal by value: Dog = 5 + 2 = 7. Cat = 4. Fish = 5. Bird = 3.',
+        '3. Each bar graph space stands for exactly 1, so each bar goes up to its own count.',
       ],
-      answer: '7 votes',
+      answer: 'Dog to 7, Cat to 4, Fish to 5, Bird to 3',
       whyItMattersForSSA:
-        'Measurement & Data is 9 of the 23 Grade 2 standards, and reading a graph’s scale before counting is the same "check the unit first" habit that the length and money standards in this same domain both depend on.',
+        'Measurement & Data is 9 of the 23 Grade 2 standards, and organizing counted data into a graph — not just reading one someone else already drew — uses the same "put together, take apart, compare" reasoning the length and money word problems in this same domain use, just applied to data instead of numbers.',
     },
   },
 
@@ -808,24 +815,27 @@ export const GRADE_2_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     standardCode: 'NC.2.G.1',
     title: 'Naming Shapes and Solids by Their Attributes',
     coreConcept:
-      'A shape’s name tells you exactly how many straight sides it has: 3 for a triangle, 4 for a quadrilateral, 5 for a pentagon, 6 for a hexagon — no matter how the shape is turned, stretched, or tilted. A solid like a rectangular prism or a cube has flat faces, straight edges, and corners you can count, even the ones hidden from view in a picture.',
+      'A shape’s name tells you how many straight sides it has. A triangle has 3, a quadrilateral has 4, a pentagon has 5, and a hexagon has 6. It does not matter how the shape is turned, stretched, or tilted. A solid like a rectangular prism or a cube has flat faces, straight edges, and corners. You can count them even when a picture hides some of them from view.',
     rulesAndFormulas: [
       { label: 'Side counts name 2-D shapes', detail: 'Triangle 3, quadrilateral 4, pentagon 5, hexagon 6 — count the straight sides.' },
       { label: 'Size and tilt do not matter', detail: 'A long, thin, or tilted four-sided shape is still a quadrilateral — only the side count decides the name.' },
       { label: 'Rectangular prisms and cubes have faces', detail: 'A rectangular prism has 6 flat faces, even though a single picture only shows 3 of them at once.' },
       { label: 'Combine two attributes', detail: '4 equal sides with square corners is a square; 4 equal sides with NO square corners is a rhombus.' },
+      { label: 'Drawing from attributes', detail: 'Asked to draw a shape with certain attributes — like "4 sides, no square corners" — draw ANY shape that fits every attribute given. More than one correct drawing is possible.' },
     ],
     stepByStepMethod: [
       'Step 1: Count the straight sides of the shape.',
       'Step 2: If more than one property is given — like equal sides AND corner type — check both before naming it.',
       'Step 3: For a solid, count faces (flat sides), edges (straight lines where two faces meet), or corners — whichever the question asks for.',
       'Step 4: Remember a picture only shows some of a solid’s faces; the hidden ones still count.',
+      'Step 5: If you are asked to DRAW a shape instead of naming one, draw a shape that fits every attribute listed.',
     ],
     commonTraps: [
       'Confusing a shape’s name with its side count — mixing up pentagon (5) and hexagon (6), which sound alike and sit right next to each other.',
       'Judging a shape by how it looks — unusually long, thin, or tilted — rather than by counting its actual sides.',
       'Counting only the faces of a solid visible in a picture instead of every face, including the ones hidden behind it.',
       'Counting a solid’s edges or corners when the question asks for faces, or the reverse.',
+      'When drawing a shape from a list of attributes, drawing one that fits only some of them instead of every attribute listed.',
     ],
     workedExample: {
       problem: 'A box shaped like a rectangular prism has a flat face on every side, including the sides hidden from view in a picture of it. How many faces does it have in all?',
@@ -849,7 +859,7 @@ export const GRADE_2_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       { label: 'Halves', detail: '2 equal pieces. The whole is two halves.' },
       { label: 'Thirds', detail: '3 equal pieces. The whole is three thirds.' },
       { label: 'Fourths', detail: '4 equal pieces. The whole is four fourths.' },
-      { label: 'Equal shares can look different', detail: 'Two identical pizzas can both be cut into halves — one straight down the middle, one corner to corner — and the pieces are still equal in size even though they are different shapes.' },
+      { label: 'Equal shares can look different', detail: 'Two identical square pizzas can both be cut into halves — one straight down the middle, one corner to corner — and the pieces are still equal in size even though they are different shapes.' },
     ],
     stepByStepMethod: [
       'Step 1: Count how many pieces the whole is cut into.',
