@@ -460,8 +460,9 @@ export const GRADE_2_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       'Step 1: Decide whether you are changing by 10 or by 100.',
       'Step 2: For 10, look at the tens digit; for 100, look at the hundreds digit.',
       'Step 3: Move that one digit up or down by one.',
-      'Step 4: If you are adding and the tens digit was already 9, it rolls into a new hundred. If you are subtracting and the tens digit was already 0, it borrows from the hundreds instead.',
-      'Step 5: Leave the other digits exactly where they were.',
+      'Step 4: If that digit was the tens digit and it was already 9 while adding, it rolls over — the hundreds digit goes up by one too.',
+      'Step 5: If that digit was the tens digit and it was already 0 while subtracting, it borrows — the hundreds digit goes down by one too.',
+      'Step 6: Otherwise, that is the only digit that changes. Either way, the ones digit never moves.',
     ],
     commonTraps: [
       'Changing the wrong place — moving the tens digit when the problem asks for 100 more or less, or the hundreds digit when it asks for 10.',

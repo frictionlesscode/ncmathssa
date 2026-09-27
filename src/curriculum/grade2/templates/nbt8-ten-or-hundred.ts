@@ -65,27 +65,31 @@ export const nbt8TenOrHundred: QuestionTemplate = {
     const sign = isMore ? 1 : -1;
     const word = isMore ? 'more than' : 'less than';
     const place = delta === 10 ? 'tens' : 'hundreds';
-    const otherPlace = delta === 10 ? 'hundreds' : 'tens';
 
     const answer = n + sign * delta;
     const answerText = `${answer}`;
 
-    // The "only the tens/hundreds change" rule needs a direction-aware hedge:
-    // adding overflows a tens digit of 9 up into a new hundred, but
-    // subtracting underflows a tens digit of 0, borrowing DOWN from the
-    // hundreds instead — a different mechanism, not just the reverse of the
-    // same one. A bare "fills up and trades on" describes only the add case
-    // and is silent (arguably misleading) about the borrow case, which this
-    // generator draws in real seeds (n in [200,800] regularly lands on a
-    // multiple of 10). The hundreds place never rolls over in this
-    // generator's range, so no hedge is needed there. (Task 20 fix round,
-    // I1/X1.)
-    const rollover =
-      place === 'tens'
-        ? isMore
-          ? ` — unless the tens digit is already 9, which rolls the count into a new hundred`
-          : ` — unless the tens digit is already 0, which borrows a ten from the hundreds instead`
-        : '';
+    // Step 3's leading sentence "Only the X change" must itself be
+    // conditioned on whether a rollover/borrow actually happens at THIS
+    // seed, not just have a hedge tacked onto a second sentence — a hedge
+    // attached only to the second sentence leaves the first sentence
+    // standing alone as an unqualified (and sometimes false) claim. At
+    // seed 7 (n=207, tens digit 0, subtracting 10) the hundreds digit DOES
+    // change (207 -> 197, 2 -> 1), so "Only the tens change" would be
+    // literally false there. The hundreds place never rolls over in this
+    // generator's bounded range (n in [200,800], delta in {10,100}), so
+    // that branch is always the plain, unconditioned statement. (Task 20
+    // fix round 2, I1's unmet half of X1.)
+    const tensDigit = Math.floor(n / 10) % 10;
+    const crossesHundred = place === 'tens' && (isMore ? tensDigit === 9 : tensDigit === 0);
+    const step3 =
+      place === 'hundreds'
+        ? 'Only the hundreds change. The tens and the ones stay exactly where they are.'
+        : crossesHundred
+          ? isMore
+            ? 'The tens digit is already 9, so it rolls over into a new hundred — the hundreds change too, and the ones stay exactly where they are.'
+            : 'The tens digit is already 0, so it borrows a ten from the hundreds — the hundreds change too, and the ones stay exactly where they are.'
+          : 'Only the tens change. The hundreds and the ones stay exactly where they are.';
 
     const candidates = [
       { text: answerText, isCorrect: true },
@@ -120,7 +124,7 @@ export const nbt8TenOrHundred: QuestionTemplate = {
         stepByStep: [
           `Step 1: ${delta} ${word} means one ${delta === 10 ? 'ten' : 'hundred'} ${isMore ? 'added to' : 'taken from'} the number, so look at the ${place} place.`,
           `Step 2: ${n} is ${plural(Math.floor(n / 100), 'hundred')}, ${plural(Math.floor(n / 10) % 10, 'ten')}, and ${plural(n % 10, 'one')}.`,
-          `Step 3: Only the ${place} change. The ${otherPlace} and the ones stay exactly where they are${rollover}.`,
+          `Step 3: ${step3}`,
           `Step 4: ${delta} ${word} ${n} is ${answerText}.`,
         ],
         conceptSummary:
