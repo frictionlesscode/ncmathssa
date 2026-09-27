@@ -15,13 +15,17 @@ import { labelOptions } from '../../../engine/questionModel';
  * p.m. (ruling 19-3) and it is always the right one for that part of the day.
  * Every option carries the SAME label, so the label never marks the key;
  * choosing between a.m. and p.m. is its own question, asked in the authored
- * items (g2-md7-01..03), where a wrong label is a distractor of its own.
+ * items g2-md7-01, -02, -03 and -05, where a wrong label is a distractor of
+ * its own.
  *
  * LATE IN THE HOUR ONLY: the minute hand points at the 7 to the 11, so the
  * time is :35 to :55 and the hour hand sits NEARER THE NEXT NUMBER. That is
  * where reading the hour is genuinely hard, and it is what makes the
  * next-hour error a live option at every seed rather than at half of them.
- * The earlier part of the hour — :05 to :30 — is read in the authored items.
+ * The earlier part of the hour is read in the authored items, at exactly four
+ * marks: :00 (g2-md7-03), :15 (g2-md7-01), :25 (g2-md7-05) and :30
+ * (g2-md7-04). :05, :10 and :20 appear in no MD.7 item; reading them is the
+ * same count by fives that :25 asks for.
  *
  * ---------------------------------------------------------------------------
  * THE DRAW SPACE

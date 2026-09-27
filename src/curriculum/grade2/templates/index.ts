@@ -161,8 +161,9 @@ import { md10BarGraphHowManyMore } from './md10-bar-graph-how-many-more';
  *                its ☐ + n = m equation printed. Put-together, start-unknown
  *                and choose-the-equation items are authored.
  *    NC.2.MD.7   TIME late in the hour (:35 to :55) to the nearest five
- *                minutes, a.m. or p.m. from the part of the day. Earlier in
- *                the hour, and choosing a.m. against p.m., are authored.
+ *                minutes, a.m. or p.m. from the part of the day. The authored
+ *                items read :00, :15, :25 and :30 and carry the a.m.-against-
+ *                p.m. choice.
  *    NC.2.MD.8   COUNTING COINS within 99¢. Whole dollars, spending, and the
  *                ¢ and $ signs themselves are authored.
  *    NC.2.MD.10  "HOW MANY MORE" off a four-bar graph on a scale of one.

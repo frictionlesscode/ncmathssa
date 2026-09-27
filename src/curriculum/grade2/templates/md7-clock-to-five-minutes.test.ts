@@ -160,15 +160,54 @@ describe('g2.md7.clock-to-five-minutes', () => {
     expect(CLOCK_READINGS.length).toBe(59);
   });
 
-  // The one exclusion, shown to be real: when the minute hand points at the
-  // hour's own number, swapping the hands reads back the right time.
-  it('would collide on exactly the excluded minute hand = hour', () => {
-    for (const hour of [7, 8, 9, 10]) {
-      const hand = hour;
-      const key = `${hour}:${pad(5 * hand)}`;
-      const swapped = `${hand}:${pad(5 * hour)}`;
-      expect(swapped, `${hour} o'clock hour with the minute hand at the ${hand}`).toBe(key);
-      expect(CLOCK_READINGS.some((r) => r.hour === hour && r.hand === hand)).toBe(false);
+  // The counterfactual, over the space as it would be with no exclusion: every
+  // part of the day, every hour in it, every minute-hand number 7-11. A reading
+  // is kept exactly when its four options are distinct, and the readings whose
+  // options collide are exactly the six with the minute hand on the hour's own
+  // number, where swapping the hands reads back the right time.
+  it('keeps exactly the readings whose four options are distinct', () => {
+    const parts = [
+      { part: 'morning', from: 6, to: 10 },
+      { part: 'afternoon', from: 1, to: 4 },
+      { part: 'evening', from: 5, to: 8 },
+    ];
+    let unconstrained = 0;
+    const collided: string[] = [];
+    for (const { part, from, to } of parts) {
+      for (let hour = from; hour <= to; hour++) {
+        for (let hand = 7; hand <= 11; hand++) {
+          unconstrained++;
+          const collides = new Set(clockOptions(hour, hand)).size < 4;
+          const kept = CLOCK_READINGS.some(
+            (r) => r.part === part && r.hour === hour && r.hand === hand,
+          );
+          expect(kept, `${part} ${hour} / hand ${hand}`).toBe(!collides);
+          expect(collides, `${part} ${hour} / hand ${hand}`).toBe(hand === hour);
+          if (collides) collided.push(`${part} ${hour}:${pad(5 * hand)}`);
+        }
+      }
     }
+    expect(unconstrained).toBe(65);
+    expect(collided).toEqual([
+      'morning 7:35',
+      'morning 8:40',
+      'morning 9:45',
+      'morning 10:50',
+      'evening 7:35',
+      'evening 8:40',
+    ]);
   });
 });
+
+/** The four readings the docstring's table gives — key, minute-hand number,
+ *  swapped hands, next hour — in that order. The "gives each distractor the
+ *  value its tag names" test above checks these same formulas against what
+ *  the generator actually emits, at 600 seeds. */
+function clockOptions(hour: number, hand: number): string[] {
+  return [
+    `${hour}:${pad(5 * hand)}`,
+    `${hour}:${pad(hand)}`,
+    `${hand}:${pad(5 * hour)}`,
+    `${hour + 1}:${pad(5 * hand)}`,
+  ];
+}

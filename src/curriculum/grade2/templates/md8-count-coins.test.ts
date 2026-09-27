@@ -155,16 +155,53 @@ describe('g2.md8.count-coins', () => {
     expect(COIN_SETS.length).toBe(COIN_SET_COUNT);
   });
 
-  // The one exclusion, shown to be real: with as many nickels as dimes,
-  // swapping their values changes nothing, so that option IS the answer.
-  it('would collide on exactly the excluded nickels = dimes', () => {
-    for (let k = 0; k <= 4; k++) {
-      const c = { q: 1, d: k, n: k, p: 1 };
-      expect(25 * c.q + 5 * c.d + 10 * c.n + c.p).toBe(25 * c.q + 10 * c.d + 5 * c.n + c.p);
+  // The counterfactual, over the space as it would be with no exclusion: every
+  // coin set within the count bounds that has a silver coin. A set is kept
+  // exactly when its four options are distinct and all within 99¢, and the
+  // sets whose options collide are exactly those with as many nickels as
+  // dimes — where swapping the two values changes nothing, so the swapped
+  // total IS the answer.
+  it('keeps exactly the coin sets whose options are distinct and within 99¢', () => {
+    let collisions = 0;
+    for (let q = 0; q <= 3; q++) {
+      for (let d = 0; d <= 4; d++) {
+        for (let n = 0; n <= 4; n++) {
+          for (let p = 1; p <= 4; p++) {
+            if (q + d + n < 1) continue;
+            const c = { q, d, n, p };
+            const values = coinOptions(c);
+            const collides = new Set(values).size < 4;
+            const inRange = values.every((v) => v >= 1 && v <= 99);
+            const kept = COIN_SETS.some(
+              (x) => x.q === q && x.d === d && x.n === n && x.p === p,
+            );
+            const where = JSON.stringify(c);
+            expect(collides, `${where}: collides exactly when nickels = dimes`).toBe(n === d);
+            expect(kept, where).toBe(!collides && inRange);
+            if (collides) collisions++;
+          }
+        }
+      }
     }
-    expect(COIN_SETS.some((c) => c.n === c.d)).toBe(false);
+    // 5 equal nickel/dime counts x 4 quarter counts x 4 penny counts = 80,
+    // less the 4 with no silver coin at all.
+    expect(collisions).toBe(76);
   });
 });
+
+/** The four option values the docstring's table gives — value, coin count,
+ *  nickel/dime swap, kept counting — in that order. The "gives each
+ *  distractor the value its tag names" test above checks these same formulas
+ *  against what the generator actually emits, at 600 seeds. */
+function coinOptions(c: Coins): number[] {
+  const total = 25 * c.q + 10 * c.d + 5 * c.n + c.p;
+  return [
+    total,
+    c.q + c.d + c.n + c.p,
+    25 * c.q + 5 * c.d + 10 * c.n + c.p,
+    total - c.p + c.p * lastCoinValue(c),
+  ];
+}
 
 /** Pinned from an enumeration of the stated bounds (see the template's
  *  docstring): 0-3 quarters, 0-4 dimes, 0-4 nickels, 1-4 pennies, at least

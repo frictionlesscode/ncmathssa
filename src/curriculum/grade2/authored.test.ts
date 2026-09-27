@@ -70,7 +70,9 @@ describe('grade 2 authored aggregate', () => {
     for (const id of ids) expect(id, `${id} is not a g2- id`).toMatch(/^g2-[a-z]+\d+-\d{2}$/);
   });
 
-  it('shares no prompt between any two authored items in the grade', () => {
+  // Keyed on prompt AND figure together: g2-oa4-01 and g2-oa4-04 share a
+  // prompt over two different arrays, which are two different questions.
+  it('shares no question — prompt and figure together — between any two authored items', () => {
     const seen = new Map<string, string>();
     for (const q of GRADE_2_AUTHORED) {
       const prompt = `${q.prompt.trim()}\n${(q.promptDetails ?? '').trim()}`;

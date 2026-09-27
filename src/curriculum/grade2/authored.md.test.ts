@@ -169,14 +169,20 @@ describe('grade 2 MD authored bank', () => {
   });
 
   // ── Ruling 19-3 ──────────────────────────────────────────────────────────
-  // NC Grade 2 is bi-systemic. Between them MD.1 and MD.3 must use every one
-  // of the five units the standards name, customary and metric both.
-  it('uses inches, feet, yards, centimeters and meters across MD.1 and MD.3', () => {
-    const blob = [...itemsFor('NC.2.MD.1'), ...itemsFor('NC.2.MD.3')]
-      .map((q) => shown({ ...q, where: q.id }))
-      .join(' ');
-    for (const unit of [/\binch(es)?\b/, /\bfeet\b|\bfoot\b/, /\byards?\b/, /\bcentimeters?\b/, /\bmeters?\b/]) {
-      expect(unit.test(blob), `no MD.1 or MD.3 item uses ${unit}`).toBe(true);
+  // NC Grade 2 is bi-systemic. NC.2.MD.3's keyConcepts are "estimating in
+  // inches, feet, and yards" and "estimating in centimeters and meters", so an
+  // MD.3 estimate is KEYED in each of the five units. This reads the correct
+  // option only: a unit that appears solely as a rejected option, or in an
+  // MD.1 tool name like "a centimeter ruler", does not count as estimating in
+  // it.
+  it('keys an MD.3 estimate in each of inches, feet, yards, centimeters and meters', () => {
+    const keyed = new Set(
+      itemsFor('NC.2.MD.3').flatMap((q) =>
+        [...key({ ...q, where: q.id }).matchAll(LENGTH_UNIT)].map((m) => unitName(m[1])),
+      ),
+    );
+    for (const unit of ['inch', 'foot', 'yard', 'centimeter', 'meter']) {
+      expect(keyed.has(unit), `no MD.3 estimate is keyed in ${unit}`).toBe(true);
     }
   });
 
@@ -222,6 +228,20 @@ describe('grade 2 MD authored bank', () => {
       expect(Number(m![1]), `${q.where}: ${key(q)}`).toBeGreaterThanOrEqual(1);
       expect(Number(m![1]), `${q.where}: ${key(q)}`).toBeLessThanOrEqual(12);
     }
+  });
+
+  // The generator draws only :35 to :55. A standard titled "to five minutes"
+  // needs at least one reading at a five-minute mark that is neither on the
+  // hour, a quarter, nor a half — :05, :10, :20 or :25 — and only the
+  // authored items can supply it.
+  it('keys an authored MD.7 item on a five-minute mark that is not a quarter or half', () => {
+    const minutes = itemsFor('NC.2.MD.7').map((q) =>
+      Number(/:(\d{2}) /.exec(key({ ...q, where: q.id }))![1]),
+    );
+    expect(
+      minutes.some((m) => [5, 10, 20, 25].includes(m)),
+      `authored MD.7 keys only :${minutes.join(', :')}`,
+    ).toBe(true);
   });
 
   // "Quarters, dimes, nickels, and pennies within 99¢, using ¢" and "whole

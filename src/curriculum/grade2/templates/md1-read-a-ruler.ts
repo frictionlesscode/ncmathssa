@@ -24,19 +24,15 @@ import { labelOptions } from '../../../engine/questionModel';
  * ---------------------------------------------------------------------------
  * THE DRAW SPACE
  *
- *   s  the start mark, 2..5
- *   d  the length, 2..7, d != s    so e = s + d, the end mark, is at most 12
- *   and a coin flip choosing which mark-counting error is offered.
- *
- * d != s keeps the key off every number the figure prints: a child who
- * answers with the mark the object starts on never lands on the right answer
- * by accident. (The key can never be e, since s >= 2, nor 0 or 12.)
+ *   s     the start mark, 2..5
+ *   d     the length, 2..7         so e = s + d, the end mark, is at most 12
+ *   over  which of the two mark-counting errors is offered
  *
  *   answer                                          d
  *   read-the-end-mark-without-starting-at-zero      e = s + d
  *   added-instead-of-subtracted                     e + s = 2s + d
- *   counted-the-ruler-marks-not-the-spaces          d + 1   (flip = over)
- *   counted-only-the-marks-between-the-ends         d - 1   (flip = under)
+ *   counted-the-ruler-marks-not-the-spaces          d + 1   (over)
+ *   counted-only-the-marks-between-the-ends         d - 1   (under)
  *
  * WHY THE FLIP. Every other ruler error overshoots. With only overshooting
  * distractors the answer would be the smallest option at every seed, and
@@ -51,7 +47,7 @@ import { labelOptions } from '../../../engine/questionModel';
  * an addition/subtraction coin flip, which is why this is not split into two
  * templates.
  *
- * Pairwise distinctness, with s >= 2 and d >= 2:
+ * OPTION COLLISIONS. Pairwise, with s >= 2 and d >= 2:
  *
  *   d     = e          =>  s = 0.            Never: s >= 2.
  *   d     = 2s + d     =>  s = 0.            Never.
@@ -64,23 +60,52 @@ import { labelOptions } from '../../../engine/questionModel';
  *
  * So the only option collision is a start mark of 1, where the end-mark
  * reading and the counted-marks count are the same number; the draw space
- * starts at 2 by construction and nothing is resampled. d >= 2 keeps the undercount d - 1 at
- * 1 or more, so no option is ever a zero length. 4 start marks x 6 lengths,
- * less the 4 spans with d = s, leaves 20; the sibling test walks all 20 in
- * both flips and shows the excluded s = 1 really collides.
+ * starts at 2 by construction. d >= 2 keeps the undercount d - 1 at 1 or more,
+ * so no option is ever a zero length.
+ *
+ * FIGURE COLLISIONS. The figure prints three numbers a child can answer with
+ * without measuring at all: 0 and 12 at the ends of the ruler, and s, the mark
+ * the object starts on (e, where it ends, is the end-mark error itself). No
+ * option other than the end-mark reading may be one of them — otherwise a
+ * child who answered with the start mark could land on the key by accident, or
+ * on a distractor whose tag names a mark-counting error they never made. With
+ * d <= 7 the only clashes are:
+ *
+ *   key       d     = s                    4 (s, d) spans, both flips
+ *   over      d + 1 = s                    (3,2) (4,3) (5,4)
+ *   under     d - 1 = s                    (2,3) (3,4) (4,5) (5,6)
+ *   added     2s + d = 12                  (3,6) (5,2), both flips
+ *                                          ((4,4) is already out as d = s)
+ *
+ * 4 x 6 x 2 = 48 draws, less 8 + 3 + 4 + 4 = 19, leaves 29 — 15 with the
+ * overcount and 14 with the undercount. Every exclusion is made when the list
+ * is built; nothing is resampled. The sibling test walks the unconstrained
+ * space and shows the kept draws are exactly the ones with no collision of
+ * either kind.
  */
-export interface RulerSpan {
+export interface RulerDraw {
   /** The mark the object's left end sits on. */
   s: number;
   /** The object's length in whole units. */
   d: number;
+  /** true: offer the overcount d + 1; false: the undercount d - 1. */
+  over: boolean;
 }
 
-export const RULER_SPANS: RulerSpan[] = [];
+/** Numbers the figure prints that a child could answer with unmeasured. */
+const printedBy = (s: number) => [0, 12, s];
+
+export const RULER_DRAWS: RulerDraw[] = [];
 for (let s = 2; s <= 5; s++) {
   for (let d = 2; d <= 7; d++) {
-    if (d === s) continue; // the key would be the start mark the figure prints
-    RULER_SPANS.push({ s, d });
+    for (const over of [true, false]) {
+      const printed = printedBy(s);
+      const tick = over ? d + 1 : d - 1;
+      if (printed.includes(d)) continue; // the key would be a printed number
+      if (printed.includes(tick)) continue; // so would the mark-counting error
+      if (printed.includes(2 * s + d)) continue; // so would the added error
+      RULER_DRAWS.push({ s, d, over });
+    }
   }
 }
 
@@ -109,8 +134,7 @@ export const md1ReadARuler: QuestionTemplate = {
   generate(rng: Rng): GeneratedQuestion {
     const object = rng.pick(OBJECTS);
     const unit = rng.pick(UNITS);
-    const { s, d } = rng.pick(RULER_SPANS);
-    const over = rng.int(0, 1) === 1;
+    const { s, d, over } = rng.pick(RULER_DRAWS);
     const e = s + d;
 
     const length = (n: number) => `${n} ${n === 1 ? unit.singular : unit.plural}`;

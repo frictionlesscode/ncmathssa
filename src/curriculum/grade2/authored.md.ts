@@ -52,8 +52,8 @@ import { labelOptions } from '../../engine/questionModel';
  * option's value appears once — "4 inches" and "4 feet" would parse as the
  * same number, which is why the estimation items write "About 4 inches".
  *
- * The correct option sits at a varied position: eight items key each of A, B,
- * C and D.
+ * The correct option sits at a varied position: of the 34 items, 8 key A, 9 B,
+ * 9 C and 8 D.
  */
 export const GRADE_2_MD_AUTHORED: Question[] = [
   // ==========================================
@@ -276,45 +276,49 @@ export const GRADE_2_MD_AUTHORED: Question[] = [
     id: 'g2-md2-03',
     standardCode: 'NC.2.MD.2',
     domainId: 'MD',
-    // Predicting the second measurement before it is taken, across the two
-    // systems: a book 20 centimeters long is just under 8 inches.
+    // Predicting the second measurement before it is taken, from a big unit
+    // down to a much smaller one. Yards and inches are a pair the generator
+    // never draws (it uses inch/foot, foot/yard, cm/m and cm/inch), and none
+    // of its names is Hana, so this is not a copy of a generated question. A
+    // rug 3 yards long is 108 inches.
     prompt:
-      'Maya measures the same book two times. First she measures it in centimeters and gets 20. Then she measures it in inches. An inch is longer than a centimeter. What will happen?',
+      'Hana measures the same rug two times. First she measures it in yards and gets 3. Then she measures it in inches. A yard is much longer than an inch. What will happen?',
     options: labelOptions([
-      // The longer unit "should" give the bigger count.
+      // The shorter unit "should" give the smaller count — the longer unit
+      // the bigger one.
       {
-        text: 'She will count more than 20 inches.',
+        text: 'She will count fewer than 3 inches.',
         isCorrect: false,
         misconception: 'expected-a-longer-unit-to-give-a-bigger-count',
       },
-      // The count belongs to the book, so it stays 20.
+      // The count belongs to the rug, so it stays 3.
       {
-        text: 'She will count exactly 20 inches.',
+        text: 'She will count exactly 3 inches.',
         isCorrect: false,
         misconception: 'expected-the-count-to-stay-the-same-in-a-new-unit',
       },
-      // A smaller count read as a shorter book.
+      // A bigger count read as a longer rug.
       {
-        text: 'The book will be shorter in inches.',
+        text: 'The rug will be longer in inches.',
         isCorrect: false,
         misconception: 'thought-the-object-changed-length-with-the-unit',
       },
-      { text: 'She will count fewer than 20 inches.', isCorrect: true },
+      { text: 'She will count more than 3 inches.', isCorrect: true },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
     explanation: {
       stepByStep: [
-        'Step 1: The book stays the same length. Only the unit changes.',
-        'Step 2: An inch is longer than a centimeter, so each inch covers more of the book.',
-        'Step 3: Longer units fit fewer times, so the count will be less than 20.',
-        'Step 4: She will count fewer than 20 inches.',
+        'Step 1: The rug stays the same length. Only the unit changes.',
+        'Step 2: An inch is much shorter than a yard, so each inch covers only a little of the rug.',
+        'Step 3: Shorter units fit more times, so the count will be more than 3.',
+        'Step 4: She will count more than 3 inches.',
       ],
       conceptSummary:
-        'Switching to a longer unit makes the count go down; switching to a shorter unit makes it go up. The object itself never changes.',
+        'Switching to a shorter unit makes the count go up; switching to a longer unit makes it go down. The object itself never changes.',
       commonMisconception:
-        'An inch is the bigger unit, and it is tempting to think the bigger unit gives the bigger number. Bigger units give smaller counts.',
+        'An inch is the smaller unit, and it is tempting to think the smaller unit gives the smaller number. Smaller units give bigger counts.',
     },
   },
 
@@ -325,8 +329,10 @@ export const GRADE_2_MD_AUTHORED: Question[] = [
     id: 'g2-md3-01',
     standardCode: 'NC.2.MD.3',
     domainId: 'MD',
-    // Inches. A new crayon is a little under 4 inches.
-    prompt: 'Which is the best estimate for the length of a new crayon?',
+    // Inches. A new crayon is a little under 4 inches. Asked as "how long",
+    // the words a child uses, which is what makes the minutes option a real
+    // error rather than a filler.
+    prompt: 'About how long is a new crayon?',
     options: labelOptions([
       // A length unit, but far too big: 4 yards is longer than a bed.
       { text: 'About 4 yards', isCorrect: false, misconception: 'chose-a-unit-of-the-wrong-size' },
@@ -419,8 +425,9 @@ export const GRADE_2_MD_AUTHORED: Question[] = [
     id: 'g2-md3-04',
     standardCode: 'NC.2.MD.3',
     domainId: 'MD',
-    // Yards. A car is about 15 feet, which is 5 big steps.
-    prompt: 'Which is the best estimate for the length of a car?',
+    // Yards. A car is about 15 feet, which is 5 big steps. Asked as "how
+    // long", so the minutes option is the error its tag names.
+    prompt: 'About how long is a car?',
     options: labelOptions([
       // A far smaller unit: shorter than a pencil.
       { text: 'About 5 inches', isCorrect: false, misconception: 'chose-a-unit-of-the-wrong-size' },
@@ -444,6 +451,39 @@ export const GRADE_2_MD_AUTHORED: Question[] = [
         'Yards and feet are for bigger things; inches are for small ones. The unit has to fit the size of the object before the number can.',
       commonMisconception:
         'A car does take minutes to drive somewhere, but "how long is a car" asks how far it stretches from front to back, which is a length.',
+    },
+  },
+  {
+    id: 'g2-md3-05',
+    standardCode: 'NC.2.MD.3',
+    domainId: 'MD',
+    // Centimeters as the KEYED unit — keyConcept 2 is "estimating in
+    // centimeters and meters", and until this item centimeters only ever
+    // appeared as a wrong option. A new pencil is about 19 centimeters.
+    prompt: 'Which is the best estimate for the length of a new pencil?',
+    options: labelOptions([
+      // The same number in a far bigger unit: longer than a classroom.
+      { text: 'About 20 meters', isCorrect: false, misconception: 'chose-a-unit-of-the-wrong-size' },
+      // Ten times too long: taller than a grown-up.
+      { text: 'About 200 centimeters', isCorrect: false, misconception: 'estimated-ten-times-too-large' },
+      { text: 'About 20 centimeters', isCorrect: true },
+      // Ten times too short: only two fingertips wide.
+      { text: 'About 2 centimeters', isCorrect: false, misconception: 'estimated-ten-times-too-small' },
+    ]),
+    calculatorAllowed: false,
+    isStretch: false,
+    difficulty: 'mastery',
+    explanation: {
+      stepByStep: [
+        'Step 1: A centimeter is about as wide as the tip of your little finger.',
+        'Step 2: A new pencil is about as long as 20 of those fingertips in a row.',
+        'Step 3: 2 centimeters is shorter than a paper clip, 200 centimeters is taller than a grown-up, and 20 meters is longer than a whole classroom.',
+        'Step 4: About 20 centimeters is the best estimate.',
+      ],
+      conceptSummary:
+        'Centimeters are the small metric unit, for things that fit in your hand. Picturing one fingertip-width and counting how many would fit keeps a centimeter estimate sensible.',
+      commonMisconception:
+        'About 20 meters has the right number in the wrong unit. A meter is about one big step, and a pencil is nowhere near 20 big steps long.',
     },
   },
 
@@ -965,6 +1005,44 @@ export const GRADE_2_MD_AUTHORED: Question[] = [
         'Halfway to the 3 is not at the 3. Reading 3:30 counts an hour that has not happened yet.',
     },
   },
+  {
+    id: 'g2-md7-05',
+    standardCode: 'NC.2.MD.7',
+    domainId: 'MD',
+    // A five-minute mark that is not a quarter or a half: :25. The generator
+    // draws only :35 to :55, and the other authored items read :00, :15 and
+    // :30, so without this item a child would never count fives to anything
+    // but a quarter-hour in the first half of the hour.
+    prompt:
+      'Leo’s class goes to the library in the morning at the time this clock shows. What time does the class go?',
+    promptDetails:
+      'A clock with two hands. The short hour hand is a little past the 10, not yet halfway to the 11. The long minute hand points straight at the 5.',
+    options: labelOptions([
+      // The 5 the minute hand points at read as 5 minutes.
+      { text: '10:05 a.m.', isCorrect: false, misconception: 'read-the-minute-hand-as-the-number-it-points-to' },
+      { text: '10:25 a.m.', isCorrect: true },
+      // The long hand read as the hour (5), the short hand's 10 as 10 fives of
+      // minutes (50).
+      { text: '5:50 a.m.', isCorrect: false, misconception: 'swapped-the-hour-and-minute-hands' },
+      // A morning trip written as p.m.
+      { text: '10:25 p.m.', isCorrect: false, misconception: 'mixed-up-a-m-and-p-m' },
+    ]),
+    calculatorAllowed: false,
+    isStretch: false,
+    difficulty: 'mastery',
+    explanation: {
+      stepByStep: [
+        'Step 1: The short hand tells the hour. It is a little past the 10, so the hour is 10.',
+        'Step 2: The long hand points at the 5. Count by fives: 5, 10, 15, 20, 25.',
+        'Step 3: The class goes in the morning, and morning times are a.m.',
+        'Step 4: The class goes to the library at 10:25 a.m.',
+      ],
+      conceptSummary:
+        'Every number around the clock is 5 more minutes for the long hand. Counting by fives from the 12 to the number it points at gives the minutes past the hour.',
+      commonMisconception:
+        'The long hand pointing at the 5 does not mean 5 minutes. Five fives make 25, so the time is 25 minutes past 10.',
+    },
+  },
 
   // ==========================================
   // Standard: NC.2.MD.8 — Money Word Problems: Coins & Dollars
@@ -1067,30 +1145,39 @@ export const GRADE_2_MD_AUTHORED: Question[] = [
     standardCode: 'NC.2.MD.8',
     domainId: 'MD',
     // Coins named in words, counted by value, then a "how much more" step.
-    prompt: 'Rae has 1 quarter and 2 dimes. A sticker costs 60¢. How much more money does Rae need?',
+    //
+    // The coins and price are chosen so each wrong option has ONE cause. None
+    // of 35, 48 or 20 is a number the prompt prints (1, 1, 50), a coin's value
+    // (25, 10), what leaving a coin out gives (50 − 25 = 25, 50 − 10 = 40),
+    // adding the price on (50 + 35 = 85), or the no-regrouping slip on
+    // 50 − 35 (tens 5 − 3, ones 5 − 0: 25). With 2 dimes and a 60¢ price
+    // instead, counting a dime as 5¢ and leaving one dime out BOTH gave 25¢,
+    // and 25¢ was also the quarter's own value — so the tag could name an
+    // error the child did not make.
+    prompt: 'Rae has 1 quarter and 1 dime. A sticker costs 50¢. How much more money does Rae need?',
     options: labelOptions([
       { text: '15¢', isCorrect: true },
-      // 25 + 10 + 10 = 45: counted her coins and stopped before comparing.
-      { text: '45¢', isCorrect: false, misconception: 'forgot-the-final-step' },
-      // 3 coins counted as 3¢: 60 − 3 = 57.
-      { text: '57¢', isCorrect: false, misconception: 'counted-the-coins-not-their-value' },
-      // Each dime counted as 5¢: 25 + 5 + 5 = 35, and 60 − 35 = 25.
-      { text: '25¢', isCorrect: false, misconception: 'mixed-up-the-values-of-a-nickel-and-a-dime' },
+      // 25 + 10 = 35: counted her coins and stopped before comparing.
+      { text: '35¢', isCorrect: false, misconception: 'forgot-the-final-step' },
+      // 2 coins counted as 2¢: 50 − 2 = 48.
+      { text: '48¢', isCorrect: false, misconception: 'counted-the-coins-not-their-value' },
+      // The dime counted as 5¢: 25 + 5 = 30, and 50 − 30 = 20.
+      { text: '20¢', isCorrect: false, misconception: 'mixed-up-the-values-of-a-nickel-and-a-dime' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'advanced',
     explanation: {
       stepByStep: [
-        'Step 1: Count Rae’s coins by value: the quarter is 25¢, then each dime is 10¢ more: 35¢, 45¢.',
-        'Step 2: Rae has 45¢.',
-        'Step 3: The sticker costs 60¢. Count up from 45¢ to 60¢: 60 − 45 = 15.',
+        'Step 1: Count Rae’s coins by value: the quarter is 25¢, and the dime is 10¢ more: 35¢.',
+        'Step 2: Rae has 35¢.',
+        'Step 3: The sticker costs 50¢. Count up from 35¢ to 50¢: 50 − 35 = 15.',
         'Step 4: Rae needs 15¢ more.',
       ],
       conceptSummary:
         'Coins are counted by what each one is worth, not by how many there are. Then "how much more" is the difference between the price and the money counted.',
       commonMisconception:
-        'Three coins is not 3¢. A quarter is worth 25¢ and each dime 10¢, so these three coins are worth 45¢.',
+        'Two coins is not 2¢. A quarter is worth 25¢ and a dime 10¢, so these two coins are worth 35¢.',
     },
   },
 
