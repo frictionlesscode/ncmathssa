@@ -169,3 +169,50 @@ export function assertNoGeneratorDuplicatesAuthored(
     }
   }
 }
+
+/**
+ * The Grade 1 readability guard: every prompt a six-year-old is shown must be
+ * one a six-year-old can read, often aloud with a parent. This is a
+ * correctness check, not a style preference. A first-grader who cannot read
+ * the question gets it wrong for a reason the app then reports to that parent
+ * as a MATHEMATICAL misconception, with every other test green.
+ *
+ * Three limits (ruling 22-7 of the Tasks 22-26 pre-flight):
+ *
+ *   - under 90 characters;
+ *   - at most two sentences, split on . ? and ! — one setup and one question
+ *     is the most a word problem at this grade should ask a child to hold;
+ *   - no word longer than 10 letters, the check that catches vocabulary a
+ *     first-grader does not read ("associative", "subtraction") when the
+ *     sentence around it is short.
+ *
+ * It does NOT re-check that the prompt is non-empty: assertAuthoredBankSound
+ * and assertTemplateSound already do, and a second copy of that check is a
+ * second place for the two to disagree.
+ *
+ * Shared, not copied, for the reason `numericValue` above gives (ruling E.3):
+ * the Grade 1 authored banks and every Grade 1 template test call this one
+ * definition, so tuning a limit happens in one place, and no domain file can
+ * quietly keep an older, looser copy. A template test passes its generated
+ * prompts in as `{ id: 'seed N', prompt }`.
+ */
+export function assertGradeOneReadable(items: { id: string; prompt: string }[]): void {
+  for (const q of items) {
+    expect(
+      q.prompt.length,
+      `${q.id}: prompt is ${q.prompt.length} characters, must be under 90: "${q.prompt}"`,
+    ).toBeLessThan(90);
+
+    const sentences = q.prompt.split(/[.?!]/).filter((s) => s.trim().length > 0);
+    expect(
+      sentences.length,
+      `${q.id}: prompt has ${sentences.length} sentences, at most 2: "${q.prompt}"`,
+    ).toBeLessThanOrEqual(2);
+
+    const longWords = (q.prompt.match(/[A-Za-z]+/g) ?? []).filter((w) => w.length > 10);
+    expect(
+      longWords,
+      `${q.id}: prompt uses words longer than 10 letters: ${longWords.join(', ')}`,
+    ).toEqual([]);
+  }
+}

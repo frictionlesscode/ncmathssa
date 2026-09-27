@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import type { Question } from '../engine/questionModel';
 import type { DomainInfo } from './types';
-import { assertAuthoredBankSound } from './authoredBank.testkit';
+import { assertAuthoredBankSound, assertGradeOneReadable } from './authoredBank.testkit';
 
 /**
  * Negative controls for the shared kit.
@@ -194,5 +194,44 @@ describe('assertAuthoredBankSound rejects an unbalanced answer key', () => {
     }
     expect(message, 'twelve keys at A was accepted').not.toBe('');
     expect(message).toMatch(/only ever at|more than half/);
+  });
+});
+
+describe('assertGradeOneReadable', () => {
+  function caught(items: { id: string; prompt: string }[]): string {
+    try {
+      assertGradeOneReadable(items);
+    } catch (e) {
+      return e instanceof Error ? e.message : String(e);
+    }
+    return '';
+  }
+
+  it('accepts a short setup-and-question word problem', () => {
+    expect(caught([{ id: 'ok', prompt: 'Mia has 8 red beads and 5 blue beads. How many beads in all?' }])).toBe('');
+  });
+
+  it('accepts a prompt of exactly 89 characters, and a 10-letter word', () => {
+    const prompt = `Everything here is fine. ${'a '.repeat(30)}okay`;
+    expect(prompt.length).toBe(89);
+    expect(caught([{ id: 'edge', prompt }])).toBe('');
+  });
+
+  it('rejects a prompt of 90 characters', () => {
+    const prompt = `Everything here is fine. ${'a '.repeat(30)}okay?`;
+    expect(prompt.length).toBe(90);
+    expect(caught([{ id: 'long', prompt }])).toMatch(/long: prompt is 90 characters/);
+  });
+
+  it('rejects a third sentence', () => {
+    expect(caught([{ id: 'three', prompt: 'Sam had 9 cars. He lost some. How many are left?' }])).toMatch(
+      /three: prompt has 3 sentences/,
+    );
+  });
+
+  it('rejects a word longer than 10 letters', () => {
+    expect(caught([{ id: 'word', prompt: 'Which associative rule helps?' }])).toMatch(
+      /word: prompt uses words longer than 10 letters: associative/,
+    );
   });
 });
