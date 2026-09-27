@@ -73,7 +73,24 @@ export type MisconceptionFamily =
    *  place-value error, and 'geometry-and-measurement' would tell a parent
    *  their child has a measuring problem when the child is mixing up a dime
    *  and a nickel. The family label is the headline a parent reads. */
-  | 'money';
+  | 'money'
+  /** What the equal sign MEANS: that both sides name the same amount, not
+   *  "the answer goes next". Added for NC.1.OA.7 and NC.1.OA.8, whose errors
+   *  are about reading an equation rather than doing arithmetic — a child who
+   *  answers 4 + 3 = ☐ + 2 with 7 has added correctly and misread the sign.
+   *  'operation-choice' would tell a parent their child picked the wrong
+   *  operation, which the child did not do, and 'order-of-operations' is a
+   *  Grade 5 headline. */
+  | 'equal-sign'
+  /** Using a strategy such as making ten, getting to ten, or a doubles fact to
+   *  add or subtract within 20: breaking a number into two parts and keeping
+   *  track of which part has already been used. Added for NC.1.OA.6, whose
+   *  sourced keyConcepts ARE these strategies. Not 'incomplete-procedure' —
+   *  a child who adds all of the 5 after using 2 of it to make ten has not
+   *  stopped early, they have gone one step too far — and not
+   *  'place-value-and-decimals', which would tell a parent their child has a
+   *  tens-and-ones problem when the child has a strategy problem. */
+  | 'addition-and-subtraction-strategies';
 
 export interface MisconceptionInfo {
   tag: string;
@@ -1869,6 +1886,60 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'put-a-count-on-the-wrong-bar',
       'geometry-and-measurement',
       "Counted the data correctly but drew one category's count on another category's bar, so two bars traded places.",
+    ),
+
+    // -- Grade 1 Operations & Algebraic Thinking (NC.1.OA.1-4, 6-9) --------
+    // Grade 1's errors are about COUNTING and about what the equal sign means
+    // (the Task 22 brief). Grade 2's counting tags are reused where they name
+    // exactly the slip - counted-on-by-ones-and-stopped-one-short,
+    // counted-on-by-ones-one-too-many, restated-a-known-number-instead-of-
+    // solving, left-one-of-the-addends-out - and so are forgot-the-final-step
+    // and subtracted-without-regrouping. What follows are the errors nothing
+    // declared yet.
+    entry(
+      'counted-the-start-number-as-a-hop',
+      'incomplete-procedure',
+      'When counting on or back by ones, counted the number they started from as the first hop — saying "8, 9, 10" for 8 + 3 — so the answer came out one away from the right one.',
+    ),
+    entry(
+      'gave-an-amount-instead-of-the-difference',
+      'incomplete-procedure',
+      'In a "how many more" or "how many fewer" problem, answered with how many one person has instead of the difference between the two amounts.',
+    ),
+    entry(
+      'added-one-number-twice',
+      'multi-step-problems',
+      'Lost track while adding three numbers and added one of them into the total twice, so the total came out too big by that number.',
+    ),
+    entry(
+      'added-every-number-in-the-equation',
+      'equal-sign',
+      'Added together every number in an equation — answering 8 = 3 + ☐ with 11 — instead of finding the number that makes both sides the same amount.',
+    ),
+    entry(
+      'read-the-equal-sign-as-the-answer-comes-next',
+      'equal-sign',
+      'Read the equal sign as "the answer goes next" instead of "both sides are the same amount", so in 4 + 3 = ☐ + 2 they wrote 7 and ignored the + 2.',
+    ),
+    entry(
+      'used-the-whole-number-after-breaking-it-apart',
+      'addition-and-subtraction-strategies',
+      'Broke a number into two parts to use a strategy — making a ten, getting to 10, or a doubles fact — then used the WHOLE number again in the next step instead of only the part that was left, so 8 + 5 became 8 + 2 = 10, then 10 + 5 = 15.',
+    ),
+    entry(
+      'used-the-wrong-part-after-making-ten',
+      'addition-and-subtraction-strategies',
+      'Broke a number into two parts to make a ten, then added the part that had already gone into the ten instead of the part left over — so 8 + 5 became 10 + 2 = 12.',
+    ),
+    entry(
+      'used-the-wrong-partner-to-make-ten',
+      'addition-and-subtraction-strategies',
+      'Filled a number up to 10 with the wrong partner — treating 8 as needing 1 more instead of 2 — so the part left over, and the answer, came out wrong.',
+    ),
+    entry(
+      'left-the-ten-out-of-a-teen-number',
+      'place-value-and-decimals',
+      'Added or subtracted using only the ones digit of a teen number and dropped its ten, so 15 + 3 came out 8 instead of 18.',
     ),
   ].map((info) => [info.tag, info]),
 );
