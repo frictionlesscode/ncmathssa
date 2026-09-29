@@ -193,12 +193,6 @@ Open the URL Vite prints in the console, including the `/ncmathssa/` path
 (its default is `http://localhost:5173/ncmathssa/`, but it will pick the
 next free port if that one is busy).
 
-## Live Site
-
-The app is published to GitHub Pages at
-**https://frictionlesscode.github.io/ncmathssa/** by
-`.github/workflows/deploy.yml` on every push to `master`.
-
 ### Tests and checks
 
 ```bash
@@ -210,7 +204,13 @@ npm run build      # tsc -b && vite build
 ```
 
 `.github/workflows/ci.yml` runs lint, typecheck, `test:run`, and build on
-every pull request and on pushes to `main`.
+every pull request and on pushes to `master`.
+
+## Live Site
+
+The app is published to GitHub Pages at
+**https://frictionlesscode.github.io/ncmathssa/** by
+`.github/workflows/deploy.yml` on every push to `master`.
 
 ---
 
@@ -221,3 +221,20 @@ Grades 1–2 use `{ kind: 'even-by-standard-count' }` weighting because NCDPI
 publishes no state EOG blueprint below grade 3; Grades 3–5 weight domains by
 the published NCDPI blueprint. Adding a future grade (e.g. Grade 6) follows
 the same four steps under [Adding a grade](#adding-a-grade) above.
+
+---
+
+## Disclaimer
+
+This is an independent, unofficial practice tool. It is not affiliated with,
+endorsed by, or produced by WCPSS, NCDPI, CASE, or any school or district. Its
+questions were written from publicly available information only; the actual
+test is secure and not public, so nothing here is a real test item. It is
+provided as is, with no guarantee of accuracy or of any test or placement
+outcome, and is used at your own risk. The app asks every visitor to agree to
+this, including a hold-harmless clause, before it can be used
+(`src/components/DisclaimerGate.tsx`).
+
+## License
+
+[MIT](LICENSE).

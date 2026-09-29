@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ProgressProvider, useProgress } from './context/ProgressContext';
 import { FirstRunScreen } from './components/FirstRunScreen';
+import { DisclaimerGate } from './components/DisclaimerGate';
 import { Navbar } from './components/Navbar';
 import type { NavTab } from './components/Navbar';
 import { Dashboard } from './components/Dashboard';
@@ -206,9 +207,11 @@ const MainApp: React.FC = () => {
 
 export function App() {
   return (
-    <ProgressProvider>
-      <MainApp />
-    </ProgressProvider>
+    <DisclaimerGate>
+      <ProgressProvider>
+        <MainApp />
+      </ProgressProvider>
+    </DisclaimerGate>
   );
 }
 
