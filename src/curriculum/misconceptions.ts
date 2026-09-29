@@ -2046,6 +2046,150 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'place-value-and-decimals',
       "Answered how many tens are in a multiple of ten with its ones digit (always 0) instead of its tens digit.",
     ),
+
+    // -- Grade 1 Measurement & Data (NC.1.MD.1-5) --------------------------
+    entry(
+      'compared-only-two-of-three-objects',
+      'geometry-and-measurement',
+      'Ordered three objects by length using only one pair of them, instead of checking all three against each other, so the full order came out wrong.',
+    ),
+    entry(
+      'reversed-a-length-comparison',
+      'geometry-and-measurement',
+      'Read "longer than" or "shorter than" backward, so the object that was said to be longer was treated as the shorter one, or the other way round.',
+    ),
+    entry(
+      'denied-transitivity-of-length',
+      'geometry-and-measurement',
+      'Refused to conclude which of two objects is longer when they were compared only indirectly, through a third object, even though the two comparisons given are enough to tell.',
+    ),
+    entry(
+      'left-gaps-between-the-units-while-iterating',
+      'geometry-and-measurement',
+      'Measured by laying copies of a unit end to end but left gaps between them, so the units no longer covered the full length being measured.',
+    ),
+    entry(
+      'overlapped-the-units-while-iterating',
+      'geometry-and-measurement',
+      'Measured by laying copies of a unit end to end but let them overlap each other, so part of the length was covered by more than one unit.',
+    ),
+    entry(
+      'stacked-the-units-instead-of-laying-them-end-to-end',
+      'geometry-and-measurement',
+      'Piled units on top of each other instead of laying them end to end along the length being measured, so the count no longer matches the length at all.',
+    ),
+    entry(
+      'reversed-the-effect-of-gaps-on-the-count',
+      'geometry-and-measurement',
+      'Believed that leaving gaps between units while measuring makes the counted length come out too large, when it actually makes the counted length come out too small.',
+    ),
+    entry(
+      'denied-that-placement-affects-the-count',
+      'geometry-and-measurement',
+      'Assumed that gaps or overlaps between units make no difference to a measurement, when only laying units end to end with no gaps or overlaps gives an accurate count.',
+    ),
+    entry(
+      'blamed-a-miscount-instead-of-the-gaps',
+      'geometry-and-measurement',
+      'Explained an inaccurate measurement as a simple counting slip instead of recognizing that gaps or overlaps between the units caused the count to be wrong.',
+    ),
+    entry(
+      'counted-a-unit-that-was-not-there',
+      'geometry-and-measurement',
+      'Counted one more unit than were actually laid end to end while measuring, overstating the length by one unit.',
+    ),
+    entry(
+      'left-out-the-last-unit-while-counting',
+      'geometry-and-measurement',
+      'Stopped counting one unit short while measuring by iteration, understating the length by one unit.',
+    ),
+    entry(
+      'read-the-count-for-the-wrong-object',
+      'geometry-and-measurement',
+      "Read off the number of units measuring a different object than the one the question asked about.",
+    ),
+    entry(
+      'denied-that-non-standard-units-can-measure-length',
+      'geometry-and-measurement',
+      'Claimed a length cannot be found without a ruler, when a whole number of same-sized non-standard units, laid end to end with no gaps or overlaps, measures it too.',
+    ),
+    entry(
+      'read-the-hour-hand-as-pointing-exactly-at-a-number',
+      'time-intervals',
+      'At half past the hour, read the hour hand as if it pointed exactly at the number it has passed or the number ahead of it, instead of noticing it sits halfway between the two and so is only a half hour along.',
+    ),
+    entry(
+      'confused-a-coin-with-a-different-value',
+      'money',
+      'Named or valued a penny, nickel, dime, or quarter as though it were a different one of the four, giving it a value that is not its own.',
+    ),
+    entry(
+      'reversed-a-coin-value-comparison',
+      'money',
+      'Compared the value of two coins backward, naming the coin worth fewer pennies as the one worth more, or the other way round.',
+    ),
+    entry(
+      'treated-different-coins-as-equal-value',
+      'money',
+      'Treated two coins of different value as though they were worth the same number of pennies.',
+    ),
+    entry(
+      'denied-that-coin-values-can-be-compared',
+      'money',
+      'Claimed that which of two named coins is worth more cannot be known, when every coin\'s value in pennies is fixed and the two can always be compared.',
+    ),
+    entry(
+      'miscounted-while-reading-the-graph',
+      'geometry-and-measurement',
+      "Read a data display but counted one too many or one too few of a category's marks, giving a count close to, but not equal to, the true one.",
+    ),
+
+    // -- Grade 1 Geometry (NC.1.G.1-3) --------------------------------------
+    entry(
+      'treated-a-non-defining-attribute-as-defining',
+      'shape-classification',
+      'Treated an attribute that can change without changing what the shape is — such as its color, size, or which way it is turned — as if it were part of what makes the shape what it is.',
+    ),
+    entry(
+      'confused-a-defining-attribute-with-a-partial-one',
+      'shape-classification',
+      "Treated one defining attribute of a shape, such as having four sides, as enough on its own to name it, without checking the shape's other defining attributes, such as having four square corners.",
+    ),
+    entry(
+      'confused-a-3-d-shape-with-a-similar-one',
+      'shape-classification',
+      'Named a three-dimensional shape by a shape it merely resembles, such as a cone for a cylinder or a sphere for a circle, instead of by its own defining attributes.',
+    ),
+    entry(
+      'expected-a-composite-shape-to-keep-its-parts-names',
+      'shape-classification',
+      'Believed a shape made by joining two or more shapes together keeps the name of one of its parts, instead of getting its own name from the new figure as a whole.',
+    ),
+    entry(
+      'misidentified-a-component-shape',
+      'shape-classification',
+      'When asked which shapes were combined to make a composite figure, named a shape that was not actually one of the pieces used to build it.',
+    ),
+    entry(
+      'named-the-composite-shape-instead-of-its-parts',
+      'shape-classification',
+      'When asked which shapes were combined to make a composite figure, named the new combined shape itself instead of the separate pieces that made it.',
+    ),
+    entry(
+      'left-out-a-component-shape',
+      'shape-classification',
+      'Named only some of the shapes used to build a composite figure and left at least one of the pieces out entirely.',
+    ),
+    entry(
+      'expected-more-shares-to-be-bigger',
+      'geometry-and-measurement',
+      'Assumed that splitting a whole into more equal shares makes each share bigger, when splitting the same whole into more equal shares actually makes each share smaller.',
+    ),
+    entry(
+      'assumed-share-size-does-not-depend-on-the-count',
+      'geometry-and-measurement',
+      'Assumed that equal shares of the same whole are always the same size no matter how many shares the whole was split into.',
+    ),
   ].map((info) => [info.tag, info]),
 );
 

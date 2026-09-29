@@ -14,6 +14,8 @@ import { nbt4AddWithin100 } from './nbt4-add-within-100';
 import { nbt5TenMoreOrLess } from './nbt5-ten-more-or-less';
 import { nbt6SubtractMultiplesOfTen } from './nbt6-subtract-multiples-of-ten';
 import { nbt7WriteTheNumeral } from './nbt7-write-the-numeral';
+import { md2MeasureWithUnits } from './md2-measure-with-units';
+import { md4ReadTheData } from './md4-read-the-data';
 
 /** Every parameterized Grade 1 template. Task 22 (Operations & Algebraic
  *  Thinking) starts this list; Tasks 23 (Base Ten) and 24 (Measurement & Data)
@@ -115,7 +117,39 @@ import { nbt7WriteTheNumeral } from './nbt7-write-the-numeral';
  *  NC.1.NBT.4-6 where the generators ask bare "what is" questions, and single-
  *  next-number counting for NC.1.NBT.1 where the generator always asks for
  *  three numbers at once. `../authored.nbt.test.ts` runs
- *  `assertNoGeneratorDuplicatesAuthored` over these templates to hold that. */
+ *  `assertNoGeneratorDuplicatesAuthored` over these templates to hold that.
+ *
+ *  ── Measurement & Data (Task 24) ──────────────────────────────────────────
+ *
+ *  RULING 24-1 SWAPS NC.1.MD.3 AND NC.1.MD.5: NC.1.MD.3 is TIME to the hour
+ *  and half-hour; NC.1.MD.5 is COINS, identifying quarters, dimes and nickels
+ *  and relating their values to pennies. The Task 24 brief has those two
+ *  backward in its own Step 4.
+ *
+ *  RULING 24-2/24-3 MAKES NC.1.MD.1 AUTHORED, NOT TEMPLATED. Ordering three
+ *  objects by length, and comparing two objects indirectly through a third,
+ *  is transitivity over a DESCRIBED scenario: the natural prompt needs three
+ *  clauses of held state, over the two-sentence cap a six-year-old can read.
+ *  Task 24 therefore contributes only TWO templates, for NC.1.MD.2 and
+ *  NC.1.MD.4 - Time, Coins and all three Geometry standards (NC.1.G.1-3) are
+ *  fully authored in `../authored.md.ts` and `../authored.g.ts`, because a
+ *  generator over them would only shuffle labels on described figures, not
+ *  exercise a different draw of numbers.
+ *
+ *    NC.1.MD.2  MEASURE WITH NON-STANDARD UNITS - read off a count of units
+ *               already laid out correctly (ruling 24-9: the "no gaps or
+ *               overlaps" figure lives in promptDetails, not the
+ *               length-checked prompt). The authored bank takes the
+ *               standard's OTHER shape: judging whether a description of
+ *               measuring (with gaps, with overlaps, stacked) is correct.
+ *    NC.1.MD.4  READ THE DATA - one template, branching on the seed across
+ *               the standard's own three question types (ruling 24-5: the
+ *               total; how many in one category; how many more or less),
+ *               always with exactly three categories. AUTHORED AND GENERATED
+ *               DO NOT OVERLAP: the authored bank uses two-category graphs, a
+ *               take-apart shape (total given, one category missing), and
+ *               "how many fewer" phrasing the generator never asks.
+ */
 export const GRADE_1_TEMPLATES: QuestionTemplate[] = [
   oa1CompareDifference,
   oa2ThreeAddends,
@@ -132,6 +166,8 @@ export const GRADE_1_TEMPLATES: QuestionTemplate[] = [
   nbt5TenMoreOrLess,
   nbt6SubtractMultiplesOfTen,
   nbt7WriteTheNumeral,
+  md2MeasureWithUnits,
+  md4ReadTheData,
 ];
 
 export {
@@ -150,4 +186,6 @@ export {
   nbt5TenMoreOrLess,
   nbt6SubtractMultiplesOfTen,
   nbt7WriteTheNumeral,
+  md2MeasureWithUnits,
+  md4ReadTheData,
 };

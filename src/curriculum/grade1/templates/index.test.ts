@@ -112,6 +112,9 @@ describe('GRADE_1_TEMPLATES', () => {
       'g1.nbt5.ten-more-or-less': /^What is 10 (?:more|less) than \d+\?$/,
       'g1.nbt6.subtract-multiples-of-ten': /^Find the difference: \d+ − \d+\.$/,
       'g1.nbt7.write-the-numeral': /^Which number is [a-z]+(?:-[a-z]+)?\?$/,
+      'g1.md2.measure-with-units': /^How many [a-z]+(?: [a-z]+)* long is the [a-z]+\?$/,
+      'g1.md4.read-the-data':
+        /^(?:How many students answered in all\?|How many students picked [a-z]+\?|How many more students picked [a-z]+ than [a-z]+\?)$/,
     };
     expect(Object.keys(sentinels).sort()).toEqual(GRADE_1_TEMPLATES.map((t) => t.id).sort());
     for (const t of GRADE_1_TEMPLATES) {

@@ -195,8 +195,23 @@ export function assertNoGeneratorDuplicatesAuthored(
  * definition, so tuning a limit happens in one place, and no domain file can
  * quietly keep an older, looser copy. A template test passes its generated
  * prompts in as `{ id: 'seed N', prompt }`.
+ *
+ * `opts.allowlist` exempts specific words from the ten-letter cap. It exists
+ * because NC.1.G.1 and NC.1.G.2's own sourced vocabulary (`grade1/
+ * standards.ts`) includes words over ten letters — "rectangular" (in
+ * NC.1.G.1's keyConcepts, "Building cubes, rectangular prisms...") is the one
+ * that actually trips the cap; "half-circles" (NC.1.G.2's keyConcepts) is
+ * listed too for documentation, though its hyphen already splits it into two
+ * words under the cap on its own. THE CAP ITSELF NEVER MOVES: this is a
+ * narrow, explicit exemption for named words, sourced from the standard's own
+ * text, not a loosened limit. `authoredBank.testkit.test.ts` proves a
+ * different long word is still rejected even with this allowlist supplied.
  */
-export function assertGradeOneReadable(items: { id: string; prompt: string }[]): void {
+export function assertGradeOneReadable(
+  items: { id: string; prompt: string }[],
+  opts: { allowlist?: string[] } = {},
+): void {
+  const allowlist = new Set((opts.allowlist ?? []).map((w) => w.toLowerCase()));
   for (const q of items) {
     expect(
       q.prompt.length,
@@ -209,10 +224,16 @@ export function assertGradeOneReadable(items: { id: string; prompt: string }[]):
       `${q.id}: prompt has ${sentences.length} sentences, at most 2: "${q.prompt}"`,
     ).toBeLessThanOrEqual(2);
 
-    const longWords = (q.prompt.match(/[A-Za-z]+/g) ?? []).filter((w) => w.length > 10);
+    const longWords = (q.prompt.match(/[A-Za-z]+/g) ?? []).filter(
+      (w) => w.length > 10 && !allowlist.has(w.toLowerCase()),
+    );
     expect(
       longWords,
       `${q.id}: prompt uses words longer than 10 letters: ${longWords.join(', ')}`,
     ).toEqual([]);
   }
 }
+
+/** The Grade 1 Geometry vocabulary allowlist for `assertGradeOneReadable`.
+ *  See that function's doc comment for why each word is here. */
+export const GRADE_1_G_VOCAB_ALLOWLIST: string[] = ['rectangular', 'half-circles'];

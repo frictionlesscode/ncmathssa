@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import type { Question } from '../engine/questionModel';
 import type { DomainInfo } from './types';
-import { assertAuthoredBankSound, assertGradeOneReadable } from './authoredBank.testkit';
+import { assertAuthoredBankSound, assertGradeOneReadable, GRADE_1_G_VOCAB_ALLOWLIST } from './authoredBank.testkit';
 
 /**
  * Negative controls for the shared kit.
@@ -232,6 +232,33 @@ describe('assertGradeOneReadable', () => {
   it('rejects a word longer than 10 letters', () => {
     expect(caught([{ id: 'word', prompt: 'Which associative rule helps?' }])).toMatch(
       /word: prompt uses words longer than 10 letters: associative/,
+    );
+  });
+
+  // The Grade 1 Geometry allowlist exempts named words, never the cap itself.
+  it('accepts an allowlisted long word', () => {
+    function caughtWithAllowlist(items: { id: string; prompt: string }[]): string {
+      try {
+        assertGradeOneReadable(items, { allowlist: GRADE_1_G_VOCAB_ALLOWLIST });
+      } catch (e) {
+        return e instanceof Error ? e.message : String(e);
+      }
+      return '';
+    }
+    expect(caughtWithAllowlist([{ id: 'allowed', prompt: 'Which shape shows a rectangular prism?' }])).toBe('');
+  });
+
+  it('still rejects a DIFFERENT long word even with the allowlist supplied', () => {
+    function caughtWithAllowlist(items: { id: string; prompt: string }[]): string {
+      try {
+        assertGradeOneReadable(items, { allowlist: GRADE_1_G_VOCAB_ALLOWLIST });
+      } catch (e) {
+        return e instanceof Error ? e.message : String(e);
+      }
+      return '';
+    }
+    expect(caughtWithAllowlist([{ id: 'still-caught', prompt: 'Which associative rule helps?' }])).toMatch(
+      /still-caught: prompt uses words longer than 10 letters: associative/,
     );
   });
 });
