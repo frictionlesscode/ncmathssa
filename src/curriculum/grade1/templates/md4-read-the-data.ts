@@ -1,5 +1,6 @@
 import type { Rng } from '../../../engine/rng';
 import type { QuestionTemplate, GeneratedQuestion } from '../../../engine/template';
+import { assertNoOptionCollision } from '../../../engine/template';
 import { labelOptions } from '../../../engine/questionModel';
 
 /**
@@ -96,10 +97,7 @@ export const md4ReadTheData: QuestionTemplate = {
         { text: `${sum - middle.count}`, isCorrect: false, misconception: 'left-one-of-the-addends-out' },
         { text: `${largest.count}`, isCorrect: false, misconception: 'forgot-the-final-step' },
       ];
-      const texts = candidates.map((c) => c.text);
-      if (new Set(texts).size !== texts.length) {
-        throw new Error(`g1.md4.read-the-data (total): option collision [${texts.join(' | ')}]`);
-      }
+      assertNoOptionCollision('g1.md4.read-the-data (total)', candidates.map((c) => c.text));
       return {
         prompt: 'How many students answered in all?',
         promptDetails,
@@ -129,10 +127,7 @@ export const md4ReadTheData: QuestionTemplate = {
         { text: `${others[1].count}`, isCorrect: false, misconception: 'used-the-wrong-given-quantity' },
         { text: `${sum}`, isCorrect: false, misconception: 'summed-all-data-points' },
       ];
-      const texts = candidates.map((c) => c.text);
-      if (new Set(texts).size !== texts.length) {
-        throw new Error(`g1.md4.read-the-data (category): option collision [${texts.join(' | ')}]`);
-      }
+      assertNoOptionCollision('g1.md4.read-the-data (category)', candidates.map((c) => c.text));
       return {
         prompt: `How many students picked ${target.name}?`,
         promptDetails,
@@ -164,10 +159,7 @@ export const md4ReadTheData: QuestionTemplate = {
       { text: `${small.count}`, isCorrect: false, misconception: 'gave-an-amount-instead-of-the-difference' },
       { text: `${big.count}`, isCorrect: false, misconception: 'gave-an-amount-instead-of-the-difference' },
     ];
-    const texts = candidates.map((c) => c.text);
-    if (new Set(texts).size !== texts.length) {
-      throw new Error(`g1.md4.read-the-data (compare): option collision [${texts.join(' | ')}]`);
-    }
+    assertNoOptionCollision('g1.md4.read-the-data (compare)', candidates.map((c) => c.text));
     return {
       prompt: `How many more students picked ${big.name} than ${small.name}?`,
       promptDetails,

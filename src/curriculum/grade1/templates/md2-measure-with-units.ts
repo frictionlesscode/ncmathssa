@@ -1,5 +1,6 @@
 import type { Rng } from '../../../engine/rng';
 import type { QuestionTemplate, GeneratedQuestion } from '../../../engine/template';
+import { assertNoOptionCollision } from '../../../engine/template';
 import { labelOptions } from '../../../engine/questionModel';
 
 /**
@@ -64,10 +65,7 @@ export const md2MeasureWithUnits: QuestionTemplate = {
       { text: `${m}`, isCorrect: false, misconception: 'read-the-count-for-the-wrong-object' },
     ];
 
-    const texts = candidates.map((c) => c.text);
-    if (new Set(texts).size !== texts.length) {
-      throw new Error(`g1.md2.measure-with-units: option collision [${texts.join(' | ')}]`);
-    }
+    assertNoOptionCollision('g1.md2.measure-with-units', candidates.map((c) => c.text));
 
     return {
       prompt: `How many ${unitPlural} long is the ${object}?`,

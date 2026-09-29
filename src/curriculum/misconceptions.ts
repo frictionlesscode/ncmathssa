@@ -2119,6 +2119,16 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'At half past the hour, read the hour hand as if it pointed exactly at the number it has passed or the number ahead of it, instead of noticing it sits halfway between the two and so is only a half hour along.',
     ),
     entry(
+      // Distinct from read-the-next-hour-from-the-hour-hand, which is the
+      // LATE-in-the-hour case, where the hand genuinely sits near the next
+      // number. This tag is for a clock with no such ambiguity - the hand
+      // sits exactly on a number - where the hour is still misread as one
+      // off, a plain misreading rather than a hand-position confusion.
+      'misread-the-hour-hand-by-one-number',
+      'time-intervals',
+      'Read the hour hand as pointing to the number next to the one it actually points to, naming an hour one more or one less than the true hour, even on a clock where the hand sits exactly on a number with nothing to make that ambiguous.',
+    ),
+    entry(
       'confused-a-coin-with-a-different-value',
       'money',
       'Named or valued a penny, nickel, dime, or quarter as though it were a different one of the four, giving it a value that is not its own.',
@@ -2142,6 +2152,16 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'miscounted-while-reading-the-graph',
       'geometry-and-measurement',
       "Read a data display but counted one too many or one too few of a category's marks, giving a count close to, but not equal to, the true one.",
+    ),
+    entry(
+      // Distinct from left-one-of-the-addends-out, which is written for a
+      // total built by ADDING several parts together. This is the same slip
+      // inside a TAKE-APART problem: the total is known, several parts are
+      // known, and one of the KNOWN parts is left out of the subtraction, so
+      // the answer still has that part's count folded into it.
+      'subtracted-only-one-of-two-known-parts',
+      'geometry-and-measurement',
+      'In a take-apart problem with a total and two known parts, subtracted only one of the two known parts from the total and reported that as the missing part, leaving the other known part still counted in the answer.',
     ),
 
     // -- Grade 1 Geometry (NC.1.G.1-3) --------------------------------------

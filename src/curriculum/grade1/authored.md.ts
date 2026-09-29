@@ -238,7 +238,7 @@ export const GRADE_1_MD_AUTHORED: Question[] = [
     prompt: 'What time does the clock show?',
     promptDetails: 'The short hour hand points exactly at the 3. The long minute hand points exactly at the 12.',
     options: labelOptions([
-      { text: '4:00', isCorrect: false, misconception: 'read-the-next-hour-from-the-hour-hand' },
+      { text: '4:00', isCorrect: false, misconception: 'misread-the-hour-hand-by-one-number' },
       { text: '3:00', isCorrect: true },
       { text: '12:03', isCorrect: false, misconception: 'swapped-the-hour-and-minute-hands' },
       { text: '3:12', isCorrect: false, misconception: 'read-the-minute-hand-as-the-number-it-points-to' },
@@ -558,9 +558,9 @@ export const GRADE_1_MD_AUTHORED: Question[] = [
     prompt: 'How many students like painting best?',
     promptDetails: 'In Ms. Ruiz\'s class of 10 students, 4 like reading best and 3 like drawing best. The rest like painting best.',
     options: labelOptions([
-      { text: '6', isCorrect: false, misconception: 'left-one-of-the-addends-out' },
+      { text: '6', isCorrect: false, misconception: 'subtracted-only-one-of-two-known-parts' },
       { text: '3', isCorrect: true },
-      { text: '7', isCorrect: false, misconception: 'left-one-of-the-addends-out' },
+      { text: '7', isCorrect: false, misconception: 'subtracted-only-one-of-two-known-parts' },
       { text: '17', isCorrect: false, misconception: 'added-instead-of-subtracted' },
     ]),
     calculatorAllowed: false,
