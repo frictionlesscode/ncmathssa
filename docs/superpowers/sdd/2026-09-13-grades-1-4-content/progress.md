@@ -2129,3 +2129,382 @@ branches were pushed. Because this workspace is gitignored, a snapshot of its ma
 regenerate) was committed to `docs/superpowers/sdd/2026-09-13-grades-1-4-content/`. This
 live copy stays authoritative; re-copy the markdown into that folder at the end of each
 batch and at the Task 26 close-out so the backup does not drift.
+
+## Session resumed 2026-09-26 (new controller session)
+
+Ledger identity matches this plan. Tasks 1-18 have completion lines; resuming at Task 19.
+HEAD `3e32f7d` (Task 18's `1f7af45` plus the workspace-snapshot docs commit). Re-verified
+at resume: 1102/1102 passing, `tsc -b` clean. Branch now tracks `origin/feat/multi-grade-
+adaptive`; push after each task completes.
+
+Ruling: commit trailers from here on use this session's attribution lines
+(`Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>` +
+`Claude-Session: https://claude.ai/code/session_012ve1EbS2XpgkomSbxXpCFc`), not the plan's
+Global Constraints copy, which names an earlier session — the trailer records which session
+produced the commit, and the plan's copy was already drifting (Task 18 used Sonnet 5) —
+costs a cosmetic trailer inconsistency if wrong.
+
+Ruling: every implementer stages explicit paths instead of the briefs' `git add -A` — an
+untracked `graphify-out/` (a knowledge-graph export from 2026-09-16, not project content)
+now sits in the tree and `-A` would commit it — costs nothing if wrong; the files still land.
+
+### Task 19 (Grade 2 MD + authored aggregate) — BASE `3e32f7d`, implementer dispatched (opus)
+
+Carries: rulings 19-1..19-7 and the standing literal-pin ruling from
+`task-17-21-rulings.md`; two lessons from Task 18 the brief predates (seedless ReviewKey
+forbids one template id mixing modes with disjoint tags; a generator must not make the
+answer identifiable from option shape across seeds).
+Task 19 implementer agent: ae20c7b4f9128de8d (resume for fix rounds 1-3).
+
+### Task 19 — implementer DONE_WITH_CONCERNS at `06e26d2` (1 commit), review dispatched (opus)
+
+1102 -> 1202 passing, lint 0, tsc clean. 32 authored MD items; six templates (MD.1, MD.2,
+MD.5, MD.7 time, MD.8 money, MD.10) routed per ruling 19-1; `GRADE_2_AUTHORED` aggregate.
+Concerns, all passed to the reviewer unjudged: (1) `g2.md1.read-a-ruler` coin-flips which
+off-by-one distractor appears so the answer is not always the smallest option — a mild
+seedless-ReviewKey tension (same skill, 2 of 3 tags shared); (2) widened the
+`templates/index.test.ts` naming regex `\d`->`\d+` so `g2.md10.*` matches ruling 19-7;
+(3) aggregate uniqueness test keys on prompt+figure because two existing OA items share a
+prompt; (4) a new `money` MisconceptionFamily member. Review package
+`review-3e32f7d..06e26d2.diff` (206 KB, 19 files, +4069/-5).
+
+### Task 19 review — APPROVED, 0 Critical, 0 Important, 12 Minor
+
+Reviewer (opus) solved all 32 items cold (one correct answer each, every distractor
+derives from its named error), re-derived every template's collision algebra (exclusions
+exactly the colliding parameters, nothing resampled), confirmed literal pins, 19-1 routing
+guarded both ways, 19-2/19-4/19-6/19-7/21-2 met, correct answers 8x at each of A-D. Judged
+all four implementer concerns acceptable (the ruler flip shares 2 of 3 tags and asks the
+identical question, so the Task 18 disjoint-tag rule is not violated). Both ⚠️ resolved by
+controller: the 7 lint warnings are all in files outside the diff (AdaptiveSessionCard.test,
+ProgressContext, QuizResults, WeakSpotsView); `06e26d2` carries the required trailer.
+
+Ruling: 8 of the 12 Minors are REQUIRED in a fix round (review #1 MD.7 :05–:25 marks never
+appear + false docstring; #4 `g2-md8-04` "25¢" reachable by three errors; #5 two MD.3
+explanations blame "how long" wording the prompts don't use; #6 centimeters never keyed in
+MD.3 and the unit test guards nothing; #7 ruler start-mark exclusion applied to d=s only;
+#8 three tautological "would collide" tests; #9 test title; #10 `g2-md2-03` near-duplicates
+the MD.2 template) — each is false or mis-attributable child/parent-facing content, an
+uncovered keyConcept, or a test that asserts nothing, and the Global Constraints call a
+mis-filed tag a defect worse than none; this matches Task 18's practice of ruling Minors
+into its fix round while the implementer's context is intact — costs one fix round of
+churn if wrong. Findings in `task-19-fixes.md`.
+Task 19: minor (deferred): #2 every numeric template locks the key's value-rank to two of four (md1/md5/md10 rank 0-1; md7/md8 rank 1-2) and the rank tests pin `toEqual([0,1])`; consider "not always the same rank".
+Task 19: minor (deferred): #3 MD.7 and MD.3 options converge — each distractor alters one feature of the key, so a feature-majority vote rebuilds it.
+Task 19: minor (deferred): #11 MD.10's "represent" half is one bar-graph item; no picture-graph or organize-into-categories item (meets ruling 19-4 at the minimum).
+Task 19: minor (deferred): #12 report claims 27 new tags; diff declares 26 (cosmetic).
+
+### Task 19 fix round 1 — FIX_BASE `06e26d2`, implementer resumed with task-19-fixes.md
+Task 19 fix round 1 interrupted mid-edit by an account spend-limit 429 (not a repo issue); uncommitted edits to 9 grade2 files left in the tree; implementer resumed from its transcript once the limit reset (2026-09-27).
+Task 19 fix round 1 implementer DONE at `7a9bd66` (1 commit): F1-F8 closed, 1204/1204, lint 0, tsc clean. F5 applied (29 ruler draws remain, 15 over/14 under) and extended one step to exclude the "added" distractor equalling the ruler's printed 12; md1 pins re-captured, seed-1 overcount pin added. Scoped re-review dispatched (sonnet) on `review-06e26d2..7a9bd66.diff`.
+
+### Task 19 fix round 1 re-review (sonnet) — all 8 ADDRESSED, no new Critical/Important
+
+Re-reviewer solved the new/changed items cold (g2-md7-05 at 10:25; g2-md8-04 now quarter+dime
+for 50¢, 25¢ no longer offered; g2-md3-05 keyed 20 cm; g2-md2-03 now Hana, yards->inches),
+re-derived md1's exclusion set by hand (48 raw draws, 19 excluded, 29 kept, 15 over/14 under —
+matches the docstring table), judged the extra 2s+d=12 exclusion a correct extension of the
+stated rationale, and independently re-derived the three new counterfactual collision counts
+(md1 19, md7 6, md8 76).
+Task 19: fix round 1/5 (8 addressed, 0 open; commits 06e26d2..7a9bd66)
+Task 19: minor (deferred): `g2-md2-03`'s rewrite still uses "rug", one of `md2-two-units.ts`'s OBJECTS — no duplication possible (Hana and yards->inches are outside the generator's pools), just an avoidable overlap.
+Task 19: complete (commits 3e32f7d..7a9bd66, review clean after 1 fix round)
+
+### Task 20 (Grade 2 study guides) — BASE `7a9bd66`, implementer dispatched (sonnet)
+
+Ruling: Task 20's implementer runs on sonnet, not opus — the brief carries the test verbatim and the work is 23 prose guides written against `standards.ts`, the account hit its spend limit once this session, and the opus review is the net for false traps and bad worked examples (Task 10's defect class) — costs an extra fix round if wrong.
+Carries rulings 20-1..20-4 and the standards.ts-wins instruction (19-1's MD.6/7/8 cycle applies to guides too).
+Task 20 implementer agent: a3402a1cc71dd8428 (resume for fix rounds 1-3).
+Task 20 implementer DONE at `4140d6a` (1 commit): 23 guides, 1208/1208, lint 0, tsc clean, no concerns. Review dispatched (opus) on `review-7a9bd66..4140d6a.diff` (67 KB, +949).
+Ruling: Task 21's Step 8 (verify in a browser) is performed by the controller after the task review, not by the implementer — this session has Chrome available (Tasks 11 and 16 shipped their browser steps unperformed for lack of one), and a controller-side look is verification, not a fix; anything it finds enters Task 21's fix loop as a finding — costs a few minutes of controller context if wrong.
+
+### Task 20 review (opus) — NEEDS FIXES: 0 Critical, 5 Important, 11 Minor
+
+Reviewer re-solved all 23 worked answers (all correct), confirmed 20-1 counts in every
+`whyItMattersForSSA`, 20-2/20-3/20-4 met, MD.6/7/8 and NBT.6 routed per `standards.ts`, and
+that each test guard fails on what it claims. Important: I1 NBT.8 child rule false for
+subtracting 10 across a hundred (305−10); I2 NBT.2 "only the tens digit changes" false
+across a hundred (~30% of the template's 10s draws); I3 MD.10 teaches a non-1 scale against
+the single-unit-scale keyConcept (Grade 3 content) and the represent half is one line; I4
+MD.3 Step 2 implies a meter is smaller than a yard; I5 four parent-facing sequencing claims
+false (NBT.3/NBT.5 "next standard", NBT.7 "Grade 3 one place further", NBT.4 left-to-right).
+⚠️ resolved by controller: the Opus 5.5 trailer is this session's dispatch instruction
+(ruled at resume); the lint warnings are the same seven pre-existing ones in four untouched
+files seen at Task 19; child-friendly titles follow ruling 10.3 (titles need not equal the
+standard title).
+
+Ruling: the review's out-of-diff observation — `grade2/templates/nbt2-skip-count.ts:108`
+tells the child "Only the tens change" on 10s runs the same template makes cross a hundred —
+is fixed in Task 20's round 1 although the file is Task 18's, and the implementer also checks
+`nbt8-ten-or-hundred.ts` for I1's claim — it is the same false child-facing rule as I2,
+emitted at runtime, cheapest fixed alongside it — costs a small out-of-task diff the
+re-review must also cover if wrong.
+Ruling: all eleven Task 20 Minors are REQUIRED in round 1 (M1 no guard on the 20-1 figure;
+M2 `/%/` misses "percent"; M3 NBT.7 steps hide the regrouping reductions; M4 NBT.6 omits
+"convenient order"; M5 G.3 "pizzas" missing "square"; M6 a false "worth the same" line; M7
+NBT.4 problem offers no sentences; M8 header comment false twice; M9 OA.1 trap uses the
+example's own correct answer; M10 three hard-to-read child lines; M11 G.1 "draw a shape to
+attributes" uncovered) — every one is false/misleading/unreadable text a child or parent
+reads, an omitted keyConcept, or a guard with a hole, and all are cheap text edits while the
+implementer's context is intact; same practice as Task 19 — costs one larger fix round if
+wrong. Findings in `task-20-fixes.md`.
+
+### Task 20 fix round 1 — FIX_BASE `4140d6a`, implementer resumed with task-20-fixes.md
+Task 20 fix round 1 implementer DONE at `eb38217` (1 commit, 4 files +102/-40): I1-I5, X1 (nbt2 + nbt8 explanation branches), M1-M11; 1209/1209, lint 0, tsc clean. Scoped re-review dispatched (sonnet) on `review-4140d6a..eb38217.diff`.
+
+### Task 20 fix round 1 re-review (sonnet) — 16 of 17 ADDRESSED, I1 open
+
+I2-I5, X1's nbt2 half, M1-M11 all ADDRESSED with arithmetic and standards.ts cross-checks
+verified. I1 NOT ADDRESSED: NBT.8 `stepByStepMethod` Step 5 (`studyGuides.ts:464`) "Leave the
+other digits exactly where they were" stays unconditional right after the new Step 4 (:463)
+describes the borrow that changes the hundreds (305−10=295). New Minor in the fix diff:
+`nbt8-ten-or-hundred.ts:123` Step 3 opens "Only the ${place} change." as a standalone
+sentence, false at the pinned seed 7 (207−10=197); the rollover hedge attaches only to the
+following sentence.
+Ruling: the nbt8 Step 3 finding is REQUIRED in round 2, not deferred — it is the unmet half of X1's ruling ("check nbt8 for I1's claim and fix it the same way"), a false child-facing sentence at a seed the test itself pins — costs a pin re-capture if wrong.
+Task 20: minor (deferred): `nbt2-skip-count.ts:120` 5s-branch "ends in the same two digits, over and over" is ambiguous read literally (last digits alternate 5,0,5,0 — defensible as "the same two digits"); untouched by this task's diffs.
+Task 20: fix round 1/5 (16 addressed, 1 open — I1 NBT.8 Step 5 unconditional; commits 4140d6a..eb38217)
+
+### Task 20 fix round 2 — FIX_BASE `eb38217`, implementer resumed
+Task 20 fix round 2 implementer DONE at `5b4120b` (2 files +25/-20): NBT.8 steps split into conditional add-rollover / subtract-borrow / otherwise; nbt8 Step 3 branched on a computed crossesHundred; 1209/1209, lint 0, tsc clean. Scoped re-review dispatched (sonnet) on `review-eb38217..5b4120b.diff`.
+
+### Task 20 fix round 2 re-review (sonnet) — both ADDRESSED, no new breakage
+
+Re-reviewer traced the new NBT.8 steps through ordinary / add-rollover (395+10) / subtract-
+borrow (305−10) / ±100 cases, and ran the nbt8 template's new Step 3 branch logic exhaustively
+over its whole draw space (n 200..800 × {10,100} × {more,less}, 2,404 combinations): 0 false
+claims. Confirmed no pin covers the changed step (`nbt8-ten-or-hundred.test.ts:37-38` pins
+steps 1 and 3 only).
+Task 20: fix round 2/5 (2 addressed, 0 open; commits eb38217..5b4120b)
+Task 20: complete (commits 7a9bd66..5b4120b, review clean after 2 fix rounds)
+
+### Task 21 (register Grade 2; stop the UI claiming a blueprint) — BASE `5b4120b`, implementer dispatched (sonnet)
+
+Carries rulings 21-1..21-9 (21-7 detail from the pre-flight) and the item-id rule. Step 8
+(browser) is the controller's, per the ruling above.
+Task 21 implementer agent: affc79c80eae35e36 (resume for fix rounds 1-3).
+Task 21 implementer DONE at `f81e24b` (14 files +662/-22): 1247/1247, lint 0, tsc clean, build ok. Concerns passed unjudged: new `weightValue` export for 21-3; two extra bare-officialWeightRange fixes (CurriculumView filter pills, Dashboard domain badge); own timeLimitMinutes choices; Dashboard.tsx:65 left as naming NCSCOS. Review dispatched (opus) on `review-5b4120b..f81e24b.diff`.
+
+## Session resumed 2026-09-27 (new controller session, after /clear)
+
+Ledger identity matches. Tasks 1-20 complete; Task 21 implemented at `f81e24b` (not yet pushed).
+The Task 21 opus review (agent a3dbd22812bb85cbc) died on an account spend-limit 429 before
+reporting — no verdict exists. Re-dispatching the identical review (opus) on the same package
+`review-5b4120b..f81e24b.diff`.
+
+### Task 21 review (opus, re-dispatch) — Spec ✅, Approved: 0 Critical, 0 Important, 8 Minor
+
+Reviewer confirmed 21-1..21-9, all 90 authored ids / 6 quizzes resolve in-domain, mock OA4/NBT9/MD10/G2
+covering all 23 standards, no bare weight render or blueprint claim left for Grade 2, Grade 5 gauge/heading/print
+text unchanged and asserted; accepted `weightValue` and the two extra bare-range fixes; `Dashboard.tsx:65` correct.
+⚠️ resolved by controller: trailer on `f81e24b` is this session's Opus 5.5 pair (ruled at 2026-09-26 resume);
+the MD/G label layout goes to the controller's browser check (Step 8), now running.
+
+### Task 21 Step 8 — controller browser check (dev server :5199, Grade 2 + Grade 5 profiles, 2560px viewport)
+
+Confirmed as the report describes: first-run default Grade 5 (highest); Grade 2 Curriculum "Share of Grade
+Standards: 17/35/39/9%", pills OA (17%)…; Dashboard gauge subtitle honest; Testing Center diagnostic 23 Qs/35 min,
+mock 25 items/40 min with honest allocation text, drill badges OA • 17%…; print table "Share of Grade Standards";
+Grade 5 heading/gauge/print wording unchanged; Grade 5 QuizzesListView MD/G badges fit one line.
+Found (all written up in `task-21-fixes.md`): F1 Grade 5 MD/G combined label breaks the Curriculum pill row and
+wraps the Dashboard badge (review M1 confirmed in-browser); F2 StudyGuideModal "Common 4th/5th Grade Traps" at
+every grade; F3 Testing Center "Timed 60-65 Minutes • Divided into Calculator Inactive & Active" at Grade 2 (one
+40-min mock, no calculator items); F4 print rec 3 "at least two full mock exams within a 60-minute window" at
+Grade 2; F5 "high-weight domains" advice at Grade 2 (review M8); F7 "Blueprint" chrome at Grade 2 (Navbar banner,
+Curriculum eyebrow/h1, Dashboard hero); F8 index.html title/description say Grade 5.
+
+Ruling: F7 ("Blueprint" page chrome at unweighted grades) is in Task 21's scope although reviewer and implementer
+judged it generic chrome — the task's title is "stop the UI claiming a blueprint that does not exist" and the spec
+says grades 1-2 have no NCDPI blueprint, so a Grade 2 banner reading "Grade 2 Mathematics Blueprint" is that claim;
+blueprint grades keep their wording — costs one copy change the owner may revert if wrong.
+Ruling: F8 (index.html title/description) makes the static title grade-neutral rather than setting
+document.title per grade — four grades share one page and a static fix has no runtime surface — costs a
+less-specific browser-tab title if wrong.
+Ruling: all eight review Minors are REQUIRED in round 1 (M1+M3 fold into F1, M8 is F5, M2 F6, M4 F9, M5 F10,
+M6 F11, M7 F12) — a fix round runs anyway for the browser findings, each Minor is a few lines in files it already
+opens, and M4 is a trap Task 26's Grade 1 registration would fall into; follows the Task 19/20 precedent —
+costs a slightly larger fix diff if wrong.
+Task 21 fix round 1: original implementer affc79c80eae35e36 not resumable after the session restart (no transcript);
+fresh implementer dispatched (sonnet) with brief + report + `task-21-fixes.md`, FIX_BASE `f81e24b`.
+Task 21 fix-round implementer agent: a2d7f1a0b54af15ac (resume for rounds 2-3).
+Task 21 fix round 1 implementer DONE at `2d350ad` (1 commit, 18 files): F1-F12; 1271/1271, lint 0, tsc clean, build ok. Flagged: F2 changes Grade 5 heading to "Common Grade 5 Traps to Avoid". Scoped re-review dispatched (sonnet) on `review-f81e24b..2d350ad.diff`; controller browser re-check in parallel.
+Task 21 fix round 1 — controller browser re-check on `2d350ad`: F1 Grade 5 Dashboard badge "MD • 19–23% with G Weight"
+one line, titles aligned; Curriculum pills "MD (19–23% with G)" / "G (19–23% with MD)" — the Grade 5 pill row still
+wraps to two rows, but a DOM experiment with the old bare "MD (19–23%)"/"G (19–23%)" also gives two rows, so that
+wrap predates Task 21 (not a regression). F2 Grade 2 guide "Common Grade 2 Traps to Avoid". F3 Grade 2 "Timed 40
+Minutes", Grade 5 unchanged "Timed 60-65 Minutes • Divided into Calculator Inactive & Active". F4/F5/F6 Grade 2 print
+reads "Focused drill on the domains furthest below the bar", "Focus on the Biggest Gaps:", "at least one full mock
+exam within a 40-minute window". F7 Grade 2 banner "Grade 2 Mathematics Standards", Curriculum "Grade 2 Content
+Standards" / "Curriculum Structure & Standards", Dashboard hero "…Grade 2 Mathematics standards". OPEN: F8 —
+index.html now says "Grades 2-5" in title and description: not grade-neutral as F8 required, and false once Task 26
+registers Grade 1.
+Task 21 fix round 1 re-review (sonnet): F1-F12 all ADDRESSED, no new breakage; F2 Grade 5 heading change ("Common Grade 5
+Traps to Avoid") judged acceptable — accepted. Out-of-scope: `weightCompactLabel`'s 3+-member join path untested (no
+grade has one).
+Task 21: minor (deferred): `weightCompactLabel` `otherIds.join(' & ')` untested beyond 2-member groups; no 3-member weightGroup exists.
+Ruling: F8 is NOT addressed despite the re-review's verdict — F8 required a grade-NEUTRAL title and description, and
+"Grades 2-5" enumerates grades, becoming false when Task 26 registers Grade 1 (no Task 22-26 brief touches index.html);
+it goes to fix round 2 alone — costs one tiny round if wrong.
+Task 21: fix round 1/5 (11 addressed, 1 open — F8 index.html names "Grades 2-5"; commits f81e24b..2d350ad)
+Task 21 fix round 2 implementer DONE at `80e94ac` (index.html only): title "NC Math SSA Prep | North Carolina Math
+Acceleration Practice (WCPSS)", grade-neutral description; build ok. Scoped re-review (sonnet): F8 ADDRESSED, no breakage.
+Task 21: fix round 2/5 (1 addressed, 0 open; commits 2d350ad..80e94ac)
+Task 21: minor (deferred): README.md:1 and :16 still say "Wake County Grade 5 Math Acceleration" / "Honest Blueprint" against Grade 5 — stale for a Grades 2-5 (soon 1-5) app; for the final review / Task 26 close-out.
+Task 21: complete (commits 5b4120b..80e94ac, review clean after 2 fix rounds; Step 8 browser check done by controller)
+
+### Task 22 (Grade 1 OA) — BASE `80e94ac`, implementer dispatched (opus)
+
+Carries: `task-22-26-rulings.md` (the verbatim standards.ts-wins instruction; 22-1 OA.6↔OA.9 swap → templates OA.1,
+OA.2, OA.6, OA.8, OA.9, authored-only OA.3, OA.4, OA.7; 22-2..22-8; E.3; the standing literal-pin ruling) and the
+lessons from Tasks 18 and 20 the brief predates (one template id = one skill; answer not identifiable from option shape;
+every derivation and every child-facing sentence true at every seed the generator can draw).
+Ruling: Task 22's implementer runs on opus — Grade 1 content is the plan's hardest audience, the task carries a code
+swap and seven range/shape rulings, and Tasks 18-19 (same shape) ran on opus — costs opus spend on one task if wrong.
+Ruling: `assertGradeOneReadable` (E.3) is written in Task 22 and applied to Grade 1 only; E.3's "Grade 2 imports it
+too" presumed an order that did not happen — Grade 2 (Tasks 17-20) shipped with no readability guard at all, so there
+is nothing duplicated to replace, and retrofitting Grade 2 (whose readers are a year older, so the 90-char/2-sentence
+numbers may not fit) is left to the final review — costs Grade 2 prompts staying unguarded until then if wrong.
+Task 22: minor (deferred): Grade 2 authored and generated prompts have no readability guard (E.3 presumed one); final review to decide whether Grade 2 adopts `assertGradeOneReadable` or a Grade 2 variant.
+Task 22 implementer agent: ab46594e078118ad1 (resume for fix rounds 1-3).
+Task 22 implementer DONE_WITH_CONCERNS at `ba3d99c` (2 commits f93ce23, ba3d99c): 26 authored items / 8 standards, 8
+templates (OA.6, OA.8, OA.9 each split into two ids), 9 new tags, `assertGradeOneReadable` in the testkit; 1406/1406, lint 0,
+tsc clean. Concerns passed unjudged to the reviewer: (1) 22-7's rationale is wrong — "determine"/"represent" are 9 letters
+and pass the 10-letter cap, only "associative" is caught; implemented as ruled; (2) `g1.oa8.missing-whole` and
+`g1.oa9.add-within-10` keep the key in the top half by value; (3) OA.1 items model the equation but never ask for it.
+Task 22: minor (deferred): out of scope — `g2-oa2-01`/`g2-oa2-02` appear to be exact prompts `g2.oa2.fluency-fact` can emit; no generator-duplicates-authored check covers Grade 2 OA.
+Review dispatched (opus) on `review-80e94ac..ba3d99c.diff`.
+Task 22 opus review (ac14eeebc3bc80744) died on an account spend-limit 429 before reporting; the user said "keep going" — re-dispatching the identical review (opus) on the same package.
+
+### Task 22 review (opus, re-dispatch) — Spec ❌ (1 item), Needs fixes: 0 Critical, 2 Important, 10 Minor
+
+Reviewer read all 4033 diff lines in 12 passes, cold-solved all 26 items (all keys right, all 78 distractor derivations
+right), confirmed 22-1..22-8, E.3 and literal pins. Important: I1 g1-oa4-01 is CCSS 1.OA.4 (subtraction via addition,
+= OA.6's skill) and no OA.4 item does NC keyConcept 2 (rewrite unknown-addend as subtraction); I2 oa9-add-within-10 Step 1
+"Start at the bigger number" false for doubles (35 of seeds 0-299, incl. seed 0).
+⚠️ resolved by controller: trailers on f93ce23/ba3d99c are this session's Opus 5.5 pair; OA contributes 8 template ids
+over 5 standards toward Task 26's floor (noted for Task 26).
+Ruling: the 22-7 word cap stays at 10 letters although its rationale named "determine"/"represent" (9 letters, pass) —
+a cap of 8 would block "rectangle" and "triangles" (9), standard Grade 1 G vocabulary Task 24 must use; the guard catches
+long words, and a reviewer reading as a six-year-old catches the rest — costs a 9-letter adult word slipping past the
+guard if wrong.
+Ruling (for Task 24's dispatch): NC.1.G.1/G.2 keyConcepts use "rectangular" (11 letters) and "half-circles"; where a
+standard's own vocabulary exceeds 10 letters, the guard gets an explicit exported allowlist of those words sourced from
+`grade1/standards.ts`, never a raised cap — costs a small guard change in Task 24 if wrong.
+Ruling: Minors M1, M2, M4, M5, M6, M7 and the solver half of M9 are REQUIRED in round 1 — M1 is a mis-familied tag a
+Grade 1 parent reads (global constraint), M4/M5 are the answer-from-shape lesson, M6 is NC.1.OA.1's "equations with a
+symbol for the unknown", M7 is readability, M9's solver is a verbatim duplicated logic block; follows the Task 19/20
+precedent — costs a larger round-1 diff if wrong.
+Task 22: parked — M3 key value-rank tell in missing-whole/add-within-10 — Ruling: acceptable; shape guesser 43%/34%, no worse than other templates, and "a sum is bigger than its parts" is the mathematics.
+Task 22: parked — M8 oa8-missing-part coin-flips the box side — Ruling: one template; NC.1.OA.8's keyConcept "unknown in any position" makes position part of the one skill, unlike Task 18's disjoint-tag modes.
+Task 22: minor (deferred): M9 small helpers `shape`/`byTag`/`gen` repeated across the 8 Grade 1 template tests.
+Task 22: minor (deferred): M10 `counted-the-start-number-as-a-hop` (G1) and `counted-on-by-ones-and-stopped-one-short` (G2) describe the same a+b−1 value — one error, two tags across grades; final review to decide on a merge.
+Task 22 fix round 1 implementer DONE_WITH_CONCERNS at `2e147ac` (1 commit): I1, I2, M1, M2, M4-M7, M9 solver; 1413/1413,
+lint 0, tsc clean; 8 new/re-captured tests fail on revert. Also fixed two more I2-class sentences its sweep found
+(make-ten "fill the bigger number" on doubles; missing-whole "bigger than both 5 and 5"). New tags
+`added-the-rest-after-getting-to-ten` (M1) and `left-out-the-jump-to-ten` (M4). g1-oa6-04 is now a get-to-10 item, so OA.6
+has no count-on take-away item.
+Ruling: M4's residual is accepted — lower/upper-of-pair is now balanced 6/6 (was 14/6) and the pair-pick guesser fell to
+40.0% (from 67.9% lower-pick); the rest is inherent to offering a counting-slip distractor, which always lands ±1 from the
+key, and dropping the commonest Grade 1 error from most items would cost more diagnosis than the tell costs — costs a
+residual shape signal a six-year-old is unlikely to exploit if wrong.
+Scoped re-review dispatched (sonnet) on `review-ba3d99c..2e147ac.diff`.
+Task 22 fix round 1 re-review (sonnet): I1, I2, M1, M2, M4-as-amended, M5, M6, M7, M9-solver all ADDRESSED (ran the covering
+tests and generator pins live); no new Critical/Important.
+Task 22: fix round 1/5 (9 addressed, 0 open; commits ba3d99c..2e147ac)
+Task 22: minor (deferred): `authored.oa.ts:88` g1-oa1-01 explanation says "the difference" — explanations are not gated by `assertGradeOneReadable` (prompt only); child-facing explanation vocabulary is unguarded at Grade 1.
+Task 22: minor (deferred): `authored.oa.test.ts:213` M4 shape ceiling met with zero margin (12 of 20); a future OA item must rebalance.
+Task 22: complete (commits 80e94ac..2e147ac, review clean after 1 fix round)
+
+### Task 23 (Grade 1 NBT) — BASE `2e147ac`, implementer dispatched (opus)
+
+Carries: `task-22-26-rulings.md` (standards.ts-wins instruction; 23-1 NBT.1↔NBT.7 swap; 23-2..23-9; E.3 import of
+`assertGradeOneReadable`; literal pins) and Task 22's lessons (every generated sentence true across the full draw space,
+including equal draws; counting-slip distractors balanced low/high of the key; odd-one-out shapes; M1's family honesty).
+Task 23 implementer agent: a2feed7c7f1cca9b2 (resume for fix rounds 1-3).
+Task 23 implementer (a2feed7c7f1cca9b2) lost with the prior session — left 7 untracked files (placeValue testkit + test,
+tests for nbt1/nbt2/nbt3/nbt7 templates and placeValue.test.ts; no template implementations, no authored items, no
+report, no commit). HEAD still 2e147ac.
+Ruling: the user asked (2026-09-29) that all subagents run on Sonnet — this supersedes the "Grade 1 on opus" ruling for
+Task 22 and every remaining dispatch, including the final review; "Sonnet 5.5" does not exist, so Sonnet 5 (`sonnet`) —
+costs review depth on the hardest audience if wrong; the user can ask to restore opus.
+Ruling: the fresh Task 23 implementer inherits the untracked partial work as a starting point, to verify rather than
+trust — costs a redo of those tests if they are wrong, which review would catch.
+Task 23 implementer re-dispatched (sonnet), BASE 2e147ac.
+Task 23 implementer agent: aebfd274adc794130 (sonnet; resume for fix rounds 1-3).
+Task 23 implementer DONE at 744022d (1 commit): 7 templates, 21 authored items; 1527/1527, lint 0, tsc clean.
+Review dispatched (sonnet) on `review-2e147ac..744022d.diff`.
+
+### Task 23 review (sonnet) — Spec ❌, Needs fixes: 1 Critical, 2 Important, 3 Minor
+C1 g1-nbt7-01 ("thirteen") carries g1-nbt7-02's 17/71/70 distractors; its own misconception text names 31, which is not
+an option. I1 STANDING literal-pin ruling unmet in nbt1/nbt2/nbt3/nbt7 tests (plan-mandated). I2 authored NBT.4
+addend-shape test checks a hardcoded array, not GRADE_1_NBT_AUTHORED.
+Ruling: Minors M1 (nbt2 steps numbered 1,2,4 on every generated question) and M2 (founding-error test's '31' substring
+also matched by '131') are REQUIRED in round 1 — M1 is child-facing text on every NBT.2 question and M2 is a test that
+would still pass if the item it guards were deleted; follows the Task 22 precedent — costs a slightly larger round if wrong.
+Task 23: minor (deferred): reused tags stretched past their declared scope — `counted-on-by-ones-one-too-many` ("within 20") used near 100 in g1-nbt1-03; `added-instead-of-subtracted` used for a wrong-direction count; for the final review's tag audit.
+Task 23: minor (deferred): helpers like `assertStatedArithmeticHolds` only match numeric sentence forms — prose like "31 instead of 13" in commonMisconception text is unchecked.
+Task 23 fix round 1: resuming implementer (sonnet) with C1, I1, I2, M1, M2.
+Task 23 fix round 1 implementer DONE at e69c0c6: C1, I1, I2, M1, M2; 1539/1539, lint 0, tsc clean. Scoped re-review dispatched (sonnet).
+Task 23 fix round 1 re-review (sonnet): C1, I1, I2, M1, M2 all ADDRESSED; no new breakage.
+Task 23: fix round 1/5 (5 addressed, 0 open; commits 744022d..e69c0c6)
+Task 23: complete (commits 2e147ac..e69c0c6, review clean after 1 fix round)
+### Task 24 (Grade 1 MD, G, authored aggregate) — BASE `e69c0c6`, implementer dispatched (sonnet)
+Task 24 carries: rulings 24-1..24-9, E.3, literal pins, the Task 22 allowlist ruling, and Task 23's lessons (distractors derived from the item's own values; >=2 literal pins per template test; tests on live bank data).
+Task 24 implementer agent: ad5b5f4d243e8f364 (sonnet; resume for fix rounds 1-3).
+Task 24 implementer DONE at 4b5f524 (1 commit); 1592/1592, lint 0, tsc clean; allowlist built but unused by any prompt. Review dispatched (sonnet).
+
+### Task 24 review (sonnet) — Spec ❌ (1 item), Needs fixes: 0 Critical, 2 Important, 3 Minor
+I1 g1-md3-01 on-the-hour 3:00 clock tags "4:00" `read-the-next-hour-from-the-hour-hand`, whose description is the
+late-in-the-hour confusion — no such ambiguity on an exact hour. I2 md4-read-the-data.ts repeats the same 3-line
+distinct-texts guard verbatim in three branches (md2 has a fourth copy).
+Ruling: Minors M1 (g1-md4-04 reuses `left-one-of-the-addends-out` for a take-apart/subtraction shape) and M2 (drop the
+dead 'half-circles' allowlist entry, which the tokenizer splits before the allowlist check) are REQUIRED in round 1 —
+M1 is the same tag-honesty global constraint as I1, M2 is config that misleads a reader; both are small — costs a
+slightly larger round if wrong.
+Task 24: minor (deferred): authored.md.ts (582 lines) and authored.g.ts (380) are large but proportional to their content.
+Task 24 fix round 1: resuming implementer (sonnet) with I1, I2, M1, M2.
+Task 24 fix round 1 implementer DONE at 418a65e: I1 (new tag misread-the-hour-hand-by-one-number), I2 (assertNoOptionCollision in src/engine/template.ts), M1 (new tag subtracted-only-one-of-two-known-parts), M2; 1592/1592, lint 0, tsc clean.
+Task 24: minor (deferred): the distinct-option-texts collision guard is duplicated across many pre-existing templates in other grades; `assertNoOptionCollision` (src/engine/template.ts) now exists for the final review to adopt or leave.
+Scoped re-review dispatched (sonnet).
+Task 24 fix round 1 re-review (sonnet): I1, I2, M1, M2 all ADDRESSED; no new breakage.
+Task 24: fix round 1/5 (4 addressed, 0 open; commits 4b5f524..418a65e)
+Task 24: complete (commits e69c0c6..418a65e, review clean after 1 fix round)
+### Task 25 (Grade 1 study guides) — BASE `418a65e`, implementer dispatched (sonnet); carries 25-1..25-3 and Task 20's lessons (every parent-facing claim true, no sequencing claims beyond standards.ts, child rules true in all cases).
+Task 25 implementer agent: af48ad7f0017d1ad8 (sonnet; resume for fix rounds 1-3).
+Task 25 implementer DONE at c871d05 (1 commit); 1597/1597, lint 0, tsc clean. Review dispatched (sonnet).
+
+### Task 25 review (sonnet) — Spec ✅, Approved: 0 Critical, 0 Important, 2 Minor
+Re-solved all 23 worked examples (correct); 25-1..25-3 met; code swaps routed; no sequencing claims.
+⚠️ resolved by controller: the commonTraps-echo-authored claim is not a requirement; the readability of workedExample.problem was checked by an uncommitted script, not a committed test (deferred minor below).
+Task 25: minor (deferred): studyGuides.test.ts does not run `assertGradeOneReadable` over the 23 workedExample.problem strings — readability was checked once by an uncommitted script.
+Task 25: minor (deferred): NC.1.MD.2 and NC.1.MD.3 workedExample.problem are statements with no question ("How long is the desk?" / "What time is it?").
+Task 25: minor (deferred): NC.1.G.1 commonTraps names "pentagon", not in G.1's keyConcepts; swap for "square and rectangle".
+Task 25: complete (commits 418a65e..c871d05, review clean)
+
+### Task 26 (register Grade 1, close out) — BASE `c871d05`, implementer dispatched (sonnet)
+Ruling: 26-4's floor assumed 13 generator-backed standards; Grades 1 content shipped templates on 14 (OA.1, OA.2, OA.6, OA.8, OA.9, all 7 NBT, MD.2, MD.4) — the test asserts the exact named set that exists (a floor that cannot silently drop any) rather than ≥12 — costs one test edit if a generator is later removed on purpose.
+Ruling: Step 6 (browser check of grades 1-5) is done by the controller after the implementer's commit, as at Task 21 — costs nothing if wrong beyond controller time.
+Ruling: Task 21's deferred README minor (README still titled for Grade 5) is folded into Task 26 as close-out — README must describe Grades 1-5 honestly (no blueprint/percentages for grades 1-2) — costs a small doc diff if wrong.
+Task 26 implementer agent: ad83f90d6bce84cb9 (sonnet; resume for fix rounds 1-3).
+Task 26 implementer DONE at 4bdd2ff (1 commit); 1624/1624, lint 0, tsc clean, build ok; generator set = the named 14. Review dispatched (sonnet).
+Task 26 Step 6: controller browser check BLOCKED — the Chrome extension shows an error page for localhost:5277, [::1]:5277 and the older :5199 server, all of which curl reaches; not retried further. Left open for the user.
+
+### Task 26 review (sonnet) — Spec ✅, Approved: 0 Critical, 0 Important, 1 Minor
+⚠️ resolved by controller: `git status` shows only `?? graphify-out/` after the commit, so explicit add is confirmed.
+Task 26: minor (deferred): README.md:53/107/151 still carry Grade-5-only narrative (17 standards, blueprint percentages), flagged by a new intro paragraph but not rewritten per grade.
+Task 26: complete (commits c871d05..4bdd2ff, review clean; Step 6 browser check left to the user — see above)
+
+### Final whole-branch review — range 8dbb53a..4bdd2ff (this plan's baseline; merge-base with master dde8edc also holds the prior plan)
+Ruling: the final review runs on sonnet, not the most capable model the skill prescribes — the user asked (2026-09-29) for every subagent on Sonnet — costs cross-cutting depth if wrong; the user can ask for an opus pass before merge.
+Ruling: the branch is 64k lines over 331 files, every content task already task-reviewed; the final reviewer gets a focused package (all shared/engine/UI/testkit/registry/doc changes in full, ~3.4k lines, plus the whole-branch stat) and reads grade content only for cross-grade consistency and to triage the deferred list (`final-review-deferred.md`) — costs missed intra-content defects the task reviews also missed, if wrong.
+Final review dispatched (sonnet).
+Final review (sonnet): Ready to merge — Yes; 0 Critical, 1 Important, 5 Minor; suite re-run live 1624/1624, lint 0, tsc clean. Triaged all 54 deferred lines: none must-fix; agrees with parked M3/M8 rulings.
+Important: Grade 2 prompts have no readability guard; 43+ prompts ≥90 chars, some 3-sentence word problems up to 227 chars, against the Content Contract's "A Grade 1 or 2 item may not require reading a paragraph".
+Ruling: the Grade 2 guard is fixed in the one final fix wave, not left as a fast-follow — the Content Contract is a global constraint naming Grade 2 explicitly, and the reviewer's "not obviously unreadable" is a judgment the guard should encode; limits are calibrated to catch a paragraph (not to the Grade 1 bar), and any prompt over them is shortened with its mathematics unchanged — costs a content diff on already-reviewed Grade 2 items if wrong.
+Ruling: the three Task 25 polish minors (studyGuides readability test over workedExample.problem; MD.2/MD.3 examples get a question; "pentagon" → a G.1 pair) ride in the same fix wave — child/parent-facing, trivially small — costs nothing material if wrong.
+Final fix wave dispatched (sonnet), FIX_BASE 4bdd2ff.
+Final fix wave DONE at 2eed97a (0e004fb, 2eed97a): Grade 2 guard + 21 authored prompts and 3 generators shortened; study-guide polish; 1638/1638, lint 0, tsc clean. Scoped re-review dispatched (sonnet).
+Final fix wave re-review (sonnet): F2a, F2b, F2c ADDRESSED; F1 ADDRESSED except one new Important regression — g2-g3-04 (authored.g.ts:333-382) rewrite dropped "identical" from the pizzas, which its explanation Step 1 and NC.2.G.3 ("identical wholes") rely on.
+Final: parked — g2-g3-04 lost its "identical wholes" premise in the readability rewrite — Ruling: real, child-facing and a one-line fix, but the process allows no second fix wave; surfaced to the user as a pre-merge fix with the exact wording — costs a Grade 2 item whose prompt no longer states the premise its explanation uses, until fixed.
+Final: minor (deferred): grade2/templates/md2-two-units.ts:99-102 hint drops the article ("Since centimeter is shorter than an inch").
+Final: minor (deferred): g2-md10-03 rewrite leaves "each student voted once" implicit.
