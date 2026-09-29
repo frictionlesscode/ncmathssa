@@ -125,4 +125,20 @@ describe('g1.nbt7.write-the-numeral', () => {
     expect(new Set(NUMERAL_DRAWS.map((d) => 10 * d.tens + d.ones)).size).toBe(64);
     expect(NUMERAL_DRAWS.length).toBe(128);
   });
+
+  // STANDING RULING: fixed-seed pins on LITERAL strings, obtained by running
+  // the generator, never hand-derived.
+  it('pins seed 7', () => {
+    const g = gen(7);
+    expect(g.prompt).toBe('Which number is twenty-one?');
+    expect(g.answerText).toBe('21');
+    expect(g.options.map((o) => o.text)).toEqual(['1', '12', '201', '21']);
+  });
+
+  it('pins seed 100', () => {
+    const g = gen(100);
+    expect(g.prompt).toBe('Which number is thirty-seven?');
+    expect(g.answerText).toBe('37');
+    expect(g.options.map((o) => o.text)).toEqual(['37', '307', '30', '73']);
+  });
 });

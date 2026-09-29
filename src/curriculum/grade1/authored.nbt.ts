@@ -136,9 +136,9 @@ export const GRADE_1_NBT_AUTHORED: Question[] = [
     domainId: 'NBT',
     prompt: 'Which number is thirteen?',
     options: labelOptions([
-      { text: '17', isCorrect: false, misconception: 'confused-a-teen-number-with-its-decade' },
-      { text: '71', isCorrect: false, misconception: 'swapped-the-tens-and-the-ones' },
-      { text: '70', isCorrect: false, misconception: 'confused-a-teen-number-with-its-decade' },
+      { text: '31', isCorrect: false, misconception: 'swapped-the-tens-and-the-ones' },
+      { text: '30', isCorrect: false, misconception: 'confused-a-teen-number-with-its-decade' },
+      { text: '3', isCorrect: false, misconception: 'left-off-part-of-the-number-name' },
       { text: '13', isCorrect: true },
     ]),
     calculatorAllowed: false,

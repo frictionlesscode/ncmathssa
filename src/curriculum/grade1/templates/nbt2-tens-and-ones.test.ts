@@ -102,4 +102,20 @@ describe('g1.nbt2.tens-and-ones', () => {
     // LITERAL: 9 x 9 digit pairs less the 9 with two equal digits.
     expect(TENS_AND_ONES.length).toBe(72);
   });
+
+  // STANDING RULING: fixed-seed pins on LITERAL strings, obtained by running
+  // the generator, never hand-derived.
+  it('pins seed 7', () => {
+    const g = gen(7);
+    expect(g.prompt).toBe('What number is 1 ten and 2 ones?');
+    expect(g.answerText).toBe('12');
+    expect(g.options.map((o) => o.text)).toEqual(['102', '21', '3', '12']);
+  });
+
+  it('pins seed 100', () => {
+    const g = gen(100);
+    expect(g.prompt).toBe('What number is 2 tens and 8 ones?');
+    expect(g.answerText).toBe('28');
+    expect(g.options.map((o) => o.text)).toEqual(['28', '10', '208', '82']);
+  });
 });

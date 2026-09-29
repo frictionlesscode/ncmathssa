@@ -66,7 +66,7 @@ export const nbt2TensAndOnes: QuestionTemplate = {
         stepByStep: [
           `Step 1: ${tensAndOnes(n)} is written ${n}.`,
           `Step 2: ${unitCount(tens, 'ten')} is ${10 * tens}. ${unitCount(ones, 'one')} is ${ones}.`,
-          `Step 4: The number is ${n}.`,
+          `Step 3: The number is ${n}.`,
         ],
         conceptSummary:
           'A two-digit number is made of tens and ones. The tens digit says how many groups of ten, and the ones digit says how many are left over.',

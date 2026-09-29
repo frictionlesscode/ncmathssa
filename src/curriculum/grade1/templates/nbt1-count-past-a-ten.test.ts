@@ -162,4 +162,20 @@ describe('g1.nbt1.count-past-a-ten', () => {
     expect(count((d) => d.tenSlip === 'back')).toBe(79);
     expect(count((d) => d.tenSlip === 'skip')).toBe(74);
   });
+
+  // STANDING RULING: fixed-seed pins on LITERAL strings, obtained by running
+  // the generator, never hand-derived.
+  it('pins seed 7', () => {
+    const g = gen(7);
+    expect(g.prompt).toBe('Count on from 19. What are the next three numbers?');
+    expect(g.answerText).toBe('20, 21, 22');
+    expect(g.options.map((o) => o.text)).toEqual(['110, 111, 112', '10, 11, 12', '21, 22, 23', '20, 21, 22']);
+  });
+
+  it('pins seed 100', () => {
+    const g = gen(100);
+    expect(g.prompt).toBe('Count on from 38. What are the next three numbers?');
+    expect(g.answerText).toBe('39, 40, 41');
+    expect(g.options.map((o) => o.text)).toEqual(['39, 40, 41', '39, 41, 42', '39, 310, 311', '39, 50, 51']);
+  });
 });

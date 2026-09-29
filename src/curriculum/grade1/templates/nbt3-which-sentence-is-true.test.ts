@@ -133,4 +133,20 @@ describe('g1.nbt3.which-sentence-is-true', () => {
     // The sweep reached every draw, so the check above covered them all.
     expect(seen.size).toBe(144);
   });
+
+  // STANDING RULING: fixed-seed pins on LITERAL strings, obtained by running
+  // the generator, never hand-derived.
+  it('pins seed 7', () => {
+    const g = gen(7);
+    expect(g.prompt).toBe('Which sentence about 12 and 21 is true?');
+    expect(g.answerText).toBe('12 < 21');
+    expect(g.options.map((o) => o.text)).toEqual(['12 = 21', '12 > 21', '21 < 12', '12 < 21']);
+  });
+
+  it('pins seed 100', () => {
+    const g = gen(100);
+    expect(g.prompt).toBe('Which sentence about 28 and 82 is true?');
+    expect(g.answerText).toBe('28 < 82');
+    expect(g.options.map((o) => o.text)).toEqual(['28 < 82', '82 < 28', '28 = 82', '28 > 82']);
+  });
 });

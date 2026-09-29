@@ -79,18 +79,17 @@ describe('grade 1 NBT authored bank', () => {
   });
 
   // Ruling 23-2: NC.1.NBT.4's second addend is a one-digit number or a
-  // multiple of 10, and the sum stays within 100.
+  // multiple of 10, and the sum stays within 100. Reads a and b from the
+  // LIVE bank, so an edit that breaks the ruling fails here.
   it('keeps every NC.1.NBT.4 item within the standard\'s addend shape', () => {
-    const shapes = [
-      { a: 19, b: 1 },
-      { a: 24, b: 3 },
-      { a: 45, b: 20 },
-    ];
-    for (const { a, b } of shapes) {
+    for (const q of itemsFor('NC.1.NBT.4')) {
+      const [a, b] = numbersIn(q.prompt);
       const isOneDigit = b >= 1 && b <= 9;
-      const isMultipleOfTen = b % 10 === 0;
-      expect(isOneDigit || isMultipleOfTen).toBe(true);
-      expect(a + b, `${a} + ${b}`).toBeLessThanOrEqual(100);
+      const isMultipleOfTen = b >= 10 && b % 10 === 0;
+      expect(isOneDigit || isMultipleOfTen, `${q.id}: b=${b}`).toBe(true);
+      expect(a + b, `${q.id}: ${a} + ${b}`).toBeLessThanOrEqual(100);
+      const correct = q.options.find((o) => o.isCorrect)!;
+      expect(Number(correct.text), `${q.id}`).toBe(a + b);
     }
   });
 
@@ -113,18 +112,31 @@ describe('grade 1 NBT authored bank', () => {
     expect(correctValues.some((v) => v < 10)).toBe(true);
   });
 
-  // The brief's own founding errors, named verbatim.
-  it('includes the founding place-value errors the brief names', () => {
-    const all = GRADE_1_NBT_AUTHORED.map((q) => [q.prompt, ...q.options.map((o) => o.text)].join(' | ')).join('\n');
-    // 13 read as 31.
-    expect(all).toContain('31');
-    // 4 tens and 2 ones written 24.
-    expect(all).toContain('24');
-    // 19 + 1 believed to be 110.
-    expect(all).toContain('110');
-    // comparing two-digit numbers by the ones digit is exercised by the
-    // compared-the-wrong-place-first tag.
-    const tags = GRADE_1_NBT_AUTHORED.flatMap((q) => q.options.map((o) => o.misconception).filter(Boolean));
-    expect(tags).toContain('compared-the-wrong-place-first');
+  // The brief's own founding errors, named verbatim. Each is checked on the
+  // SPECIFIC item and option it lives on, not as a bank-wide substring
+  // search - a substring search for "31" or "24" is satisfied by unrelated
+  // numbers elsewhere in the bank (131 in g1-nbt1-02, for instance) and would
+  // stay green even if the intended item were rewritten to drop the error.
+  const optionTag = (id: string, text: string): string | undefined =>
+    GRADE_1_NBT_AUTHORED.find((q) => q.id === id)!.options.find((o) => o.text === text)?.misconception;
+
+  it('gives g1-nbt2-01 the "13 read as 31" founding error', () => {
+    expect(optionTag('g1-nbt2-01', '31')).toBe('swapped-the-tens-and-the-ones');
+  });
+
+  it('gives g1-nbt7-01 the "13 read as 31" founding error', () => {
+    expect(optionTag('g1-nbt7-01', '31')).toBe('swapped-the-tens-and-the-ones');
+  });
+
+  it('gives g1-nbt2-03 the "4 tens and 2 ones written 24" founding error', () => {
+    expect(optionTag('g1-nbt2-03', '24')).toBe('swapped-the-tens-and-the-ones');
+  });
+
+  it('gives g1-nbt4-01 the "19 + 1 believed to be 110" founding error', () => {
+    expect(optionTag('g1-nbt4-01', '110')).toBe('wrote-the-digits-side-by-side-instead-of-adding-the-values');
+  });
+
+  it('gives g1-nbt3-01 the "compared by the ones digit" founding error', () => {
+    expect(optionTag('g1-nbt3-01', '38')).toBe('compared-the-wrong-place-first');
   });
 });
