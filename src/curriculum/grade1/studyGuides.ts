@@ -611,7 +611,9 @@ export const GRADE_1_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       'Stacking the units on top of each other instead of laying them along the length, which does not measure the length at all.',
     ],
     workedExample: {
-      problem: 'Ben measures his desk with 8 blocks laid end to end, with no gaps.',
+      // Fix 2b (whole-branch review, polish): this was a statement with no
+      // question; a question is added and stays within assertGradeOneReadable.
+      problem: 'Ben measures his desk with 8 blocks laid end to end, with no gaps. How long is the desk?',
       steps: [
         '1. The blocks are laid end to end with no gaps or overlaps.',
         '2. Count every block laid along the desk: 8.',
@@ -644,7 +646,10 @@ export const GRADE_1_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       'Reading the number the minute hand points to as the minutes itself, instead of only checking whether it is at the 12 or the 6.',
     ],
     workedExample: {
-      problem: 'The hour hand points halfway between 7 and 8. The minute hand points at 6.',
+      // Fix 2b (whole-branch review, polish): this was a statement with no
+      // question. assertGradeOneReadable allows at most 2 sentences, so the
+      // two original setup sentences are merged into one before the question.
+      problem: 'The hour hand is halfway between 7 and 8, and the minute hand is at 6. What time is it?',
       steps: [
         '1. The minute hand points at the 6, which means half past the hour.',
         '2. The hour hand sits halfway between 7 and 8, matching half past 7.',
@@ -744,7 +749,10 @@ export const GRADE_1_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     commonTraps: [
       'Treating a shape\'s color, size, or the way it is tilted as if it decided what shape it is.',
       'Assuming a 4-sided shape must be a rectangle without checking that its corners are square too.',
-      'Mixing up two shape names that sound alike, such as pentagon and hexagon.',
+      // Fix 2c (whole-branch review, polish): "pentagon" is not in G.1's own
+      // keyConcepts (triangles, rectangles, squares, trapezoids, hexagons,
+      // circles), so the trap now names two shapes G.1 actually covers.
+      'Mixing up two shape names that share a lot of attributes, such as square and rectangle.',
     ],
     workedExample: {
       problem: 'A shape has 4 straight sides. Must it be a rectangle?',

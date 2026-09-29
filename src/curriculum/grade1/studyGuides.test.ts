@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { GRADE_1_DOMAINS } from './standards';
 import { GRADE_1_STUDY_GUIDES } from './studyGuides';
+import { assertGradeOneReadable, GRADE_1_G_VOCAB_ALLOWLIST } from '../authoredBank.testkit';
 
 const STANDARDS = GRADE_1_DOMAINS.flatMap((d) => d.standards);
 
@@ -89,5 +90,18 @@ describe('grade 1 study guides', () => {
         `${code} whyItMattersForSSA does not contain "${expected}"`,
       ).toBe(true);
     }
+  });
+
+  // Fix 2a (whole-branch review, polish): assertGradeOneReadable already
+  // guards every authored bank and every template; the study guides' own
+  // worked-example prompts were only ever checked by an uncommitted script.
+  it('keeps every worked example readable for a six-year-old', () => {
+    assertGradeOneReadable(
+      Object.entries(GRADE_1_STUDY_GUIDES).map(([code, g]) => ({
+        id: code,
+        prompt: g.workedExample.problem,
+      })),
+      { allowlist: GRADE_1_G_VOCAB_ALLOWLIST },
+    );
   });
 });
