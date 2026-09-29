@@ -37,11 +37,10 @@ describe('FirstRunScreen', () => {
   it('offers only grades that have a curriculum', () => {
     render(<FirstRunScreen onComplete={vi.fn()} />);
     const options = screen.getAllByRole('option').map((o) => (o as HTMLOptionElement).value);
-    // Grades 2, 3, 4 and 5 are registered; grade 1 is a later batch and must
-    // not be offered, because choosing one would land on an empty
-    // curriculum. This pin moves as each grade registers (Ruling 21-9) - it
-    // was ['3', '4', '5'] until Task 21 registered grade 2.
-    expect(options).toEqual(['2', '3', '4', '5']);
+    // Grades 1 through 5 are all registered as of Task 26. This pin moves
+    // as each grade registers (Ruling 21-9) - it was ['2', '3', '4', '5']
+    // until Task 26 registered grade 1, completing the set.
+    expect(options).toEqual(['1', '2', '3', '4', '5']);
   });
 
   it('pre-selects the highest registered grade', async () => {

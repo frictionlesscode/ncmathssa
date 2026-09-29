@@ -1,11 +1,14 @@
-# NC Math SSA Prep (Wake County Grade 5 Math Acceleration)
+# NC Math SSA Prep (Wake County Math Acceleration, Grades 1–5)
 
 A web application built to help students prepare for **North Carolina Single
-Subject Acceleration (SSA)** to skip 5th grade mathematics and place directly
-into 6th grade math in the **Wake County Public School System (WCPSS)**.
+Subject Acceleration (SSA)** to skip ahead a grade in mathematics in the
+**Wake County Public School System (WCPSS)**.
 
-**Current scope: Grade 5 only.** Grades 1–4 are a planned follow-on, not yet
-shipped — see [Roadmap](#roadmap-grades-1-4) below.
+**Current scope: Grades 1 through 5.** Every grade's curriculum, question
+bank, and adaptive engine are described below; the sections under "Program
+Structure" and the architecture notes were written against Grade 5 first and
+carry its numbers as the worked example, but the same structure now backs
+Grades 1–4 as well (`src/curriculum/grade1/` through `grade4/`).
 
 ---
 
@@ -13,7 +16,7 @@ shipped — see [Roadmap](#roadmap-grades-1-4) below.
 
 - **Target Assessment**: Above-grade-level comprehensive assessment administered by WCPSS and built by **CASE** (Collaborative Assessment Solutions for Educators).
 - **Qualifying Cutoff**: **80% or higher** on the comprehensive assessment.
-- **Honest Blueprint**: Because the secure CASE item bank is strictly confidential and never made public, this application does **not** guess or fabricate real test items. Instead, the entire curriculum and question bank is built directly against the official, public **North Carolina Standard Course of Study (NCSCOS) for Grade 5 Mathematics**.
+- **Honest Blueprint**: Because the secure CASE item bank is strictly confidential and never made public, this application does **not** guess or fabricate real test items. Instead, the entire curriculum and question bank is built directly against the official, public **North Carolina Standard Course of Study (NCSCOS)**, per grade. NCDPI publishes an EOG blueprint (a published weight range per domain) only for **Grades 3–5**; Grades 1–2 have no state assessment to weight against, so their domains are weighted evenly by standard count instead, and the app never shows a percentage as an official weight for those two grades.
 - **Assessment Format**: Every question is **multiple choice**. There is no open-response or free-text entry. Each wrong option is engineered to be the answer a specific, named misconception produces (e.g. "added the denominators" for a fraction-addition slip), so a missed question is diagnostic, not just wrong.
 - **Test Mode**: Real test simulation without mid-quiz answer hints. On completion, an immediate diagnostic report card displays overall score, SSA qualification status against the 80% cutoff, and full worked step-by-step solutions.
 
@@ -118,7 +121,7 @@ The refactor this app went through separates *what the questions are* from
 change, not a new component.
 
 - **`src/curriculum/`** — curriculum as data. One module per grade
-  (currently only `grade5/`) exports a `GradeCurriculum`: its domains,
+  (`grade1/` through `grade5/`) exports a `GradeCurriculum`: its domains,
   standards, official blueprint weighting (or an even-by-standard-count
   weighting for grades with no state blueprint), and a `QuestionSource`.
   `src/curriculum/registry.ts` is the single place that lists which grades
@@ -205,10 +208,10 @@ every pull request and on pushes to `main`.
 
 ---
 
-## Roadmap: Grades 1–4
+## Status: Grades 1–5 Complete
 
-Grades 1–4 are deliberately out of scope for now. They require the NCSCOS
-standards for those grades to be transcribed from published documents
-rather than recalled, and grades 1–2 have no state EOG blueprint to weight
-against. Once the source documents are in hand, adding each grade follows
-the four steps under [Adding a grade](#adding-a-grade) above.
+Grades 1 through 5 are all registered and playable (`src/curriculum/registry.ts`).
+Grades 1–2 use `{ kind: 'even-by-standard-count' }` weighting because NCDPI
+publishes no state EOG blueprint below grade 3; Grades 3–5 weight domains by
+the published NCDPI blueprint. Adding a future grade (e.g. Grade 6) follows
+the same four steps under [Adding a grade](#adding-a-grade) above.

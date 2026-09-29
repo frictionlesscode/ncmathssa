@@ -9,7 +9,7 @@ import {
   weightValue,
   weightCompactLabel,
 } from './registry';
-import type { GradeCurriculum } from './types';
+import type { Grade, GradeCurriculum } from './types';
 import { makeQuestionSource } from '../engine/questionSource';
 
 describe('registry', () => {
@@ -20,21 +20,20 @@ describe('registry', () => {
   });
 
   it('throws for a grade with no curriculum module', () => {
-    // Grade 1 is the only grade still without a module after Task 21
-    // registers grade 2. Asking for one must fail loudly, not return an
-    // empty curriculum that renders as a blank app. This pin has been grade
-    // 1 since Task 16's deliberate choice - NOT grade 2, whatever an earlier
-    // version of this comment claimed (Finding F10) - and this task's grade
-    // 2 registration does not move it, because grade 1 is still the only
-    // unregistered grade (Ruling 21-1). After Task 26 registers grade 1
-    // itself, no member of `Grade` is unregistered, so this assertion
-    // becomes a type-level impossibility and is re-expressed there as
-    // `getCurriculum(6 as Grade)`, never deleted outright.
-    expect(() => getCurriculum(1)).toThrow(/no curriculum/i);
+    // Task 26 registers grade 1, the last unregistered member of `Grade`.
+    // After that, no member of `Grade = 1|2|3|4|5` is unregistered, so
+    // `getCurriculum(3)` (or any real grade) can no longer throw and the
+    // failure path becomes inexpressible with a real grade number. Ruling
+    // 26-3 keeps the test by simulating a future grade whose module does
+    // not exist yet: the cast is deliberate. Deleting this test would
+    // remove the only coverage of the registry's failure path on the very
+    // task that finalises the registry, and that failure path is what
+    // stops a missing module rendering as a blank app.
+    expect(() => getCurriculum(6 as Grade)).toThrow(/no curriculum/i);
   });
 
   it('lists only grades that actually have modules', () => {
-    expect(listCurricula().map((c) => c.grade)).toEqual([2, 3, 4, 5]);
+    expect(listCurricula().map((c) => c.grade)).toEqual([1, 2, 3, 4, 5]);
   });
 });
 

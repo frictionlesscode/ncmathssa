@@ -1,10 +1,12 @@
 import type { Grade, GradeCurriculum, DomainId, StandardInfo } from './types';
+import { GRADE_1 } from './grade1';
 import { GRADE_2 } from './grade2';
 import { GRADE_3 } from './grade3';
 import { GRADE_4 } from './grade4';
 import { GRADE_5 } from './grade5';
 
 const CURRICULA: Partial<Record<Grade, GradeCurriculum>> = {
+  1: GRADE_1,
   2: GRADE_2,
   3: GRADE_3,
   4: GRADE_4,

@@ -439,3 +439,33 @@ site. Releasing a new app version is a tag bump.
 The live site at `frictionlesscode.com/math/` must be confirmed rendering correctly by
 the repository owner. Local preview and build output can be verified in development;
 the deployed custom-domain result cannot be, from here.
+
+**What this plan machine-checked, and what it did not.** Tasks 1–26 verified, by test,
+that every grade's standards and domain weights match the sourced NCDPI/CCSS text in
+`docs/sources/` and that `standards.ts` is a faithful transcription of it (the
+standards-integrity check, `src/curriculum/sourcedStandards.test.ts`, and its per-grade
+siblings). **The mathematical correctness of the authored items themselves is not
+machine-checked** — no test can tell whether a distractor really is what a child would
+compute, only that four options exist, are distinct, and are tagged with a named
+misconception. That is the most honest sentence in this plan and remains true after
+Task 26: it is owner verification, not something a green suite can stand in for.
+
+**Process finding for the next content plan.** Across Tasks 22–26 (and, before them,
+Tasks 8 and 12), briefs written from recall repeatedly described mathematics NC does not
+teach, and in every case `standards.ts` — transcribed from the published source — was the
+only authority that caught it:
+
+- `NC.4.NBT.7` — a brief-authored rounding standard that ships mathematics not in NC's
+  standard.
+- Grade 3's `NC.3.MD.2` — a customary/metric unit error.
+- Grade 1's three code swaps (rulings 22-1, 23-1, 24-1): `NC.1.OA.6` ↔ `NC.1.OA.9`,
+  `NC.1.NBT.1` ↔ `NC.1.NBT.7`, and `NC.1.MD.3` ↔ `NC.1.MD.5`, each of which shipped with
+  BOTH halves green — `assertAuthoredBankSound` checks only that a code belongs to its
+  domain, and the aggregate coverage test checks only that some item exists per code.
+  Nothing in the suite can see that an item is filed under the wrong standard's meaning.
+
+No test in this suite can detect any of these classes on its own; each was caught only by
+an implementer or auditor re-reading `standards.ts` against the brief line by line. The
+next content plan should budget that reading as a required step, not a discretionary one
+— the cost of doing it is a paragraph nobody needed; the cost of skipping it is a whole
+domain's worth of items shipped green under the wrong standard.
