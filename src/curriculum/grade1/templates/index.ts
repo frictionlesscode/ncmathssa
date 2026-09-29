@@ -7,6 +7,13 @@ import { oa8MissingPart } from './oa8-missing-part';
 import { oa8MissingWhole } from './oa8-missing-whole';
 import { oa9AddWithin10 } from './oa9-add-within-10';
 import { oa9SubtractWithin10 } from './oa9-subtract-within-10';
+import { nbt1CountPastATen } from './nbt1-count-past-a-ten';
+import { nbt2TensAndOnes } from './nbt2-tens-and-ones';
+import { nbt3WhichSentenceIsTrue } from './nbt3-which-sentence-is-true';
+import { nbt4AddWithin100 } from './nbt4-add-within-100';
+import { nbt5TenMoreOrLess } from './nbt5-ten-more-or-less';
+import { nbt6SubtractMultiplesOfTen } from './nbt6-subtract-multiples-of-ten';
+import { nbt7WriteTheNumeral } from './nbt7-write-the-numeral';
 
 /** Every parameterized Grade 1 template. Task 22 (Operations & Algebraic
  *  Thinking) starts this list; Tasks 23 (Base Ten) and 24 (Measurement & Data)
@@ -70,6 +77,44 @@ import { oa9SubtractWithin10 } from './oa9-subtract-within-10';
  *  making ten and getting to 10 asked about as a strategy; 0 as an unknown
  *  or an answer; a result with the box on the left (☐ = 9 − 3); the pairs
  *  that make 10; and a fact family. `../authored.oa.test.ts` runs
+ *  `assertNoGeneratorDuplicatesAuthored` over these templates to hold that.
+ *
+ *  ── Number & Operations in Base Ten (Task 23) ─────────────────────────────
+ *
+ *  RULING 23-1 DECIDES WHAT EACH CODE MEANS. The Task 23 brief swaps
+ *  NC.1.NBT.1 and NC.1.NBT.7: NC.1.NBT.1 is COUNTING to 150 from any starting
+ *  number, and NC.1.NBT.7 is READING AND WRITING NUMERALS to 100. `../
+ *  standards.ts` is the ground truth, transcribed from the published
+ *  standards, and every template below is filed under the code its own
+ *  sibling test checks against that source.
+ *
+ *  RULING 23-9 KEEPS A GENERATOR ON ALL SEVEN NBT STANDARDS, for the same
+ *  reason Grade 4 makes the same call: place-value procedures are learned on
+ *  numbers a student has not memorized the answer to, so a bank of only
+ *  authored items would let a student pass by recognizing the specific
+ *  numbers rather than by doing the place-value reasoning. Seven templates,
+ *  each drilling ONE skill:
+ *
+ *    NC.1.NBT.1  COUNT ON across a ten, from any start below 150.
+ *    NC.1.NBT.2  TENS AND ONES — what number is N tens and M ones.
+ *    NC.1.NBT.3  COMPARE two two-digit numbers (ruling 23-6: "which sentence
+ *                is true?", four complete comparison sentences).
+ *    NC.1.NBT.4  ADD WITHIN 100 (ruling 23-2: the second addend is always a
+ *                one-digit number or a multiple of 10, never an arbitrary
+ *                two-digit number, which would be NC.2.NBT.5's regrouping).
+ *    NC.1.NBT.5  10 MORE OR 10 LESS than a two-digit number, mentally.
+ *    NC.1.NBT.6  SUBTRACT two multiples of 10 (ruling 23-5: 10-90, minuend at
+ *                least the subtrahend, no negative distractors).
+ *    NC.1.NBT.7  WRITE THE NUMERAL for a number name, to 100 (ruling 23-4:
+ *                never inherits NC.1.NBT.1's 150).
+ *
+ *  AUTHORED AND GENERATED DO NOT OVERLAP. `../authored.nbt.ts` takes shapes
+ *  the generators above do not make: numerals under 20 and numerals with a
+ *  zero digit for NC.1.NBT.7 (the generators exclude both), teen-number
+ *  decomposition and a plain decade for NC.1.NBT.2, word-problem framings for
+ *  NC.1.NBT.4-6 where the generators ask bare "what is" questions, and single-
+ *  next-number counting for NC.1.NBT.1 where the generator always asks for
+ *  three numbers at once. `../authored.nbt.test.ts` runs
  *  `assertNoGeneratorDuplicatesAuthored` over these templates to hold that. */
 export const GRADE_1_TEMPLATES: QuestionTemplate[] = [
   oa1CompareDifference,
@@ -80,6 +125,13 @@ export const GRADE_1_TEMPLATES: QuestionTemplate[] = [
   oa8MissingWhole,
   oa9AddWithin10,
   oa9SubtractWithin10,
+  nbt1CountPastATen,
+  nbt2TensAndOnes,
+  nbt3WhichSentenceIsTrue,
+  nbt4AddWithin100,
+  nbt5TenMoreOrLess,
+  nbt6SubtractMultiplesOfTen,
+  nbt7WriteTheNumeral,
 ];
 
 export {
@@ -91,4 +143,11 @@ export {
   oa8MissingWhole,
   oa9AddWithin10,
   oa9SubtractWithin10,
+  nbt1CountPastATen,
+  nbt2TensAndOnes,
+  nbt3WhichSentenceIsTrue,
+  nbt4AddWithin100,
+  nbt5TenMoreOrLess,
+  nbt6SubtractMultiplesOfTen,
+  nbt7WriteTheNumeral,
 };

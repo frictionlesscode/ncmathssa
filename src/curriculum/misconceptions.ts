@@ -1956,6 +1956,96 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'place-value-and-decimals',
       'Added or subtracted using only the ones digit of a teen number and dropped its ten, so 15 + 3 came out 8 instead of 18.',
     ),
+
+    // -- Grade 1 Number & Operations in Base Ten (NC.1.NBT.1-7) ------------
+    // Ruling 23-1: NC.1.NBT.1 is counting to 150 and NC.1.NBT.7 is reading and
+    // writing numerals to 100 - the brief has the two swapped. Several Grade 2
+    // NBT tags are reused where they name the same slip a step earlier:
+    // compared-the-wrong-place-first, reversed-the-inequality-symbol,
+    // same-digits-read-as-the-same-number, left-off-part-of-the-number-name,
+    // listed-the-starting-number-as-the-first-count and wrote-the-digits-
+    // side-by-side-instead-of-adding-the-values. What follows are the errors
+    // nothing declared yet.
+    entry(
+      'restarted-the-count-at-the-start-of-the-ten',
+      'place-value-and-decimals',
+      'While counting on across a ten, went back to the start of the ten just crossed instead of moving on into the next one.',
+    ),
+    entry(
+      'skipped-a-ten-while-counting',
+      'place-value-and-decimals',
+      'While counting on across a ten, jumped ahead to the following ten and skipped the numbers of the one just crossed.',
+    ),
+    entry(
+      'skipped-a-number-while-counting',
+      'incomplete-procedure',
+      'While counting on by ones, skipped over one number in the sequence instead of saying every number in order.',
+    ),
+    entry(
+      'swapped-the-tens-and-the-ones',
+      'place-value-and-decimals',
+      "Swapped a two-digit number's tens and ones digits, reading or writing 74 where 47 belongs.",
+    ),
+    entry(
+      'used-the-tens-digit-as-ones',
+      'place-value-and-decimals',
+      "Read a count of tens as if it were that many ONES, so 4 tens and 7 ones was added as 4 + 7 instead of 40 + 7, or a multiple of ten's tens digit was added as a ones-value amount.",
+    ),
+    entry(
+      'wrote-each-part-of-the-number-side-by-side',
+      'place-value-and-decimals',
+      'Wrote the tens part and the ones part of a number next to each other as digits instead of adding what each is worth, so 4 tens and 7 ones was written 407 rather than 47.',
+    ),
+    entry(
+      'added-the-second-addend-into-the-tens-place',
+      'place-value-and-decimals',
+      "Added the second addend into the two-digit number's TENS digit instead of its ones digit, so 47 + 5 came out as 9 tens and 7 ones instead of 52.",
+    ),
+    entry(
+      'dropped-the-tens-digit-when-adding',
+      'place-value-and-decimals',
+      "Added using only a two-digit number's ones digit and dropped its tens digit entirely, so 47 + 5 came out 12 instead of 52.",
+    ),
+    entry(
+      'dropped-the-ones-digit-of-the-two-digit-number',
+      'place-value-and-decimals',
+      "Added a multiple of ten to a two-digit number's tens digit alone and dropped its ones digit, so 47 + 30 came out 70 instead of 77.",
+    ),
+    entry(
+      'gave-10-less-instead-of-10-more',
+      'place-value-and-decimals',
+      'Found 10 less than a number when the question asked for 10 more, or the other way round.',
+    ),
+    entry(
+      'changed-the-ones-digit-instead-of-the-tens-digit',
+      'place-value-and-decimals',
+      'Found 10 more or 10 less by changing the ones digit instead of the tens digit, so 47 and 10 more came out 48 instead of 57.',
+    ),
+    entry(
+      'subtracted-the-tens-digits-without-the-zeros',
+      'place-value-and-decimals',
+      "Subtracted two multiples of ten by their tens digits alone and reported that digit instead of the value it stands for, so 70 minus 30 came out 4 instead of 40.",
+    ),
+    entry(
+      'added-instead-of-subtracted-the-multiples-of-ten',
+      'operation-choice',
+      'Added two multiples of ten together when the problem called for subtracting one from the other.',
+    ),
+    entry(
+      'confused-a-teen-number-with-its-decade',
+      'place-value-and-decimals',
+      'Confused a teen number with the decade number that sounds like it or is written with the same digits, such as reading thirteen as 31 or 30, or fifty as 15.',
+    ),
+    entry(
+      'picked-the-least-instead-of-the-greatest',
+      'place-value-and-decimals',
+      'Compared several two-digit numbers correctly but answered with the least of them when the greatest was asked for, or the other way round.',
+    ),
+    entry(
+      'counted-the-ones-place-instead-of-the-tens-place',
+      'place-value-and-decimals',
+      "Answered how many tens are in a multiple of ten with its ones digit (always 0) instead of its tens digit.",
+    ),
   ].map((info) => [info.tag, info]),
 );
 

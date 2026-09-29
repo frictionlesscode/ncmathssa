@@ -105,6 +105,13 @@ describe('GRADE_1_TEMPLATES', () => {
       'g1.oa8.missing-whole': /^What number makes (?:☐ − \d+ = \d+|\d+ = ☐ − \d+) true\?$/,
       'g1.oa9.add-within-10': /^What is \d+ \+ \d+\?$/,
       'g1.oa9.subtract-within-10': /^What is \d+ − \d+\?$/,
+      'g1.nbt1.count-past-a-ten': /^Count on from \d+\. What are the next three numbers\?$/,
+      'g1.nbt2.tens-and-ones': /^What number is \d+ tens? and \d+ ones?\?$/,
+      'g1.nbt3.which-sentence-is-true': /^Which sentence about \d+ and \d+ is true\?$/,
+      'g1.nbt4.add-within-100': /^Find the total: \d+ \+ \d+\.$/,
+      'g1.nbt5.ten-more-or-less': /^What is 10 (?:more|less) than \d+\?$/,
+      'g1.nbt6.subtract-multiples-of-ten': /^Find the difference: \d+ − \d+\.$/,
+      'g1.nbt7.write-the-numeral': /^Which number is [a-z]+(?:-[a-z]+)?\?$/,
     };
     expect(Object.keys(sentinels).sort()).toEqual(GRADE_1_TEMPLATES.map((t) => t.id).sort());
     for (const t of GRADE_1_TEMPLATES) {
