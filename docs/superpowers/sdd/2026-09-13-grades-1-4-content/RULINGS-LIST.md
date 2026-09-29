@@ -1,0 +1,72 @@
+# Every ruling in the SDD ledger, in order (extracted from progress.md at close-out)
+
+- (ledger line 36) *Ruling:* rewrote Step 1 to call `c.source.templates()` directly, so the
+- (ledger line 42) implementer to drop it. *Ruling:* removed the import and the instruction.
+- (ledger line 56) diagnostic. *Ruling:* both become `GradeCurriculum` fields; recorded as spec §5.4
+- (ledger line 101) **Ruling: Task 4 dispatched in parallel with the Batch A review.** The skill bars
+- (ledger line 165) grade 4 now matches. *Ruling:* implementer's call stands; plan text corrected so
+- (ledger line 185) *Ruling:* corrected at the source, not just downstream. I then scanned all 108
+- (ledger line 202) **Ruling: Task 5 is NOT dispatched in parallel with this review.** Unlike Task 4,
+- (ledger line 268) *Ruling:* fixed, in scope. Same defect class, same file, already-settled
+- (ledger line 281) **The concern was a genuine plan defect, and a costly one. Ruling: fix the
+- (ledger line 440) Ruling: the implementer following `standards.ts` over the brief in all three places is
+- (ledger line 456) 1. Ruling: **MD.2 is larger-unit-to-smaller-unit ONLY.** Sourced text: "convert metric
+- (ledger line 462) 2. Ruling: **MD.4 is whole numbers only.** Sourced text: "Represent and interpret data
+- (ledger line 468) 3. Ruling: **MD.1/MD.2 are metric only** — centimeter, meter, gram, kilogram, liter,
+- (ledger line 471) 4. Ruling: MD.1 and MD.2 get SEPARATE templates. The brief groups them under one
+- (ledger line 620) Ruling: re-dispatch Task 8 fresh rather than trust the orphaned work. The
+- (ledger line 625) Ruling: commit trailer uses `Claude-Session: .../session_01WHu3ZCRhRuKXcW8mR7AMx4`,
+- (ledger line 640) Ruling: pre-flight the whole remaining Grade 4 and Grade 3 span now rather than one
+- (ledger line 690) Ruling: all 28 upheld without exception. Each quotes `standards.ts`, which the auditor
+- (ledger line 720) Ruling: pre-flight Grades 2 and 1 as well, now, before any of their tasks are
+- (ledger line 768) Ruling: the implementer's self-flagged `g4-md6-02` concern is dismissed. The reviewer
+- (ledger line 826) Ruling: fix `Dashboard.tsx` in Task 21 even though the approved single-path redesign
+- (ledger line 832) Ruling: the registration defects are now systemic, not incidental. All four registration
+- (ledger line 1020) Ruling: I moved ONE minor into the fix round — the NF.3 method's "at Grade 4 they always
+- (ledger line 1080) Ruling: the semicolon hole in the sentence splitter goes into round 2 despite being
+- (ledger line 1128) Ruling: accept and close the loop at round 2 rather than open a round 3. The re-reviewer
+- (ledger line 1177) Ruling: do not block on it. It is pre-existing, outside every content file, and fixing
+- (ledger line 1196) Ruling: carry the implementer's second-stale-pin finding into the Grade 3, 2 and 1
+- (ledger line 1218) Ruling: the first-run default grade becomes the HIGHEST registered grade, derived from
+- (ledger line 1228) Ruling: the Geometry allocation tolerance goes into the fix round despite being reported
+- (ledger line 1235) Ruling: `QuizzesListView.tsx:200` ("G • 23-27%", a single-domain claim for a grouped
+- (ledger line 1286) Ruling: accept anyway, and I verified the load-bearing part myself rather than taking the
+- (ledger line 1423) Ruling: the period-4 correct-answer rotation (C,A,D,B repeating) stays deferred. I
+- (ledger line 1484) Ruling: the implementer's reading of 13-7 is CORRECT and I verified the source myself
+- (ledger line 1643) Ruling: two Minors pulled into the round.
+- (ledger line 1770) Ruling: two Minors pulled in.
+- (ledger line 1895) Ruling: the unguarded-subtitle gap goes to the FINAL whole-branch review, not into Task
+- (ledger line 2061) `nbt2-subtract-within-1000.ts` for the identical standard one grade up. Ruling: split
+- (ledger line 2071) Ruling: fix both (orientation swap plus one new authored `=`-keyed item).
+- (ledger line 2113) Ruling: fixed directly by the controller rather than another dispatch round, since it was a
+- (ledger line 2140) Ruling: commit trailers from here on use this session's attribution lines
+- (ledger line 2147) Ruling: every implementer stages explicit paths instead of the briefs' `git add -A` — an
+- (ledger line 2182) Ruling: 8 of the 12 Minors are REQUIRED in a fix round (review #1 MD.7 :05–:25 marks never
+- (ledger line 2215) Ruling: Task 20's implementer runs on sonnet, not opus — the brief carries the test verbatim and the work is 23 prose guides written against `standards.ts`, the account hit its spend limit once this session, and the opus review is the net for false traps and bad worked examples (Task 10's defect class) — costs an extra fix round if wrong.
+- (ledger line 2219) Ruling: Task 21's Step 8 (verify in a browser) is performed by the controller after the task review, not by the implementer — this session has Chrome available (Tasks 11 and 16 shipped their browser steps unperformed for lack of one), and a controller-side look is verification, not a fix; anything it finds enters Task 21's fix loop as a finding — costs a few minutes of controller context if wrong.
+- (ledger line 2236) Ruling: the review's out-of-diff observation — `grade2/templates/nbt2-skip-count.ts:108`
+- (ledger line 2242) Ruling: all eleven Task 20 Minors are REQUIRED in round 1 (M1 no guard on the 20-1 figure;
+- (ledger line 2264) Ruling: the nbt8 Step 3 finding is REQUIRED in round 2, not deferred — it is the unmet half of X1's ruling ("check nbt8 for I1's claim and fix it the same way"), a false child-facing sentence at a seed the test itself pins — costs a pin re-capture if wrong.
+- (ledger line 2316) Ruling: F7 ("Blueprint" page chrome at unweighted grades) is in Task 21's scope although reviewer and implementer
+- (ledger line 2320) Ruling: F8 (index.html title/description) makes the static title grade-neutral rather than setting
+- (ledger line 2323) Ruling: all eight review Minors are REQUIRED in round 1 (M1+M3 fold into F1, M8 is F5, M2 F6, M4 F9, M5 F10,
+- (ledger line 2345) Ruling: F8 is NOT addressed despite the re-review's verdict — F8 required a grade-NEUTRAL title and description, and
+- (ledger line 2361) Ruling: Task 22's implementer runs on opus — Grade 1 content is the plan's hardest audience, the task carries a code
+- (ledger line 2363) Ruling: `assertGradeOneReadable` (E.3) is written in Task 22 and applied to Grade 1 only; E.3's "Grade 2 imports it
+- (ledger line 2386) Ruling: the 22-7 word cap stays at 10 letters although its rationale named "determine"/"represent" (9 letters, pass) —
+- (ledger line 2393) Ruling: Minors M1, M2, M4, M5, M6, M7 and the solver half of M9 are REQUIRED in round 1 — M1 is a mis-familied tag a
+- (ledger line 2397) Task 22: parked — M3 key value-rank tell in missing-whole/add-within-10 — Ruling: acceptable; shape guesser 43%/34%, no worse than other templates, and "a sum is bigger than its parts" is the mathematics.
+- (ledger line 2398) Task 22: parked — M8 oa8-missing-part coin-flips the box side — Ruling: one template; NC.1.OA.8's keyConcept "unknown in any position" makes position part of the one skill, unlike Task 18's disjoint-tag modes.
+- (ledger line 2406) Ruling: M4's residual is accepted — lower/upper-of-pair is now balanced 6/6 (was 14/6) and the pair-pick guesser fell to
+- (ledger line 2427) Ruling: the user asked (2026-09-29) that all subagents run on Sonnet — this supersedes the "Grade 1 on opus" ruling for
+- (ledger line 2430) Ruling: the fresh Task 23 implementer inherits the untracked partial work as a starting point, to verify rather than
+- (ledger line 2441) Ruling: Minors M1 (nbt2 steps numbered 1,2,4 on every generated question) and M2 (founding-error test's '31' substring
+- (ledger line 2460) Ruling: Minors M1 (g1-md4-04 reuses `left-one-of-the-addends-out` for a take-apart/subtraction shape) and M2 (drop the
+- (ledger line 2485) Ruling: 26-4's floor assumed 13 generator-backed standards; Grades 1 content shipped templates on 14 (OA.1, OA.2, OA.6, OA.8, OA.9, all 7 NBT, MD.2, MD.4) — the test asserts the exact named set that exists (a floor that cannot silently drop any) rather than ≥12 — costs one test edit if a generator is later removed on purpose.
+- (ledger line 2486) Ruling: Step 6 (browser check of grades 1-5) is done by the controller after the implementer's commit, as at Task 21 — costs nothing if wrong beyond controller time.
+- (ledger line 2487) Ruling: Task 21's deferred README minor (README still titled for Grade 5) is folded into Task 26 as close-out — README must describe Grades 1-5 honestly (no blueprint/percentages for grades 1-2) — costs a small doc diff if wrong.
+- (ledger line 2498) Ruling: the final review runs on sonnet, not the most capable model the skill prescribes — the user asked (2026-09-29) for every subagent on Sonnet — costs cross-cutting depth if wrong; the user can ask for an opus pass before merge.
+- (ledger line 2499) Ruling: the branch is 64k lines over 331 files, every content task already task-reviewed; the final reviewer gets a focused package (all shared/engine/UI/testkit/registry/doc changes in full, ~3.4k lines, plus the whole-branch stat) and reads grade content only for cross-grade consistency and to triage the deferred list (`final-review-deferred.md`) — costs missed intra-content defects the task reviews also missed, if wrong.
+- (ledger line 2503) Ruling: the Grade 2 guard is fixed in the one final fix wave, not left as a fast-follow — the Content Contract is a global constraint naming Grade 2 explicitly, and the reviewer's "not obviously unreadable" is a judgment the guard should encode; limits are calibrated to catch a paragraph (not to the Grade 1 bar), and any prompt over them is shortened with its mathematics unchanged — costs a content diff on already-reviewed Grade 2 items if wrong.
+- (ledger line 2504) Ruling: the three Task 25 polish minors (studyGuides readability test over workedExample.problem; MD.2/MD.3 examples get a question; "pentagon" → a G.1 pair) ride in the same fix wave — child/parent-facing, trivially small — costs nothing material if wrong.
+- (ledger line 2508) Final: parked — g2-g3-04 lost its "identical wholes" premise in the readability rewrite — Ruling: real, child-facing and a one-line fix, but the process allows no second fix wave; surfaced to the user as a pre-merge fix with the exact wording — costs a Grade 2 item whose prompt no longer states the premise its explanation uses, until fixed.

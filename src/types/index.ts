@@ -1,55 +1,36 @@
-// NCSCOS Grade 5 Mathematics & WCPSS SSA Types
+// Types shared across the UI. The curriculum shape itself (DomainId,
+// StandardInfo, DomainInfo) and the question/mastery models now live in
+// src/curriculum and src/engine — they are re-exported here so existing
+// imports of '../types' keep working (Ruling F12).
 
-export type DomainId = 'OA' | 'NBT' | 'NF' | 'MD' | 'G';
+export type { DomainId, StandardCode, StandardInfo, DomainInfo } from '../curriculum/types';
+export type { Question, AnswerOption, Explanation } from '../engine/questionModel';
+export type { StandardMastery } from '../engine/mastery';
 
-export interface StandardInfo {
-  code: string; // e.g. 'NC.5.NF.1'
-  domainId: DomainId;
+import type { DomainId, GradeCurriculum } from '../curriculum/types';
+
+export interface StudyGuideSection {
+  standardCode: string;
   title: string;
-  description: string;
-  weightCategory: string; // e.g. '39-43% of EOG Blueprint'
-  keyConcepts: string[];
-}
-
-export interface DomainInfo {
-  id: DomainId;
-  name: string;
-  shortName: string;
-  officialWeightRange: string;
-  officialWeightMidpoint: number;
-  description: string;
-  color: string;
-  badgeBg: string;
-  standards: StandardInfo[];
-}
-
-export type QuestionType = 'multiple-choice' | 'open-response';
-
-export interface Question {
-  id: string;
-  standardCode: string; // e.g. 'NC.5.NF.1'
-  domainId: DomainId;
-  questionType: QuestionType;
-  prompt: string;
-  promptDetails?: string; // Optional context, diagram description, or data table
-  options?: string[]; // 4 choices for multiple choice
-  correctAnswer: string; // Canonical answer string e.g. 'B' or '3/4' or '48'
-  acceptableAnswers?: string[]; // Equivalent representations e.g. ['0.75', '3/4', '75%']
-  unit?: string; // e.g. 'inches', 'cubic cm', '$'
-  calculatorAllowed: boolean; // false for mental/algorithm math, true for complex word problems
-  isStretch: boolean; // Flagged as above-grade / 6th-grade stretch problem
-  difficulty: 'mastery' | 'advanced' | 'stretch';
-  explanation: {
-    stepByStep: string[];
-    conceptSummary: string;
-    commonMisconception?: string;
+  coreConcept: string;
+  rulesAndFormulas: { label: string; detail: string }[];
+  stepByStepMethod: string[];
+  commonTraps: string[];
+  workedExample: {
+    problem: string;
+    steps: string[];
+    answer: string;
+    whyItMattersForSSA: string;
   };
 }
 
 export interface QuizDefinition {
   id: string;
   title: string;
-  subtitle: string;
+  /** A plain string, or a function of the active curriculum for the rare
+   *  subtitle that needs to cite a standard count or the passing cutoff -
+   *  those must never be baked in as grade-5 literals (Ruling F11). */
+  subtitle: string | ((curriculum: GradeCurriculum) => string);
   domainId?: DomainId; // Undefined if comprehensive / multi-domain
   standardCode?: string; // If standard-specific drill
   isDiagnostic?: boolean;
@@ -63,6 +44,8 @@ export interface QuizAttemptAnswer {
   questionId: string;
   studentAnswer: string;
   isCorrect: boolean;
+  standardCode: string;          // which standard this item assessed
+  misconception?: string;        // tag of the distractor chosen, when wrong
   timeSpentSeconds?: number;
   flaggedForReview?: boolean;
 }
@@ -77,42 +60,17 @@ export interface QuizAttempt {
   scoreRaw: number;
   scoreTotal: number;
   scorePercent: number;
-  isPassingSSA: boolean; // >= 80%
+  isPassingSSA: boolean; // >= curriculum.ssa.passingPercent
   timeElapsedSeconds: number;
   answers: Record<string, QuizAttemptAnswer>;
 }
 
-export interface StandardMastery {
-  standardCode: string;
-  totalAttempts: number;
-  correctAttempts: number;
-  masteryPercent: number;
-  status: 'acceleration-ready' | 'approaching' | 'needs-focus' | 'untested';
-  lastTestedAt?: string;
-}
-
 export interface DomainMastery {
-  domainId: DomainId;
+  domainId: string;
   masteryPercent: number;
   totalQuestionsAnswered: number;
   totalCorrect: number;
   status: 'acceleration-ready' | 'approaching' | 'needs-focus' | 'untested';
   standardsCount: number;
   standardsMastered: number;
-}
-
-export interface UserSettings {
-  studentName: string;
-  currentGrade: number; // 4
-  targetGrade: number; // 5 -> into 6
-  targetExamDate: string; // e.g. '2026-05-15'
-  weeklyStudyGoalHours: number;
-  dailyQuestionGoal: number;
-}
-
-export interface AppState {
-  settings: UserSettings;
-  attempts: QuizAttempt[];
-  missedQuestionIds: string[];
-  activeQuizAttempt: QuizAttempt | null;
 }

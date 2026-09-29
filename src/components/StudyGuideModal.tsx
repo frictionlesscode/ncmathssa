@@ -1,7 +1,7 @@
 import React from 'react';
 import { BookOpen, CheckCircle, AlertTriangle, Lightbulb, X, ArrowRight } from 'lucide-react';
-import { STUDY_GUIDES } from '../data/studyGuides';
-import { getStandardByCode } from '../data/ncStandards';
+import { useProgress } from '../context/ProgressContext';
+import { standardsOf } from '../curriculum/registry';
 
 interface StudyGuideModalProps {
   standardCode: string | null;
@@ -14,10 +14,12 @@ export const StudyGuideModal: React.FC<StudyGuideModalProps> = ({
   onClose,
   onStartStandardDrill
 }) => {
+  const { curriculum } = useProgress();
+
   if (!standardCode) return null;
 
-  const guide = STUDY_GUIDES[standardCode];
-  const standard = getStandardByCode(standardCode);
+  const guide = curriculum.studyGuides[standardCode];
+  const standard = standardsOf(curriculum).find((s) => s.code === standardCode);
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
@@ -106,7 +108,7 @@ export const StudyGuideModal: React.FC<StudyGuideModalProps> = ({
                 <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
                   <h4 className="text-xs font-bold uppercase tracking-wider text-amber-900 mb-2 flex items-center gap-1.5">
                     <AlertTriangle className="w-4 h-4 text-amber-600" />
-                    Common 4th/5th Grade Traps to Avoid
+                    Common Grade {curriculum.grade} Traps to Avoid
                   </h4>
                   <ul className="space-y-1.5 text-xs text-amber-950 list-disc list-inside">
                     {guide.commonTraps.map((trap, idx) => (

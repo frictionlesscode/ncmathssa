@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ProgressProvider, useProgress } from './context/ProgressContext';
+import { FirstRunScreen } from './components/FirstRunScreen';
 import { Navbar } from './components/Navbar';
 import type { NavTab } from './components/Navbar';
 import { Dashboard } from './components/Dashboard';
@@ -12,14 +13,17 @@ import { StudyGuideModal } from './components/StudyGuideModal';
 import { StudyPaceModal } from './components/StudyPaceModal';
 import { PrintReportModal } from './components/PrintReportModal';
 import type { QuizAttempt, QuizDefinition } from './types';
+import { standardsOf } from './curriculum/registry';
+import { parseQuestionRef } from './engine/questionModel';
+import type { QuestionRef } from './engine/questionModel';
 import {
+  createAdaptiveSessionDrill,
   createMissedQuestionsDrill,
-  createStandardDrill,
-  getQuizById
-} from './data/quizzes';
+  createStandardDrill
+} from './curriculum/grade5/quizzes';
 
 const MainApp: React.FC = () => {
-  const { recordQuizAttempt } = useProgress();
+  const { recordAttempt, curriculum, profile, updateActiveProfile } = useProgress();
 
   const [currentTab, setCurrentTab] = useState<NavTab>('dashboard');
   const [activeQuiz, setActiveQuiz] = useState<QuizDefinition | null>(null);
@@ -30,9 +34,23 @@ const MainApp: React.FC = () => {
   const [isPaceModalOpen, setIsPaceModalOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
 
+  // Warn before an in-progress quiz can be silently discarded (e.g. the
+  // browser back button). There is no router, so this is the only guard.
+  useEffect(() => {
+    if (!activeQuiz) return;
+    const warn = (e: BeforeUnloadEvent) => { e.preventDefault(); e.returnValue = ''; };
+    window.addEventListener('beforeunload', warn);
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [activeQuiz]);
+
+  // A quiz id is only meaningful within the active grade: `g4-mod-nf-01`
+  // exists in Grade 4's set and nowhere else, so the lookup runs over
+  // `curriculum.quizzes` rather than over one grade's exported bank.
+  const findQuiz = (quizId: string) => curriculum.quizzes.find(q => q.id === quizId);
+
   // Launch a pre-defined quiz
   const handleStartQuiz = (quizId: string) => {
-    const quiz = getQuizById(quizId);
+    const quiz = findQuiz(quizId);
     if (quiz) {
       setCompletedAttempt(null);
       setActiveQuiz(quiz);
@@ -41,7 +59,7 @@ const MainApp: React.FC = () => {
 
   // Launch a standard-specific drill
   const handleStartStandardDrill = (standardCode: string) => {
-    const drill = createStandardDrill(standardCode);
+    const drill = createStandardDrill(standardCode, curriculum);
     setCompletedAttempt(null);
     setActiveQuiz(drill);
   };
@@ -53,9 +71,23 @@ const MainApp: React.FC = () => {
     setActiveQuiz(drill);
   };
 
-  // Handle quiz completion
+  // Launch an adaptive daily-practice session built by selectSession.
+  const handleStartAdaptiveSession = (refs: QuestionRef[]) => {
+    const drill = createAdaptiveSessionDrill(refs);
+    setCompletedAttempt(null);
+    setActiveQuiz(drill);
+  };
+
+  // Handle quiz completion. Most answer ids are authored ids, but a custom
+  // "practice due reviews" drill can carry generated refs too (encoded as
+  // `templateId#seed`), so every id is parsed back into its QuestionRef
+  // rather than assumed authored.
   const handleFinishQuiz = (attempt: QuizAttempt) => {
-    recordQuizAttempt(attempt);
+    const results = Object.entries(attempt.answers).map(([questionId, ans]) => ({
+      ref: parseQuestionRef(questionId),
+      wasCorrect: ans.isCorrect
+    }));
+    recordAttempt(attempt, results);
     setCompletedAttempt(attempt);
     setActiveQuiz(null);
   };
@@ -63,11 +95,25 @@ const MainApp: React.FC = () => {
   // Retake currently viewed attempt
   const handleRetake = () => {
     if (completedAttempt) {
-      const quiz = getQuizById(completedAttempt.quizId) || createStandardDrill(completedAttempt.standardCode || 'NC.5.NF.1');
-      setCompletedAttempt(null);
-      setActiveQuiz(quiz);
+      const fallbackStandard = completedAttempt.standardCode ?? standardsOf(curriculum)[0]?.code;
+      const quiz = findQuiz(completedAttempt.quizId)
+        || (fallbackStandard ? createStandardDrill(fallbackStandard, curriculum) : undefined);
+      if (quiz) {
+        setCompletedAttempt(null);
+        setActiveQuiz(quiz);
+      }
     }
   };
+
+  // First-run: nothing typed yet and no history for this profile. Shown
+  // before anything else so a visitor sees it before any quiz UI.
+  if (!profile.studentName.trim() && profile.attempts.length === 0) {
+    return (
+      <FirstRunScreen
+        onComplete={({ studentName, grade }) => updateActiveProfile({ studentName, grade })}
+      />
+    );
+  }
 
   // Render Test Runner if quiz is active
   if (activeQuiz) {
@@ -126,6 +172,7 @@ const MainApp: React.FC = () => {
           <QuizzesListView
             onStartQuiz={handleStartQuiz}
             onStartStandardDrill={handleStartStandardDrill}
+            onStartAdaptiveSession={handleStartAdaptiveSession}
           />
         )}
 

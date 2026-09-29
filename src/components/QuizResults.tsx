@@ -12,8 +12,9 @@ import {
   XCircle
 } from 'lucide-react';
 import type { Question, QuizAttempt } from '../types';
-import { QUESTIONS_BANK } from '../data/questions';
-import { checkAnswer, formatTime } from '../utils/answerChecker';
+import { correctOption, parseQuestionRef } from '../engine/questionModel';
+import { useProgress } from '../context/ProgressContext';
+import { formatTime } from '../utils/answerChecker';
 
 interface QuizResultsProps {
   attempt: QuizAttempt;
@@ -30,11 +31,12 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
   onOpenStudyGuide,
   onDone
 }) => {
+  const { curriculum } = useProgress();
+  const passingPercent = curriculum.ssa.passingPercent;
   const [filter, setFilter] = useState<'all' | 'missed' | 'correct' | 'flagged'>('all');
-  const [retryInputs, setRetryInputs] = useState<Record<string, string>>({});
   const [retryResults, setRetryResults] = useState<Record<string, boolean | null>>({});
 
-  // Confetti effect if passed SSA bar (>= 80%)
+  // Confetti effect if passed the SSA bar
   useEffect(() => {
     if (attempt.isPassingSSA) {
       try {
@@ -49,10 +51,19 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
     }
   }, [attempt.isPassingSSA]);
 
-  // Collect question objects
+  // Collect question objects. Most answer ids are authored ids, but a
+  // custom "practice due reviews" drill can carry generated refs too
+  // (encoded as `templateId#seed`), so every id is parsed back into its
+  // QuestionRef rather than assumed authored.
   const questionIds = Object.keys(attempt.answers);
   const questions: Question[] = questionIds
-    .map(id => QUESTIONS_BANK.find(q => q.id === id))
+    .map(id => {
+      try {
+        return curriculum.source.resolve(parseQuestionRef(id));
+      } catch {
+        return undefined;
+      }
+    })
     .filter((q): q is Question => q !== undefined);
 
   const missedQuestions = questions.filter(q => !attempt.answers[q.id]?.isCorrect);
@@ -67,10 +78,8 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
     return true;
   });
 
-  const handleRetrySubmit = (q: Question) => {
-    const input = retryInputs[q.id] || '';
-    const isCorrect = checkAnswer(q, input);
-    setRetryResults(prev => ({ ...prev, [q.id]: isCorrect }));
+  const handleRetryChoice = (q: Question, label: string) => {
+    setRetryResults(prev => ({ ...prev, [q.id]: correctOption(q).label === label }));
   };
 
   // Group missed questions by standard to identify weak standards
@@ -95,7 +104,7 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
                   ? 'bg-emerald-600 text-white border-emerald-700'
                   : 'bg-amber-500 text-white border-amber-600'
               }`}>
-                {attempt.isPassingSSA ? '★ SSA Acceleration-Ready (Passed ≥ 80%)' : 'Needs Practice (Below 80% Cutoff)'}
+                {attempt.isPassingSSA ? `★ SSA Acceleration-Ready (Passed ≥ ${passingPercent}%)` : `Needs Practice (Below ${passingPercent}% Cutoff)`}
               </span>
               <span className="text-xs text-slate-500 font-mono">
                 {formatTime(attempt.timeElapsedSeconds)} Elapsed
@@ -106,8 +115,8 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
             </h1>
             <p className="text-xs sm:text-sm text-slate-600 max-w-xl">
               {attempt.isPassingSSA
-                ? 'Excellent mastery! Scoring at or above 80% satisfies the Wake County Single Subject Acceleration performance benchmark on this module.'
-                : 'Wake County SSA requires an 80% or higher score to accelerate. Review the missed questions below to identify and master weak concepts.'}
+                ? `Excellent mastery! Scoring at or above ${passingPercent}% satisfies the Wake County Single Subject Acceleration performance benchmark on this module.`
+                : `Wake County SSA requires a ${passingPercent}% or higher score to accelerate. Review the missed questions below to identify and master weak concepts.`}
             </p>
           </div>
 
@@ -125,7 +134,7 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
               {attempt.scoreRaw} of {attempt.scoreTotal} Correct
             </div>
             <div className="text-[11px] text-slate-500 mt-0.5">
-              Qualifying Bar: 80%
+              Qualifying Bar: {passingPercent}%
             </div>
           </div>
         </div>
@@ -295,29 +304,31 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
                   )}
                 </div>
 
-                {/* Multiple Choice Options preview if MC */}
-                {q.questionType === 'multiple-choice' && q.options && (
-                  <div className="grid sm:grid-cols-2 gap-2 text-xs">
-                    {q.options.map((opt, oIdx) => {
-                      const optLetter = opt.charAt(0).toUpperCase();
-                      const isCanonical = optLetter === q.correctAnswer.toUpperCase();
-                      const isStudentChoice = optLetter === studentAns.toUpperCase();
+                {/* Answer choices, with the key and the student's pick marked */}
+                <div className="grid sm:grid-cols-2 gap-2 text-xs">
+                  {q.options.map(opt => {
+                    const isStudentChoice = opt.label === studentAns.toUpperCase();
 
-                      let cardStyle = 'bg-slate-50 border-slate-200 text-slate-700';
-                      if (isCanonical) {
-                        cardStyle = 'bg-emerald-50 border-emerald-300 text-emerald-950 font-bold';
-                      } else if (isStudentChoice && !isCorrect) {
-                        cardStyle = 'bg-rose-50 border-rose-300 text-rose-950 font-bold line-through';
-                      }
+                    let cardStyle = 'bg-slate-50 border-slate-200 text-slate-700';
+                    if (opt.isCorrect) {
+                      cardStyle = 'bg-emerald-50 border-emerald-300 text-emerald-950 font-bold';
+                    } else if (isStudentChoice && !isCorrect) {
+                      cardStyle = 'bg-rose-50 border-rose-300 text-rose-950 font-bold';
+                    }
 
-                      return (
-                        <div key={oIdx} className={`p-2.5 rounded-xl border ${cardStyle}`}>
-                          {opt}
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
+                    return (
+                      <div key={opt.label} className={`p-2.5 rounded-xl border ${cardStyle}`}>
+                        <span className="font-mono font-black mr-1.5">{opt.label})</span>
+                        {opt.text}
+                        {isStudentChoice && !isCorrect && opt.misconception && (
+                          <span className="block mt-1 font-mono text-[10px] font-semibold text-rose-700">
+                            error: {opt.misconception.replace(/-/g, ' ')}
+                          </span>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
 
                 {/* Answers Comparison Box */}
                 <div className="grid sm:grid-cols-2 gap-3 pt-2 text-xs">
@@ -336,7 +347,9 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
                     <span className="block text-[10px] font-extrabold uppercase tracking-wider opacity-70 mb-0.5">
                       Correct Target Answer
                     </span>
-                    <span className="text-sm font-bold font-mono">{q.correctAnswer}</span>
+                    <span className="text-sm font-bold font-mono">
+                      {correctOption(q).label}) {correctOption(q).text}
+                    </span>
                   </div>
                 </div>
 
@@ -365,19 +378,16 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
                   <div className="pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-start sm:items-center gap-2">
                     <span className="text-xs font-bold text-slate-700">Try Question Again:</span>
                     <div className="flex items-center gap-2 w-full sm:w-auto">
-                      <input
-                        type="text"
-                        placeholder="Enter retry answer..."
-                        value={retryInputs[q.id] || ''}
-                        onChange={e => setRetryInputs({ ...retryInputs, [q.id]: e.target.value })}
-                        className="px-3 py-1.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-mono font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                      />
-                      <button
-                        onClick={() => handleRetrySubmit(q)}
-                        className="px-3 py-1.5 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs rounded-xl shadow-xs transition-colors"
-                      >
-                        Check
-                      </button>
+                      {q.options.map(opt => (
+                        <button
+                          key={opt.label}
+                          onClick={() => handleRetryChoice(q, opt.label)}
+                          className="w-9 h-9 bg-slate-100 hover:bg-slate-800 hover:text-white text-slate-800 font-mono font-black text-xs rounded-xl border border-slate-300 transition-colors"
+                          title={opt.text}
+                        >
+                          {opt.label}
+                        </button>
+                      ))}
                     </div>
 
                     {retryResults[q.id] !== undefined && retryResults[q.id] !== null && (

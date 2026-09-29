@@ -8,30 +8,69 @@ import {
   Target
 } from 'lucide-react';
 import { useProgress } from '../context/ProgressContext';
-import { ALL_STANDARDS, NC_DOMAINS } from '../data/ncStandards';
-import { STATIC_QUIZZES } from '../data/quizzes';
+import { standardsOf, weightCompactLabel } from '../curriculum/registry';
+import type { QuizDefinition } from '../types';
+import { AdaptiveSessionCard } from './AdaptiveSessionCard';
+import type { QuestionRef } from '../engine/questionModel';
+import { parseQuestionRef } from '../engine/questionModel';
 
 interface QuizzesListViewProps {
   onStartQuiz: (quizId: string) => void;
   onStartStandardDrill: (standardCode: string) => void;
+  onStartAdaptiveSession: (refs: QuestionRef[]) => void;
 }
 
 export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
   onStartQuiz,
-  onStartStandardDrill
+  onStartStandardDrill,
+  onStartAdaptiveSession
 }) => {
-  const { state } = useProgress();
+  const { profile, curriculum } = useProgress();
+  const passingPercent = curriculum.ssa.passingPercent;
+  const standards = standardsOf(curriculum);
 
   // Helper to find highest score on a quiz
   const getBestScore = (quizId: string) => {
-    const attempts = state.attempts.filter(a => a.quizId === quizId);
+    const attempts = profile.attempts.filter(a => a.quizId === quizId);
     if (attempts.length === 0) return null;
     return Math.max(...attempts.map(a => a.scorePercent));
   };
 
-  const diagnosticQuiz = STATIC_QUIZZES.find(q => q.isDiagnostic);
-  const mockQuizzes = STATIC_QUIZZES.filter(q => q.isMockAssessment);
-  const moduleDrills = STATIC_QUIZZES.filter(q => q.domainId && !q.isMockAssessment);
+  const diagnosticQuiz = curriculum.quizzes.find(q => q.isDiagnostic);
+  const mockQuizzes = curriculum.quizzes.filter(q => q.isMockAssessment);
+  const moduleDrills = curriculum.quizzes.filter(q => q.domainId && !q.isMockAssessment);
+
+  // Finding F3: the mock header used to hardcode grade 5's own "60-65
+  // Minutes... Calculator Inactive & Active" wording for every grade. Both
+  // clauses are derived from the active curriculum's actual mock quizzes,
+  // never assumed - grades 2-4 have exactly one mock apiece and no
+  // calculator split, so both facts must come from the real content.
+  const mockMinutes = mockQuizzes
+    .map(q => q.timeLimitMinutes)
+    .filter((m): m is number => typeof m === 'number');
+  const mockMinutesLabel = mockMinutes.length === 0
+    ? ''
+    : Math.min(...mockMinutes) === Math.max(...mockMinutes)
+    ? `${mockMinutes[0]}`
+    : `${Math.min(...mockMinutes)}-${Math.max(...mockMinutes)}`;
+  const mockCalculatorFlags = mockQuizzes
+    .flatMap(q => q.questionIds)
+    .map(id => {
+      try {
+        return curriculum.source.resolve(parseQuestionRef(id)).calculatorAllowed;
+      } catch {
+        return undefined;
+      }
+    })
+    .filter((v): v is boolean => typeof v === 'boolean');
+  const mockHasCalculatorSplit = mockCalculatorFlags.includes(true) && mockCalculatorFlags.includes(false);
+
+  // A quiz's subtitle is either a plain string or a function of the active
+  // curriculum, for the handful of quizzes whose copy cites a standard
+  // count or the passing cutoff (Ruling F11 - no such figure may be a
+  // grade-5 literal).
+  const subtitleOf = (quiz: QuizDefinition) =>
+    typeof quiz.subtitle === 'function' ? quiz.subtitle(curriculum) : quiz.subtitle;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10 animate-in fade-in duration-200">
@@ -44,11 +83,20 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
           <span className="text-xs font-semibold text-slate-500">Secure Assessment Simulations</span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-          NCSCOS Grade 5 Assessment Library
+          NCSCOS Grade {curriculum.grade} Assessment Library
         </h1>
         <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl">
-          Take full timed mock exams, comprehensive module assessments, or drill individual standards. Every quiz is benchmarked against Wake County's 80% passing bar.
+          Take full timed mock exams, comprehensive module assessments, or drill individual standards. Every quiz is benchmarked against Wake County's {passingPercent}% passing bar.
         </p>
+      </div>
+
+      {/* 0. Adaptive daily practice - additive to the static library below,
+          not a replacement for it. */}
+      <div className="space-y-3">
+        <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+          Daily Practice
+        </h2>
+        <AdaptiveSessionCard onStart={onStartAdaptiveSession} />
       </div>
 
       {/* 1. Baseline Diagnostic */}
@@ -63,10 +111,10 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
                 <span className="font-mono text-[11px] font-bold px-2 py-0.5 bg-blue-600 text-white rounded-md">
                   DIAGNOSTIC
                 </span>
-                <span className="text-xs font-bold text-blue-900">16 Questions (1 per standard)</span>
+                <span className="text-xs font-bold text-blue-900">{diagnosticQuiz.questionIds.length} Questions (1 per standard)</span>
               </div>
               <h3 className="text-xl font-black text-slate-900">{diagnosticQuiz.title}</h3>
-              <p className="text-xs text-slate-600 max-w-xl">{diagnosticQuiz.subtitle}</p>
+              <p className="text-xs text-slate-600 max-w-xl">{subtitleOf(diagnosticQuiz)}</p>
             </div>
 
             <div className="flex items-center gap-4 self-end sm:self-center">
@@ -74,7 +122,7 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
                 <div className="text-right">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Best Score</span>
                   <span className={`text-xl font-black ${
-                    (getBestScore(diagnosticQuiz.id) ?? 0) >= 80 ? 'text-emerald-600' : 'text-amber-600'
+                    (getBestScore(diagnosticQuiz.id) ?? 0) >= passingPercent ? 'text-emerald-600' : 'text-amber-600'
                   }`}>
                     {getBestScore(diagnosticQuiz.id)}%
                   </span>
@@ -99,14 +147,14 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
             Full NC SSA Mock Assessment Simulations
           </h2>
           <span className="text-xs text-slate-500 font-semibold">
-            Timed 60-65 Minutes • Divided into Calculator Inactive & Active
+            Timed {mockMinutesLabel} Minutes{mockHasCalculatorSplit ? ' • Divided into Calculator Inactive & Active' : ''}
           </span>
         </div>
 
         <div className="grid md:grid-cols-2 gap-5">
           {mockQuizzes.map(quiz => {
             const best = getBestScore(quiz.id);
-            const isPassing = best !== null && best >= 80;
+            const isPassing = best !== null && best >= passingPercent;
 
             return (
               <div
@@ -127,7 +175,7 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
                   </div>
 
                   <h3 className="text-lg font-black text-slate-900">{quiz.title}</h3>
-                  <p className="text-xs text-slate-600 leading-relaxed">{quiz.subtitle}</p>
+                  <p className="text-xs text-slate-600 leading-relaxed">{subtitleOf(quiz)}</p>
                 </div>
 
                 <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
@@ -154,18 +202,18 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
         </div>
       </div>
 
-      {/* 3. 5 Domain Module Drills */}
+      {/* 3. Domain Module Drills */}
       <div className="space-y-4">
         <h2 className="text-base font-black text-slate-900 flex items-center gap-2">
           <Layers className="w-5 h-5 text-blue-600" />
-          Domain Comprehensive Mastery Drills (5 Modules)
+          Domain Comprehensive Mastery Drills ({curriculum.domains.length} Modules)
         </h2>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
           {moduleDrills.map(quiz => {
             const best = getBestScore(quiz.id);
-            const domain = NC_DOMAINS.find(d => d.id === quiz.domainId);
-            const isPassing = best !== null && best >= 80;
+            const domain = curriculum.domains.find(d => d.id === quiz.domainId);
+            const isPassing = best !== null && best >= passingPercent;
 
             return (
               <div
@@ -174,8 +222,11 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
               >
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className={`font-mono text-[10px] font-bold px-2 py-0.5 rounded border ${domain?.badgeBg}`}>
-                      {quiz.domainId} • {domain?.officialWeightRange}
+                    <span
+                      className={`font-mono text-[10px] font-bold px-2 py-0.5 rounded border ${domain?.badgeBg}`}
+                      title={domain?.weightGroupLabel}
+                    >
+                      {quiz.domainId} • {weightCompactLabel(curriculum, quiz.domainId ?? '')}
                     </span>
                     <span className="text-xs text-slate-500 font-semibold">
                       {quiz.questionIds.length} Qs
@@ -183,7 +234,7 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
                   </div>
 
                   <h3 className="text-base font-extrabold text-slate-900">{quiz.title}</h3>
-                  <p className="text-xs text-slate-600 line-clamp-2">{quiz.subtitle}</p>
+                  <p className="text-xs text-slate-600 line-clamp-2">{subtitleOf(quiz)}</p>
                 </div>
 
                 <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
@@ -210,18 +261,18 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
         </div>
       </div>
 
-      {/* 4. Standard-Specific Rapid Drills (16 Standards) */}
+      {/* 4. Standard-Specific Rapid Drills */}
       <div className="space-y-4">
         <h2 className="text-base font-black text-slate-900 flex items-center gap-2">
           <Target className="w-5 h-5 text-emerald-600" />
-          Targeted Single-Standard Drills (16 Total)
+          Targeted Single-Standard Drills ({standards.length} Total)
         </h2>
         <p className="text-xs text-slate-500">
           Drill a specific standard code to eliminate weak spots and guarantee mastery.
         </p>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          {ALL_STANDARDS.map(std => (
+          {standards.map(std => (
             <div
               key={std.code}
               className="bg-white rounded-2xl p-4 border border-slate-200 shadow-2xs hover:border-blue-300 transition-all flex flex-col justify-between"

@@ -8,9 +8,9 @@ import {
   Target,
   TrendingUp
 } from 'lucide-react';
-import { useProgress } from '../context/ProgressContext';
-import { NC_DOMAINS } from '../data/ncStandards';
-import { STATIC_QUIZZES } from '../data/quizzes';
+import { useProgress, useReadinessSummary, domainStatsFor } from '../context/ProgressContext';
+import { standardsOf, weightCompactLabel } from '../curriculum/registry';
+import { dueEntries } from '../engine/scheduler';
 import type { NavTab } from './Navbar';
 
 interface DashboardProps {
@@ -28,13 +28,22 @@ export const Dashboard: React.FC<DashboardProps> = ({
   onOpenPaceModal,
   onOpenReportModal
 }) => {
-  const { state, overallReadiness, getDomainMastery } = useProgress();
+  const { profile, curriculum, mastery } = useProgress();
+  const readiness = useReadinessSummary();
+  const passingPercent = curriculum.ssa.passingPercent;
+  const totalStandardsCount = standardsOf(curriculum).length;
+  const dueReviewCount = dueEntries(profile.reviewQueue, new Date()).length;
 
-  const diagnosticQuiz = STATIC_QUIZZES.find(q => q.isDiagnostic);
-  const mockQuiz = STATIC_QUIZZES.find(q => q.id === 'mock-ssa-01');
+  // Both are found by their flag, not by a literal id: Grade 4's are
+  // `g4-diagnostic-01` and `g4-mock-ssa-01`, so a grade-5 id here would
+  // silently blank the simulation card and leave the diagnostic prompt
+  // showing forever for every other grade.
+  const diagnosticQuiz = curriculum.quizzes.find(q => q.isDiagnostic);
+  const mockQuiz = curriculum.quizzes.find(q => q.isMockAssessment);
 
   // Check if diagnostic has been taken
-  const hasTakenDiagnostic = state.attempts.some(a => a.quizId === 'diagnostic-01');
+  const hasTakenDiagnostic = !!diagnosticQuiz
+    && profile.attempts.some(a => a.quizId === diagnosticQuiz.id);
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-in fade-in duration-200">
@@ -50,10 +59,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
               <span className="text-xs text-slate-400">Collaborative Assessment Solutions for Educators (CASE)</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white">
-              Target: Master Grade 5 to Skip to Grade 6 Math
+              Target: Master Grade {curriculum.grade} to Skip to Grade {curriculum.ssa.targetsGrade + 1} Math
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-              Wake County administers a secure, above-grade-level assessment built by CASE. The actual item bank is confidential, so this platform builds complete mastery against the public, authoritative <strong className="text-white">North Carolina Standard Course of Study (NCSCOS) Grade 5 Mathematics</strong> blueprint with multi-step reasoning, open-response items, and above-grade stretch challenges.
+              Wake County administers a secure, above-grade-level assessment built by CASE. The actual item bank is confidential, so this platform builds complete mastery against the public, authoritative <strong className="text-white">North Carolina Standard Course of Study (NCSCOS) Grade {curriculum.grade} Mathematics</strong> {curriculum.weighting.kind === 'ncdpi-blueprint' ? 'blueprint' : 'standards'} with multi-step reasoning, non-routine word problems, and above-grade stretch challenges.
             </p>
           </div>
 
@@ -61,12 +70,12 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
               SSA Qualifying Bar
             </span>
-            <div className="text-3xl font-black text-emerald-400">80% +</div>
+            <div className="text-3xl font-black text-emerald-400">{passingPercent}% +</div>
             <p className="text-[11px] text-slate-400 mt-1">
-              {overallReadiness.isAccelerationReady ? (
+              {readiness.isAccelerationReady ? (
                 <span className="text-emerald-400 font-bold">Currently Meeting Bar!</span>
               ) : (
-                <span>Need {Math.max(0, 80 - overallReadiness.weightedScore)}% more for SSA threshold</span>
+                <span>Need {Math.max(0, passingPercent - readiness.weightedScore)}% more for SSA threshold</span>
               )}
             </p>
           </div>
@@ -84,50 +93,54 @@ export const Dashboard: React.FC<DashboardProps> = ({
               </span>
               <div>
                 <h3 className="text-sm font-bold text-slate-900">Overall SSA Readiness Gauge</h3>
-                <p className="text-xs text-slate-500">Weighted by official NC EOG blueprint domain weights</p>
+                <p className="text-xs text-slate-500">
+                  {curriculum.weighting.kind === 'ncdpi-blueprint'
+                    ? 'Weighted by official NC EOG blueprint domain weights'
+                    : `Weighted by each domain's share of Grade ${curriculum.grade} standards — no state test exists at this grade`}
+                </p>
               </div>
             </div>
             <span className={`text-xs font-extrabold px-3 py-1 rounded-full border ${
-              overallReadiness.isAccelerationReady
+              readiness.isAccelerationReady
                 ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
                 : 'bg-amber-100 text-amber-800 border-amber-300'
             }`}>
-              {overallReadiness.isAccelerationReady ? 'Acceleration-Ready (≥80%)' : 'Approaching Mastery'}
+              {readiness.isAccelerationReady ? `Acceleration-Ready (≥${passingPercent}%)` : 'Approaching Mastery'}
             </span>
           </div>
 
-          {/* Progress Bar with 80% Qualifying Marker */}
+          {/* Progress Bar with passing % Qualifying Marker */}
           <div className="space-y-2 my-2">
             <div className="flex justify-between text-xs font-bold">
-              <span className="text-slate-600">Current Composite: {overallReadiness.weightedScore}%</span>
-              <span className="text-emerald-700">WCPSS Qualifying Target: 80%</span>
+              <span className="text-slate-600">Current Composite: {readiness.weightedScore}%</span>
+              <span className="text-emerald-700">WCPSS Qualifying Target: {passingPercent}%</span>
             </div>
             <div className="relative w-full h-4 bg-slate-100 rounded-full overflow-hidden border border-slate-200">
               <div
                 className={`h-full rounded-full transition-all duration-500 ${
-                  overallReadiness.isAccelerationReady
+                  readiness.isAccelerationReady
                     ? 'bg-gradient-to-r from-emerald-500 to-teal-500'
                     : 'bg-gradient-to-r from-blue-500 to-indigo-500'
                 }`}
-                style={{ width: `${Math.min(100, overallReadiness.weightedScore)}%` }}
+                style={{ width: `${Math.min(100, readiness.weightedScore)}%` }}
               />
-              {/* 80% Bar Marker */}
+              {/* passing % Bar Marker */}
               <div
                 className="absolute top-0 bottom-0 w-1 bg-emerald-600 z-10"
-                style={{ left: '80%' }}
-                title="80% SSA Bar"
+                style={{ left: `${passingPercent}%` }}
+                title={`${passingPercent}% SSA Bar`}
               />
             </div>
             <div className="flex justify-between text-[11px] text-slate-400">
               <span>0% (Untested)</span>
-              <span className="font-bold text-emerald-700">80% SSA Bar</span>
+              <span className="font-bold text-emerald-700">{passingPercent}% SSA Bar</span>
               <span>100% (Full Mastery)</span>
             </div>
           </div>
 
           <div className="flex items-center justify-between pt-4 border-t border-slate-100 text-xs text-slate-600">
             <span>
-              <strong>{overallReadiness.masteredStandardsCount}</strong> of 16 Standards Mastered
+              <strong>{readiness.masteredStandardsCount}</strong> of {totalStandardsCount} Standards Mastered
             </span>
             <button
               onClick={onOpenReportModal}
@@ -154,10 +167,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
             </div>
             <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Exam Countdown</h3>
             <div className="text-3xl font-black text-slate-900 mt-1">
-              {overallReadiness.daysUntilExam} <span className="text-base font-normal text-slate-500">days left</span>
+              {readiness.daysUntilExam} <span className="text-base font-normal text-slate-500">days left</span>
             </div>
             <p className="text-xs text-slate-600 mt-1">
-              Target: {state.settings.targetExamDate}
+              Target: {profile.targetExamDate || 'Not set'}
             </p>
           </div>
 
@@ -165,7 +178,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <div className="flex justify-between items-center mb-1">
               <span className="font-semibold">Recommended Pace:</span>
               <span className="font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                {overallReadiness.dailyQuestionsPace} Qs / Day
+                {readiness.dailyQuestionsPace} Qs / Day
               </span>
             </div>
           </div>
@@ -179,26 +192,26 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 <TrendingUp className="w-5 h-5" />
               </span>
               <span className="text-xs font-bold text-violet-700 bg-violet-50 px-2.5 py-1 rounded-full border border-violet-200">
-                {state.attempts.length} Quizzes Taken
+                {profile.attempts.length} Quizzes Taken
               </span>
             </div>
             <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Questions Practiced</h3>
             <div className="text-3xl font-black text-slate-900 mt-1">
-              {overallReadiness.totalQuestionsAnswered}
+              {readiness.totalQuestionsAnswered}
             </div>
             <p className="text-xs text-slate-600 mt-1">
-              {overallReadiness.totalCorrectAnswered} correct ({overallReadiness.overallAccuracy}% accuracy)
+              {readiness.totalCorrectAnswered} correct ({readiness.overallAccuracy}% accuracy)
             </p>
           </div>
 
           <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
             <span className="text-slate-600">Active Weak Spots:</span>
-            {state.missedQuestionIds.length > 0 ? (
+            {dueReviewCount > 0 ? (
               <button
                 onClick={() => onNavigateTab('weakspots')}
                 className="font-bold text-rose-600 hover:text-rose-700 flex items-center gap-1"
               >
-                {state.missedQuestionIds.length} Missed Qs <ArrowRight className="w-3.5 h-3.5" />
+                {dueReviewCount} Due for Review <ArrowRight className="w-3.5 h-3.5" />
               </button>
             ) : (
               <span className="font-semibold text-emerald-600">0 unmastered!</span>
@@ -216,15 +229,17 @@ export const Dashboard: React.FC<DashboardProps> = ({
           </div>
           <h2 className="text-2xl font-black tracking-tight">
             {!hasTakenDiagnostic
-              ? 'Step 1: Take the 16-Question Baseline Diagnostic'
-              : overallReadiness.weightedScore >= 80
+              ? `Step 1: Take the ${diagnosticQuiz?.questionIds.length ?? totalStandardsCount}-Question Baseline Diagnostic`
+              : readiness.weightedScore >= passingPercent
               ? 'Acceleration Ready! Complete a Full 60-Minute Mock Exam'
-              : 'Drill High-Weight Domains to Reach the 80% Benchmark'}
+              : curriculum.weighting.kind === 'ncdpi-blueprint'
+              ? `Drill High-Weight Domains to Reach the ${passingPercent}% Benchmark`
+              : `Drill the Domains Furthest Below the ${passingPercent}% Benchmark`}
           </h2>
           <p className="text-xs sm:text-sm text-blue-100 leading-relaxed">
             {!hasTakenDiagnostic
-              ? 'Test all 16 Grade 5 NCSCOS standards in a single 35-minute test to establish your baseline and pinpoint exact focus areas.'
-              : 'Practice under authentic test conditions: strict test mode, no mid-quiz hints, mixed open-response and multiple-choice questions.'}
+              ? `Test all ${totalStandardsCount} Grade ${curriculum.grade} NCSCOS standards in a single ${diagnosticQuiz?.timeLimitMinutes ?? 45}-minute test to establish your baseline and pinpoint exact focus areas.`
+              : 'Practice under authentic test conditions: strict test mode, no mid-quiz hints, all multiple-choice questions.'}
           </p>
         </div>
 
@@ -246,12 +261,12 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   Full Mock Exam <ArrowRight className="w-4 h-4" />
                 </button>
               )}
-              {state.missedQuestionIds.length > 0 && (
+              {dueReviewCount > 0 && (
                 <button
                   onClick={() => onNavigateTab('weakspots')}
                   className="flex items-center justify-center gap-2 px-5 py-3.5 bg-blue-800/80 hover:bg-blue-800 text-white font-bold text-sm rounded-2xl border border-white/20 transition-colors"
                 >
-                  <RotateCcw className="w-4 h-4" /> Practice Missed Qs ({state.missedQuestionIds.length})
+                  <RotateCcw className="w-4 h-4" /> Practice Missed Qs ({dueReviewCount})
                 </button>
               )}
             </>
@@ -259,32 +274,32 @@ export const Dashboard: React.FC<DashboardProps> = ({
         </div>
       </div>
 
-      {/* 5 Domain Curriculum Modules Overview */}
+      {/* Domain Curriculum Modules Overview */}
       <div>
         <div className="flex items-center justify-between mb-5">
           <div>
             <h2 className="text-lg font-black tracking-tight text-slate-900">
-              Grade 5 Program of Study: 5 Core NC Domains
+              Grade {curriculum.grade} Program of Study: {curriculum.domains.length} Core NC Domains
             </h2>
             <p className="text-xs text-slate-500">
-              Each module is strictly benchmarked against the 80% acceleration qualifying bar.
+              Each module is strictly benchmarked against the {passingPercent}% acceleration qualifying bar.
             </p>
           </div>
           <button
             onClick={() => onNavigateTab('curriculum')}
             className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1"
           >
-            Explore All 16 Standards <ArrowRight className="w-3.5 h-3.5" />
+            Explore All {totalStandardsCount} Standards <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {NC_DOMAINS.map(domain => {
-            const dm = getDomainMastery(domain.id);
-            const isReady = dm.masteryPercent >= 80;
+          {curriculum.domains.map(domain => {
+            const dm = domainStatsFor(domain, mastery, passingPercent);
+            const isReady = dm.masteryPercent >= passingPercent;
 
             // Find drill quiz for this domain
-            const drillQuiz = STATIC_QUIZZES.find(q => q.domainId === domain.id);
+            const drillQuiz = curriculum.quizzes.find(q => q.domainId === domain.id);
 
             return (
               <div
@@ -295,8 +310,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   {/* Domain Header */}
                   <div className="flex items-start justify-between gap-2 mb-3">
                     <div>
-                      <span className={`inline-block font-mono text-[11px] font-bold px-2 py-0.5 rounded-md border ${domain.badgeBg}`}>
-                        {domain.id} • {domain.officialWeightRange} Weight
+                      <span
+                        className={`inline-block font-mono text-[11px] font-bold px-2 py-0.5 rounded-md border ${domain.badgeBg}`}
+                        title={domain.weightGroupLabel}
+                      >
+                        {domain.id} • {weightCompactLabel(curriculum, domain.id)} Weight
                       </span>
                       <h3 className="text-base font-extrabold text-slate-900 mt-1.5 leading-snug">
                         {domain.name}
@@ -313,7 +331,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                             {dm.masteryPercent}%
                           </span>
                           <span className={`block text-[10px] font-bold uppercase ${isReady ? 'text-emerald-700' : 'text-amber-700'}`}>
-                            {isReady ? 'Ready' : 'Below 80%'}
+                            {isReady ? 'Ready' : `Below ${passingPercent}%`}
                           </span>
                         </div>
                       )}
@@ -363,12 +381,12 @@ export const Dashboard: React.FC<DashboardProps> = ({
       </div>
 
       {/* Recent Test History */}
-      {state.attempts.length > 0 && (
+      {profile.attempts.length > 0 && (
         <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-xs">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-base font-black text-slate-900">Recent Test History & Scores</h3>
-              <p className="text-xs text-slate-500">All tests taken in test conditions with 80% benchmark validation</p>
+              <p className="text-xs text-slate-500">All tests taken in test conditions with {passingPercent}% benchmark validation</p>
             </div>
             <button
               onClick={onOpenReportModal}
@@ -379,7 +397,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
           </div>
 
           <div className="divide-y divide-slate-100">
-            {state.attempts.slice(0, 5).map(attempt => (
+            {profile.attempts.slice(0, 5).map(attempt => (
               <div key={attempt.id} className="py-3.5 flex items-center justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-2">
@@ -389,7 +407,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                         ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
                         : 'bg-amber-100 text-amber-800 border-amber-300'
                     }`}>
-                      {attempt.isPassingSSA ? 'SSA Passed (≥80%)' : 'Needs Practice (<80%)'}
+                      {attempt.isPassingSSA ? `SSA Passed (≥${passingPercent}%)` : `Needs Practice (<${passingPercent}%)`}
                     </span>
                   </div>
                   <div className="text-xs text-slate-500 mt-0.5">

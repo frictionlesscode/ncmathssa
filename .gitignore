@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Subagent-driven-development scratch workspace
+.superpowers/
+
+# Local knowledge-graph output
+graphify-out/
