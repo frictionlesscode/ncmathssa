@@ -4,7 +4,8 @@ import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/math/app/',
+  // Served by GitHub Pages at https://frictionlesscode.github.io/ncmathssa/
+  base: '/ncmathssa/',
   plugins: [react(), tailwindcss()],
 })
 

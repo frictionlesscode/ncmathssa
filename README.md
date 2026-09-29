@@ -189,9 +189,15 @@ npm run build
 npm run preview
 ```
 
-Open the URL Vite prints in the console (its default is
-`http://localhost:5173/`, but it will pick the next free port if that one
-is busy).
+Open the URL Vite prints in the console, including the `/ncmathssa/` path
+(its default is `http://localhost:5173/ncmathssa/`, but it will pick the
+next free port if that one is busy).
+
+## Live Site
+
+The app is published to GitHub Pages at
+**https://frictionlesscode.github.io/ncmathssa/** by
+`.github/workflows/deploy.yml` on every push to `master`.
 
 ### Tests and checks
 
