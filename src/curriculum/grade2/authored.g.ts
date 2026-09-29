@@ -337,9 +337,10 @@ export const GRADE_2_G_AUTHORED: Question[] = [
     // shape" — the standard's third bullet, per ruling 17-5.
     // Fix 1 (whole-branch review, Important): shortened from 227 characters
     // and 4 sentences to 3 sentences, keeping both cuts and the reasoning
-    // question unchanged.
+    // question unchanged. The "identical square" premise stays in the prompt:
+    // Step 1 and the standard's "identical wholes" both depend on it.
     prompt:
-      'Pizza 1 is cut straight down the middle into 2 matching rectangles. Pizza 2 is cut corner to corner into 2 matching triangles. Are both cut into equal halves?',
+      'Two identical square pizzas: Pizza 1 is cut into 2 matching rectangles, Pizza 2 corner to corner into 2 matching triangles. Are both cut into equal halves?',
     options: labelOptions([
       {
         text: 'Yes, because each half is the same size, even though the two pizzas were cut into different shapes.',
