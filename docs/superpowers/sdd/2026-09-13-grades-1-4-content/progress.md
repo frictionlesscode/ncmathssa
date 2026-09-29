@@ -2508,3 +2508,4 @@ Final fix wave re-review (sonnet): F2a, F2b, F2c ADDRESSED; F1 ADDRESSED except 
 Final: parked — g2-g3-04 lost its "identical wholes" premise in the readability rewrite — Ruling: real, child-facing and a one-line fix, but the process allows no second fix wave; surfaced to the user as a pre-merge fix with the exact wording — costs a Grade 2 item whose prompt no longer states the premise its explanation uses, until fixed.
 Final: minor (deferred): grade2/templates/md2-two-units.ts:99-102 hint drops the article ("Since centimeter is shorter than an inch").
 Final: minor (deferred): g2-md10-03 rewrite leaves "each student voted once" implicit.
+Final: parked g2-g3-04 fix applied at f902aa8 ("Two identical square pizzas: ...", 155 chars, 2 sentences); 1638/1638, lint 0 errors, tsc clean.
