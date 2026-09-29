@@ -4,6 +4,7 @@ import { GRADE_2_DOMAINS } from '../standards';
 import { assertTemplateSound } from '../../../engine/templateTesting';
 import { makeRng } from '../../../engine/rng';
 import { MISCONCEPTIONS } from '../../misconceptions';
+import { assertGradeTwoReadable, GRADE_2_VOCAB_ALLOWLIST } from '../../authoredBank.testkit';
 
 const codes = new Set(GRADE_2_DOMAINS.flatMap((d) => d.standards.map((s) => s.code)));
 
@@ -125,4 +126,19 @@ describe('GRADE_2_TEMPLATES', () => {
     '%s satisfies every template invariant',
     (_id, t) => assertTemplateSound(t, { runs: 200 }),
   );
+
+  // Fix 1 (whole-branch review, Important). Each template also asserts this
+  // in its own test where one exists; this copy is the net over every
+  // template, at 300 seeds, the range the calibration measurement used.
+  it('keeps every generated prompt readable for a seven-year-old', () => {
+    for (const t of GRADE_2_TEMPLATES) {
+      assertGradeTwoReadable(
+        Array.from({ length: 300 }, (_, seed) => ({
+          id: `${t.id} @ seed ${seed}`,
+          prompt: t.generate(makeRng(seed)).prompt,
+        })),
+        { allowlist: GRADE_2_VOCAB_ALLOWLIST },
+      );
+    }
+  });
 });

@@ -79,8 +79,8 @@ export const GRADE_2_NBT_AUTHORED: Question[] = [
     standardCode: 'NC.2.NBT.1',
     domainId: 'NBT',
     // keyConcept 1: "Unitize by making a hundred from a collection of ten tens."
-    prompt:
-      'A teacher has 10 bundles of straws. Each bundle holds 10 straws. She unties every bundle and puts all the straws in one pile. How many straws are in the pile?',
+    // Fix 1 (whole-branch review, Important): shortened from 4 sentences to 2.
+    prompt: 'A teacher unties 10 bundles of straws, 10 straws in each bundle, into one pile. How many straws are in the pile?',
     options: labelOptions([
       // Counted the bundles and reported that, so the tens were never turned
       // back into single straws.
@@ -834,8 +834,9 @@ export const GRADE_2_NBT_AUTHORED: Question[] = [
     domainId: 'NBT',
     // Three two-digit numbers whose total passes 100, where the ones column
     // carries two tens rather than one.
-    prompt:
-      'Three classes collected cans. Class A collected 46 cans, Class B collected 38 cans, and Class C collected 57 cans. How many cans did the three classes collect in all?',
+    // Fix 1 (whole-branch review, Important): shortened from 166 characters
+    // to under 160, keeping all three addends and the same one-sentence shape.
+    prompt: 'Class A collected 46 cans, Class B collected 38, and Class C collected 57. How many cans did all three classes collect?',
     options: labelOptions([
       { text: '141', isCorrect: true },
       // Ones 6 + 8 + 7 = 21, written as 1 with the 2 tens thrown away; tens
@@ -873,8 +874,10 @@ export const GRADE_2_NBT_AUTHORED: Question[] = [
     domainId: 'NBT',
     // keyConcept 1: "Concrete models or drawings" tied to the written method —
     // the standard's own phrase is "relating the strategy to a written method".
+    // Fix 1 (whole-branch review, Important): shortened from 169 characters
+    // and 4 sentences to 3 sentences.
     prompt:
-      'Sam adds 236 + 147 with base-ten blocks. He puts the hundreds together, the tens together, and the ones together. The 13 ones become 1 ten and 3 ones. What is 236 + 147?',
+      'Sam adds 236 + 147 with base-ten blocks: hundreds with hundreds, tens with tens, ones with ones. The 13 ones become 1 ten and 3 ones. What is 236 + 147?',
     options: labelOptions([
       // The ten inside the 13 ones was never added to the tens: 383 - 10.
       { text: '373', isCorrect: false, misconception: 'added-without-carrying' },
@@ -1109,7 +1112,8 @@ export const GRADE_2_NBT_AUTHORED: Question[] = [
     domainId: 'NBT',
     // "10 OR 100", not "10 and 100": one of each, in turn, so the child has to
     // keep straight which place each amount moves.
-    prompt: 'Start at 264. Add 100. Then take away 10. What number do you end on?',
+    // Fix 1 (whole-branch review, Important): shortened from 4 sentences to 2.
+    prompt: 'Start at 264, add 100, then take away 10. What number do you end on?',
     options: labelOptions([
       // Added the 100 and stopped, never taking the 10 off.
       { text: '364', isCorrect: false, misconception: 'forgot-the-final-step' },

@@ -2,6 +2,8 @@ import { describe, it, expect } from 'vitest';
 import {
   assertAuthoredBankSound,
   assertNoGeneratorDuplicatesAuthored,
+  assertGradeTwoReadable,
+  GRADE_2_VOCAB_ALLOWLIST,
   numericValue,
 } from '../authoredBank.testkit';
 import { GRADE_2_DOMAINS } from './standards';
@@ -63,6 +65,11 @@ const unitName = (u: string) =>
 describe('grade 2 MD authored bank', () => {
   it('holds every authored-bank invariant', () => {
     assertAuthoredBankSound(GRADE_2_MD_AUTHORED, md);
+  });
+
+  // Fix 1 (whole-branch review, Important): see authored.oa.test.ts.
+  it('keeps every prompt readable for a seven-year-old', () => {
+    assertGradeTwoReadable(GRADE_2_MD_AUTHORED, { allowlist: GRADE_2_VOCAB_ALLOWLIST });
   });
 
   // Ruling 21-2: the separator after the grade prefix is a HYPHEN, and the

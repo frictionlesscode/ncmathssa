@@ -97,9 +97,11 @@ export const md2TwoUnits: QuestionTemplate = {
     const changedSaysLonger = rng.int(0, 1) === 1;
 
     const [first, second] = shorterFirst ? [S, L] : [L, S];
-    const hint = hintFromShorter
-      ? `${S.article} ${S.singular} is shorter than ${L.article.toLowerCase()} ${L.singular}.`
-      : `${L.article} ${L.singular} is longer than ${S.article.toLowerCase()} ${S.singular}.`;
+    // Lowercase, period-free clause, for folding the hint into one question
+    // sentence below (Fix 1, whole-branch review, Important).
+    const hintClause = hintFromShorter
+      ? `${S.singular} is shorter than ${L.article.toLowerCase()} ${L.singular}`
+      : `${L.singular} is longer than ${S.article.toLowerCase()} ${S.singular}`;
 
     const answerText = `${name} counts more ${S.plural} than ${L.plural}.`;
 
@@ -133,8 +135,13 @@ export const md2TwoUnits: QuestionTemplate = {
       throw new Error(`g2.md2.two-units: option collision [${texts.join(' | ')}]`);
     }
 
+    // Fix 1 (whole-branch review, Important): the original four-sentence
+    // prompt reached up to 171 characters at some seeds. Folding the second
+    // measurement and the hint into fewer sentences keeps the leading
+    // sentence the `templates/index.test.ts` sentinel pins
+    // ("Name measures the same object two times.") untouched.
     return {
-      prompt: `${name} measures the same ${object} two times. First ${pronoun} measures it in ${first.plural}. Then ${pronoun} measures it in ${second.plural}. ${hint} Which sentence is true?`,
+      prompt: `${name} measures the same ${object} two times. First ${pronoun} measures it in ${first.plural}, then in ${second.plural}. Since ${hintClause}, which sentence is true?`,
       options: labelOptions(rng.shuffle(candidates)),
       answerText,
       explanation: {

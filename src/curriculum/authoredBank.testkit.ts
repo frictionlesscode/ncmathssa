@@ -242,3 +242,79 @@ export function assertGradeOneReadable(
  *  "half-circles" — also over ten letters in `grade1/standards.ts` — is
  *  deliberately NOT listed. */
 export const GRADE_1_G_VOCAB_ALLOWLIST: string[] = ['rectangular'];
+
+/**
+ * The Grade 2 readability guard (whole-branch review, Important finding).
+ * Grade 1 had `assertGradeOneReadable`; Grade 2 shipped with no equivalent,
+ * and 43 authored Grade 2 prompts (of 90) reached 90 characters or more, up
+ * to 227 for a two-cuts-of-pizza item — long enough that some are genuinely
+ * three narrative sentences before the question is even asked. The Grade 1
+ * bar (under 90 characters, at most 2 sentences) is calibrated for a
+ * six-year-old; applying it unchanged to Grade 2 would force rewriting
+ * material the Content Contract's E.3 ruling does not ask to touch, because
+ * NC.2.OA.1 legitimately requires two-step word problems, which the Grade 1
+ * standards never do.
+ *
+ * The limits below were chosen by measuring the actual Grade 2 distribution
+ * (90 authored items across all four domains, plus 300 seeds of every one of
+ * the 20 Grade 2 templates), not by picking numbers that happen to pass
+ * everything already written:
+ *
+ *   - at most 160 characters. The authored bank's length distribution has a
+ *     long tail starting around 90 characters and a real cluster of
+ *     legitimate two- and three-sentence word problems in the 100-160 range;
+ *     160 catches the paragraph-length outliers (up to 227 characters) while
+ *     leaving every short multi-sentence problem alone.
+ *   - at most 3 sentences, split on . ? and ! — one more than Grade 1,
+ *     because a Grade 2 two-step problem needs a setup sentence, a change
+ *     sentence, and a question, and NC.2.OA.1's own two-step items are
+ *     exactly that shape once reworded (see the rewritten g2-oa1-04 and
+ *     g2-oa1-05, both 2 sentences: narrative folded into one sentence, then
+ *     the equation folded into the question).
+ *   - no word longer than 10 letters, same cap as Grade 1 — a seven- or
+ *     eight-year-old is not meaningfully more tolerant of "quadrilateral"
+ *     than a six-year-old is of "associative". `opts.allowlist` exists for
+ *     the same reason as Grade 1's: some of this cap's hits are Grade 2's own
+ *     sourced vocabulary, not filler prose.
+ *
+ * Two template generators (`md2-two-units`, `md5-shorter-length-unknown`)
+ * and one (`oa1-change-unknown`) failed this guard at some seeds and were
+ * shortened in place; see their file comments for what changed.
+ *
+ * Shared with Grade 1's guard for the reason `numericValue` above gives
+ * (ruling E.3): one definition, so a limit tuned here cannot silently drift
+ * from a second copy nobody remembers to update.
+ */
+export function assertGradeTwoReadable(
+  items: { id: string; prompt: string }[],
+  opts: { allowlist?: string[] } = {},
+): void {
+  const allowlist = new Set((opts.allowlist ?? []).map((w) => w.toLowerCase()));
+  for (const q of items) {
+    expect(
+      q.prompt.length,
+      `${q.id}: prompt is ${q.prompt.length} characters, must be under 160: "${q.prompt}"`,
+    ).toBeLessThanOrEqual(160);
+
+    const sentences = q.prompt.split(/[.?!]/).filter((s) => s.trim().length > 0);
+    expect(
+      sentences.length,
+      `${q.id}: prompt has ${sentences.length} sentences, at most 3: "${q.prompt}"`,
+    ).toBeLessThanOrEqual(3);
+
+    const longWords = (q.prompt.match(/[A-Za-z]+/g) ?? []).filter(
+      (w) => w.length > 10 && !allowlist.has(w.toLowerCase()),
+    );
+    expect(
+      longWords,
+      `${q.id}: prompt uses words longer than 10 letters: ${longWords.join(', ')}`,
+    ).toEqual([]);
+  }
+}
+
+/** The Grade 2 vocabulary allowlist for `assertGradeTwoReadable`, sourced
+ *  from `grade2/standards.ts`: "centimeters" (NC.2.MD.3's keyConcepts),
+ *  "rectangular" (NC.2.OA.4's rectangular arrays and NC.2.G.1's rectangular
+ *  prisms), and "quadrilateral" (NC.2.G.1's own shape list, offered as a
+ *  wrong-answer shape name in `authored.g.ts`). */
+export const GRADE_2_VOCAB_ALLOWLIST: string[] = ['centimeters', 'rectangular', 'quadrilateral'];

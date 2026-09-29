@@ -2,6 +2,8 @@ import { describe, it, expect } from 'vitest';
 import {
   assertAuthoredBankSound,
   assertNoGeneratorDuplicatesAuthored,
+  assertGradeTwoReadable,
+  GRADE_2_VOCAB_ALLOWLIST,
 } from '../authoredBank.testkit';
 import { GRADE_2_DOMAINS } from './standards';
 import { GRADE_2_NBT_AUTHORED } from './authored.nbt';
@@ -11,6 +13,11 @@ describe('grade 2 NBT authored bank', () => {
   it('holds every authored-bank invariant', () => {
     const nbt = GRADE_2_DOMAINS.find((d) => d.id === 'NBT')!;
     assertAuthoredBankSound(GRADE_2_NBT_AUTHORED, nbt);
+  });
+
+  // Fix 1 (whole-branch review, Important): see authored.oa.test.ts.
+  it('keeps every prompt readable for a seven-year-old', () => {
+    assertGradeTwoReadable(GRADE_2_NBT_AUTHORED, { allowlist: GRADE_2_VOCAB_ALLOWLIST });
   });
 
   // The whole domain is generated as well as authored, so a review key could

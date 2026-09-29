@@ -110,8 +110,9 @@ export const GRADE_2_G_AUTHORED: Question[] = [
     id: 'g2-g1-03',
     standardCode: 'NC.2.G.1',
     domainId: 'G',
-    prompt:
-      'A box shaped like a rectangular prism has a flat face on every side, including the sides hidden from view in a picture of it. How many faces does it have in all?',
+    // Fix 1 (whole-branch review, Important): shortened from 161 to under 160
+    // characters.
+    prompt: 'A rectangular prism has a flat face on every side, even ones hidden in a picture. How many faces does it have in all?',
     options: labelOptions([
       // Counted only the faces visible in a typical picture (front, top, side).
       { text: '4 faces', isCorrect: false, misconception: 'counted-only-the-visible-faces' },
@@ -334,8 +335,11 @@ export const GRADE_2_G_AUTHORED: Question[] = [
     domainId: 'G',
     // "Explain that equal shares of identical wholes need not have the same
     // shape" — the standard's third bullet, per ruling 17-5.
+    // Fix 1 (whole-branch review, Important): shortened from 227 characters
+    // and 4 sentences to 3 sentences, keeping both cuts and the reasoning
+    // question unchanged.
     prompt:
-      'Two identical square pizzas are each cut into halves. Pizza 1 is cut straight down the middle into two matching rectangles. Pizza 2 is cut corner to corner into two matching triangles. Are both pizzas correctly cut into halves?',
+      'Pizza 1 is cut straight down the middle into 2 matching rectangles. Pizza 2 is cut corner to corner into 2 matching triangles. Are both cut into equal halves?',
     options: labelOptions([
       {
         text: 'Yes, because each half is the same size, even though the two pizzas were cut into different shapes.',

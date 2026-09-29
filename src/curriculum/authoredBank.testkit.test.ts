@@ -1,7 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import type { Question } from '../engine/questionModel';
 import type { DomainInfo } from './types';
-import { assertAuthoredBankSound, assertGradeOneReadable, GRADE_1_G_VOCAB_ALLOWLIST } from './authoredBank.testkit';
+import {
+  assertAuthoredBankSound,
+  assertGradeOneReadable,
+  assertGradeTwoReadable,
+  GRADE_1_G_VOCAB_ALLOWLIST,
+  GRADE_2_VOCAB_ALLOWLIST,
+} from './authoredBank.testkit';
 
 /**
  * Negative controls for the shared kit.
@@ -252,6 +258,94 @@ describe('assertGradeOneReadable', () => {
     function caughtWithAllowlist(items: { id: string; prompt: string }[]): string {
       try {
         assertGradeOneReadable(items, { allowlist: GRADE_1_G_VOCAB_ALLOWLIST });
+      } catch (e) {
+        return e instanceof Error ? e.message : String(e);
+      }
+      return '';
+    }
+    expect(caughtWithAllowlist([{ id: 'still-caught', prompt: 'Which associative rule helps?' }])).toMatch(
+      /still-caught: prompt uses words longer than 10 letters: associative/,
+    );
+  });
+});
+
+describe('assertGradeTwoReadable', () => {
+  function caught(items: { id: string; prompt: string }[]): string {
+    try {
+      assertGradeTwoReadable(items);
+    } catch (e) {
+      return e instanceof Error ? e.message : String(e);
+    }
+    return '';
+  }
+
+  it('accepts a short one-step word problem', () => {
+    expect(
+      caught([{ id: 'ok', prompt: 'Mia has 8 red beads and 5 blue beads. How many beads in all?' }]),
+    ).toBe('');
+  });
+
+  it('accepts a two-step problem told in three short sentences (NC.2.OA.1)', () => {
+    expect(
+      caught([
+        {
+          id: 'two-step',
+          prompt:
+            'Ana had 9 crayons, lost some, then got 4 more, ending with 8. In 9 − ☐ + 4 = 8, how many did Ana lose?',
+        },
+      ]),
+    ).toBe('');
+  });
+
+  it('accepts a prompt of exactly 160 characters', () => {
+    const prompt = `${'ok '.repeat(52)}end.`;
+    expect(prompt.length).toBe(160);
+    expect(caught([{ id: 'edge', prompt }])).toBe('');
+  });
+
+  it('rejects a prompt of 161 characters', () => {
+    const prompt = `${'ok '.repeat(52)}ends.`;
+    expect(prompt.length).toBe(161);
+    expect(caught([{ id: 'long', prompt }])).toMatch(/long: prompt is 161 characters/);
+  });
+
+  it('rejects a fourth sentence', () => {
+    expect(
+      caught([
+        {
+          id: 'four',
+          prompt: 'Sam had 9 cars. He gave 2 away. Then he found 1. How many does he have now?',
+        },
+      ]),
+    ).toMatch(/four: prompt has 4 sentences/);
+  });
+
+  it('rejects a word longer than 10 letters', () => {
+    expect(caught([{ id: 'word', prompt: 'Which associative rule helps?' }])).toMatch(
+      /word: prompt uses words longer than 10 letters: associative/,
+    );
+  });
+
+  // The Grade 2 vocabulary allowlist exempts named words sourced from
+  // grade2/standards.ts, never the cap itself.
+  it('accepts allowlisted long words', () => {
+    function caughtWithAllowlist(items: { id: string; prompt: string }[]): string {
+      try {
+        assertGradeTwoReadable(items, { allowlist: GRADE_2_VOCAB_ALLOWLIST });
+      } catch (e) {
+        return e instanceof Error ? e.message : String(e);
+      }
+      return '';
+    }
+    expect(
+      caughtWithAllowlist([{ id: 'allowed', prompt: 'Which shape is a rectangular prism, not a quadrilateral?' }]),
+    ).toBe('');
+  });
+
+  it('still rejects a DIFFERENT long word even with the allowlist supplied', () => {
+    function caughtWithAllowlist(items: { id: string; prompt: string }[]): string {
+      try {
+        assertGradeTwoReadable(items, { allowlist: GRADE_2_VOCAB_ALLOWLIST });
       } catch (e) {
         return e instanceof Error ? e.message : String(e);
       }

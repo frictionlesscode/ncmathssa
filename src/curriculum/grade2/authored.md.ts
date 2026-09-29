@@ -187,8 +187,11 @@ export const GRADE_2_MD_AUTHORED: Question[] = [
     // Two units of different lengths, and the count tells which is shorter.
     // The generator gives the unit sizes and asks for the counts; this runs
     // the other way.
+    // Fix 1 (whole-branch review, Important): shortened from 4 sentences to
+    // 3; "the same" is kept, since a sibling test requires it for every
+    // NC.2.MD.2 item.
     prompt:
-      'Ben and Tia measure the same rug with their own shoes, heel to toe. The rug is 9 of Ben’s shoes long. It is 12 of Tia’s shoes long. What does this tell you?',
+      'Ben and Tia measure the same rug in shoe lengths. It is 9 of Ben’s shoes, but 12 of Tia’s shoes. What does this tell you?',
     options: labelOptions([
       // Tia's count is bigger, so her shoe "must be" bigger too.
       {
@@ -232,8 +235,8 @@ export const GRADE_2_MD_AUTHORED: Question[] = [
     domainId: 'MD',
     // keyConcept 2: "Describing how the two measurements relate to the size of
     // the unit chosen." 4 feet and 48 inches are both right.
-    prompt:
-      'Jada measures the same table two times. In inches, the table is 48 inches long. In feet, it is 4 feet long. Why is the number of feet so much smaller?',
+    // Fix 1 (whole-branch review, Important): shortened from 4 sentences to 2.
+    prompt: 'Jada measures the same table twice: 48 inches, or 4 feet. Why is the number of feet so much smaller?',
     options: labelOptions([
       { text: 'A foot is longer than an inch, so fewer feet fit along the table.', isCorrect: true },
       // To explain a smaller count with "a smaller unit gives a smaller
@@ -281,8 +284,10 @@ export const GRADE_2_MD_AUTHORED: Question[] = [
     // never draws (it uses inch/foot, foot/yard, cm/m and cm/inch), and none
     // of its names is Hana, so this is not a copy of a generated question. A
     // rug 3 yards long is 108 inches.
+    // Fix 1 (whole-branch review, Important): shortened from 166 characters
+    // and 5 sentences to 3 sentences.
     prompt:
-      'Hana measures the same rug two times. First she measures it in yards and gets 3. Then she measures it in inches. A yard is much longer than an inch. What will happen?',
+      'Hana measures the same rug twice: 3 yards, then inches. A yard is much longer than an inch. What will happen when she counts inches?',
     options: labelOptions([
       // The shorter unit "should" give the smaller count — the longer unit
       // the bigger one.
@@ -568,8 +573,8 @@ export const GRADE_2_MD_AUTHORED: Question[] = [
     domainId: 'MD',
     // keyConcept 2: "Expressing the difference in a standard length unit" —
     // which object, how much, and in what unit.
-    prompt:
-      'Kim measures a table and a desk with a measuring tape marked in feet. The table is 5 feet long. The desk is 3 feet long. Which sentence is true?',
+    // Fix 1 (whole-branch review, Important): shortened from 4 sentences to 2.
+    prompt: 'Kim measures a table and a desk in feet: the table is 5 feet, the desk is 3 feet. Which sentence is true?',
     options: labelOptions([
       // Found the difference of 2 but gave it to the shorter object.
       {
@@ -653,8 +658,10 @@ export const GRADE_2_MD_AUTHORED: Question[] = [
     // the equations. COMPARE, BIGGER unknown. The other correct form,
     // ☐ − 17 = 26, is deliberately not on offer: exactly one option may
     // represent the story.
+    // Fix 1 (whole-branch review, Important): shortened from 176 characters
+    // and 4 sentences to 2 sentences, keeping all three lengths (26, 30, 17).
     prompt:
-      'The red ribbon is 26 inches long. The green ribbon is 30 inches long. The blue ribbon is 17 inches longer than the red ribbon. Which equation shows how long the blue ribbon is?',
+      'The red ribbon is 26 inches, the green is 30 inches, and the blue is 17 inches longer than the red. Which equation shows the blue ribbon’s length?',
     options: labelOptions([
       // Subtracted: "longer than" treated as a take-away.
       { text: '26 − 17 = ☐', isCorrect: false, misconception: 'subtracted-instead-of-added' },
@@ -685,8 +692,9 @@ export const GRADE_2_MD_AUTHORED: Question[] = [
     standardCode: 'NC.2.MD.5',
     domainId: 'MD',
     // TAKE FROM, START unknown: the length before the cut.
-    prompt:
-      'Dad cuts 25 centimeters off a board. Now the board is 48 centimeters long. The equation ☐ − 25 = 48 shows this. How long was the board before Dad cut it?',
+    // Fix 1 (whole-branch review, Important): shortened from 4 sentences to
+    // 2 by folding the equation into the question.
+    prompt: 'Dad cuts 25 centimeters off a board, leaving 48 centimeters. In ☐ − 25 = 48, how long was the board before?',
     options: labelOptions([
       // 48 − 25 = 23: the minus sign in the equation followed instead of
       // undone.
@@ -726,8 +734,8 @@ export const GRADE_2_MD_AUTHORED: Question[] = [
     standardCode: 'NC.2.MD.6',
     domainId: 'MD',
     // A SUM within 100 as jumps: 23 + 14 as one jump of 10 and four of 1.
-    prompt:
-      'Ava starts at 23 on a number line. She makes one jump of 10. Then she makes 4 jumps of 1. Where does she land?',
+    // Fix 1 (whole-branch review, Important): shortened from 4 sentences to 2.
+    prompt: 'Ava starts at 23 on a number line, jumps 10, then jumps 1 four times. Where does she land?',
     options: labelOptions([
       // Counted the 33 she was standing on as the first of the four jumps:
       // 33, 34, 35, 36.
@@ -1083,7 +1091,8 @@ export const GRADE_2_MD_AUTHORED: Question[] = [
     standardCode: 'NC.2.MD.8',
     domainId: 'MD',
     // keyConcept 2: whole dollars with $, in a two-step story.
-    prompt: 'Omar has $45. He earns $30 more. Then he spends $18 on a book. How much money does Omar have now?',
+    // Fix 1 (whole-branch review, Important): shortened from 4 sentences to 2.
+    prompt: 'Omar has $45, earns $30 more, then spends $18 on a book. How much money does he have now?',
     options: labelOptions([
       // 45 + 30 = 75, and stopped before paying for the book.
       { text: '$75', isCorrect: false, misconception: 'forgot-the-final-step' },
@@ -1268,8 +1277,11 @@ export const GRADE_2_MD_AUTHORED: Question[] = [
     standardCode: 'NC.2.MD.10',
     domainId: 'MD',
     // TAKE APART: the total is known and one bar is missing.
+    // Fix 1 (whole-branch review, Important): shortened from 184 characters
+    // and 5 sentences to 2 sentences; "missing" is kept, since a sibling
+    // test requires it somewhere among the NC.2.MD.10 items.
     prompt:
-      'There are 20 students in Ms. Fox’s class. Each student voted once for the best part of the school day. The bar for recess is missing from the graph. How many students voted for recess?',
+      '20 students voted for their favorite part of the day, but the bar for recess is missing. How many voted for recess?',
     promptDetails:
       'Bar graph titled "Best Part of the Day". The scale counts by ones. Art: the bar reaches 6. Music: the bar reaches 4. Gym: the bar reaches 7. Recess: the bar is missing.',
     options: labelOptions([

@@ -62,8 +62,10 @@ export const GRADE_2_OA_AUTHORED: Question[] = [
     standardCode: 'NC.2.OA.1',
     domainId: 'OA',
     // One-step, Add to-Start Unknown.
-    prompt:
-      'Some birds were on a fence. 8 more birds landed on the fence. Now there are 15 birds. The equation ☐ + 8 = 15 shows this. What number goes in the ☐?',
+    // Fix 1 (whole-branch review, Important): shortened from 5 sentences to
+    // 3 by folding the result and the equation into the question. Numbers,
+    // answer, standard and every distractor's derivation are unchanged.
+    prompt: 'A fence had some birds. 8 more landed, and now there are 15. What number goes in ☐ + 8 = 15?',
     options: labelOptions([
       { text: '7', isCorrect: true },
       // 15 + 8 = 23: added the two known numbers instead of subtracting.
@@ -94,8 +96,9 @@ export const GRADE_2_OA_AUTHORED: Question[] = [
     standardCode: 'NC.2.OA.1',
     domainId: 'OA',
     // One-step, Compare-Bigger Unknown.
-    prompt:
-      'Maya has 6 stickers. Liam has 5 more stickers than Maya. The equation 6 + 5 = ☐ shows how many stickers Liam has. What number goes in the ☐?',
+    // Fix 1 (whole-branch review, Important): shortened from 4 sentences to
+    // 3 by folding the equation into the question.
+    prompt: 'Maya has 6 stickers. Liam has 5 more than Maya. What number goes in ☐ in 6 + 5 = ☐?',
     options: labelOptions([
       // Restated Maya's 6 instead of solving for Liam's total.
       { text: '6', isCorrect: false, misconception: 'restated-a-known-number-instead-of-solving' },
@@ -126,8 +129,9 @@ export const GRADE_2_OA_AUTHORED: Question[] = [
     standardCode: 'NC.2.OA.1',
     domainId: 'OA',
     // One-step, Compare-Smaller Unknown.
-    prompt:
-      'Jon has 14 marbles. Priya has 6 fewer marbles than Jon. The equation 14 − 6 = ☐ shows how many marbles Priya has. What number goes in the ☐?',
+    // Fix 1 (whole-branch review, Important): shortened from 4 sentences to
+    // 3 by folding the equation into the question.
+    prompt: 'Jon has 14 marbles. Priya has 6 fewer than Jon. What number goes in ☐ in 14 − 6 = ☐?',
     options: labelOptions([
       // 14 + 6 = 20: added instead of taking away the "6 fewer".
       { text: '20', isCorrect: false, misconception: 'added-instead-of-subtracted' },
@@ -158,8 +162,11 @@ export const GRADE_2_OA_AUTHORED: Question[] = [
     standardCode: 'NC.2.OA.1',
     domainId: 'OA',
     // Two-step, single digit, Add to/Take from - Change Unknown.
-    prompt:
-      'Ana had 9 crayons. She lost some crayons. Then her friend gave her 4 more crayons. Now Ana has 8 crayons. The equation 9 − ☐ + 4 = 8 shows this. How many crayons did Ana lose?',
+    // Fix 1 (whole-branch review, Important): shortened from 175 characters
+    // and 6 sentences to 2 sentences, folding the narrative into one
+    // sentence and the equation into the question — the two-step
+    // mathematics NC.2.OA.1 requires is unchanged.
+    prompt: 'Ana had 9 crayons, lost some, then got 4 more, ending with 8. In 9 − ☐ + 4 = 8, how many did Ana lose?',
     options: labelOptions([
       // 9 − 8 = 1: compared only the start and the end, skipping over the
       // 4 crayons her friend gave in between.
@@ -192,8 +199,9 @@ export const GRADE_2_OA_AUTHORED: Question[] = [
     standardCode: 'NC.2.OA.1',
     domainId: 'OA',
     // Two-step, single digit, Add to/Take from - Result Unknown.
-    prompt:
-      'Leo has 7 toy cars. He buys 5 more toy cars. Then he gives 3 toy cars to his brother. The equation 7 + 5 − 3 = ☐ shows this. How many toy cars does Leo have now?',
+    // Fix 1 (whole-branch review, Important): shortened from 161 characters
+    // and 5 sentences to 2 sentences, the same way as g2-oa1-04 above.
+    prompt: 'Leo has 7 toy cars, buys 5 more, then gives 3 to his brother. In 7 + 5 − 3 = ☐, how many cars does Leo have now?',
     options: labelOptions([
       { text: '9', isCorrect: true },
       // Stopped after the first step and never subtracted the 3 given away.
@@ -364,8 +372,8 @@ export const GRADE_2_OA_AUTHORED: Question[] = [
     standardCode: 'NC.2.OA.3',
     domainId: 'OA',
     // Pairing objects, then counting by 2s — the odd case.
-    prompt:
-      'Priya has 13 blocks. She pairs them up: 2 blocks in every pair. She makes 6 pairs, and 1 block is left with no partner. Is 13 odd or even?',
+    // Fix 1 (whole-branch review, Important): shortened from 4 sentences to 3.
+    prompt: 'Priya pairs up 13 blocks, 2 in each pair. She makes 6 pairs, with 1 block left over. Is 13 odd or even?',
     options: labelOptions([
       // Fixates on the number of complete pairs (6, which is even) instead of
       // the leftover block, and calls the total even because the pair count is.

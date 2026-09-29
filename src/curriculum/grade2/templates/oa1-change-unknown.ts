@@ -93,8 +93,16 @@ export const oa1ChangeUnknown: QuestionTemplate = {
       throw new Error(`g2.oa1.change-unknown: option collision [${texts.join(' | ')}]`);
     }
 
+    // Fix 1 (whole-branch review, Important): the original five-sentence
+    // prompt (start, change, result, equation, question as separate
+    // sentences) failed assertGradeTwoReadable at some seeds — up to 175
+    // characters and 6 sentences for the authored sibling this mirrors,
+    // g2-oa1-04. Folding the result and the equation into the question
+    // keeps the first two sentences the `templates/index.test.ts` sentinel
+    // pins ("X had N noun. X verbPast some of them.") untouched and brings
+    // every seed to 3 sentences.
     return {
-      prompt: `${ctx.subject} had ${start} ${ctx.noun}. ${ctx.subject} ${ctx.verbPast} some of them. Now ${ctx.subject} has ${end} ${ctx.noun}. The equation ${start} − ☐ = ${end} shows this. How many ${ctx.noun} did ${ctx.subject} ${ctx.verbBase}?`,
+      prompt: `${ctx.subject} had ${start} ${ctx.noun}. ${ctx.subject} ${ctx.verbPast} some of them. In ${start} − ☐ = ${end}, how many ${ctx.noun} did ${ctx.subject} ${ctx.verbBase}?`,
       options: labelOptions(rng.shuffle(candidates)),
       answerText,
       explanation: {

@@ -9,7 +9,7 @@ const shape = (g: {
 
 function parse(prompt: string): { big: number; diff: number; unit: string } {
   const m =
-    /^The [a-z]+ [a-z ]+ is (\d+) ([a-z]+) long\. It is (\d+) ([a-z]+) longer than the [a-z]+ [a-z ]+\. The equation ☐ \+ (\d+) = (\d+) shows this\. How long is the [a-z]+ [a-z ]+\?$/.exec(
+    /^The [a-z]+ [a-z ]+ is (\d+) ([a-z]+) long\. It is (\d+) ([a-z]+) longer than the [a-z]+ [a-z ]+\. In ☐ \+ (\d+) = (\d+), how long is the [a-z]+ [a-z ]+\?$/.exec(
       prompt,
     );
   if (!m) throw new Error(`unparsable prompt: ${prompt}`);
@@ -42,7 +42,7 @@ describe('g2.md5.shorter-length-unknown', () => {
   it('emits exactly this question at seed 7', () => {
     const g = md5ShorterLengthUnknown.generate(makeRng(7));
     expect(g.prompt).toBe(
-      'The blue ribbon is 26 inches long. It is 18 inches longer than the red ribbon. The equation ☐ + 18 = 26 shows this. How long is the red ribbon?',
+      'The blue ribbon is 26 inches long. It is 18 inches longer than the red ribbon. In ☐ + 18 = 26, how long is the red ribbon?',
     );
     expect(g.answerText).toBe('8 inches');
     expect(shape(g)).toEqual([
@@ -57,7 +57,7 @@ describe('g2.md5.shorter-length-unknown', () => {
   it('emits exactly this question at seed 123', () => {
     const g = md5ShorterLengthUnknown.generate(makeRng(123));
     expect(g.prompt).toBe(
-      'The red kite string is 31 meters long. It is 28 meters longer than the yellow kite string. The equation ☐ + 28 = 31 shows this. How long is the yellow kite string?',
+      'The red kite string is 31 meters long. It is 28 meters longer than the yellow kite string. In ☐ + 28 = 31, how long is the yellow kite string?',
     );
     expect(g.answerText).toBe('3 meters');
     expect(shape(g)).toEqual([

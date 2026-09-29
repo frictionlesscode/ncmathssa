@@ -153,8 +153,12 @@ export const md5ShorterLengthUnknown: QuestionTemplate = {
       throw new Error(`g2.md5.shorter-length-unknown: option collision [${texts.join(' | ')}]`);
     }
 
+    // Fix 1 (whole-branch review, Important): the original four-sentence
+    // prompt reached up to 176 characters at some seeds (e.g. "kite string").
+    // Folding the equation into the question keeps the two frozen leading
+    // sentences the `templates/index.test.ts` sentinel pins untouched.
     return {
-      prompt: `The ${longOne} is ${length(big)} long. It is ${length(diff)} longer than the ${shortOne}. The equation ☐ + ${diff} = ${big} shows this. How long is the ${shortOne}?`,
+      prompt: `The ${longOne} is ${length(big)} long. It is ${length(diff)} longer than the ${shortOne}. In ☐ + ${diff} = ${big}, how long is the ${shortOne}?`,
       options: labelOptions(rng.shuffle(candidates)),
       answerText,
       explanation: {

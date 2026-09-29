@@ -17,7 +17,7 @@ describe('g2.oa1.change-unknown', () => {
   it('emits exactly this question at seed 7', () => {
     const g = oa1ChangeUnknown.generate(makeRng(7));
     expect(g.prompt).toBe(
-      'Mia had 14 stickers. Mia gave away some of them. Now Mia has 10 stickers. The equation 14 − ☐ = 10 shows this. How many stickers did Mia give away?',
+      'Mia had 14 stickers. Mia gave away some of them. In 14 − ☐ = 10, how many stickers did Mia give away?',
     );
     expect(g.answerText).toBe('4 stickers');
     expect(g.options.map((o) => [o.label, o.text, o.isCorrect, o.misconception ?? null])).toEqual([
@@ -31,7 +31,7 @@ describe('g2.oa1.change-unknown', () => {
   it('emits exactly this question at seed 123', () => {
     const g = oa1ChangeUnknown.generate(makeRng(123));
     expect(g.prompt).toBe(
-      'Elena had 22 shells. Elena gave away some of them. Now Elena has 17 shells. The equation 22 − ☐ = 17 shows this. How many shells did Elena give away?',
+      'Elena had 22 shells. Elena gave away some of them. In 22 − ☐ = 17, how many shells did Elena give away?',
     );
     expect(g.answerText).toBe('5 shells');
     expect(g.options.map((o) => [o.label, o.text, o.isCorrect, o.misconception ?? null])).toEqual([
@@ -47,7 +47,7 @@ describe('g2.oa1.change-unknown', () => {
       const g = oa1ChangeUnknown.generate(makeRng(seed));
       const start = Number(/had (\d+)/.exec(g.prompt)![1]);
       const change = Number(g.answerText.split(' ')[0]);
-      const end = Number(/Now \S+ has (\d+)/.exec(g.prompt)![1]);
+      const end = Number(/− ☐ = (\d+)/.exec(g.prompt)![1]);
       expect(start, `seed ${seed}`).toBeLessThanOrEqual(100);
       expect(change).toBeGreaterThan(0);
       expect(end).toBeGreaterThan(0);
