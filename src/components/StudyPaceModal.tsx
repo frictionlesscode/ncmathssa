@@ -63,10 +63,11 @@ export const StudyPaceModal: React.FC<StudyPaceModalProps> = ({ isOpen, onClose 
         <form onSubmit={handleSave} className="p-6 space-y-5">
           {/* Student Name */}
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+            <label htmlFor="pace-name" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
               Student Name
             </label>
             <input
+              id="pace-name"
               type="text"
               value={name}
               onChange={e => setName(e.target.value)}
@@ -77,11 +78,12 @@ export const StudyPaceModal: React.FC<StudyPaceModalProps> = ({ isOpen, onClose 
 
           {/* Target Exam Date */}
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+            <label htmlFor="pace-date" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
               <Calendar className="w-3.5 h-3.5 text-emerald-600" />
               WCPSS SSA Testing Date / Window
             </label>
             <input
+              id="pace-date"
               type="date"
               value={examDate}
               onChange={e => setExamDate(e.target.value)}
@@ -99,11 +101,12 @@ export const StudyPaceModal: React.FC<StudyPaceModalProps> = ({ isOpen, onClose 
 
           {/* Goals */}
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1">
+            <label htmlFor="pace-daily" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1">
               <Target className="w-3.5 h-3.5 text-emerald-600" />
               Daily Questions
             </label>
             <input
+              id="pace-daily"
               type="number"
               min="3"
               max="50"

@@ -15,7 +15,7 @@ import { createAdaptiveSessionDrill, createMissedQuestionsDrill, createStandardD
 /** Today's full tab UI (codes, study guides, per-standard drills), kept for
  *  parents who want the detail, reached from the home page footer (spec 4.4). */
 export const DetailedView: React.FC<{ onStartQuiz: (quiz: QuizDefinition) => void; onBack: () => void }> = ({ onStartQuiz, onBack }) => {
-  const { curriculum } = useProgress();
+  const { curriculum, profile } = useProgress();
   const [currentTab, setCurrentTab] = useState<NavTab>('dashboard');
   const [studyGuideStandard, setStudyGuideStandard] = useState<string | null>(null);
   const [isPaceModalOpen, setIsPaceModalOpen] = useState(false);
@@ -69,7 +69,7 @@ export const DetailedView: React.FC<{ onStartQuiz: (quiz: QuizDefinition) => voi
         onClose={() => setStudyGuideStandard(null)}
         onStartStandardDrill={startStandardDrill}
       />
-      <StudyPaceModal isOpen={isPaceModalOpen} onClose={() => setIsPaceModalOpen(false)} />
+      {isPaceModalOpen && <StudyPaceModal key={profile.id} isOpen onClose={() => setIsPaceModalOpen(false)} />}
       <PrintReportModal isOpen={isReportModalOpen} onClose={() => setIsReportModalOpen(false)} />
     </div>
   );
