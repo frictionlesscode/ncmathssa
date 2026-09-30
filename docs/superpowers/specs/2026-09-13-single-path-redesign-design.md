@@ -3,7 +3,7 @@
 Replaces the app's four-tab catalog with one road, one Continue button, and a
 separate parent screen.
 
-Status: approved in brainstorming 2026-09-13. Next step: implementation plan.
+Status: approved in brainstorming 2026-09-13, never planned or built. **Superseded** by `2026-09-29-parent-path-design.md`.
 
 ---
 
