@@ -1,9 +1,12 @@
 import { describe, it, expect, vi } from 'vitest';
+import * as exportData from '../state/exportData';
 import { render, screen, act } from '@testing-library/react';
 import { ProgressProvider, useProgress } from './ProgressContext';
 import { SaveBanner } from '../components/SaveBanner';
 import { createMemoryStorage } from '../state/memoryStorage';
 import { saveState, newProfile, STORAGE_KEY_V2 } from '../state/storage';
+
+vi.mock('../state/exportData', async (orig) => ({ ...(await orig<typeof import('../state/exportData')>()), downloadText: vi.fn() }));
 
 function Probe() {
   const { state, updateActiveProfile } = useProgress();
@@ -45,5 +48,20 @@ describe('saving', () => {
     expect(screen.getByRole('alert')).toHaveTextContent(/isn't being saved/i);
     act(() => screen.getByText('change').click());
     expect(screen.getByTestId('count')).toHaveTextContent('1');
+  });
+
+  it('logic-flows Medium: the banner Export hands over the current in-memory state, not the stale stored copy', () => {
+    const s = createMemoryStorage();
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.spyOn(s, 'setItem').mockImplementation(() => { throw new DOMException('QuotaExceededError'); });
+    const download = vi.mocked(exportData.downloadText);
+    download.mockClear();
+    renderWith(() => s);
+    act(() => screen.getByText('change').click());
+    act(() => screen.getByRole('button', { name: /export/i }).click());
+    expect(download).toHaveBeenCalledTimes(1);
+    const [filename, text] = download.mock.calls[0];
+    expect(filename).toMatch(/^ncmath-progress-\d{4}-\d{2}-\d{2}\.json$/);
+    expect(JSON.parse(text).profiles[0].studentName).toBe('Changed');
   });
 });
