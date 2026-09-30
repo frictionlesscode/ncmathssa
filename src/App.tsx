@@ -21,7 +21,7 @@ import {
   createAdaptiveSessionDrill,
   createMissedQuestionsDrill,
   createStandardDrill
-} from './curriculum/grade5/quizzes';
+} from './engine/drills';
 
 const MainApp: React.FC = () => {
   const { recordAttempt, curriculum, profile, updateActiveProfile } = useProgress();
