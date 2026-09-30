@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { render, screen, act } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen, act, within } from '@testing-library/react';
 import { ProgressProvider, useProgress } from './ProgressContext';
 import { createMemoryStorage } from '../state/memoryStorage';
 import { loadState, saveState, newProfile, STORAGE_KEY_V2 } from '../state/storage';
@@ -145,5 +145,49 @@ describe('multi-tab', () => {
     expect(screen.getByTestId('session-at')).toBeEmptyDOMElement();
     click('drop-session');
     expect(screen.getByTestId('session-at').textContent).toMatch(/^\d{4}-\d{2}-\d{2}T/);
+  });
+
+  it('two dirty tabs converge on the union of their changes and stop saving', () => {
+    const s = createMemoryStorage();
+    seed(s);
+    let renders = 0;
+    function Tab({ id }: { id: 'A' | 'B' }) {
+      const { profile, completeSession, updateActiveProfile } = useProgress();
+      renders += 1;
+      return (
+        <section aria-label={`tab-${id}`}>
+          <span data-testid={`attempts-${id}`}>{profile.attempts.map((a) => a.id).sort().join(',')}</span>
+          <span data-testid={`name-${id}`}>{profile.studentName}</span>
+          <button onClick={() => completeSession(att(`attempt-${id}`, id === 'A' ? '2026-09-30T10:00:00.000Z' : '2026-09-30T11:00:00.000Z'), [])}>finish {id}</button>
+          <button onClick={() => updateActiveProfile({ studentName: 'Renamed' })}>rename {id}</button>
+        </section>
+      );
+    }
+    render(
+      <>
+        <ProgressProvider storageAccess={() => s}><Tab id="A" /></ProgressProvider>
+        <ProgressProvider storageAccess={() => s}><Tab id="B" /></ProgressProvider>
+      </>,
+    );
+    const setItem = vi.spyOn(s, 'setItem');
+    const tab = (id: string) => within(screen.getByRole('region', { name: `tab-${id}` }));
+
+    act(() => tab('A').getByText('finish A').click());
+    act(() => tab('B').getByText('finish B').click());
+    act(() => tab('B').getByText('rename B').click());
+    storageEvent(); // delivered to both tabs
+    const afterSync = { renders, saves: setItem.mock.calls.length };
+    storageEvent(); // a second delivery changes nothing
+    expect(renders).toBe(afterSync.renders);
+    expect(setItem.mock.calls.length).toBe(afterSync.saves);
+
+    for (const id of ['A', 'B']) {
+      expect(screen.getByTestId(`attempts-${id}`)).toHaveTextContent('attempt-A,attempt-B');
+      expect(screen.getByTestId(`name-${id}`)).toHaveTextContent('Renamed');
+    }
+    const stored = loadState(s).profiles[0];
+    expect(stored.attempts.map((a) => a.id).sort()).toEqual(['attempt-A', 'attempt-B']);
+    expect(stored.studentName).toBe('Renamed');
+    expect(setItem.mock.calls.length).toBeLessThan(12);
   });
 });
