@@ -83,3 +83,17 @@ describe('isPassingSSA is exact (F3)', () => {
     expect(a.isPassingSSA).toBe(false);
   });
 });
+
+describe('attempt ids', () => {
+  it('logic-flows Low: two attempts finished in the same millisecond get different ids', () => {
+    const s = newSession({ kind: 'practice', quizId: 'x', title: 'x', refs: [], now: NOW });
+    const a = sessionToAttempt(s, [], 80, NOW, { answeredOnly: true });
+    const b = sessionToAttempt(s, [], 80, NOW, { answeredOnly: true });
+    expect(a.id).toMatch(/^attempt-\d+-[a-z0-9]+$/);
+    expect(a.id).not.toBe(b.id);
+  });
+  it('logic-flows Low: accepts an injected suffix for deterministic tests', () => {
+    const s = newSession({ kind: 'practice', quizId: 'x', title: 'x', refs: [], now: NOW });
+    expect(sessionToAttempt(s, [], 80, NOW, { answeredOnly: true, idSuffix: 'abc' }).id).toBe(`attempt-${NOW.getTime()}-abc`);
+  });
+});

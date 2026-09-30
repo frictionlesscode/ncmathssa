@@ -102,7 +102,7 @@ export function sessionToAttempt(
   questions: Question[],
   passingPercent: number,
   now: Date,
-  opts: { answeredOnly: boolean },
+  opts: { answeredOnly: boolean; idSuffix?: string },
 ): QuizAttempt {
   const graded = opts.answeredOnly ? questions.filter((q) => s.answers[q.id]) : questions;
   const answers: Record<string, QuizAttemptAnswer> = {};
@@ -130,7 +130,7 @@ export function sessionToAttempt(
   const total = graded.length;
   const scorePercent = total === 0 ? 0 : Math.round((raw / total) * 1000) / 10;
   return {
-    id: `attempt-${now.getTime()}`,
+    id: `attempt-${now.getTime()}-${opts.idSuffix ?? Math.random().toString(36).slice(2, 8)}`,
     quizId: s.quizId,
     quizTitle: s.title,
     domainId: s.domainId,
