@@ -54,6 +54,21 @@ const renderDashboard = () =>
     </ProgressProvider>
   );
 
+describe('Dashboard topic copy', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  it('F10: topics are compared with a goal, not claimed as an SSA benchmark', () => {
+    saveState(localStorage, stateForGrade(5));
+    renderDashboard();
+    expect(screen.queryByText(/strictly benchmarked/i)).not.toBeInTheDocument();
+    expect(
+      screen.getByText(/Each topic is compared with the 80% goal; only full practice tests say whether you're ready for SSA\./),
+    ).toBeInTheDocument();
+  });
+});
+
 describe('Dashboard weight labeling', () => {
   beforeEach(() => {
     localStorage.clear();

@@ -297,7 +297,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               Grade {curriculum.grade} Program of Study: {curriculum.domains.length} Core NC Domains
             </h2>
             <p className="text-xs text-slate-500">
-              Each module is strictly benchmarked against the {passingPercent}% acceleration qualifying bar.
+              Each topic is compared with the {passingPercent}% goal; only full practice tests say whether you're ready for SSA.
             </p>
           </div>
           <button
