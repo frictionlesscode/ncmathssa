@@ -1,9 +1,9 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import type { Grade, GradeCurriculum, StandardCode } from '../curriculum/types';
 import { getCurriculum, standardsOf } from '../curriculum/registry';
 import type { AppStateV2, Profile } from '../state/types';
-import { loadState, saveState, newProfile } from '../state/storage';
+import { getBrowserStorage, loadState, saveState, newProfile } from '../state/storage';
 import type { QuizAttempt } from '../types';
 import type { QuestionRef } from '../engine/questionModel';
 import {
@@ -39,6 +39,8 @@ export interface ProgressContextValue {
    *  profile (there must always be at least one), and reassigns
    *  activeProfileId to another profile if the active one is removed. */
   deleteProfile(id: string): void;
+  /** False when the last write failed or localStorage is blocked. */
+  saveOk: boolean;
 }
 
 function withAttempt(
@@ -63,12 +65,22 @@ function withAttempt(
 
 const ProgressContext = createContext<ProgressContextValue | undefined>(undefined);
 
-export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [state, setState] = useState<AppStateV2>(() => loadState(localStorage));
+export const ProgressProvider: React.FC<{ children: React.ReactNode; storageAccess?: () => Storage }> = ({ children, storageAccess }) => {
+  const [store] = useState(() => getBrowserStorage(storageAccess));
+  const [state, setState] = useState<AppStateV2>(() => loadState(store.storage));
+  const [saveOk, setSaveOk] = useState(!store.blocked);
+  // Nothing is written until the user changes something: loading a repaired
+  // or unfamiliar blob must never overwrite it.
+  const dirty = useRef(false);
+  const update = useCallback((fn: (prev: AppStateV2) => AppStateV2) => {
+    dirty.current = true;
+    setState(fn);
+  }, []);
 
   useEffect(() => {
-    saveState(localStorage, state);
-  }, [state]);
+    if (!dirty.current) return;
+    setSaveOk(saveState(store.storage, state).ok && !store.blocked);
+  }, [state, store]);
 
   const profile = useMemo(
     () => state.profiles.find((p) => p.id === state.activeProfileId) ?? state.profiles[0],
@@ -85,49 +97,49 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const readiness = useMemo(() => overallReadiness(mastery, curriculum), [mastery, curriculum]);
 
   const switchProfile = useCallback((id: string) => {
-    setState((prev) => (prev.profiles.some((p) => p.id === id) ? { ...prev, activeProfileId: id } : prev));
-  }, []);
+    update((prev) => (prev.profiles.some((p) => p.id === id) ? { ...prev, activeProfileId: id } : prev));
+  }, [update]);
 
   const addProfile = useCallback((name: string, grade: Grade) => {
-    setState((prev) => {
+    update((prev) => {
       const p = newProfile({ studentName: name, grade });
       return { ...prev, profiles: [...prev.profiles, p], activeProfileId: p.id };
     });
-  }, []);
+  }, [update]);
 
   const recordAttempt = useCallback(
     (attempt: QuizAttempt, results: { ref: QuestionRef; wasCorrect: boolean }[]) =>
-      setState((prev) => withAttempt(prev, attempt, results, false)),
-    [],
+      update((prev) => withAttempt(prev, attempt, results, false)),
+    [update],
   );
 
   const completeSession = useCallback(
     (attempt: QuizAttempt, results: { ref: QuestionRef; wasCorrect: boolean }[]) =>
-      setState((prev) => withAttempt(prev, attempt, results, true)),
-    [],
+      update((prev) => withAttempt(prev, attempt, results, true)),
+    [update],
   );
 
   const updateActiveProfile = useCallback(
     (patch: Partial<Omit<Profile, 'id' | 'attempts' | 'reviewQueue'>>) => {
-      setState((prev) => ({
+      update((prev) => ({
         ...prev,
         profiles: prev.profiles.map((p) => (p.id === prev.activeProfileId ? { ...p, ...patch } : p)),
       }));
     },
-    [],
+    [update],
   );
 
   const clearActiveProfileHistory = useCallback(() => {
-    setState((prev) => ({
+    update((prev) => ({
       ...prev,
       profiles: prev.profiles.map((p) =>
         p.id === prev.activeProfileId ? { ...p, attempts: [], reviewQueue: {}, activeSession: undefined, checkupSkipped: undefined } : p,
       ),
     }));
-  }, []);
+  }, [update]);
 
   const deleteProfile = useCallback((id: string) => {
-    setState((prev) => {
+    update((prev) => {
       if (prev.profiles.length <= 1) return prev;
       const profiles = prev.profiles.filter((p) => p.id !== id);
       if (profiles.length === prev.profiles.length) return prev;
@@ -135,7 +147,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         prev.activeProfileId === id ? profiles[0].id : prev.activeProfileId;
       return { ...prev, profiles, activeProfileId };
     });
-  }, []);
+  }, [update]);
 
   const value: ProgressContextValue = useMemo(
     () => ({
@@ -151,6 +163,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       updateActiveProfile,
       clearActiveProfileHistory,
       deleteProfile,
+      saveOk,
     }),
     [
       state,
@@ -165,6 +178,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       updateActiveProfile,
       clearActiveProfileHistory,
       deleteProfile,
+      saveOk,
     ],
   );
 

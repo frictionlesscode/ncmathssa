@@ -281,11 +281,13 @@ export function loadState(storage: Storage, opts: MigrateOptions = {}): AppState
   return initialState(newId);
 }
 
-export function saveState(storage: Storage, state: AppStateV2): void {
+export function saveState(storage: Storage, state: AppStateV2): { ok: boolean } {
   try {
     storage.setItem(STORAGE_KEY_V2, JSON.stringify(state));
+    return { ok: true };
   } catch (e) {
     console.error('Failed to save state', e);
+    return { ok: false };
   }
 }
 

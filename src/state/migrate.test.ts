@@ -238,6 +238,7 @@ describe('saveState', () => {
 
     const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     expect(() => saveState(throwingStorage, initialState())).not.toThrow();
+    expect(saveState(throwingStorage, initialState())).toEqual({ ok: false });
     expect(consoleErrorSpy).toHaveBeenCalled();
     consoleErrorSpy.mockRestore();
   });

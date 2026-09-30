@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ProgressProvider, useProgress } from './context/ProgressContext';
 import { DisclaimerGate } from './components/DisclaimerGate';
+import { SaveBanner } from './components/SaveBanner';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { FirstRunScreen } from './components/FirstRunScreen';
 import { WhoIsPracticing } from './components/WhoIsPracticing';
@@ -188,6 +189,7 @@ export function App() {
     <ErrorBoundary>
       <DisclaimerGate>
         <ProgressProvider>
+          <SaveBanner />
           <MainApp />
         </ProgressProvider>
       </DisclaimerGate>
