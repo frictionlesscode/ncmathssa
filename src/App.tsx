@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ProgressProvider, useProgress } from './context/ProgressContext';
 import { DisclaimerGate } from './components/DisclaimerGate';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { FirstRunScreen } from './components/FirstRunScreen';
 import { WhoIsPracticing } from './components/WhoIsPracticing';
 import { ParentHome } from './components/ParentHome';
@@ -184,11 +185,13 @@ const MainApp: React.FC = () => {
 
 export function App() {
   return (
-    <DisclaimerGate>
-      <ProgressProvider>
-        <MainApp />
-      </ProgressProvider>
-    </DisclaimerGate>
+    <ErrorBoundary>
+      <DisclaimerGate>
+        <ProgressProvider>
+          <MainApp />
+        </ProgressProvider>
+      </DisclaimerGate>
+    </ErrorBoundary>
   );
 }
 

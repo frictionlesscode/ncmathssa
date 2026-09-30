@@ -5,6 +5,7 @@ import type { ReviewQueue } from '../engine/scheduler';
 import type { QuizAttempt } from '../types';
 import { reviewKeyId } from '../engine/questionModel';
 import { listCurricula } from '../curriculum/registry';
+import { createMemoryStorage } from './memoryStorage';
 
 export const STORAGE_KEY_V1 = 'nc_math_ssa_prep_state_v1';
 export const STORAGE_KEY_V2 = 'nc_math_ssa_prep_state_v2';
@@ -225,6 +226,21 @@ export function backupRaw(storage: Storage, raw: string, now: Date): void {
     storage.setItem(`${CORRUPT_KEY_PREFIX}${now.toISOString()}`, raw);
   } catch {
     // Nothing more can be done; the original blob is still untouched.
+  }
+}
+
+export interface BrowserStorage {
+  storage: Storage;
+  /** True when reading the localStorage global itself threw (site data blocked). */
+  blocked: boolean;
+}
+
+/** localStorage, or an in-memory stand-in when even touching it throws. */
+export function getBrowserStorage(access: () => Storage = () => window.localStorage): BrowserStorage {
+  try {
+    return { storage: access(), blocked: false };
+  } catch {
+    return { storage: createMemoryStorage(), blocked: true };
   }
 }
 
