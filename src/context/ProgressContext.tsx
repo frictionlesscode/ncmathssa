@@ -1,12 +1,12 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-import type { Grade, GradeCurriculum, StandardCode, DomainInfo } from '../curriculum/types';
+import type { Grade, GradeCurriculum, StandardCode } from '../curriculum/types';
 import { getCurriculum, standardsOf } from '../curriculum/registry';
 import type { AppStateV2, Profile } from '../state/types';
 import { loadState, saveState, newProfile } from '../state/storage';
 import type { QuizAttempt } from '../types';
 import type { QuestionRef } from '../engine/questionModel';
-import { masteryByStandard, overallReadiness, masteryStatus, type StandardMastery, type MasteryStatus } from '../engine/mastery';
+import { masteryByStandard, overallReadiness, type StandardMastery } from '../engine/mastery';
 import { recordResult } from '../engine/scheduler';
 
 export interface ProgressContextValue {
@@ -157,48 +157,10 @@ export const useProgress = (): ProgressContextValue => {
   return context;
 };
 
-/** Domain-level rollup of the per-standard mastery map. Components used to
- *  get this from a single-grade `getDomainMastery` helper on the old
- *  context; it is derived here from the same `mastery` map every component
- *  already reads, so it works for any grade's domain shape. */
-export interface DomainStats {
-  masteryPercent: number;
-  totalQuestionsAnswered: number;
-  totalCorrect: number;
-  status: MasteryStatus;
-  standardsCount: number;
-  standardsMastered: number;
-}
-
-export function domainStatsFor(
-  domain: DomainInfo,
-  mastery: Map<StandardCode, StandardMastery>,
-  passingPercent: number,
-): DomainStats {
-  let totalQuestionsAnswered = 0;
-  let totalCorrect = 0;
-  let standardsMastered = 0;
-
-  for (const s of domain.standards) {
-    const m = mastery.get(s.code);
-    if (!m) continue;
-    totalQuestionsAnswered += m.total;
-    totalCorrect += m.correct;
-    if (m.status === 'acceleration-ready') standardsMastered += 1;
-  }
-
-  const masteryPercent =
-    totalQuestionsAnswered === 0 ? 0 : Math.round((totalCorrect / totalQuestionsAnswered) * 100);
-
-  return {
-    masteryPercent,
-    totalQuestionsAnswered,
-    totalCorrect,
-    status: masteryStatus(masteryPercent, totalQuestionsAnswered, passingPercent),
-    standardsCount: domain.standards.length,
-    standardsMastered,
-  };
-}
+// Moved to the engine so pure modules (engine/path.ts) can use it without
+// importing React context; re-exported so existing imports keep working.
+export { domainStatsFor } from '../engine/mastery';
+export type { DomainStats } from '../engine/mastery';
 
 /** Composite readiness figures the old context exposed as a single
  *  `overallReadiness` object. Every field is derived from the primitives
