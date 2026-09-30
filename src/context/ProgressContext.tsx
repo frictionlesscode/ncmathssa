@@ -12,7 +12,7 @@ import {
   pointsToGoal as pointsToGoalFor, type StandardMastery,
 } from '../engine/mastery';
 import { recordResult } from '../engine/scheduler';
-import { daysUntil } from '../engine/path';
+import { daysUntil, localDayKey } from '../engine/path';
 
 export interface ProgressContextValue {
   state: AppStateV2;
@@ -256,6 +256,8 @@ const TARGET_PRACTICE_VOLUME = 150;
 export function useReadinessSummary(): ReadinessSummary {
   const { curriculum, mastery, readiness, profile } = useProgress();
 
+  const dayKey = localDayKey(new Date());
+
   return useMemo(() => {
     let totalQuestionsAnswered = 0;
     let totalCorrectAnswered = 0;
@@ -288,5 +290,7 @@ export function useReadinessSummary(): ReadinessSummary {
       daysUntilExam,
       dailyQuestionsPace,
     };
-  }, [curriculum, mastery, readiness, profile.targetExamDate, profile.dailyQuestionGoal]);
+    // `dayKey` is the only signal that the calendar day changed; it is read via `new Date()` above.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [curriculum, mastery, readiness, profile.targetExamDate, profile.dailyQuestionGoal, dayKey]);
 }

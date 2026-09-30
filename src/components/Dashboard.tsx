@@ -13,7 +13,7 @@ import { standardsOf, weightCompactLabel } from '../curriculum/registry';
 import { dueEntries } from '../engine/scheduler';
 import { countdownText } from '../engine/path';
 import { isPassing } from '../engine/mastery';
-import { isMockQuiz } from '../engine/attempts';
+import { isMockQuiz, currentGradeAttempts } from '../engine/attempts';
 import type { NavTab } from './Navbar';
 
 interface DashboardProps {
@@ -207,7 +207,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 <TrendingUp className="w-5 h-5" />
               </span>
               <span className="text-xs font-bold text-violet-700 bg-violet-50 px-2.5 py-1 rounded-full border border-violet-200">
-                {profile.attempts.length} Quizzes Taken
+                {currentGradeAttempts(profile.attempts, curriculum).length} Quizzes Taken
               </span>
             </div>
             <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Questions Practiced</h3>

@@ -84,6 +84,19 @@ export function countdownText(days: number | null, unit: string): string | null 
   return `${days} ${days === 1 ? unit.replace(/^days/, 'day') : unit}`;
 }
 
+/** Weeks are rounded, so 20 days reads "3 weeks", not "2" (F13). */
+export function timeLeftText(days: number): string {
+  if (days === 0) return 'Test is today';
+  if (days >= 14) return `${Math.round(days / 7)} weeks left`;
+  return days === 1 ? '1 day left' : `${days} days left`;
+}
+
+/** The local calendar day, used as a memo key so day-dependent values refresh after midnight (F11). */
+export function localDayKey(now: Date): string {
+  const p = (n: number) => String(n).padStart(2, '0');
+  return `${now.getFullYear()}-${p(now.getMonth() + 1)}-${p(now.getDate())}`;
+}
+
 export function isShortOnTime(testDate: string, now: Date): boolean {
   const d = daysUntil(testDate, now);
   return d !== null && d >= 0 && d <= SHORT_ON_TIME_DAYS;

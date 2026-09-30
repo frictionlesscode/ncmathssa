@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useProgress } from '../context/ProgressContext';
-import { buildPath, roundRank, ROUND_SAMPLE, type NextStep, type Round } from '../engine/path';
+import { buildPath, localDayKey, timeLeftText, roundRank, ROUND_SAMPLE, type NextStep, type Round } from '../engine/path';
 import { computePace, type PaceStatus } from '../engine/pace';
 import { answeredCount, sessionSizeOf } from '../engine/activeSession';
 import { formatPercent, readinessStatus, type MasteryStatus } from '../engine/mastery';
@@ -26,12 +26,6 @@ const PACE_LABEL: Record<PaceStatus, string> = {
   behind: '⚠️ A bit behind',
   ahead: '🚀 Ahead',
 };
-
-function timeLeft(days: number): string {
-  if (days === 0) return 'Test is today';
-  if (days >= 14) return `${Math.floor(days / 7)} weeks left`;
-  return days === 1 ? '1 day left' : `${days} days left`;
-}
 
 function formatDate(ymd: string): string {
   const [y, m, d] = ymd.split('-').map(Number);
@@ -63,15 +57,16 @@ export const ParentHome: React.FC<ParentHomeProps> = ({
   const passing = curriculum.ssa.passingPercent;
 
   const now = new Date();
+  const dayKey = localDayKey(now);
   const path = useMemo(
     () => buildPath({ curriculum, attempts: profile.attempts, checkupSkipped: Boolean(profile.checkupSkipped),
       testDate: profile.targetExamDate, now }),
     // `now` changes every render; the inputs that matter are listed.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [curriculum, profile.attempts, profile.checkupSkipped, profile.targetExamDate],
+    [curriculum, profile.attempts, profile.checkupSkipped, profile.targetExamDate, dayKey],
   );
   const pace = computePace({ path, attempts: profile.attempts, testDate: profile.targetExamDate, now,
-    sessionSize: sessionSizeOf(profile) });
+    sessionSize: sessionSizeOf(profile), curriculum });
   const saved = profile.activeSession;
 
   const dateInput = (
@@ -121,7 +116,7 @@ export const ParentHome: React.FC<ParentHomeProps> = ({
             {(pace.dateState === 'normal' || pace.dateState === 'short') && (
               <>
                 <p>
-                  Test date: {formatDate(profile.targetExamDate)} · {timeLeft(pace.daysLeft!)} · {PACE_LABEL[pace.status!]}
+                  Test date: {formatDate(profile.targetExamDate)} · {timeLeftText(pace.daysLeft!)} · {PACE_LABEL[pace.status!]}
                 </p>
                 {pace.dateState === 'normal' ? (
                   <p>

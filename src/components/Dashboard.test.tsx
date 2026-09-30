@@ -170,3 +170,19 @@ describe('Dashboard history chips (F10)', () => {
     expect(screen.getByText('Practice')).toBeInTheDocument();
   });
 });
+
+describe('Dashboard quizzes taken (F14)', () => {
+  beforeEach(() => localStorage.clear());
+  const at = (id: string, code: string): QuizAttempt => ({
+    id, quizId: 'x', quizTitle: 'x', completedAt: '2026-09-30T00:00:00.000Z', scoreRaw: 1, scoreTotal: 1, scorePercent: 100,
+    isPassingSSA: true, timeElapsedSeconds: 1,
+    answers: { q: { questionId: 'q', studentAnswer: 'A', isCorrect: true, standardCode: code } },
+  });
+  it('F14: counts only the current grade attempts', () => {
+    saveState(localStorage, { version: 2, activeProfileId: 'p', profiles: [newProfile({
+      id: 'p', studentName: 'T', grade: 5, attempts: [at('a', 'NC.5.NF.1'), at('b', 'NC.5.NBT.1'), at('c', 'NC.3.OA.1')],
+    })] });
+    renderDashboard();
+    expect(screen.getByText('2 Quizzes Taken')).toBeInTheDocument();
+  });
+});

@@ -3,7 +3,7 @@ import { getCurriculum } from '../curriculum/registry';
 import type { GradeCurriculum, StandardCode } from '../curriculum/types';
 import type { QuizAttempt, QuizAttemptAnswer } from '../types';
 import {
-  buildPath, daysUntil, isShortOnTime, sampleSizeFor,
+  buildPath, daysUntil, isShortOnTime, sampleSizeFor, timeLeftText, localDayKey,
   ROUND_SAMPLE, ROUND3_QUIZ_PREFIX, PRACTICE_QUIZ_PREFIX, roundRank,
 } from './path';
 import { c5, codeOf, domainIds, needFor } from './path.testkit';
@@ -244,5 +244,21 @@ describe('F6: practice-test readiness', () => {
 
   it('F6: a grade with two forms never flags a repeat after one is taken', () => {
     expect(buildPath({ ...base, attempts: [mockAttempt('mock-ssa-01', false, 1)] }).practiceTestRepeat).toBe(false);
+  });
+});
+
+describe('timeLeftText (F13)', () => {
+  it.each([
+    [0, 'Test is today'], [1, '1 day left'], [13, '13 days left'],
+    [14, '2 weeks left'], [17, '2 weeks left'], [18, '3 weeks left'], [20, '3 weeks left'], [42, '6 weeks left'],
+  ])('F13: %i days reads "%s"', (days, text) => {
+    expect(timeLeftText(days)).toBe(text);
+  });
+});
+
+describe('localDayKey (F11)', () => {
+  it('F11: is the local calendar day, zero padded', () => {
+    expect(localDayKey(new Date(2026, 0, 5, 23, 59))).toBe('2026-01-05');
+    expect(localDayKey(new Date(2026, 0, 6, 0, 1))).toBe('2026-01-06');
   });
 });
