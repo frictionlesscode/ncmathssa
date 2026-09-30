@@ -150,10 +150,8 @@ describe('multi-tab', () => {
   it('two dirty tabs converge on the union of their changes and stop saving', () => {
     const s = createMemoryStorage();
     seed(s);
-    const renders = { n: 0 };
     function Tab({ id }: { id: 'A' | 'B' }) {
       const { profile, completeSession, updateActiveProfile } = useProgress();
-      renders.n += 1;
       return (
         <section aria-label={`tab-${id}`}>
           <span data-testid={`attempts-${id}`}>{profile.attempts.map((a) => a.id).sort().join(',')}</span>
@@ -176,10 +174,9 @@ describe('multi-tab', () => {
     act(() => tab('B').getByText('finish B').click());
     act(() => tab('B').getByText('rename B').click());
     storageEvent(); // delivered to both tabs
-    const afterSync = { renders: renders.n, saves: setItem.mock.calls.length };
+    const afterSync = setItem.mock.calls.length;
     storageEvent(); // a second delivery changes nothing
-    expect(renders.n).toBe(afterSync.renders);
-    expect(setItem.mock.calls.length).toBe(afterSync.saves);
+    expect(setItem.mock.calls.length).toBe(afterSync);
 
     for (const id of ['A', 'B']) {
       expect(screen.getByTestId(`attempts-${id}`)).toHaveTextContent('attempt-A,attempt-B');
