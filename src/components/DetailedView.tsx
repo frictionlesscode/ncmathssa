@@ -9,7 +9,7 @@ import { StudyGuideModal } from './StudyGuideModal';
 import { StudyPaceModal } from './StudyPaceModal';
 import { PrintReportModal } from './PrintReportModal';
 import type { QuizDefinition } from '../types';
-import type { QuestionRef } from '../engine/questionModel';
+import type { ComposedRef } from '../engine/sessionComposer';
 import { createAdaptiveSessionDrill, createMissedQuestionsDrill, createStandardDrill } from '../engine/drills';
 
 /** Today's full tab UI (codes, study guides, per-standard drills), kept for
@@ -27,7 +27,7 @@ export const DetailedView: React.FC<{ onStartQuiz: (quiz: QuizDefinition) => voi
   };
   const startStandardDrill = (code: string) => onStartQuiz(createStandardDrill(code, curriculum));
   const startCustom = (ids: string[]) => onStartQuiz(createMissedQuestionsDrill(ids));
-  const startAdaptive = (refs: QuestionRef[]) => onStartQuiz(createAdaptiveSessionDrill(refs));
+  const startAdaptive = (composed: ComposedRef[]) => onStartQuiz(createAdaptiveSessionDrill(composed));
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col selection:bg-blue-500 selection:text-white">

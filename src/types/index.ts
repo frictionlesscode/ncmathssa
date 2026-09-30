@@ -38,6 +38,8 @@ export interface QuizDefinition {
   isCustomDrill?: boolean;
   timeLimitMinutes?: number;
   questionIds: string[];
+  /** Question id -> 'review' for questions that came from the due-review queue (adaptive practice). */
+  origins?: Record<string, AnswerOrigin>;
 }
 
 /** Where a question came from in its session: fresh content or a due review. Missing means 'new'. */

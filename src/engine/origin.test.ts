@@ -5,7 +5,8 @@ import { masteryByStandard } from './mastery';
 import { recordResult } from './scheduler';
 import { composeSession, selectSession } from './sessionComposer';
 import { sessionForStep } from './pathSession';
-import { newSession, recordAnswer, resolveSession, sessionToAttempt } from './activeSession';
+import { createAdaptiveSessionDrill } from './drills';
+import { newSession, sessionFromQuiz, recordAnswer, resolveSession, sessionToAttempt } from './activeSession';
 import { buildPath, PRACTICE_QUIZ_PREFIX, ROUND3_QUIZ_PREFIX } from './path';
 import { correctOption } from './questionModel';
 import { normaliseState, newProfile } from '../state/storage';
@@ -56,6 +57,22 @@ describe('attempts record the origin', () => {
     const a = sessionToAttempt(s, [q1, q2], 80, NOW, { answeredOnly: true });
     expect(a.answers[q1.id].origin).toBe('review');
     expect(a.answers[q2.id].origin).toBeUndefined();
+  });
+});
+
+describe('adaptive practice origins', () => {
+  it('F8: a due review in an adaptive session is saved with origin review, new answers with none', () => {
+    const queue = recordResult({}, { kind: 'authored', id: 'nf1-01' }, false, new Date(2026, 8, 1));
+    const composed = composeSession({ curriculum: c5, mastery: masteryByStandard([], c5), queue, size: 10, now: NOW, seed: 1 });
+    const drill = createAdaptiveSessionDrill(composed);
+    let s = sessionFromQuiz(drill, 'drill', NOW);
+    const qs = resolveSession(s, c5);
+    for (const q of qs) s = recordAnswer(s, q, correctOption(q).label);
+    const a = sessionToAttempt(s, qs, 80, NOW, { answeredOnly: false });
+    expect(a.answers['nf1-01'].origin).toBe('review');
+    const others = Object.values(a.answers).filter((x) => x.questionId !== 'nf1-01');
+    expect(others.length).toBeGreaterThan(0);
+    expect(others.every((x) => x.origin === undefined)).toBe(true);
   });
 });
 

@@ -1,11 +1,9 @@
 import type { DomainId, GradeCurriculum, StandardCode } from '../curriculum/types';
 import type { StandardMastery } from './mastery';
 import type { ReviewQueue } from './scheduler';
-import { composeSession, type SessionPlan } from './sessionComposer';
+import { composeSession, reviewOrigins, type SessionPlan } from './sessionComposer';
 import { PRACTICE_QUIZ_PREFIX, ROUND3_QUIZ_PREFIX, type NextStep } from './path';
 import { newSession, sessionFromQuiz, type ActiveSession } from './activeSession';
-import { questionRefId } from './questionModel';
-import type { AnswerOrigin } from '../types';
 
 /** Builds the saved session for the path's next step (spec 5). */
 export function sessionForStep(input: {
@@ -34,8 +32,7 @@ export function sessionForStep(input: {
   const composed = composeSession({ curriculum: c, mastery, queue, size, now, seed, plan });
   if (composed.length === 0) return null;
   const refs = composed.map((x) => x.ref);
-  const origins: Record<string, AnswerOrigin> = {};
-  for (const x of composed) if (x.origin === 'review') origins[questionRefId(x.ref)] = 'review';
+  const origins = reviewOrigins(composed);
   const withOrigins = Object.keys(origins).length > 0 ? { origins } : {};
 
   return step.kind === 'round3'

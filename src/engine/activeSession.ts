@@ -72,6 +72,7 @@ export function sessionFromQuiz(quiz: QuizDefinition, kind: SessionKind, now: Da
     now,
     domainId: quiz.domainId,
     standardCode: quiz.standardCode,
+    origins: quiz.origins,
   });
 }
 

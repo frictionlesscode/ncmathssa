@@ -1,7 +1,8 @@
 import type { GradeCurriculum } from '../curriculum/types';
 import { standardsOf } from '../curriculum/registry';
 import type { QuizDefinition } from '../types';
-import { questionRefId, type QuestionRef } from './questionModel';
+import { questionRefId } from './questionModel';
+import { reviewOrigins, type ComposedRef } from './sessionComposer';
 
 /**
  * Creates a dynamic custom drill for a single standard, drawing every
@@ -41,12 +42,15 @@ export function createMissedQuestionsDrill(missedIds: string[]): QuizDefinition 
  * practice session without any special-casing: every ref, authored or
  * generated, round-trips through `questionRefId`/`parseQuestionRef`.
  */
-export function createAdaptiveSessionDrill(refs: QuestionRef[]): QuizDefinition {
+export function createAdaptiveSessionDrill(composed: ComposedRef[]): QuizDefinition {
+  const refs = composed.map((x) => x.ref);
+  const origins = reviewOrigins(composed);
   return {
     id: `adaptive-session-${Date.now()}`,
     title: 'Adaptive Practice Session',
     subtitle: `A ${refs.length}-question set built from your due reviews and current weak spots.`,
     isCustomDrill: true,
-    questionIds: refs.map(questionRefId)
+    questionIds: refs.map(questionRefId),
+    ...(Object.keys(origins).length > 0 ? { origins } : {}),
   };
 }

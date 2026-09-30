@@ -47,6 +47,13 @@ export function selectSession(input: SelectSessionInput): QuestionRef[] {
   return composeSession(input).map((c) => c.ref);
 }
 
+/** Question id -> 'review' for the composed refs that are due reviews. Empty when none are. */
+export function reviewOrigins(composed: ComposedRef[]): Record<string, AnswerOrigin> {
+  const origins: Record<string, AnswerOrigin> = {};
+  for (const x of composed) if (x.origin === 'review') origins[questionRefId(x.ref)] = 'review';
+  return origins;
+}
+
 export function composeSession(input: SelectSessionInput): ComposedRef[] {
   const { curriculum: c, mastery, queue, size, now, seed, plan } = input;
   const rng = makeRng(seed);

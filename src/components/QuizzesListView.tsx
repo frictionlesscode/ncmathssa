@@ -11,14 +11,14 @@ import { useProgress } from '../context/ProgressContext';
 import { standardsOf, weightCompactLabel } from '../curriculum/registry';
 import type { QuizDefinition } from '../types';
 import { AdaptiveSessionCard } from './AdaptiveSessionCard';
-import type { QuestionRef } from '../engine/questionModel';
+import type { ComposedRef } from '../engine/sessionComposer';
 import { parseQuestionRef } from '../engine/questionModel';
 import { isPassing as meetsBar, displayPercent } from '../engine/mastery';
 
 interface QuizzesListViewProps {
   onStartQuiz: (quizId: string) => void;
   onStartStandardDrill: (standardCode: string) => void;
-  onStartAdaptiveSession: (refs: QuestionRef[]) => void;
+  onStartAdaptiveSession: (composed: ComposedRef[]) => void;
 }
 
 export const QuizzesListView: React.FC<QuizzesListViewProps> = ({

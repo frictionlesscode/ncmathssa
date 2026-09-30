@@ -2,18 +2,17 @@ import React, { useState } from 'react';
 import { Sparkles, Zap } from 'lucide-react';
 import { useProgress } from '../context/ProgressContext';
 import { dueEntries } from '../engine/scheduler';
-import { selectSession } from '../engine/sessionComposer';
-import type { QuestionRef } from '../engine/questionModel';
+import { composeSession, type ComposedRef } from '../engine/sessionComposer';
 
 const SESSION_SIZES = [10, 20, 30] as const;
 
 interface AdaptiveSessionCardProps {
-  onStart: (refs: QuestionRef[]) => void;
+  onStart: (composed: ComposedRef[]) => void;
 }
 
 /** The daily-practice entry point: a short adaptive session built from due
  *  reviews plus standards the child is struggling with or hasn't seen, per
- *  `selectSession` (Task 11). This sits alongside the static quiz library,
+ *  `composeSession` (Task 11). This sits alongside the static quiz library,
  *  not in place of it - the diagnostic, module drills and full simulations
  *  remain the right tool for a realistic timed practice test. */
 export const AdaptiveSessionCard: React.FC<AdaptiveSessionCardProps> = ({ onStart }) => {
@@ -23,7 +22,7 @@ export const AdaptiveSessionCard: React.FC<AdaptiveSessionCardProps> = ({ onStar
   const dueCount = dueEntries(profile.reviewQueue, new Date()).length;
 
   const handleStart = () => {
-    const refs = selectSession({
+    const composed = composeSession({
       curriculum,
       mastery,
       queue: profile.reviewQueue,
@@ -35,7 +34,7 @@ export const AdaptiveSessionCard: React.FC<AdaptiveSessionCardProps> = ({ onStar
       // has its questions re-rolled by a re-render.
       seed: Date.now(),
     });
-    onStart(refs);
+    onStart(composed);
   };
 
   return (

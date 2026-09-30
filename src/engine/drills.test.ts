@@ -13,7 +13,7 @@ describe('drill factories work for any grade', () => {
   });
 
   it('encodes generated refs in adaptive drills and keeps missed ids', () => {
-    expect(createAdaptiveSessionDrill([{ kind: 'generated', templateId: 't', seed: 7 }]).questionIds).toEqual(['t#7']);
+    expect(createAdaptiveSessionDrill([{ ref: { kind: 'generated', templateId: 't', seed: 7 }, origin: 'new' }]).questionIds).toEqual(['t#7']);
     expect(createMissedQuestionsDrill(['a', 'b']).questionIds).toEqual(['a', 'b']);
   });
 });
