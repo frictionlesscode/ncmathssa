@@ -176,6 +176,11 @@ export const ParentHome: React.FC<ParentHomeProps> = ({
             </div>
           ) : (
             <div className="space-y-2">
+              {path.practiceTestRepeat && path.next.kind === 'practice-test' && (
+                <p className="text-xs text-slate-600">
+                  You&rsquo;ve seen this test before &mdash; the score may be higher than on a new test.
+                </p>
+              )}
               <button onClick={() => onStartStep(path.next)} className="w-full rounded-xl bg-blue-600 px-4 py-3 text-lg font-semibold text-white hover:bg-blue-700">
                 {stepLabel(path.next)} ▶
               </button>

@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { getCurriculum } from '../curriculum/registry';
 import type { GradeCurriculum, StandardCode } from '../curriculum/types';
 import type { QuizAttempt, QuizAttemptAnswer } from '../types';
 import {
@@ -212,5 +213,36 @@ describe('F7: round exits use recent answers, labels use lifetime accuracy', () 
     const t = p.topics.find((x) => x.domainId === d)!;
     expect(t.round).toBe(3);
     expect(t.status).toBe('needs-focus');
+  });
+});
+
+describe('F6: practice-test readiness', () => {
+  const mockAttempt = (quizId: string, passed: boolean, second: number): QuizAttempt => ({
+    id: `m${second}`, quizId, quizTitle: quizId, completedAt: new Date(Date.UTC(2026, 8, 20, 0, 0, second)).toISOString(),
+    scoreRaw: 0, scoreTotal: 0, scorePercent: 0, isPassingSSA: passed, timeElapsedSeconds: 0, answers: {},
+  });
+
+  it('F6: a pass followed by a failed practice test no longer counts as ready', () => {
+    const p = buildPath({ ...base, attempts: [mockAttempt('mock-ssa-01', true, 1), mockAttempt('mock-ssa-02', false, 2)] });
+    expect(p.practiceTestPassedAt).toBeUndefined();
+  });
+
+  it('F6: a failure followed by a pass counts, dated at the pass', () => {
+    const pass = mockAttempt('mock-ssa-02', true, 2);
+    const p = buildPath({ ...base, attempts: [mockAttempt('mock-ssa-01', false, 1), pass] });
+    expect(p.practiceTestPassedAt).toBe(pass.completedAt);
+  });
+
+  it('F6: a grade with one practice-test form flags a repeat once it has been taken', () => {
+    const c3 = getCurriculum(3);
+    const forms = c3.quizzes.filter((q) => q.isMockAssessment);
+    expect(forms).toHaveLength(1); // fixture guard: grades 1-4 have a single form
+    const args = { curriculum: c3, checkupSkipped: true, testDate: '', now: NOW };
+    expect(buildPath({ ...args, attempts: [] }).practiceTestRepeat).toBe(false);
+    expect(buildPath({ ...args, attempts: [mockAttempt(forms[0].id, false, 1)] }).practiceTestRepeat).toBe(true);
+  });
+
+  it('F6: a grade with two forms never flags a repeat after one is taken', () => {
+    expect(buildPath({ ...base, attempts: [mockAttempt('mock-ssa-01', false, 1)] }).practiceTestRepeat).toBe(false);
   });
 });

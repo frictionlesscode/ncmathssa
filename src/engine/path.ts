@@ -52,6 +52,8 @@ export interface PathState {
   /** The practice-test form to offer next (least recently taken). */
   practiceTestQuizId?: string;
   practiceTestPassedAt?: string;
+  /** One practice-test form only, and it has been taken: a retake serves the same questions. */
+  practiceTestRepeat: boolean;
   next: NextStep;
 }
 
@@ -206,7 +208,9 @@ export function buildPath(input: {
   // Stable sort: never-taken forms keep their declared order.
   const nextMock = [...mocks].sort((a, b) => lastTaken(a.id).localeCompare(lastTaken(b.id)))[0];
   const mockIds = new Set(mocks.map((m) => m.id));
-  const passedMock = chronological.filter((a) => mockIds.has(a.quizId) && a.isPassingSSA).pop();
+  // Only the most recent practice test says whether the child is ready now (F6).
+  const lastMock = chronological.filter((a) => mockIds.has(a.quizId)).pop();
+  const passedMock = lastMock?.isPassingSSA ? lastMock : undefined;
 
   const checkupDone = checkups.length > 0;
   let next: NextStep;
@@ -232,6 +236,7 @@ export function buildPath(input: {
     round1Skipped: shortOnTime && topics.length > 0 && topics.every((t) => t.round1Skipped),
     practiceTestQuizId: nextMock?.id,
     practiceTestPassedAt: passedMock?.completedAt,
+    practiceTestRepeat: mocks.length === 1 && nextMock !== undefined && lastTaken(nextMock.id) !== '',
     next,
   };
 }

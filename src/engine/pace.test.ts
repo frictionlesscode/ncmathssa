@@ -7,7 +7,7 @@ import type { QuizAttempt } from '../types';
 const NOW = new Date(2026, 8, 30, 12);
 const path = (over: Partial<PathState> = {}): PathState => ({
   topics: [], checkupDone: true, currentRound: 1, activeDomains: [], roundTopicsDone: 0,
-  roundsFinished: 0, roundsTotal: 15, shortOnTime: false, round1Skipped: false, next: { kind: 'practice', round: 1 }, ...over,
+  roundsFinished: 0, roundsTotal: 15, shortOnTime: false, round1Skipped: false, practiceTestRepeat: false, next: { kind: 'practice', round: 1 }, ...over,
 });
 const attemptAt = (iso: string) => ({ completedAt: iso }) as QuizAttempt;
 const input = (over: Partial<Parameters<typeof computePace>[0]> = {}) => ({
