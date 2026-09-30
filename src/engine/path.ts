@@ -67,6 +67,15 @@ export function daysUntil(date: string, now: Date): number | null {
   return Math.round((target.getTime() - today.getTime()) / DAY_MS);
 }
 
+/** Text for a signed day count: null when no date; passed / today / n. Never
+ *  renders "0 days". `unit` is the trailing phrase for the positive case. */
+export function countdownText(days: number | null, unit: string): string | null {
+  if (days === null) return null;
+  if (days < 0) return 'Test date passed';
+  if (days === 0) return 'Test is today';
+  return `${days} ${days === 1 ? unit.replace(/^days/, 'day') : unit}`;
+}
+
 export function isShortOnTime(testDate: string, now: Date): boolean {
   const d = daysUntil(testDate, now);
   return d !== null && d >= 0 && d <= SHORT_ON_TIME_DAYS;

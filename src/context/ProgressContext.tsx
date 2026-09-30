@@ -8,6 +8,7 @@ import type { QuizAttempt } from '../types';
 import type { QuestionRef } from '../engine/questionModel';
 import { masteryByStandard, overallReadiness, type StandardMastery } from '../engine/mastery';
 import { recordResult } from '../engine/scheduler';
+import { daysUntil } from '../engine/path';
 
 export interface ProgressContextValue {
   state: AppStateV2;
@@ -192,7 +193,7 @@ export interface ReadinessSummary {
   totalQuestionsAnswered: number;
   totalCorrectAnswered: number;
   overallAccuracy: number;
-  /** Null when the profile has no (valid) test date. */
+  /** Null when the profile has no (valid) test date; negative once it has passed, 0 on the day. */
   daysUntilExam: number | null;
   dailyQuestionsPace: number;
 }
@@ -218,11 +219,7 @@ export function useReadinessSummary(): ReadinessSummary {
     const overallAccuracy =
       totalQuestionsAnswered > 0 ? Math.round((totalCorrectAnswered / totalQuestionsAnswered) * 100) : 0;
 
-    const targetDate = profile.targetExamDate ? new Date(profile.targetExamDate) : null;
-    const daysUntilExam =
-      targetDate && !Number.isNaN(targetDate.getTime())
-        ? Math.max(0, Math.ceil((targetDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
-        : null;
+    const daysUntilExam = profile.targetExamDate ? daysUntil(profile.targetExamDate, new Date()) : null;
 
     const remainingToPractice = Math.max(0, TARGET_PRACTICE_VOLUME - totalQuestionsAnswered);
     const dailyQuestionsPace =

@@ -42,6 +42,21 @@ describe('StudyPaceModal', () => {
     expect(screen.getByTestId('size')).toHaveTextContent('30');
   });
 
+  it('says the test date passed instead of "0 days"', () => {
+    seed({ targetExamDate: '2020-01-01' });
+    renderModal();
+    expect(screen.getByText('Test date passed')).toBeInTheDocument();
+    expect(screen.queryByText(/0 days/i)).not.toBeInTheDocument();
+  });
+
+  it('says the test is today', () => {
+    const d = new Date();
+    const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    seed({ targetExamDate: today });
+    renderModal();
+    expect(screen.getByText('Test is today')).toBeInTheDocument();
+  });
+
   it('shows no days-remaining text when there is no test date', () => {
     seed({ targetExamDate: '' });
     renderModal();

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ProgressProvider, useProgress } from './context/ProgressContext';
 import { DisclaimerGate } from './components/DisclaimerGate';
 import { FirstRunScreen } from './components/FirstRunScreen';
@@ -37,6 +37,9 @@ const MainApp: React.FC = () => {
   const [screen, setScreen] = useState<Screen>(() => (state.profiles.length > 1 ? { kind: 'who' } : { kind: 'home' }));
   const [studyGuideStandard, setStudyGuideStandard] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  // The "couldn't build" notice belongs to the home screen and one student.
+  useEffect(() => { setNotice(null); }, [profile.id]);
+  useEffect(() => { if (screen.kind !== 'home') setNotice(null); }, [screen.kind]);
 
   const currentPath = () =>
     buildPath({ curriculum, attempts: profile.attempts, checkupSkipped: Boolean(profile.checkupSkipped),

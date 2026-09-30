@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useProgress, useReadinessSummary } from '../context/ProgressContext';
 import { dueEntries } from '../engine/scheduler';
+import { countdownText } from '../engine/path';
 import { listCurricula } from '../curriculum/registry';
 import type { Grade } from '../curriculum/types';
 
@@ -96,7 +97,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             <Calendar className="w-3.5 h-3.5 text-emerald-400" />
             <span>
-              {readiness.daysUntilExam === null ? 'Set test date' : `${readiness.daysUntilExam} days left`}
+              {countdownText(readiness.daysUntilExam, 'days left') ?? 'Set test date'}
             </span>
           </button>
         </div>

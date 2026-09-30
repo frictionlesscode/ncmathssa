@@ -23,6 +23,28 @@ const renderNavbar = () =>
     </ProgressProvider>
   );
 
+describe('Navbar countdown', () => {
+  beforeEach(() => localStorage.clear());
+
+  it('shows "Test date passed" for a past date, never "0 days left"', () => {
+    const s = stateForGrade(5);
+    s.profiles[0].targetExamDate = '2020-01-01';
+    saveState(localStorage, s);
+    renderNavbar();
+    expect(screen.getByText('Test date passed')).toBeInTheDocument();
+    expect(screen.queryByText(/0 days/i)).not.toBeInTheDocument();
+  });
+
+  it('shows "Test is today" on the day', () => {
+    const d = new Date();
+    const s = stateForGrade(5);
+    s.profiles[0].targetExamDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    saveState(localStorage, s);
+    renderNavbar();
+    expect(screen.getByText('Test is today')).toBeInTheDocument();
+  });
+});
+
 describe('Navbar top banner (Finding F7)', () => {
   beforeEach(() => {
     localStorage.clear();

@@ -170,4 +170,12 @@ describe('useReadinessSummary daysUntilExam', () => {
     act(() => result.current.p.updateActiveProfile({ targetExamDate: '2099-01-01' }));
     expect(result.current.r.daysUntilExam).toBeGreaterThan(0);
   });
+
+  it('is negative for a past date and keeps the pace finite', () => {
+    localStorage.clear();
+    const { result } = renderHook(() => ({ p: useProgress(), r: useReadinessSummary() }), { wrapper });
+    act(() => result.current.p.updateActiveProfile({ targetExamDate: '2020-01-01' }));
+    expect(result.current.r.daysUntilExam).toBeLessThan(0);
+    expect(Number.isFinite(result.current.r.dailyQuestionsPace)).toBe(true);
+  });
 });

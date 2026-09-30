@@ -11,6 +11,7 @@ import {
 import { useProgress, useReadinessSummary, domainStatsFor } from '../context/ProgressContext';
 import { standardsOf, weightCompactLabel } from '../curriculum/registry';
 import { dueEntries } from '../engine/scheduler';
+import { countdownText } from '../engine/path';
 import type { NavTab } from './Navbar';
 
 interface DashboardProps {
@@ -170,9 +171,15 @@ export const Dashboard: React.FC<DashboardProps> = ({
               {readiness.daysUntilExam === null ? (
                 <span className="text-base font-normal text-slate-500">No test date set</span>
               ) : (
-                <>
-                  {readiness.daysUntilExam} <span className="text-base font-normal text-slate-500">days left</span>
-                </>
+                readiness.daysUntilExam <= 0 ? (
+                  <span className="text-base font-normal text-slate-500">
+                    {countdownText(readiness.daysUntilExam, 'days left')}
+                  </span>
+                ) : (
+                  <>
+                    {readiness.daysUntilExam} <span className="text-base font-normal text-slate-500">{readiness.daysUntilExam === 1 ? 'day' : 'days'} left</span>
+                  </>
+                )
               )}
             </div>
             <p className="text-xs text-slate-600 mt-1">

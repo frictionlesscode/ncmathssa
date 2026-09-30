@@ -18,7 +18,7 @@ Grades 1–4 as well (`src/curriculum/grade1/` through `grade4/`).
 - **Qualifying Cutoff**: **80% or higher** on the comprehensive assessment.
 - **Honest Blueprint**: Because the secure CASE item bank is strictly confidential and never made public, this application does **not** guess or fabricate real test items. Instead, the entire curriculum and question bank is built directly against the official, public **North Carolina Standard Course of Study (NCSCOS)**, per grade. NCDPI publishes an EOG blueprint (a published weight range per domain) only for **Grades 3–5**; Grades 1–2 have no state assessment to weight against, so their domains are weighted evenly by standard count instead, and the app never shows a percentage as an official weight for those two grades.
 - **Assessment Format**: Every question is **multiple choice**. There is no open-response or free-text entry. Each wrong option is engineered to be the answer a specific, named misconception produces (e.g. "added the denominators" for a fraction-addition slip), so a missed question is diagnostic, not just wrong.
-- **Test Mode**: Real test simulation without mid-quiz answer hints. On completion, an immediate diagnostic report card displays overall score, SSA qualification status against the 80% cutoff, and full worked step-by-step solutions.
+- **Practice test**: A full-length simulation without mid-quiz answer hints, taken at the end of the path. It reports the overall score against the 80% cutoff ("Ready to try for SSA") and shows full worked step-by-step solutions.
 
 ---
 
@@ -78,6 +78,17 @@ Hand the device to the student for each session. Practice gives feedback after e
 
 The "Detailed view" link on the home page keeps the full breakdown by NC standard, study guides and per-standard drills.
 
+**Also available**
+
+- Calculator, on the questions where a calculator is allowed
+- Scratchpad for working out answers
+- Printable report of progress
+- Weak-spots and per-standard drills in Detailed view
+- Multiple students, each with their own progress
+
+**Spaced review.** A missed question returns on the existing Leitner schedule: after 1 day, then 3, 7, 16 and 35 days each time it is answered correctly.
+A wrong answer sends it back to 1 day, and after one more correct answer at 35 days it is retired.
+
 ---
 
 ## Architecture
@@ -109,6 +120,12 @@ change, not a new component.
   - `questionModel.ts` and `template.ts` define the `Question` / answer
     option / misconception-tag shape and how a template realizes into a
     concrete question given a seed.
+  - `path.ts` derives the check-up / rounds / practice-test position from attempts.
+  - `pace.ts` computes the on-track status and the weekly plan.
+  - `pathSession.ts` builds the next session for the current step.
+  - `activeSession.ts` is the saved in-progress session stored on the profile.
+  - `sessionSummary.ts` builds the end-of-session results.
+- **`src/components/DetailedView.tsx`** — the old tabs (dashboard, standards, quizzes, weak spots) now live here, behind the "Detailed view" link.
 - **`src/state/`** — app state, with a versioned schema
   (`AppStateV2`: multiple `Profile`s plus an `activeProfileId`) and a pure,
   tested `migrate()` that upgrades older single-profile saves without

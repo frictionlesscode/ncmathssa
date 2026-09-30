@@ -4,6 +4,7 @@ import { Calendar, Target, X, Check, ArrowRight, RotateCcw, Trash2 } from 'lucid
 import { useProgress, useReadinessSummary } from '../context/ProgressContext';
 import { standardsOf } from '../curriculum/registry';
 import { sessionSizeOf } from '../engine/activeSession';
+import { countdownText } from '../engine/path';
 
 interface StudyPaceModalProps {
   isOpen: boolean;
@@ -89,7 +90,9 @@ export const StudyPaceModal: React.FC<StudyPaceModalProps> = ({ isOpen, onClose 
             />
             {readiness.daysUntilExam !== null && (
               <p className="text-[11px] text-slate-500 mt-1">
-                {readiness.daysUntilExam} days remaining until test window.
+                {readiness.daysUntilExam > 0
+                  ? `${countdownText(readiness.daysUntilExam, 'days remaining')} until test window.`
+                  : countdownText(readiness.daysUntilExam, 'days remaining')}
               </p>
             )}
           </div>
