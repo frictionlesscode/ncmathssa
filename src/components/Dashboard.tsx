@@ -167,7 +167,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
             </div>
             <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Exam Countdown</h3>
             <div className="text-3xl font-black text-slate-900 mt-1">
-              {readiness.daysUntilExam} <span className="text-base font-normal text-slate-500">days left</span>
+              {readiness.daysUntilExam === null ? (
+                <span className="text-base font-normal text-slate-500">No test date set</span>
+              ) : (
+                <>
+                  {readiness.daysUntilExam} <span className="text-base font-normal text-slate-500">days left</span>
+                </>
+              )}
             </div>
             <p className="text-xs text-slate-600 mt-1">
               Target: {profile.targetExamDate || 'Not set'}

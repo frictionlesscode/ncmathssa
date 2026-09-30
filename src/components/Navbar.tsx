@@ -95,7 +95,9 @@ export const Navbar: React.FC<NavbarProps> = ({
             className="flex items-center gap-1 text-slate-300 hover:text-white transition-colors"
           >
             <Calendar className="w-3.5 h-3.5 text-emerald-400" />
-            <span>{readiness.daysUntilExam} days left</span>
+            <span>
+              {readiness.daysUntilExam === null ? 'Set test date' : `${readiness.daysUntilExam} days left`}
+            </span>
           </button>
         </div>
       </div>

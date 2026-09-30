@@ -117,7 +117,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setState((prev) => ({
       ...prev,
       profiles: prev.profiles.map((p) =>
-        p.id === prev.activeProfileId ? { ...p, attempts: [], reviewQueue: {} } : p,
+        p.id === prev.activeProfileId ? { ...p, attempts: [], reviewQueue: {}, activeSession: undefined, checkupSkipped: undefined } : p,
       ),
     }));
   }, []);
@@ -192,7 +192,8 @@ export interface ReadinessSummary {
   totalQuestionsAnswered: number;
   totalCorrectAnswered: number;
   overallAccuracy: number;
-  daysUntilExam: number;
+  /** Null when the profile has no (valid) test date. */
+  daysUntilExam: number | null;
   dailyQuestionsPace: number;
 }
 
@@ -221,11 +222,11 @@ export function useReadinessSummary(): ReadinessSummary {
     const daysUntilExam =
       targetDate && !Number.isNaN(targetDate.getTime())
         ? Math.max(0, Math.ceil((targetDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
-        : 0;
+        : null;
 
     const remainingToPractice = Math.max(0, TARGET_PRACTICE_VOLUME - totalQuestionsAnswered);
     const dailyQuestionsPace =
-      daysUntilExam > 0 ? Math.ceil(remainingToPractice / daysUntilExam) : profile.dailyQuestionGoal;
+      daysUntilExam !== null && daysUntilExam > 0 ? Math.ceil(remainingToPractice / daysUntilExam) : profile.dailyQuestionGoal;
 
     return {
       weightedScore: Math.round(readiness),

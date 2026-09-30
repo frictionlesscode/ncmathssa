@@ -9,9 +9,11 @@ export interface FirstRunScreenResult {
 
 export interface FirstRunScreenProps {
   onComplete: (result: FirstRunScreenResult) => void;
+  /** Given when adding another student; renders a Cancel button. */
+  onCancel?: () => void;
 }
 
-export const FirstRunScreen: React.FC<FirstRunScreenProps> = ({ onComplete }) => {
+export const FirstRunScreen: React.FC<FirstRunScreenProps> = ({ onComplete, onCancel }) => {
   const curricula = listCurricula();
   const [name, setName] = useState('');
   // The HIGHEST registered grade, not the first. `listCurricula()` sorts
@@ -99,6 +101,15 @@ export const FirstRunScreen: React.FC<FirstRunScreenProps> = ({ onComplete }) =>
           >
             Start practicing
           </button>
+          {onCancel && (
+            <button
+              type="button"
+              onClick={onCancel}
+              className="w-full rounded-md border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+            >
+              Cancel
+            </button>
+          )}
         </form>
       </div>
     </div>
