@@ -54,7 +54,7 @@ function nearestSupportedGrade(g: unknown): Grade {
   return grades.reduce((best, x) => (Math.abs(x - g) < Math.abs(best - g) ? x : best), grades[0]);
 }
 
-function normaliseAttempt(v: unknown, newId: () => string): QuizAttempt | null {
+function normaliseAttempt(v: unknown, fallbackId: string): QuizAttempt | null {
   if (!isRecord(v) || !isRecord(v.answers)) return null;
   const answers: QuizAttempt['answers'] = {};
   for (const [k, a] of Object.entries(v.answers)) {
@@ -62,7 +62,7 @@ function normaliseAttempt(v: unknown, newId: () => string): QuizAttempt | null {
   }
   return {
     ...(v as unknown as QuizAttempt),
-    id: isString(v.id) && v.id ? v.id : newId(),
+    id: isString(v.id) && v.id ? v.id : fallbackId,
     completedAt: isString(v.completedAt) ? v.completedAt : '',
     quizId: isString(v.quizId) ? v.quizId : '',
     quizTitle: isString(v.quizTitle) ? v.quizTitle : '',
@@ -114,11 +114,23 @@ function normaliseReviewQueue(v: unknown): ReviewQueue {
   return out;
 }
 
-function normaliseProfile(v: unknown, newId: () => string, seen: Set<string>): Profile | null {
+/** Smallest `base`, `base-2`, `base-3`... not in `taken`; deterministic. */
+function uniqueId(base: string, taken: Set<string>): string {
+  let id = base;
+  for (let n = 2; taken.has(id); n++) id = `${base}-${n}`;
+  return id;
+}
+
+function normaliseProfile(v: unknown, index: number, seen: Set<string>): Profile | null {
   if (!isRecord(v)) return null;
-  let id = isString(v.id) && v.id ? v.id : newId();
-  while (seen.has(id)) id = newId();
+  // Repaired ids come from position, not randomness, so two tabs that repair
+  // the same stored blob agree and a merge does not duplicate the records.
+  const id = uniqueId(isString(v.id) && v.id ? v.id : `legacy-profile-${index}`, seen);
   seen.add(id);
+  const rawAttempts = Array.isArray(v.attempts) ? v.attempts : [];
+  const takenAttemptIds = new Set<string>(
+    rawAttempts.flatMap((a) => (isRecord(a) && isString(a.id) && a.id ? [a.id] : [])),
+  );
   const out: Profile = {
     ...(v as unknown as Profile),
     id,
@@ -126,7 +138,11 @@ function normaliseProfile(v: unknown, newId: () => string, seen: Set<string>): P
     grade: nearestSupportedGrade(v.grade),
     targetExamDate: isString(v.targetExamDate) ? v.targetExamDate : '',
     dailyQuestionGoal: isFiniteNumber(v.dailyQuestionGoal) ? v.dailyQuestionGoal : 20,
-    attempts: (Array.isArray(v.attempts) ? v.attempts : []).map((a) => normaliseAttempt(a, newId)).filter((a): a is QuizAttempt => a !== null),
+    attempts: rawAttempts.map((a, i) => {
+      const fallback = uniqueId(`legacy-${id}-${i}`, takenAttemptIds);
+      takenAttemptIds.add(fallback);
+      return normaliseAttempt(a, fallback);
+    }).filter((a): a is QuizAttempt => a !== null),
     reviewQueue: normaliseReviewQueue(v.reviewQueue),
   };
   const session = normaliseSession(v.activeSession);
@@ -151,13 +167,13 @@ export interface NormalisedState {
  * get defaults, malformed attempts, answers and sessions are dropped, an
  * unsupported grade moves to the nearest supported one, a missing
  * reviewQueue becomes {}. Returns null only when `raw` is not v2 or no
- * usable profile remains. Pure: ids come from `newId`.
+ * usable profile remains. Pure: repaired ids are derived from position, so repeated runs agree.
  */
-export function normaliseState(raw: unknown, newId: () => string = defaultNewId): NormalisedState | null {
+export function normaliseState(raw: unknown): NormalisedState | null {
   if (!isRecord(raw) || raw.version !== 2 || !Array.isArray(raw.profiles)) return null;
   const seen = new Set<string>();
   const profiles = raw.profiles
-    .map((p) => normaliseProfile(p, newId, seen))
+    .map((p, i) => normaliseProfile(p, i, seen))
     .filter((p): p is Profile => p !== null);
   if (profiles.length === 0) return null;
   const wanted = raw.activeProfileId;
@@ -179,7 +195,7 @@ export function normaliseState(raw: unknown, newId: () => string = defaultNewId)
 export function migrate(raw: unknown, opts: MigrateOptions = {}): AppStateV2 {
   const newId = opts.newId ?? defaultNewId;
 
-  const repaired = normaliseState(raw, newId);
+  const repaired = normaliseState(raw);
   if (repaired) return repaired.state;
   if (!isRecord(raw)) return initialState(newId);
 
@@ -272,7 +288,7 @@ export function loadState(storage: Storage, opts: MigrateOptions = {}): AppState
   // it at all, the original text is copied aside before anything overwrites it.
   const rawV2 = readRaw(STORAGE_KEY_V2);
   if (rawV2) {
-    const n = normaliseState(parse(rawV2), newId);
+    const n = normaliseState(parse(rawV2));
     if (n) {
       if (n.repaired) backupRaw(storage, rawV2, now);
       return n.state;

@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { normaliseState, loadState, newProfile, STORAGE_KEY_V2, CORRUPT_KEY_PREFIX } from './storage';
+import { mergeStates } from './merge';
 import { createMemoryStorage } from './memoryStorage';
 import type { QuizAttempt } from '../types';
 
-const gen = () => { let n = 0; return () => `gen_${++n}`; };
 const attempt = (id: string, completedAt = '2026-09-01T00:00:00.000Z'): QuizAttempt => ({
   id, quizId: 'q', quizTitle: 'q', completedAt, scoreRaw: 1, scoreTotal: 1, scorePercent: 100,
   isPassingSSA: true, timeElapsedSeconds: 1,
@@ -24,13 +24,13 @@ const corruptKeys = (s: Storage) =>
 describe('normaliseState', () => {
   it('returns a clean blob unchanged and not marked repaired', () => {
     const raw = blob();
-    const out = normaliseState(raw, gen())!;
+    const out = normaliseState(raw)!;
     expect(out.repaired).toBe(false);
     expect(out.state).toEqual(raw);
   });
 
   it('logic-flows High: a dangling activeProfileId falls back to the first profile and keeps every attempt', () => {
-    const out = normaliseState(blob({ activeProfileId: 'gone' }), gen())!;
+    const out = normaliseState(blob({ activeProfileId: 'gone' }))!;
     expect(out.repaired).toBe(true);
     expect(out.state.activeProfileId).toBe('a');
     expect(out.state.profiles[0].attempts).toHaveLength(1);
@@ -38,9 +38,9 @@ describe('normaliseState', () => {
 
   it('logic-flows High: a profile without id or studentName gets defaults and the others survive', () => {
     const raw = blob({ profiles: [{ grade: 5, attempts: [attempt('x1')] }, newProfile({ id: 'b', studentName: 'Bea', attempts: [attempt('x2')] })] });
-    const out = normaliseState(raw, gen())!;
+    const out = normaliseState(raw)!;
     expect(out.state.profiles).toHaveLength(2);
-    expect(out.state.profiles[0].id).toBe('gen_1');
+    expect(out.state.profiles[0].id).toBe('legacy-profile-0');
     expect(out.state.profiles[0].studentName).toBe('');
     expect(out.state.profiles[0].attempts).toHaveLength(1);
     expect(out.state.profiles[1].attempts).toHaveLength(1);
@@ -49,7 +49,7 @@ describe('normaliseState', () => {
   it('logic-flows High: drops null attempts and attempts without an answers object, keeps good ones', () => {
     const p = newProfile({ id: 'a', studentName: 'Alex' }) as unknown as Record<string, unknown>;
     p.attempts = [null, 7, { id: 'no-answers', completedAt: '2026-09-01T00:00:00.000Z' }, attempt('good')];
-    const out = normaliseState({ version: 2, activeProfileId: 'a', profiles: [p] }, gen())!;
+    const out = normaliseState({ version: 2, activeProfileId: 'a', profiles: [p] })!;
     expect(out.state.profiles[0].attempts.map((a) => a.id)).toEqual(['good']);
   });
 
@@ -57,7 +57,7 @@ describe('normaliseState', () => {
     const bad = attempt('mixed') as unknown as { answers: Record<string, unknown> };
     bad.answers.broken = null;
     const p = newProfile({ id: 'a', studentName: 'Alex', attempts: [bad as unknown as QuizAttempt] });
-    const out = normaliseState({ version: 2, activeProfileId: 'a', profiles: [p] }, gen())!;
+    const out = normaliseState({ version: 2, activeProfileId: 'a', profiles: [p] })!;
     expect(Object.keys(out.state.profiles[0].attempts[0].answers)).toEqual(['a']);
   });
 
@@ -71,26 +71,26 @@ describe('normaliseState', () => {
       { ...newProfile({ id: 'a', studentName: 'Alex' }), activeSession: noRefs },
       { ...newProfile({ id: 'b', studentName: 'Bea' }), activeSession: good },
     ] });
-    const out = normaliseState(raw, gen())!;
+    const out = normaliseState(raw)!;
     expect(out.state.profiles[0].activeSession).toBeUndefined();
     expect(out.state.profiles[1].activeSession).toEqual(good);
   });
 
   it('logic-flows High: moves an unsupported grade to the nearest supported one', () => {
     const grades = [6, 0, undefined, 3].map((g, i) => ({ ...newProfile({ id: `p${i}`, studentName: 'x' }), grade: g }));
-    const out = normaliseState({ version: 2, activeProfileId: 'p0', profiles: grades }, gen())!;
+    const out = normaliseState({ version: 2, activeProfileId: 'p0', profiles: grades })!;
     expect(out.state.profiles.map((p) => p.grade)).toEqual([5, 1, 5, 3]);
   });
 
   it('fills a missing reviewQueue', () => {
     const p = { ...newProfile({ id: 'a', studentName: 'Alex' }) } as Record<string, unknown>;
     delete p.reviewQueue;
-    const out = normaliseState({ version: 2, activeProfileId: 'a', profiles: [p] }, gen())!;
+    const out = normaliseState({ version: 2, activeProfileId: 'a', profiles: [p] })!;
     expect(out.state.profiles[0].reviewQueue).toEqual({});
   });
 
   it('gives two profiles that share an id distinct ids', () => {
-    const out = normaliseState(blob({ profiles: [newProfile({ id: 'dup', studentName: 'A' }), newProfile({ id: 'dup', studentName: 'B' })], activeProfileId: 'dup' }), gen())!;
+    const out = normaliseState(blob({ profiles: [newProfile({ id: 'dup', studentName: 'A' }), newProfile({ id: 'dup', studentName: 'B' })], activeProfileId: 'dup' }))!;
     expect(new Set(out.state.profiles.map((p) => p.id)).size).toBe(2);
   });
 
@@ -143,16 +143,34 @@ describe('loadState repair and backup', () => {
 });
 
 describe('attempt repair', () => {
-  it('logic-flows High: an attempt without an id is kept with a generated id', () => {
+  it('logic-flows High: an attempt without an id is kept with a deterministic repaired id', () => {
     const p = newProfile({ id: 'a', studentName: 'Alex' }) as unknown as Record<string, unknown>;
     const { id: _id, ...noId } = attempt('x');
     const { completedAt: _c, ...noDate } = attempt('y');
     p.attempts = [noId, noDate];
-    const out = normaliseState({ version: 2, activeProfileId: 'a', profiles: [p] }, gen())!;
+    const out = normaliseState({ version: 2, activeProfileId: 'a', profiles: [p] })!;
     expect(out.repaired).toBe(true);
     const [a1, a2] = out.state.profiles[0].attempts;
-    expect(a1.id).toBe('gen_1');
+    expect(a1.id).toBe('legacy-a-0');
     expect(a2.id).toBe('y');
     expect(a2.completedAt).toBe('');
+  });
+
+  it('logic-flows High: repaired ids are deterministic so two tabs loading the same legacy blob agree and merge without duplicates', () => {
+    const p = newProfile({ id: 'a', studentName: 'Alex' }) as unknown as Record<string, unknown>;
+    const { id: _id, ...noId } = attempt('x');
+    const { id: _id2, ...noId2 } = attempt('y', '2026-09-02T00:00:00.000Z');
+    p.attempts = [noId, noId2];
+    const { id: _pid, ...noIdProfile } = newProfile({ id: 'p', studentName: 'Bea' });
+    const raw = { version: 2, activeProfileId: 'a', profiles: [p, noIdProfile, { ...noIdProfile }] };
+    const one = normaliseState(raw)!.state;
+    const two = normaliseState(raw)!.state;
+    expect(one.profiles.map((x) => x.id)).toEqual(two.profiles.map((x) => x.id));
+    expect(new Set(one.profiles.map((x) => x.id)).size).toBe(3);
+    expect(one.profiles[0].attempts.map((x) => x.id)).toEqual(two.profiles[0].attempts.map((x) => x.id));
+    expect(new Set(one.profiles[0].attempts.map((x) => x.id)).size).toBe(2);
+    const merged = mergeStates(one, two);
+    expect(merged.profiles).toHaveLength(3);
+    expect(merged.profiles[0].attempts).toHaveLength(2);
   });
 });
