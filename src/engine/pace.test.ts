@@ -1,12 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import { computePace } from './pace';
-import type { PathState } from './path';
+import { buildPath, type PathState } from './path';
+import { getCurriculum } from '../curriculum/registry';
 import type { QuizAttempt } from '../types';
 
 const NOW = new Date(2026, 8, 30, 12);
 const path = (over: Partial<PathState> = {}): PathState => ({
   topics: [], checkupDone: true, currentRound: 1, activeDomains: [], roundTopicsDone: 0,
-  roundsFinished: 0, roundsTotal: 15, shortOnTime: false, next: { kind: 'practice', round: 1 }, ...over,
+  roundsFinished: 0, roundsTotal: 15, shortOnTime: false, round1Skipped: false, next: { kind: 'practice', round: 1 }, ...over,
 });
 const attemptAt = (iso: string) => ({ completedAt: iso }) as QuizAttempt;
 const input = (over: Partial<Parameters<typeof computePace>[0]> = {}) => ({
@@ -41,9 +42,49 @@ describe('computePace', () => {
   });
 
   it('is ahead when a lot is done early', () => {
-    const p = computePace(input({ attempts: [attemptAt('2026-09-29T00:00:00Z')],
-      path: path({ roundsFinished: 10 }) }));
+    const p = computePace(input({
+      attempts: [attemptAt('2026-09-29T00:00:00Z'), attemptAt('2026-09-29T06:00:00Z')],
+      path: path({ roundsFinished: 10 }),
+    }));
     expect(p.status).toBe('ahead');
+  });
+
+  it('F1: one or fewer attempts is never ahead, whatever the path says', () => {
+    const p = computePace(input({ attempts: [attemptAt('2026-09-29T00:00:00Z')], path: path({ roundsFinished: 10 }) }));
+    expect(p.status).toBe('on-track');
+  });
+
+  const shortPath = (testDate: string) =>
+    buildPath({ curriculum: getCurriculum(5), attempts: [], checkupSkipped: true, testDate, now: NOW });
+
+  it('F1: short-on-time pace with no attempts is on-track, never ahead', () => {
+    const pace = computePace(input({ path: shortPath('2026-10-05'), attempts: [], testDate: '2026-10-05' }));
+    expect(pace.dateState).toBe('short');
+    expect(pace.status).toBe('on-track');
+  });
+
+  it('F1: short-on-time pace with one fresh attempt and nothing finished is on-track, never ahead', () => {
+    const pace = computePace(input({
+      path: shortPath('2026-10-05'), attempts: [attemptAt('2026-09-30T11:00:00Z')], testDate: '2026-10-05',
+    }));
+    expect(pace.dateState).toBe('short');
+    expect(pace.status).toBe('on-track');
+  });
+
+  it('F1: test date today with 0 attempts is short-on-time and on-track, never ahead', () => {
+    const pace = computePace(input({ path: shortPath('2026-09-30'), attempts: [], testDate: '2026-09-30' }));
+    expect(pace.daysLeft).toBe(0);
+    expect(pace.dateState).toBe('short');
+    expect(pace.status).toBe('on-track');
+  });
+
+  it('F1: test date today with exactly 1 attempt is short-on-time and behind, never ahead', () => {
+    const pace = computePace(input({
+      path: shortPath('2026-09-30'), attempts: [attemptAt('2026-09-30T11:00:00Z')], testDate: '2026-09-30',
+    }));
+    expect(pace.daysLeft).toBe(0);
+    expect(pace.dateState).toBe('short');
+    expect(pace.status).toBe('behind');
   });
 
   it('suggests between 1 and 7 sessions a week', () => {

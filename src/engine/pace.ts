@@ -51,5 +51,7 @@ export function computePace(input: {
     const diff = progress - Math.min(100, Math.max(0, elapsed));
     status = diff > ON_TRACK_BAND ? 'ahead' : diff < -ON_TRACK_BAND ? 'behind' : 'on-track';
   }
+  // With no real history yet there is nothing to be ahead of (F1).
+  if (attempts.length < 2 && status === 'ahead') status = 'on-track';
   return { dateState, daysLeft, status, sessionsPerWeek };
 }

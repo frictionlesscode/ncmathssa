@@ -91,11 +91,12 @@ export const ParentHome: React.FC<ParentHomeProps> = ({
   };
 
   const rounds: { round: Round; label: string }[] = [
-    { round: 1, label: 'Round 1: Try every topic' },
+    { round: 1, label: `Round 1: Try every topic${path.round1Skipped ? ' (skipped)' : ''}` },
     { round: 2, label: `Round 2: Get every topic to ${passing}%` },
     { round: 3, label: `Round 3: Test-ready${path.shortOnTime ? ' (optional)' : ''}` },
   ];
-  const marker = (r: Round) => (roundRank(path.currentRound) > r ? '✔' : path.currentRound === r ? '●' : '○');
+  const marker = (r: Round) =>
+    r === 1 && path.round1Skipped ? '–' : roundRank(path.currentRound) > r ? '✔' : path.currentRound === r ? '●' : '○';
 
   return (
     <div className="min-h-screen bg-slate-50">

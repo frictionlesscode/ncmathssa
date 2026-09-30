@@ -12,6 +12,10 @@ export const SHORT_ON_TIME_DAYS = 14;
 export const PRACTICE_QUIZ_PREFIX = 'path-practice-';
 export const ROUND3_QUIZ_PREFIX = 'path-round3-';
 
+/** Rounds a topic needs in the normal path; short on time drops Round 1 (if skipped) and Round 3. */
+export const ROUNDS_PER_TOPIC = 3;
+export const SHORT_ON_TIME_ROUNDS = 2;
+
 export type Round = 1 | 2 | 3;
 
 export interface TopicProgress {
@@ -22,6 +26,7 @@ export interface TopicProgress {
   /** The first round this topic has not finished, or 'done'. */
   round: Round | 'done';
   roundsFinished: number;
+  round1Skipped: boolean;
   strongFromCheckup: boolean;
 }
 
@@ -43,6 +48,7 @@ export interface PathState {
   roundsFinished: number;
   roundsTotal: number;
   shortOnTime: boolean;
+  round1Skipped: boolean;
   /** The practice-test form to offer next (least recently taken). */
   practiceTestQuizId?: string;
   practiceTestPassedAt?: string;
@@ -145,7 +151,6 @@ export function buildPath(input: {
   }
 
   const mastery = masteryByStandard(attempts, c);
-  const maxRounds = shortOnTime ? 2 : 3;
 
   const topics: TopicProgress[] = c.domains
     .map((d) => ({ d, codes: d.standards.map((s) => s.code).filter((code) => withContent.has(code)) }))
@@ -158,18 +163,25 @@ export function buildPath(input: {
       const status = domainStatsFor(d, mastery, passing).status;
       const strongFromCheckup = checkupStrong.has(d.id);
 
-      const r1 = shortOnTime || strongFromCheckup || xs.length >= need;
+      // Round 1 finished for real: the child answered enough, or the check-up already showed strength.
+      const round1Done = strongFromCheckup || xs.length >= need;
+      // Short on time, Round 1 is skipped: it is not shown as finished and not counted toward pace.
+      const round1Skipped = shortOnTime && !round1Done;
+      // Navigation only: short on time never sends a child back to Round 1.
+      const r1 = shortOnTime || round1Done;
       // Short on time: Round 2 is only for the red and yellow topics.
       const r2 = r1 && (passes(xs) || (shortOnTime && status === 'acceleration-ready'));
       const r3 = r2 && passes(r3xs);
-      const roundsFinished = r3 ? 3 : r2 ? 2 : r1 ? 1 : 0;
+      const position = r3 ? 3 : r2 ? 2 : r1 ? 1 : 0; // where the path sends the child
+      const roundsFinished = (round1Done ? 1 : 0) + (r2 ? 1 : 0) + (r3 ? 1 : 0); // what the child did
       return {
         domainId: d.id,
         name: topicName(d),
         status,
         answered: xs.length,
-        round: r3 ? 'done' : ((roundsFinished + 1) as Round),
+        round: r3 ? 'done' : ((position + 1) as Round),
         roundsFinished,
+        round1Skipped,
         strongFromCheckup,
       } satisfies TopicProgress;
     });
@@ -198,6 +210,10 @@ export function buildPath(input: {
   else if (currentRound === 3) next = { kind: 'round3' };
   else next = nextMock ? { kind: 'practice-test', quizId: nextMock.id } : { kind: 'round3' };
 
+  // A topic short on time needs Round 2 only (plus Round 1 when it was not skipped).
+  const roundsNeeded = (t: TopicProgress) =>
+    shortOnTime ? (t.round1Skipped ? SHORT_ON_TIME_ROUNDS - 1 : SHORT_ON_TIME_ROUNDS) : ROUNDS_PER_TOPIC;
+
   return {
     topics,
     checkupDone,
@@ -205,9 +221,10 @@ export function buildPath(input: {
     currentRound,
     activeDomains,
     roundTopicsDone: topics.length - activeDomains.length,
-    roundsFinished: topics.reduce((n, t) => n + Math.min(t.roundsFinished, maxRounds), 0),
-    roundsTotal: topics.length * maxRounds,
+    roundsFinished: topics.reduce((n, t) => n + Math.min(t.roundsFinished, roundsNeeded(t)), 0),
+    roundsTotal: topics.reduce((n, t) => n + roundsNeeded(t), 0),
     shortOnTime,
+    round1Skipped: shortOnTime && topics.length > 0 && topics.every((t) => t.round1Skipped),
     practiceTestQuizId: nextMock?.id,
     practiceTestPassedAt: passedMock?.completedAt,
     next,

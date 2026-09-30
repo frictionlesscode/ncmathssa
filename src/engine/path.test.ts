@@ -178,3 +178,35 @@ describe('roundRank', () => {
   });
 });
 
+
+describe('F1: short-on-time progress', () => {
+  const soon = { ...base, testDate: '2026-10-10', checkupSkipped: true };
+
+  it('F1: a skipped Round 1 is not credited as finished', () => {
+    const fresh = buildPath({ ...soon, attempts: [] });
+    expect(fresh.shortOnTime).toBe(true);
+    expect(fresh.roundsFinished).toBe(0);
+    expect(fresh.roundsTotal).toBe(domainIds.length); // only Round 2 is needed per topic
+    expect(fresh.round1Skipped).toBe(true);
+    expect(fresh.topics.every((t) => t.round1Skipped && t.roundsFinished === 0)).toBe(true);
+    expect(fresh.currentRound).toBe(2); // navigation is unchanged
+  });
+
+  it('F1: finished rounds count once the child does the work, and the total stays fair', () => {
+    const d = domainIds[0];
+    const p = buildPath({ ...soon, attempts: [attempt(`${PRACTICE_QUIZ_PREFIX}1`, many(d, needFor(d), true))] });
+    const t = p.topics.find((x) => x.domainId === d)!;
+    expect(t.round1Skipped).toBe(false); // real answers finished Round 1 for real
+    expect(t.roundsFinished).toBe(2);
+    expect(p.roundsFinished).toBe(2);
+    expect(p.roundsTotal).toBe(2 + (domainIds.length - 1));
+    expect(p.round1Skipped).toBe(false);
+  });
+
+  it('F1: outside short-on-time the counts are unchanged', () => {
+    const p = buildPath({ ...base, checkupSkipped: true, attempts: [] });
+    expect(p.round1Skipped).toBe(false);
+    expect(p.roundsFinished).toBe(0);
+    expect(p.roundsTotal).toBe(domainIds.length * 3);
+  });
+});

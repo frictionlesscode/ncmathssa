@@ -115,3 +115,21 @@ describe('ParentHome', () => {
     expect(screen.getByRole('button', { name: /switch student/i })).toBeInTheDocument();
   });
 });
+
+describe('ParentHome short-on-time path (F1)', () => {
+  beforeEach(() => localStorage.clear());
+
+  it('F1: shows Round 1 as skipped, not finished, and never "Ahead"', () => {
+    const { container } = renderHome({ targetExamDate: ymd(7), checkupSkipped: true });
+    expect(screen.getByText(/round 1: try every topic \(skipped\)/i)).toBeInTheDocument();
+    expect(container.textContent).not.toMatch(/✔ Round 1/);
+    expect(container.textContent).not.toMatch(/ahead/i);
+  });
+
+  it('F1: test date today shows Round 1 skipped, never a check mark, never "Ahead"', () => {
+    const { container } = renderHome({ targetExamDate: ymd(0), checkupSkipped: true });
+    expect(screen.getByText(/round 1: try every topic \(skipped\)/i)).toBeInTheDocument();
+    expect(container.textContent).not.toMatch(/✔ Round 1/);
+    expect(container.textContent).not.toMatch(/ahead/i);
+  });
+});
