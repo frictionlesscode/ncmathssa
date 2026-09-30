@@ -239,7 +239,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     rulesAndFormulas: [
       { label: 'The hidden middle question', detail: 'Ask: what do I need to know BEFORE I can answer what was asked? That is step one.' },
       { label: 'Label the middle number', detail: 'Write "markers in the packs = 32" rather than a bare 32. A labelled number is much harder to use in the wrong place.' },
-      { label: 'One equation, two steps', detail: '(4 × 8) + 5 = m. The brackets show which part happens first.' },
+      { label: 'One equation, two steps', detail: '(4 × 8) + 5 = m. The parentheses show which part happens first.' },
       { label: 'Equal groups first, then the extra', detail: 'Anything already owned, or given away, is added or subtracted AFTER the groups are counted - not built into each group.' },
       { label: 'Estimate as a safety net', detail: '4 packs of 8 is about 30, plus a few, so the answer should be in the thirties. A number in the fifties means something went wrong.' },
     ],
@@ -248,7 +248,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       'Step 2: Find the hidden middle question - the thing you must know before you can answer that.',
       'Step 3: Do that first step and WRITE THE ANSWER DOWN with a label.',
       'Step 4: Use that labelled number in the second step, together with whatever is left over from the story.',
-      'Step 5: Write one equation with a symbol for the unknown, using brackets to show which step came first.',
+      'Step 5: Write one equation with a symbol for the unknown, using parentheses to show which step came first.',
       'Step 6: Check the size of your answer against the story - should it be bigger or smaller than the middle number?',
     ],
     commonTraps: [
