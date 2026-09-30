@@ -20,4 +20,14 @@ describe('deploy gate (logic-flows Process)', () => {
     expect(deploy).toMatch(/github\.event\.workflow_run\.conclusion == 'success'/);
     expect(deploy).toMatch(/ref: \$\{\{ github\.event\.workflow_run\.head_sha \}\}/);
   });
+
+  it('logic-flows Process: deploys only for CI runs triggered by a push, never a pull request', () => {
+    expect(deploy).toMatch(
+      /github\.event\.workflow_run\.conclusion == 'success' && github\.event\.workflow_run\.event == 'push'/,
+    );
+  });
+
+  it('a skipped build also skips deploy', () => {
+    expect(deploy).toMatch(/deploy:\r?\n\s+needs: build/);
+  });
 });
