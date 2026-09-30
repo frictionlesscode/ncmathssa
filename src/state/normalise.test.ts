@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { normaliseState, loadState, newProfile, STORAGE_KEY_V2, CORRUPT_KEY_PREFIX } from './storage';
+import { normaliseState, loadState, backupRaw, newProfile, STORAGE_KEY_V2, CORRUPT_KEY_PREFIX } from './storage';
 import { mergeStates } from './merge';
 import { createMemoryStorage } from './memoryStorage';
 import type { QuizAttempt } from '../types';
@@ -99,6 +99,31 @@ describe('normaliseState', () => {
     expect(normaliseState({ version: 1 })).toBeNull();
     expect(normaliseState({ version: 2, profiles: [], activeProfileId: 'x' })).toBeNull();
     expect(normaliseState({ version: 2, profiles: [null, 3], activeProfileId: 'x' })).toBeNull();
+  });
+});
+
+describe('backupRaw pruning', () => {
+  const at = (day: number) => new Date(Date.UTC(2026, 8, day));
+
+  it('keeps only the 3 newest corrupt backups', () => {
+    const s = createMemoryStorage();
+    for (let d = 1; d <= 5; d++) backupRaw(s, `raw-${d}`, at(d));
+    const keys = corruptKeys(s).sort();
+    expect(keys.map((k) => s.getItem(k))).toEqual(['raw-3', 'raw-4', 'raw-5']);
+  });
+
+  it('never removes the backup it just wrote, even when it sorts oldest', () => {
+    const s = createMemoryStorage();
+    for (let d = 10; d <= 12; d++) backupRaw(s, `raw-${d}`, at(d));
+    backupRaw(s, 'older', at(1));
+    expect(corruptKeys(s).map((k) => s.getItem(k))).toContain('older');
+  });
+
+  it('swallows a failure while pruning', () => {
+    const s = createMemoryStorage();
+    for (let d = 1; d <= 4; d++) backupRaw(s, `raw-${d}`, at(d));
+    s.removeItem = () => { throw new Error('nope'); };
+    expect(backupRaw(s, 'raw-5', at(5))).toBe(true);
   });
 });
 

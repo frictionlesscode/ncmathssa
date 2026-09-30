@@ -242,11 +242,31 @@ export function backupRaw(storage: Storage, raw: string, now: Date): boolean {
       const k = storage.key(i);
       if (k && k.startsWith(CORRUPT_KEY_PREFIX) && storage.getItem(k) === raw) return true;
     }
-    storage.setItem(`${CORRUPT_KEY_PREFIX}${now.toISOString()}`, raw);
+    const written = `${CORRUPT_KEY_PREFIX}${now.toISOString()}`;
+    storage.setItem(written, raw);
+    pruneBackups(storage, written);
     return true;
   } catch {
     // Nothing more can be done; the original blob is still untouched.
     return false;
+  }
+}
+
+const MAX_CORRUPT_BACKUPS = 3;
+
+/** Keeps the newest few backups (ISO times sort lexically) so repeated
+ *  corruption cannot eat the storage quota. Best effort; never removes `keep`. */
+function pruneBackups(storage: Storage, keep: string): void {
+  try {
+    const keys: string[] = [];
+    for (let i = 0; i < storage.length; i++) {
+      const k = storage.key(i);
+      if (k && k.startsWith(CORRUPT_KEY_PREFIX)) keys.push(k);
+    }
+    keys.sort().reverse();
+    for (const k of keys.slice(MAX_CORRUPT_BACKUPS)) if (k !== keep) storage.removeItem(k);
+  } catch {
+    // Pruning is housekeeping; the backup itself is already safe.
   }
 }
 
