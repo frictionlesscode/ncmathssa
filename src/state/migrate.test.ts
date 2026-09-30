@@ -119,13 +119,14 @@ describe('migrate', () => {
     expect(out.profiles[0].attempts).toEqual([]);
   });
 
-  it('treats a v2 blob whose activeProfileId does not resolve as unrecognized', () => {
+  it('repairs a v2 blob whose activeProfileId does not resolve, instead of discarding it', () => {
     const out = migrate({
       version: 2,
       profiles: [{ id: 'p_1', studentName: 'X', grade: 5, targetExamDate: '', dailyQuestionGoal: 20, attempts: [], reviewQueue: {} }],
       activeProfileId: 'does-not-exist',
     });
-    expect(out.profiles[0].studentName).not.toBe('X');
+    expect(out.profiles[0].studentName).toBe('X');
+    expect(out.activeProfileId).toBe('p_1');
   });
 
   it('accepts injected now/newId so it is a pure, deterministic function', () => {
@@ -209,7 +210,7 @@ describe('loadState', () => {
     expect(s.getItem(STORAGE_KEY_V1)).not.toBeNull();
   });
 
-  it('a v2 blob with a dangling activeProfileId also falls through to v1', () => {
+  it('a v2 blob with a dangling activeProfileId is repaired and still wins over v1', () => {
     const s = mem();
     s.setItem(STORAGE_KEY_V2, JSON.stringify({
       version: 2,
@@ -219,8 +220,8 @@ describe('loadState', () => {
     s.setItem(STORAGE_KEY_V1, JSON.stringify(v1Real));
 
     const out = loadState(s);
-    expect(out.profiles[0].studentName).not.toBe('Ghost');
-    expect(out.profiles[0].attempts.length).toBe((v1Real as { attempts: unknown[] }).attempts.length);
+    expect(out.profiles[0].studentName).toBe('Ghost');
+    expect(out.activeProfileId).toBe('p_x');
   });
 });
 
