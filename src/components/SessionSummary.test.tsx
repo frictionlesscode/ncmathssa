@@ -30,7 +30,7 @@ describe('SessionSummary', () => {
     expect(screen.getByText(/decimals & place value/i)).toBeInTheDocument();
     expect(screen.getByText(/missed 2/i)).toBeInTheDocument();
     expect(screen.getByText(/these will come back next time/i)).toBeInTheDocument();
-    expect(screen.getByText(/readiness: 0% → 10%/i)).toBeInTheDocument();
+    expect(screen.getByText(/readiness: 0% → 5%/i)).toBeInTheDocument();
     expect(container.textContent).not.toMatch(/NC\.\d/);
     await userEvent.click(screen.getByRole('button', { name: /back to home/i }));
     expect(onHome).toHaveBeenCalledTimes(1);

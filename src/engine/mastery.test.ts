@@ -14,6 +14,7 @@ import {
 } from './mastery';
 import { getCurriculum, standardsOf } from '../curriculum/registry';
 import type { QuizAttempt } from '../types';
+import { buildReadinessAttempt } from '../state/readiness.testkit';
 import type { StandardMastery } from './mastery';
 
 const c = getCurriculum(5);
@@ -227,5 +228,27 @@ describe('topMisconceptionFamilies', () => {
         tags: [{ tag: 'added-instead-of-multiplied', count: 4 }],
       },
     ]);
+  });
+});
+
+describe('F2: readiness scaled by evidence', () => {
+  it('F2: a perfect one-answer-per-standard check-up is 25%, not 100%', () => {
+    const r = overallReadiness(masteryByStandard([buildReadinessAttempt(1, 1)], c), c);
+    expect(r).toBeCloseTo(25, 5);
+    expect(readinessStatus(r, c.ssa.passingPercent)).toBe('building');
+  });
+
+  it('F2: two answers per standard counts half', () => {
+    expect(overallReadiness(masteryByStandard([buildReadinessAttempt(2, 2)], c), c)).toBeCloseTo(50, 5);
+  });
+
+  it('F2: four answers per standard counts fully', () => {
+    const r = overallReadiness(masteryByStandard([buildReadinessAttempt(4, 4)], c), c);
+    expect(r).toBeCloseTo(100, 5);
+    expect(readinessStatus(r, c.ssa.passingPercent)).toBe('ready');
+  });
+
+  it('F2: untested standards stay 0', () => {
+    expect(overallReadiness(masteryByStandard([], c), c)).toBe(0);
   });
 });

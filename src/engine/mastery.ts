@@ -92,9 +92,17 @@ export function masteryByStandard(
   return out;
 }
 
-/** Blueprint-weighted composite, 0-100. Untested standards count as 0:
- *  readiness means readiness for the whole assessment. Unrounded: compare it
- *  with readinessStatus and show it with formatPercent. */
+/** Weight a standard's accuracy by how much evidence backs it: below
+ *  MIN_SAMPLE_FOR_MASTERY answers a perfect score counts proportionally
+ *  less, so one lucky answer per standard cannot look like readiness (F2). */
+function evidenceAdjustedPercent(m: StandardMastery | undefined): number {
+  if (!m) return 0;
+  return m.percent * Math.min(1, m.total / MIN_SAMPLE_FOR_MASTERY);
+}
+
+/** Blueprint-weighted composite, 0-100, unrounded. Untested standards count
+ *  as 0: readiness means readiness for the whole assessment. Compare it with
+ *  readinessStatus and show it with formatPercent. */
 export function overallReadiness(
   mastery: Map<StandardCode, StandardMastery>,
   c: GradeCurriculum,
@@ -104,7 +112,7 @@ export function overallReadiness(
     const weight = domainWeight(c, d.id);
     if (d.standards.length === 0) continue;
     const domainPercent =
-      d.standards.reduce((sum, s) => sum + (mastery.get(s.code)?.percent ?? 0), 0) /
+      d.standards.reduce((sum, s) => sum + evidenceAdjustedPercent(mastery.get(s.code)), 0) /
       d.standards.length;
     total += (weight / 100) * domainPercent;
   }
