@@ -7,6 +7,7 @@ import { KidPractice } from './KidPractice';
 import { getCurriculum } from '../curriculum/registry';
 import { newSession, recordAnswer, type ActiveSession } from '../engine/activeSession';
 import { correctOption } from '../engine/questionModel';
+import { newProfile, saveState } from '../state/storage';
 
 const c = getCurriculum(5);
 const diagnostic = c.quizzes.find((q) => q.isDiagnostic)!;
@@ -73,7 +74,7 @@ describe('KidPractice', () => {
   it('stopping with nothing answered discards', async () => {
     const { onDiscard, onFinish } = setup();
     await userEvent.click(screen.getByRole('button', { name: /stop for today/i }));
-    expect(screen.getByText(/stop and save your progress\?/i)).toBeInTheDocument();
+    expect(screen.getByText(/stop now\? your answers so far are saved and counted/i)).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: /yes, stop/i }));
     expect(onDiscard).toHaveBeenCalledTimes(1);
     expect(onFinish).not.toHaveBeenCalled();
@@ -119,5 +120,49 @@ describe('KidPractice', () => {
     const text = container.textContent ?? '';
     expect(text).not.toContain(q1.standardCode);
     expect(text).not.toMatch(/\d\.[A-Z]{2,3}\.\d/);
+  });
+});
+
+describe('KidPractice text diagrams (content-g3 CRITICAL display)', () => {
+  beforeEach(() => localStorage.clear());
+
+  it('g3 nf2: promptDetails render monospace with exact spacing', () => {
+    saveState(localStorage, {
+      version: 2, activeProfileId: 'p3',
+      profiles: [newProfile({ id: 'p3', studentName: 'Sam', grade: 3 })],
+    });
+    const ref = { kind: 'generated' as const, templateId: 'g3.nf2.fraction-on-a-number-line', seed: 7 };
+    const q = getCurriculum(3).source.resolve(ref);
+    expect(q.promptDetails).toBeTruthy();
+    setup(newSession({ kind: 'practice', quizId: 'path-practice-1', title: 't', refs: [ref], now: new Date() }));
+    const box = screen.getByTestId('prompt-details');
+    expect(box.textContent).toBe(q.promptDetails);
+    expect(box).toHaveClass('font-mono', 'whitespace-pre', 'overflow-x-auto');
+  });
+});
+
+describe('KidPractice accessibility (logic-flows Medium)', () => {
+  beforeEach(() => localStorage.clear());
+
+  it('moves focus to the feedback heading, which sits in a status region', async () => {
+    setup();
+    await choose(correctOption(q1).label);
+    const heading = screen.getByRole('heading', { name: /nice!/i });
+    expect(heading).toHaveFocus();
+    expect(screen.getByRole('status')).toContainElement(heading);
+  });
+
+  it('options expose selection with aria-pressed', async () => {
+    setup();
+    const label = q1.options[0].label;
+    expect(option(label)).toHaveAttribute('aria-pressed', 'false');
+    await userEvent.click(option(label));
+    expect(option(label)).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('spec 2.6: the stop confirm says answers are saved and counted', async () => {
+    setup();
+    await userEvent.click(screen.getByRole('button', { name: /stop for today/i }));
+    expect(screen.getByText('Stop now? Your answers so far are saved and counted.')).toBeInTheDocument();
   });
 });

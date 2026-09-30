@@ -1,4 +1,6 @@
 import type { QuizAttempt } from '../types';
+import type { GradeCurriculum } from '../curriculum/types';
+import { currentGradeAttempts } from './attempts';
 import { daysUntil, DAY_MS, ROUND_SAMPLE, type PathState } from './path';
 
 /** Within this many percentage points of where the calendar says the child
@@ -24,8 +26,9 @@ export function computePace(input: {
   testDate: string;
   now: Date;
   sessionSize: number;
+  curriculum: GradeCurriculum;
 }): Pace {
-  const { path, attempts, testDate, now, sessionSize } = input;
+  const { path, attempts, testDate, now, sessionSize, curriculum } = input;
   const daysLeft = daysUntil(testDate, now);
   if (daysLeft === null) return { dateState: 'none', daysLeft: null };
   if (daysLeft < 0) return { dateState: 'passed', daysLeft };
@@ -39,7 +42,8 @@ export function computePace(input: {
   const sessionsPerWeek = Math.min(7, Math.max(1, Math.ceil(sessionsLeft / weeks)));
 
   const progress = path.roundsTotal === 0 ? 100 : (path.roundsFinished / path.roundsTotal) * 100;
-  const first = attempts.reduce<string | null>(
+  const mine = currentGradeAttempts(attempts, curriculum);
+  const first = mine.reduce<string | null>(
     (min, a) => (min === null || a.completedAt < min ? a.completedAt : min),
     null,
   );
@@ -51,5 +55,7 @@ export function computePace(input: {
     const diff = progress - Math.min(100, Math.max(0, elapsed));
     status = diff > ON_TRACK_BAND ? 'ahead' : diff < -ON_TRACK_BAND ? 'behind' : 'on-track';
   }
+  // With no real history yet there is nothing to be ahead of (F1).
+  if (mine.length < 2 && status === 'ahead') status = 'on-track';
   return { dateState, daysLeft, status, sessionsPerWeek };
 }

@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { ProgressProvider, useProgress } from '../context/ProgressContext';
 import { AdaptiveSessionCard } from './AdaptiveSessionCard';
 import type { QuestionRef } from '../engine/questionModel';
+import type { ComposedRef } from '../engine/sessionComposer';
 
 const renderCard = (onStart = vi.fn()) => {
   render(
@@ -50,18 +51,18 @@ describe('AdaptiveSessionCard', () => {
       return null;
     };
 
-    let captured: QuestionRef[] = [];
+    let captured: ComposedRef[] = [];
     render(
       <ProgressProvider>
         <Capture />
-        <AdaptiveSessionCard onStart={(refs) => { captured = refs; }} />
+        <AdaptiveSessionCard onStart={(composed) => { captured = composed; }} />
       </ProgressProvider>
     );
 
     await userEvent.click(screen.getByRole('button', { name: /start.*practice/i }));
 
     expect(captured.length).toBeGreaterThan(0);
-    for (const ref of captured) {
+    for (const { ref } of captured) {
       expect(() => resolveFn!(ref)).not.toThrow();
     }
   });

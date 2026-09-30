@@ -11,13 +11,14 @@ import { useProgress } from '../context/ProgressContext';
 import { standardsOf, weightCompactLabel } from '../curriculum/registry';
 import type { QuizDefinition } from '../types';
 import { AdaptiveSessionCard } from './AdaptiveSessionCard';
-import type { QuestionRef } from '../engine/questionModel';
+import type { ComposedRef } from '../engine/sessionComposer';
 import { parseQuestionRef } from '../engine/questionModel';
+import { isPassing as meetsBar, displayPercent } from '../engine/mastery';
 
 interface QuizzesListViewProps {
   onStartQuiz: (quizId: string) => void;
   onStartStandardDrill: (standardCode: string) => void;
-  onStartAdaptiveSession: (refs: QuestionRef[]) => void;
+  onStartAdaptiveSession: (composed: ComposedRef[]) => void;
 }
 
 export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
@@ -33,8 +34,14 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
   const getBestScore = (quizId: string) => {
     const attempts = profile.attempts.filter(a => a.quizId === quizId);
     if (attempts.length === 0) return null;
-    return Math.max(...attempts.map(a => a.scorePercent));
+    // Shown floored from raw counts so a miss never displays as the goal (F5).
+    return displayPercent(Math.max(...attempts.map(a =>
+      a.scoreTotal > 0 ? (a.scoreRaw * 100) / a.scoreTotal : a.scorePercent)));
   };
+
+  // Pass is decided from raw counts, never from the rounded percent (F5).
+  const hasPassed = (quizId: string) =>
+    profile.attempts.some(a => a.quizId === quizId && meetsBar(a.scoreRaw, a.scoreTotal, passingPercent));
 
   const diagnosticQuiz = curriculum.quizzes.find(q => q.isDiagnostic);
   const mockQuizzes = curriculum.quizzes.filter(q => q.isMockAssessment);
@@ -86,7 +93,7 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
           NCSCOS Grade {curriculum.grade} Assessment Library
         </h1>
         <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl">
-          Take full timed mock exams, comprehensive module assessments, or drill individual standards. Every quiz is benchmarked against Wake County's {passingPercent}% passing bar.
+          Take full timed mock exams, comprehensive module assessments, or drill individual standards. Practice tests are scored against the {passingPercent}% SSA bar; module quizzes and drills are practice.
         </p>
       </div>
 
@@ -122,7 +129,7 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
                 <div className="text-right">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Best Score</span>
                   <span className={`text-xl font-black ${
-                    (getBestScore(diagnosticQuiz.id) ?? 0) >= passingPercent ? 'text-emerald-600' : 'text-amber-600'
+                    hasPassed(diagnosticQuiz.id) ? 'text-emerald-600' : 'text-amber-600'
                   }`}>
                     {getBestScore(diagnosticQuiz.id)}%
                   </span>
@@ -154,7 +161,7 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
         <div className="grid md:grid-cols-2 gap-5">
           {mockQuizzes.map(quiz => {
             const best = getBestScore(quiz.id);
-            const isPassing = best !== null && best >= passingPercent;
+            const isPassing = hasPassed(quiz.id);
 
             return (
               <div
@@ -213,7 +220,7 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
           {moduleDrills.map(quiz => {
             const best = getBestScore(quiz.id);
             const domain = curriculum.domains.find(d => d.id === quiz.domainId);
-            const isPassing = best !== null && best >= passingPercent;
+            const isPassing = hasPassed(quiz.id);
 
             return (
               <div

@@ -38,7 +38,12 @@ export interface QuizDefinition {
   isCustomDrill?: boolean;
   timeLimitMinutes?: number;
   questionIds: string[];
+  /** Question id -> 'review' for questions that came from the due-review queue (adaptive practice). */
+  origins?: Record<string, AnswerOrigin>;
 }
+
+/** Where a question came from in its session: fresh content or a due review. Missing means 'new'. */
+export type AnswerOrigin = 'new' | 'review';
 
 export interface QuizAttemptAnswer {
   questionId: string;
@@ -48,6 +53,7 @@ export interface QuizAttemptAnswer {
   misconception?: string;        // tag of the distractor chosen, when wrong
   timeSpentSeconds?: number;
   flaggedForReview?: boolean;
+  origin?: AnswerOrigin;         // absent means 'new'; only 'review' is written
 }
 
 export interface QuizAttempt {

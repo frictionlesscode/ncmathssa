@@ -1,7 +1,7 @@
 import type { DomainId, GradeCurriculum, StandardCode } from '../curriculum/types';
 import { topicName } from '../curriculum/registry';
 import type { QuizAttempt } from '../types';
-import { domainStatsFor, masteryByStandard, type MasteryStatus } from './mastery';
+import { domainStatsFor, isPassing, masteryByStandard, type MasteryStatus } from './mastery';
 
 /** How many recent answers a round's exit rule looks at (spec 5.3). */
 export const ROUND_SAMPLE = 8;
@@ -11,6 +11,10 @@ export const SHORT_ON_TIME_DAYS = 14;
  *  Round 3 (test-style) session apart from ordinary practice. */
 export const PRACTICE_QUIZ_PREFIX = 'path-practice-';
 export const ROUND3_QUIZ_PREFIX = 'path-round3-';
+
+/** Rounds a topic needs in the normal path; short on time drops Round 1 (if skipped) and Round 3. */
+export const ROUNDS_PER_TOPIC = 3;
+export const SHORT_ON_TIME_ROUNDS = 2;
 
 export type Round = 1 | 2 | 3;
 
@@ -22,6 +26,7 @@ export interface TopicProgress {
   /** The first round this topic has not finished, or 'done'. */
   round: Round | 'done';
   roundsFinished: number;
+  round1Skipped: boolean;
   strongFromCheckup: boolean;
 }
 
@@ -43,9 +48,12 @@ export interface PathState {
   roundsFinished: number;
   roundsTotal: number;
   shortOnTime: boolean;
+  round1Skipped: boolean;
   /** The practice-test form to offer next (least recently taken). */
   practiceTestQuizId?: string;
   practiceTestPassedAt?: string;
+  /** One practice-test form only, and it has been taken: a retake serves the same questions. */
+  practiceTestRepeat: boolean;
   next: NextStep;
 }
 
@@ -76,6 +84,19 @@ export function countdownText(days: number | null, unit: string): string | null 
   return `${days} ${days === 1 ? unit.replace(/^days/, 'day') : unit}`;
 }
 
+/** Weeks are rounded, so 20 days reads "3 weeks", not "2" (F13). */
+export function timeLeftText(days: number): string {
+  if (days === 0) return 'Test is today';
+  if (days >= 14) return `${Math.round(days / 7)} weeks left`;
+  return days === 1 ? '1 day left' : `${days} days left`;
+}
+
+/** The local calendar day, used as a memo key so day-dependent values refresh after midnight (F11). */
+export function localDayKey(now: Date): string {
+  const p = (n: number) => String(n).padStart(2, '0');
+  return `${now.getFullYear()}-${p(now.getMonth() + 1)}-${p(now.getDate())}`;
+}
+
 export function isShortOnTime(testDate: string, now: Date): boolean {
   const d = daysUntil(testDate, now);
   return d !== null && d >= 0 && d <= SHORT_ON_TIME_DAYS;
@@ -90,8 +111,9 @@ export function sampleSizeFor(c: GradeCurriculum, standards: StandardCode[]): nu
   return Math.max(1, Math.min(ROUND_SAMPLE, authored));
 }
 
-function percent(xs: boolean[]): number {
-  return xs.length === 0 ? 0 : (xs.filter(Boolean).length / xs.length) * 100;
+/** True when the list is non-empty and meets the bar exactly (no rounding). */
+function meetsBar(xs: boolean[], passing: number): boolean {
+  return isPassing(xs.filter(Boolean).length, xs.length, passing);
 }
 
 function push<K, V>(m: Map<K, V[]>, k: K, v: V) {
@@ -122,14 +144,17 @@ export function buildPath(input: {
   const checkups = diagnostic ? chronological.filter((a) => a.quizId === diagnostic.id) : [];
   const lastCheckup = checkups[checkups.length - 1];
 
-  const all = new Map<DomainId, boolean[]>();
-  const round3 = new Map<DomainId, boolean[]>();
+  const all = new Map<DomainId, boolean[]>();      // every answer: Round 1 volume, topic label
+  const fresh = new Map<DomainId, boolean[]>();    // without due reviews: the Round 2 exit window
+  const round3 = new Map<DomainId, boolean[]>();   // Round 3 sessions without due reviews: the Round 3 exit window
   for (const a of chronological) {
     const isRound3 = a.quizId.startsWith(ROUND3_QUIZ_PREFIX);
     for (const ans of Object.values(a.answers)) {
       const d = domainByStandard.get(ans.standardCode);
       if (!d) continue; // another grade's content
       push(all, d, ans.isCorrect);
+      if (ans.origin === 'review') continue; // due reviews of finished topics must not pull them back (F8)
+      push(fresh, d, ans.isCorrect);
       if (isRound3) push(round3, d, ans.isCorrect);
     }
   }
@@ -141,11 +166,10 @@ export function buildPath(input: {
       const d = domainByStandard.get(ans.standardCode);
       if (d) push(byDomain, d, ans.isCorrect);
     }
-    for (const [d, xs] of byDomain) if (percent(xs) >= passing) checkupStrong.add(d);
+    for (const [d, xs] of byDomain) if (meetsBar(xs, passing)) checkupStrong.add(d);
   }
 
   const mastery = masteryByStandard(attempts, c);
-  const maxRounds = shortOnTime ? 2 : 3;
 
   const topics: TopicProgress[] = c.domains
     .map((d) => ({ d, codes: d.standards.map((s) => s.code).filter((code) => withContent.has(code)) }))
@@ -153,23 +177,31 @@ export function buildPath(input: {
     .map(({ d, codes }) => {
       const need = sampleSizeFor(c, codes);
       const xs = all.get(d.id) ?? [];
+      const freshXs = fresh.get(d.id) ?? [];
       const r3xs = round3.get(d.id) ?? [];
-      const passes = (list: boolean[]) => list.length >= need && percent(list.slice(-need)) >= passing;
+      const passes = (list: boolean[]) => list.length >= need && meetsBar(list.slice(-need), passing);
       const status = domainStatsFor(d, mastery, passing).status;
       const strongFromCheckup = checkupStrong.has(d.id);
 
-      const r1 = shortOnTime || strongFromCheckup || xs.length >= need;
+      // Round 1 finished for real: the child answered enough, or the check-up already showed strength.
+      const round1Done = strongFromCheckup || xs.length >= need;
+      // Short on time, Round 1 is skipped: it is not shown as finished and not counted toward pace.
+      const round1Skipped = shortOnTime && !round1Done;
+      // Navigation only: short on time never sends a child back to Round 1.
+      const r1 = shortOnTime || round1Done;
       // Short on time: Round 2 is only for the red and yellow topics.
-      const r2 = r1 && (passes(xs) || (shortOnTime && status === 'acceleration-ready'));
+      const r2 = r1 && (passes(freshXs) || (shortOnTime && status === 'acceleration-ready'));
       const r3 = r2 && passes(r3xs);
-      const roundsFinished = r3 ? 3 : r2 ? 2 : r1 ? 1 : 0;
+      const position = r3 ? 3 : r2 ? 2 : r1 ? 1 : 0; // where the path sends the child
+      const roundsFinished = (round1Done ? 1 : 0) + (r2 ? 1 : 0) + (r3 ? 1 : 0); // what the child did
       return {
         domainId: d.id,
         name: topicName(d),
         status,
         answered: xs.length,
-        round: r3 ? 'done' : ((roundsFinished + 1) as Round),
+        round: r3 ? 'done' : ((position + 1) as Round),
         roundsFinished,
+        round1Skipped,
         strongFromCheckup,
       } satisfies TopicProgress;
     });
@@ -189,7 +221,9 @@ export function buildPath(input: {
   // Stable sort: never-taken forms keep their declared order.
   const nextMock = [...mocks].sort((a, b) => lastTaken(a.id).localeCompare(lastTaken(b.id)))[0];
   const mockIds = new Set(mocks.map((m) => m.id));
-  const passedMock = chronological.filter((a) => mockIds.has(a.quizId) && a.isPassingSSA).pop();
+  // Only the most recent practice test says whether the child is ready now (F6).
+  const lastMock = chronological.filter((a) => mockIds.has(a.quizId)).pop();
+  const passedMock = lastMock?.isPassingSSA ? lastMock : undefined;
 
   const checkupDone = checkups.length > 0;
   let next: NextStep;
@@ -198,6 +232,10 @@ export function buildPath(input: {
   else if (currentRound === 3) next = { kind: 'round3' };
   else next = nextMock ? { kind: 'practice-test', quizId: nextMock.id } : { kind: 'round3' };
 
+  // A topic short on time needs Round 2 only (plus Round 1 when it was not skipped).
+  const roundsNeeded = (t: TopicProgress) =>
+    shortOnTime ? (t.round1Skipped ? SHORT_ON_TIME_ROUNDS - 1 : SHORT_ON_TIME_ROUNDS) : ROUNDS_PER_TOPIC;
+
   return {
     topics,
     checkupDone,
@@ -205,11 +243,13 @@ export function buildPath(input: {
     currentRound,
     activeDomains,
     roundTopicsDone: topics.length - activeDomains.length,
-    roundsFinished: topics.reduce((n, t) => n + Math.min(t.roundsFinished, maxRounds), 0),
-    roundsTotal: topics.length * maxRounds,
+    roundsFinished: topics.reduce((n, t) => n + Math.min(t.roundsFinished, roundsNeeded(t)), 0),
+    roundsTotal: topics.reduce((n, t) => n + roundsNeeded(t), 0),
     shortOnTime,
+    round1Skipped: shortOnTime && topics.length > 0 && topics.every((t) => t.round1Skipped),
     practiceTestQuizId: nextMock?.id,
     practiceTestPassedAt: passedMock?.completedAt,
+    practiceTestRepeat: mocks.length === 1 && nextMock !== undefined && lastTaken(nextMock.id) !== '',
     next,
   };
 }

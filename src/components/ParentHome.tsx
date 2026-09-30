@@ -1,9 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import { useProgress } from '../context/ProgressContext';
-import { buildPath, roundRank, type NextStep, type Round } from '../engine/path';
+import { buildPath, localDayKey, timeLeftText, roundRank, ROUND_SAMPLE, type NextStep, type Round } from '../engine/path';
 import { computePace, type PaceStatus } from '../engine/pace';
 import { answeredCount, sessionSizeOf } from '../engine/activeSession';
-import type { MasteryStatus } from '../engine/mastery';
+import { formatPercent, readinessStatus, type MasteryStatus } from '../engine/mastery';
 import { StudyPaceModal } from './StudyPaceModal';
 import { PrintReportModal } from './PrintReportModal';
 
@@ -26,12 +26,6 @@ const PACE_LABEL: Record<PaceStatus, string> = {
   behind: '⚠️ A bit behind',
   ahead: '🚀 Ahead',
 };
-
-function timeLeft(days: number): string {
-  if (days === 0) return 'Test is today';
-  if (days >= 14) return `${Math.floor(days / 7)} weeks left`;
-  return days === 1 ? '1 day left' : `${days} days left`;
-}
 
 function formatDate(ymd: string): string {
   const [y, m, d] = ymd.split('-').map(Number);
@@ -63,15 +57,16 @@ export const ParentHome: React.FC<ParentHomeProps> = ({
   const passing = curriculum.ssa.passingPercent;
 
   const now = new Date();
+  const dayKey = localDayKey(now);
   const path = useMemo(
     () => buildPath({ curriculum, attempts: profile.attempts, checkupSkipped: Boolean(profile.checkupSkipped),
       testDate: profile.targetExamDate, now }),
     // `now` changes every render; the inputs that matter are listed.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [curriculum, profile.attempts, profile.checkupSkipped, profile.targetExamDate],
+    [curriculum, profile.attempts, profile.checkupSkipped, profile.targetExamDate, dayKey],
   );
   const pace = computePace({ path, attempts: profile.attempts, testDate: profile.targetExamDate, now,
-    sessionSize: sessionSizeOf(profile) });
+    sessionSize: sessionSizeOf(profile), curriculum });
   const saved = profile.activeSession;
 
   const dateInput = (
@@ -91,17 +86,18 @@ export const ParentHome: React.FC<ParentHomeProps> = ({
   };
 
   const rounds: { round: Round; label: string }[] = [
-    { round: 1, label: 'Round 1: Try every topic' },
+    { round: 1, label: `Round 1: Try every topic${path.round1Skipped ? ' (skipped)' : ''}` },
     { round: 2, label: `Round 2: Get every topic to ${passing}%` },
     { round: 3, label: `Round 3: Test-ready${path.shortOnTime ? ' (optional)' : ''}` },
   ];
-  const marker = (r: Round) => (roundRank(path.currentRound) > r ? '✔' : path.currentRound === r ? '●' : '○');
+  const marker = (r: Round) =>
+    r === 1 && path.round1Skipped ? '–' : roundRank(path.currentRound) > r ? '✔' : path.currentRound === r ? '●' : '○';
 
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="max-w-2xl mx-auto px-4 py-8 space-y-6">
         {/* 1. Tracker */}
-        <section className="bg-white rounded-xl border border-slate-200 p-5 space-y-3">
+        <section data-testid="readiness-tracker" data-readiness-state={readinessStatus(readiness, passing)} className="bg-white rounded-xl border border-slate-200 p-5 space-y-3">
           <h1 className="text-xl font-bold text-slate-900">{profile.studentName} · Grade {curriculum.grade} math</h1>
           <div>
             <div className="relative h-3 rounded-full bg-slate-200 overflow-hidden" aria-hidden="true">
@@ -109,7 +105,7 @@ export const ParentHome: React.FC<ParentHomeProps> = ({
               <div className="absolute top-0 h-full w-0.5 bg-slate-800" style={{ left: `${passing}%` }} />
             </div>
             <p className="mt-2 text-slate-800">
-              <strong>{Math.round(readiness)}% ready</strong> — goal: {passing}%
+              <strong>{formatPercent(readiness)} ready</strong> — goal: {passing}%
             </p>
             <p className="text-xs text-slate-500">This is practice readiness, not a prediction of the real test.</p>
           </div>
@@ -120,7 +116,7 @@ export const ParentHome: React.FC<ParentHomeProps> = ({
             {(pace.dateState === 'normal' || pace.dateState === 'short') && (
               <>
                 <p>
-                  Test date: {formatDate(profile.targetExamDate)} · {timeLeft(pace.daysLeft!)} · {PACE_LABEL[pace.status!]}
+                  Test date: {formatDate(profile.targetExamDate)} · {timeLeftText(pace.daysLeft!)} · {PACE_LABEL[pace.status!]}
                 </p>
                 {pace.dateState === 'normal' ? (
                   <p>
@@ -145,6 +141,9 @@ export const ParentHome: React.FC<ParentHomeProps> = ({
               </li>
             ))}
           </ul>
+          <p className="mt-2 text-xs text-slate-500">
+            Topics are labelled from all answers so far. A round counts as finished when the most recent {ROUND_SAMPLE} answers are strong.
+          </p>
         </section>
 
         {/* 3. Path */}
@@ -172,6 +171,11 @@ export const ParentHome: React.FC<ParentHomeProps> = ({
             </div>
           ) : (
             <div className="space-y-2">
+              {path.practiceTestRepeat && path.next.kind === 'practice-test' && (
+                <p className="text-xs text-slate-600">
+                  You&rsquo;ve seen this test before &mdash; the score may be higher than on a new test.
+                </p>
+              )}
               <button onClick={() => onStartStep(path.next)} className="w-full rounded-xl bg-blue-600 px-4 py-3 text-lg font-semibold text-white hover:bg-blue-700">
                 {stepLabel(path.next)} ▶
               </button>

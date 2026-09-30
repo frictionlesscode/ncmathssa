@@ -2,7 +2,7 @@ import React from 'react';
 import { Printer, X, Award, CheckCircle, AlertTriangle, HelpCircle } from 'lucide-react';
 import { useProgress, useReadinessSummary, domainStatsFor } from '../context/ProgressContext';
 import { standardsOf, weightHeading, weightValue } from '../curriculum/registry';
-import { topMisconceptionFamilies } from '../engine/mastery';
+import { topMisconceptionFamilies, formatPercent } from '../engine/mastery';
 import { MISCONCEPTIONS, familyLabel } from '../curriculum/misconceptions';
 
 interface PrintReportModalProps {
@@ -127,7 +127,7 @@ export const PrintReportModal: React.FC<PrintReportModalProps> = ({ isOpen, onCl
               <p className="text-xs mt-1 font-medium max-w-lg">
                 {readiness.isAccelerationReady
                   ? `Candidate has achieved the ${passingPercent}% acceleration threshold across tested standards. Continue maintaining readiness with timed full mock exams.`
-                  : `Currently ${passingPercent - readiness.weightedScore}% below the ${passingPercent}% WCPSS qualifying bar. ${curriculum.weighting.kind === 'ncdpi-blueprint' ? 'Focused drill on high-weight domains is recommended.' : 'Focused drill on the domains furthest below the bar is recommended.'}`}
+                  : `Currently ${readiness.pointsToGoal}% below the ${passingPercent}% WCPSS qualifying bar. ${curriculum.weighting.kind === 'ncdpi-blueprint' ? 'Focused drill on high-weight domains is recommended.' : 'Focused drill on the domains furthest below the bar is recommended.'}`}
               </p>
             </div>
             <div className="text-right flex flex-col items-end">
@@ -177,7 +177,7 @@ export const PrintReportModal: React.FC<PrintReportModalProps> = ({ isOpen, onCl
                         {dm.status === 'untested' ? (
                           <span className="text-slate-400">Untested</span>
                         ) : (
-                          <span className={dm.masteryPercent >= passingPercent ? 'text-emerald-600 font-extrabold' : 'text-amber-600 font-extrabold'}>
+                          <span className={dm.status === 'acceleration-ready' ? 'text-emerald-600 font-extrabold' : 'text-amber-600 font-extrabold'}>
                             {dm.masteryPercent}%
                           </span>
                         )}
@@ -231,7 +231,7 @@ export const PrintReportModal: React.FC<PrintReportModalProps> = ({ isOpen, onCl
                     <div>
                       {sm?.status === 'acceleration-ready' ? (
                         <span className="flex items-center gap-1 text-emerald-600 font-bold text-[11px]">
-                          <CheckCircle className="w-3.5 h-3.5" /> {Math.round(sm.percent)}%
+                          <CheckCircle className="w-3.5 h-3.5" /> {formatPercent(sm.percent)}
                         </span>
                       ) : !sm || sm.status === 'untested' ? (
                         <span className="text-slate-400 text-[11px] flex items-center gap-1">
@@ -239,7 +239,7 @@ export const PrintReportModal: React.FC<PrintReportModalProps> = ({ isOpen, onCl
                         </span>
                       ) : (
                         <span className="text-amber-600 font-bold text-[11px] flex items-center gap-1">
-                          <AlertTriangle className="w-3.5 h-3.5" /> {Math.round(sm.percent)}%
+                          <AlertTriangle className="w-3.5 h-3.5" /> {formatPercent(sm.percent)}
                         </span>
                       )}
                     </div>

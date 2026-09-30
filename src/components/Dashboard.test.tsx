@@ -6,6 +6,8 @@ import { newProfile, saveState } from '../state/storage';
 import type { AppStateV2 } from '../state/types';
 import type { Grade } from '../curriculum/types';
 import { getCurriculum } from '../curriculum/registry';
+import { buildReadinessAttempt } from '../state/readiness.testkit';
+import type { QuizAttempt } from '../types';
 
 function stateForGrade(grade: Grade): AppStateV2 {
   const profile = newProfile({ id: `p-${grade}`, studentName: 'Test', grade });
@@ -51,6 +53,21 @@ const renderDashboard = () =>
       />
     </ProgressProvider>
   );
+
+describe('Dashboard topic copy', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  it('F10: topics are compared with a goal, not claimed as an SSA benchmark', () => {
+    saveState(localStorage, stateForGrade(5));
+    renderDashboard();
+    expect(screen.queryByText(/strictly benchmarked/i)).not.toBeInTheDocument();
+    expect(
+      screen.getByText(/Each topic is compared with the 80% goal; only full practice tests say whether you're ready for SSA\./),
+    ).toBeInTheDocument();
+  });
+});
 
 describe('Dashboard weight labeling', () => {
   beforeEach(() => {
@@ -121,5 +138,66 @@ describe('Dashboard weight labeling', () => {
     saveState(localStorage, stateHavingTakenDiagnostic(5));
     renderDashboard();
     expect(screen.getByText(/Drill High-Weight Domains to Reach the \d+% Benchmark/)).toBeInTheDocument();
+  });
+});
+
+describe('Dashboard readiness labels (F3, F4)', () => {
+  beforeEach(() => localStorage.clear());
+
+  it('F4: a domain with 3 of 3 right is not labelled Ready', () => {
+    const code = getCurriculum(5).domains.find((d) => d.id === 'NF')!.standards[0].code;
+    const attempt: QuizAttempt = {
+      id: 'a1', quizId: 'x', quizTitle: 'x', completedAt: '2026-09-30T00:00:00.000Z',
+      scoreRaw: 3, scoreTotal: 3, scorePercent: 100, isPassingSSA: true, timeElapsedSeconds: 1,
+      answers: Object.fromEntries([0, 1, 2].map((i) => [`q${i}`, { questionId: `q${i}`, studentAnswer: 'A', isCorrect: true, standardCode: code }])),
+    };
+    saveState(localStorage, { version: 2, activeProfileId: 'p', profiles: [newProfile({ id: 'p', studentName: 'T', attempts: [attempt] })] });
+    renderDashboard();
+    expect(screen.getByText('Needs more answers')).toBeInTheDocument();
+    expect(screen.queryByText('Ready')).not.toBeInTheDocument();
+  });
+
+  it('F3: at 79.6% the headline, badge and gap all say "not there yet"', () => {
+    const diagnosticId = getCurriculum(5).quizzes.find((q) => q.isDiagnostic)!.id;
+    saveState(localStorage, {
+      version: 2, activeProfileId: 'p',
+      profiles: [newProfile({ id: 'p', studentName: 'T', attempts: [buildReadinessAttempt(250, 199, diagnosticId)] })],
+    });
+    renderDashboard();
+    expect(screen.getByTestId('readiness-badge')).toHaveAttribute('data-readiness-state', 'building');
+    expect(screen.getByText(/Current Composite: 79%/)).toBeInTheDocument();
+    expect(screen.getByText(/Need 1% more for SSA threshold/)).toBeInTheDocument();
+    expect(screen.queryByText(/Acceleration Ready!/)).not.toBeInTheDocument();
+    expect(screen.getByText(/Drill High-Weight Domains/)).toBeInTheDocument();
+  });
+});
+
+describe('Dashboard history chips (F10)', () => {
+  beforeEach(() => localStorage.clear());
+  it('F10: a passed drill is not labelled "SSA Passed"', () => {
+    const attempt: QuizAttempt = {
+      id: 'd1', quizId: 'drill-nf1', quizTitle: 'NF drill', completedAt: '2026-09-30T00:00:00.000Z',
+      scoreRaw: 4, scoreTotal: 5, scorePercent: 80, isPassingSSA: true, timeElapsedSeconds: 60, answers: {},
+    };
+    saveState(localStorage, { version: 2, activeProfileId: 'p', profiles: [newProfile({ id: 'p', studentName: 'T', attempts: [attempt] })] });
+    renderDashboard();
+    expect(screen.queryByText(/SSA Passed/)).not.toBeInTheDocument();
+    expect(screen.getByText('Practice')).toBeInTheDocument();
+  });
+});
+
+describe('Dashboard quizzes taken (F14)', () => {
+  beforeEach(() => localStorage.clear());
+  const at = (id: string, code: string): QuizAttempt => ({
+    id, quizId: 'x', quizTitle: 'x', completedAt: '2026-09-30T00:00:00.000Z', scoreRaw: 1, scoreTotal: 1, scorePercent: 100,
+    isPassingSSA: true, timeElapsedSeconds: 1,
+    answers: { q: { questionId: 'q', studentAnswer: 'A', isCorrect: true, standardCode: code } },
+  });
+  it('F14: counts only the current grade attempts', () => {
+    saveState(localStorage, { version: 2, activeProfileId: 'p', profiles: [newProfile({
+      id: 'p', studentName: 'T', grade: 5, attempts: [at('a', 'NC.5.NF.1'), at('b', 'NC.5.NBT.1'), at('c', 'NC.3.OA.1')],
+    })] });
+    renderDashboard();
+    expect(screen.getByText('2 Quizzes Taken')).toBeInTheDocument();
   });
 });

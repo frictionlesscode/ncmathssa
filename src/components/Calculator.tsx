@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Calculator as CalcIcon, X } from 'lucide-react';
+import { useEscapeKey } from './useEscapeKey';
 
 interface CalculatorProps {
   isOpen: boolean;
@@ -7,6 +8,7 @@ interface CalculatorProps {
 }
 
 export const Calculator: React.FC<CalculatorProps> = ({ isOpen, onClose }) => {
+  useEscapeKey(isOpen, onClose);
   const [display, setDisplay] = useState('0');
   const [prevVal, setPrevVal] = useState<number | null>(null);
   const [op, setOp] = useState<string | null>(null);
@@ -74,7 +76,7 @@ export const Calculator: React.FC<CalculatorProps> = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 bg-slate-900/90 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-700 p-4 w-72 text-white">
+    <div role="dialog" aria-label="Calculator" className="fixed bottom-6 right-6 z-50 bg-slate-900/90 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-700 p-4 w-72 text-white">
       <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-700">
         <div className="flex items-center gap-2">
           <CalcIcon className="w-4 h-4 text-emerald-400" />
@@ -82,6 +84,7 @@ export const Calculator: React.FC<CalculatorProps> = ({ isOpen, onClose }) => {
         </div>
         <button
           onClick={onClose}
+          aria-label="Close calculator"
           className="text-slate-400 hover:text-white p-1 rounded-md transition-colors"
         >
           <X className="w-4 h-4" />

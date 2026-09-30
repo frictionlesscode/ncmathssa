@@ -5,6 +5,8 @@ import { ProgressProvider } from '../context/ProgressContext';
 import { ParentHome } from './ParentHome';
 import { newProfile, saveState } from '../state/storage';
 import type { Profile } from '../state/types';
+import { buildReadinessAttempt } from '../state/readiness.testkit';
+import { getCurriculum } from '../curriculum/registry';
 
 const ymd = (daysFromNow: number) => {
   const d = new Date();
@@ -113,5 +115,73 @@ describe('ParentHome', () => {
     localStorage.clear();
     renderHome({}, [newProfile({ id: 'p2', studentName: 'Sam' })]);
     expect(screen.getByRole('button', { name: /switch student/i })).toBeInTheDocument();
+  });
+});
+
+describe('ParentHome short-on-time path (F1)', () => {
+  beforeEach(() => localStorage.clear());
+
+  it('F1: shows Round 1 as skipped, not finished, and never "Ahead"', () => {
+    const { container } = renderHome({ targetExamDate: ymd(7), checkupSkipped: true });
+    expect(screen.getByText(/round 1: try every topic \(skipped\)/i)).toBeInTheDocument();
+    expect(container.textContent).not.toMatch(/✔ Round 1/);
+    expect(container.textContent).not.toMatch(/ahead/i);
+  });
+
+  it('F1: test date today shows Round 1 skipped, never a check mark, never "Ahead"', () => {
+    const { container } = renderHome({ targetExamDate: ymd(0), checkupSkipped: true });
+    expect(screen.getByText(/round 1: try every topic \(skipped\)/i)).toBeInTheDocument();
+    expect(container.textContent).not.toMatch(/✔ Round 1/);
+    expect(container.textContent).not.toMatch(/ahead/i);
+  });
+});
+
+describe('ParentHome readiness and topic captions', () => {
+  beforeEach(() => localStorage.clear());
+
+  it('F3: 79.6% shows as 79% and not ready', () => {
+    renderHome({ attempts: [buildReadinessAttempt(250, 199)] });
+    expect(screen.getByTestId('readiness-tracker')).toHaveTextContent(/79% ready/);
+    expect(screen.getByTestId('readiness-tracker')).toHaveAttribute('data-readiness-state', 'building');
+  });
+
+  it('F7: explains that topic labels use every answer while rounds use the recent ones', () => {
+    renderHome();
+    expect(screen.getByText(/topics are labelled from all answers so far/i)).toBeInTheDocument();
+  });
+});
+
+describe('ParentHome practice-test banner (F6)', () => {
+  beforeEach(() => localStorage.clear());
+  const mock = (id: string, quizId: string, passed: boolean, day: number) => ({
+    id, quizId, quizTitle: 'Mock', completedAt: new Date(2026, 10, day, 12).toISOString(),
+    scoreRaw: 0, scoreTotal: 0, scorePercent: 0, isPassingSSA: passed, timeElapsedSeconds: 0, answers: {},
+  });
+
+  it('F6: no "Ready to try" after a later failed practice test', () => {
+    renderHome({ attempts: [mock('m1', 'mock-ssa-01', true, 2), mock('m2', 'mock-ssa-02', false, 5)] });
+    expect(screen.queryByText(/Ready to try for SSA/)).not.toBeInTheDocument();
+  });
+
+  it('F6: warns that a single form has been seen before', () => {
+    const forms = getCurriculum(3).quizzes.filter((q) => q.isMockAssessment);
+    // Short on time with every standard answered correctly puts the path on the practice-test step.
+    renderHome({
+      grade: 3, checkupSkipped: true, targetExamDate: ymd(7),
+      attempts: [buildReadinessAttempt(40, 40, 'fixture', 3), mock('m1', forms[0].id, false, 2)],
+    });
+    expect(screen.getByRole('button', { name: /practice test/i })).toBeInTheDocument();
+    expect(screen.getByText(/seen this test before/i)).toBeInTheDocument();
+  });
+
+  it('F6: does not show the repeat note before the practice-test step', () => {
+    const forms = getCurriculum(3).quizzes.filter((q) => q.isMockAssessment);
+    renderHome({ grade: 3, attempts: [mock('m1', forms[0].id, false, 2)] });
+    expect(screen.queryByText(/seen this test before/i)).not.toBeInTheDocument();
+  });
+
+  it('F6: says nothing about repeats for a fresh student', () => {
+    renderHome({ grade: 3 });
+    expect(screen.queryByText(/seen this test before/i)).not.toBeInTheDocument();
   });
 });

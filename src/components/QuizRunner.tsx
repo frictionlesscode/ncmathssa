@@ -14,7 +14,9 @@ import { useProgress } from '../context/ProgressContext';
 import { resolveSession, sessionToAttempt, type ActiveSession, type SessionAnswer } from '../engine/activeSession';
 import { checkAnswer, formatTime } from '../utils/answerChecker';
 import { Scratchpad } from './Scratchpad';
+import { useEscapeKey } from './useEscapeKey';
 import { Calculator } from './Calculator';
+import { PromptDetails } from './PromptDetails';
 
 interface QuizRunnerProps {
   session: ActiveSession;
@@ -38,12 +40,17 @@ export const QuizRunner: React.FC<QuizRunnerProps> = ({ session, onChange, onFin
   const [isPaused, setIsPaused] = useState(false);
   const [showNavigator, setShowNavigator] = useState(false);
   const [showConfirmSubmit, setShowConfirmSubmit] = useState(false);
+  useEscapeKey(showNavigator, () => setShowNavigator(false));
+  useEscapeKey(showConfirmSubmit, () => setShowConfirmSubmit(false));
 
   const secondsRef = useRef(secondsElapsed);
   secondsRef.current = secondsElapsed;
 
   const snapshot = (): ActiveSession => {
     const saved: Record<string, SessionAnswer> = {};
+    // Keep answers whose question no longer resolves: dropping them would lose them for good.
+    const known = new Set(questions.map((q) => q.id));
+    for (const [id, a] of Object.entries(session.answers)) if (!known.has(id)) saved[id] = a;
     for (const q of questions) {
       const sel = answers[q.id];
       if (sel?.trim()) saved[q.id] = { selected: sel, isCorrect: checkAnswer(q, sel) };
@@ -101,7 +108,7 @@ export const QuizRunner: React.FC<QuizRunnerProps> = ({ session, onChange, onFin
     onFinish(sessionToAttempt(snapshot(), questions, passingPercent, new Date(), { answeredOnly: false }));
   };
 
-  const answeredCount = Object.keys(answers).filter(k => answers[k]?.trim().length > 0).length;
+  const answeredCount = questions.filter(q => answers[q.id]?.trim().length > 0).length;
   const unansweredCount = questions.length - answeredCount;
 
   return (
@@ -111,8 +118,9 @@ export const QuizRunner: React.FC<QuizRunnerProps> = ({ session, onChange, onFin
         <div className="flex items-center gap-3">
           <button
             onClick={() => { onChange(snapshot()); onPause(); }}
-            className="p-1.5 text-slate-400 hover:text-white rounded-lg transition-colors"
+            className="p-1.5 min-h-[44px] min-w-[44px] flex items-center justify-center text-slate-400 hover:text-white rounded-lg transition-colors"
             title="Stop for today (your progress is saved)"
+            aria-label="Stop for today, your progress is saved"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
@@ -160,7 +168,7 @@ export const QuizRunner: React.FC<QuizRunnerProps> = ({ session, onChange, onFin
         <div className="flex items-center gap-2 sm:gap-3">
           <button
             onClick={() => setIsScratchpadOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl shadow-xs transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 min-h-[44px] bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl shadow-xs transition-colors"
             title="Open scratchpad whiteboard"
           >
             <Pen className="w-3.5 h-3.5" />
@@ -171,8 +179,9 @@ export const QuizRunner: React.FC<QuizRunnerProps> = ({ session, onChange, onFin
           <button
             type="button"
             onClick={() => setIsPaused(!isPaused)}
-            className="font-mono text-xs sm:text-sm font-extrabold px-3 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-xl border border-slate-700 transition-colors cursor-pointer"
+            className="font-mono text-xs sm:text-sm font-extrabold px-3 py-1.5 min-h-[44px] bg-slate-800 hover:bg-slate-700 rounded-xl border border-slate-700 transition-colors cursor-pointer"
             title={isPaused ? "Resume Timer" : "Pause Timer"}
+            aria-label={isPaused ? `Resume timer, paused at ${formatTime(secondsElapsed)}` : `Pause timer, ${formatTime(secondsElapsed)} elapsed`}
           >
             {isPaused ? '⏸ ' : ''}{formatTime(secondsElapsed)}
           </button>
@@ -232,9 +241,7 @@ export const QuizRunner: React.FC<QuizRunnerProps> = ({ session, onChange, onFin
             </h2>
 
             {currentQ.promptDetails && (
-              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 font-mono text-base font-semibold text-slate-800 whitespace-pre-wrap">
-                {currentQ.promptDetails}
-              </div>
+              <PromptDetails className="p-4 rounded-2xl text-base">{currentQ.promptDetails}</PromptDetails>
             )}
           </div>
 
@@ -316,11 +323,12 @@ export const QuizRunner: React.FC<QuizRunnerProps> = ({ session, onChange, onFin
       {/* Question Navigator Drawer / Modal */}
       {showNavigator && (
         <div className="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-xs flex items-end justify-center p-4">
-          <div className="bg-white rounded-3xl p-6 shadow-2xl border border-slate-200 w-full max-w-xl animate-in slide-in-from-bottom-6 duration-200">
+          <div role="dialog" aria-modal="true" aria-label="Question navigator" className="bg-white rounded-3xl p-6 shadow-2xl border border-slate-200 w-full max-w-xl animate-in slide-in-from-bottom-6 duration-200">
             <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-200">
               <h3 className="text-sm font-extrabold text-slate-900">Question Navigator</h3>
               <button
                 onClick={() => setShowNavigator(false)}
+                aria-label="Close question navigator"
                 className="p-1 text-slate-400 hover:text-slate-700 rounded-lg"
               >
                 <X className="w-4 h-4" />
@@ -375,7 +383,7 @@ export const QuizRunner: React.FC<QuizRunnerProps> = ({ session, onChange, onFin
       {/* Confirmation Modal if Submitting with Unanswered Questions */}
       {showConfirmSubmit && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-6 shadow-2xl border border-slate-200 max-w-md w-full animate-in zoom-in-95 duration-150">
+          <div role="dialog" aria-modal="true" aria-label="Unanswered questions" className="bg-white rounded-3xl p-6 shadow-2xl border border-slate-200 max-w-md w-full animate-in zoom-in-95 duration-150">
             <div className="flex items-center gap-3 mb-3 text-amber-600">
               <AlertCircle className="w-6 h-6" />
               <h3 className="text-base font-extrabold text-slate-900">Unanswered Questions</h3>

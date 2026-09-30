@@ -5,9 +5,16 @@ import {
   masteryByStandard,
   topMisconceptions,
   topMisconceptionFamilies,
+  isPassing,
+  readinessStatus,
+  formatPercent,
+  displayPercent,
+  pointsToGoal,
+  domainStatsFor,
 } from './mastery';
-import { getCurriculum } from '../curriculum/registry';
+import { getCurriculum, standardsOf } from '../curriculum/registry';
 import type { QuizAttempt } from '../types';
+import { buildReadinessAttempt } from '../state/readiness.testkit';
 import type { StandardMastery } from './mastery';
 
 const c = getCurriculum(5);
@@ -18,21 +25,85 @@ describe('masteryStatus', () => {
   });
 
   it('is acceleration-ready at or above the passing mark', () => {
-    expect(masteryStatus(80, 10, 80)).toBe('acceleration-ready');
-    expect(masteryStatus(95, 10, 80)).toBe('acceleration-ready');
+    expect(masteryStatus(8, 10, 80)).toBe('acceleration-ready');
+    expect(masteryStatus(19, 20, 80)).toBe('acceleration-ready');
   });
 
   it('is approaching between 60 and the passing mark', () => {
-    expect(masteryStatus(70, 10, 80)).toBe('approaching');
+    expect(masteryStatus(7, 10, 80)).toBe('approaching');
   });
 
   it('is needs-focus below 60', () => {
-    expect(masteryStatus(45, 10, 80)).toBe('needs-focus');
+    expect(masteryStatus(9, 20, 80)).toBe('needs-focus');
   });
 
   it('does not award acceleration-ready on a single lucky answer', () => {
     // 1 for 1 is 100% but says nothing; require a minimum sample.
-    expect(masteryStatus(100, 1, 80)).toBe('approaching');
+    expect(masteryStatus(1, 1, 80)).toBe('approaching');
+  });
+
+  it('F5: 63 of 79 (79.75%) is approaching, not ready', () => {
+    expect(masteryStatus(63, 79, 80)).toBe('approaching');
+  });
+
+  it('F5: 119 of 200 (59.5%) is needs-focus, not approaching', () => {
+    expect(masteryStatus(119, 200, 80)).toBe('needs-focus');
+  });
+});
+
+describe('isPassing', () => {
+  it('compares exactly, with no rounding', () => {
+    expect(isPassing(4, 5, 80)).toBe(true);
+    expect(isPassing(79, 100, 80)).toBe(false);
+    expect(isPassing(63, 79, 80)).toBe(false);
+    expect(isPassing(0, 0, 80)).toBe(false);
+  });
+  it('reads the bar it is given, not a literal 80', () => {
+    expect(isPassing(3, 5, 60)).toBe(true);
+    expect(isPassing(3, 5, 61)).toBe(false);
+  });
+});
+
+describe('readiness thresholds and display (F3)', () => {
+  it('F3: 79.6 is building and displays as 79%', () => {
+    expect(readinessStatus(79.6, 80)).toBe('building');
+    expect(formatPercent(79.6)).toBe('79%');
+    expect(displayPercent(79.95)).toBe(79);
+    expect(pointsToGoal(79.6, 80)).toBe(1);
+  });
+  it('F3: floating-point noise around 80 is ready and displays as 80%', () => {
+    expect(readinessStatus(79.99999999999999, 80)).toBe('ready');
+    expect(formatPercent(79.99999999999999)).toBe('80%');
+    expect(readinessStatus(80, 80)).toBe('ready');
+    expect(pointsToGoal(80, 80)).toBe(0);
+  });
+  it('F3: a uniform 79.6% accuracy is not ready anywhere', () => {
+    const mastery = new Map(standardsOf(c).map((s) => [s.code, {
+      standardCode: s.code, total: 500, correct: 398, percent: 79.6, status: 'approaching' as const, misconceptions: {},
+    }]));
+    const r = overallReadiness(mastery, c);
+    expect(r).toBeCloseTo(79.6, 5);
+    expect(readinessStatus(r, c.ssa.passingPercent)).toBe('building');
+    expect(formatPercent(r)).toBe('79%');
+  });
+});
+
+describe('domainStatsFor (F5)', () => {
+  const domain = c.domains[0];
+  const only = (correct: number, total: number) =>
+    new Map([[domain.standards[0].code, {
+      standardCode: domain.standards[0].code, total, correct, percent: (correct / total) * 100,
+      status: 'approaching' as const, misconceptions: {},
+    }]]);
+  it('F5: 63 of 79 in a domain is approaching and displays 79, never the goal', () => {
+    const s = domainStatsFor(domain, only(63, 79), 80);
+    expect(s.masteryPercent).toBe(79);
+    expect(s.status).toBe('approaching');
+  });
+  it('F5: 119 of 200 is needs-focus and displays 59', () => {
+    const s = domainStatsFor(domain, only(119, 200), 80);
+    expect(s.masteryPercent).toBe(59);
+    expect(s.status).toBe('needs-focus');
   });
 });
 
@@ -157,5 +228,27 @@ describe('topMisconceptionFamilies', () => {
         tags: [{ tag: 'added-instead-of-multiplied', count: 4 }],
       },
     ]);
+  });
+});
+
+describe('F2: readiness scaled by evidence', () => {
+  it('F2: a perfect one-answer-per-standard check-up is 25%, not 100%', () => {
+    const r = overallReadiness(masteryByStandard([buildReadinessAttempt(1, 1)], c), c);
+    expect(r).toBeCloseTo(25, 5);
+    expect(readinessStatus(r, c.ssa.passingPercent)).toBe('building');
+  });
+
+  it('F2: two answers per standard counts half', () => {
+    expect(overallReadiness(masteryByStandard([buildReadinessAttempt(2, 2)], c), c)).toBeCloseTo(50, 5);
+  });
+
+  it('F2: four answers per standard counts fully', () => {
+    const r = overallReadiness(masteryByStandard([buildReadinessAttempt(4, 4)], c), c);
+    expect(r).toBeCloseTo(100, 5);
+    expect(readinessStatus(r, c.ssa.passingPercent)).toBe('ready');
+  });
+
+  it('F2: untested standards stay 0', () => {
+    expect(overallReadiness(masteryByStandard([], c), c)).toBe(0);
   });
 });

@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { useEscapeKey } from './useEscapeKey';
 import { Eraser, Pen, RotateCcw, X } from 'lucide-react';
 
 interface ScratchpadProps {
@@ -7,6 +8,7 @@ interface ScratchpadProps {
 }
 
 export const Scratchpad: React.FC<ScratchpadProps> = ({ isOpen, onClose }) => {
+  useEscapeKey(isOpen, onClose);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [tool, setTool] = useState<'pen' | 'eraser'>('pen');
@@ -87,7 +89,7 @@ export const Scratchpad: React.FC<ScratchpadProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-4xl h-[85vh] flex flex-col overflow-hidden">
+      <div role="dialog" aria-modal="true" aria-label="Scratchpad" className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-4xl h-[85vh] flex flex-col overflow-hidden">
         {/* Header */}
         <div className="px-5 py-3.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -148,6 +150,7 @@ export const Scratchpad: React.FC<ScratchpadProps> = ({ isOpen, onClose }) => {
 
             <button
               onClick={onClose}
+              aria-label="Close scratchpad"
               className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-200 rounded-lg transition-colors ml-2"
             >
               <X className="w-5 h-5" />

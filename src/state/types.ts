@@ -17,10 +17,16 @@ export interface Profile {
   checkupSkipped?: boolean;
   /** Questions per path session; read through sessionSizeOf(). */
   sessionSize?: number;
+  /** When activeSession was last written or cleared. The multi-tab merge keeps the later one. */
+  activeSessionAt?: string;
+  /** Attempts completed at or before this instant were cleared by the parent; the multi-tab merge never resurrects them. */
+  historyClearedAt?: string;
 }
 
 export interface AppStateV2 {
   version: 2;
   profiles: Profile[];
   activeProfileId: string;
+  /** Students deleted in some tab; the multi-tab merge never resurrects them. */
+  deletedProfileIds?: string[];
 }

@@ -3,18 +3,12 @@ import { getCurriculum } from '../curriculum/registry';
 import type { GradeCurriculum, StandardCode } from '../curriculum/types';
 import type { QuizAttempt, QuizAttemptAnswer } from '../types';
 import {
-  buildPath, daysUntil, isShortOnTime, sampleSizeFor,
+  buildPath, daysUntil, isShortOnTime, sampleSizeFor, timeLeftText, localDayKey,
   ROUND_SAMPLE, ROUND3_QUIZ_PREFIX, PRACTICE_QUIZ_PREFIX, roundRank,
 } from './path';
+import { c5, codeOf, domainIds, needFor } from './path.testkit';
 
-const c5 = getCurriculum(5);
 const NOW = new Date(2026, 8, 30, 12); // 30 Sep 2026, local noon
-const withContent = new Set(c5.source.allStandardsWithContent());
-const domainIds = c5.domains.filter((d) => d.standards.some((s) => withContent.has(s.code))).map((d) => d.id);
-const codeOf = (domainId: string): StandardCode =>
-  c5.domains.find((d) => d.id === domainId)!.standards.find((s) => withContent.has(s.code))!.code;
-const needFor = (domainId: string) =>
-  sampleSizeFor(c5, c5.domains.find((d) => d.id === domainId)!.standards.map((s) => s.code).filter((c) => withContent.has(c)));
 
 let seq = 0;
 function attempt(quizId: string, answers: [StandardCode, boolean][], passing?: boolean): QuizAttempt {
@@ -178,3 +172,93 @@ describe('roundRank', () => {
   });
 });
 
+
+describe('F1: short-on-time progress', () => {
+  const soon = { ...base, testDate: '2026-10-10', checkupSkipped: true };
+
+  it('F1: a skipped Round 1 is not credited as finished', () => {
+    const fresh = buildPath({ ...soon, attempts: [] });
+    expect(fresh.shortOnTime).toBe(true);
+    expect(fresh.roundsFinished).toBe(0);
+    expect(fresh.roundsTotal).toBe(domainIds.length); // only Round 2 is needed per topic
+    expect(fresh.round1Skipped).toBe(true);
+    expect(fresh.topics.every((t) => t.round1Skipped && t.roundsFinished === 0)).toBe(true);
+    expect(fresh.currentRound).toBe(2); // navigation is unchanged
+  });
+
+  it('F1: finished rounds count once the child does the work, and the total stays fair', () => {
+    const d = domainIds[0];
+    const p = buildPath({ ...soon, attempts: [attempt(`${PRACTICE_QUIZ_PREFIX}1`, many(d, needFor(d), true))] });
+    const t = p.topics.find((x) => x.domainId === d)!;
+    expect(t.round1Skipped).toBe(false); // real answers finished Round 1 for real
+    expect(t.roundsFinished).toBe(2);
+    expect(p.roundsFinished).toBe(2);
+    expect(p.roundsTotal).toBe(2 + (domainIds.length - 1));
+    expect(p.round1Skipped).toBe(false);
+  });
+
+  it('F1: outside short-on-time the counts are unchanged', () => {
+    const p = buildPath({ ...base, checkupSkipped: true, attempts: [] });
+    expect(p.round1Skipped).toBe(false);
+    expect(p.roundsFinished).toBe(0);
+    expect(p.roundsTotal).toBe(domainIds.length * 3);
+  });
+});
+
+describe('F7: round exits use recent answers, labels use lifetime accuracy', () => {
+  it('F7: 40 misses then a strong run finishes Round 2 while the topic label stays "needs-focus" (documented behaviour)', () => {
+    const d = domainIds[0];
+    const p = buildPath({ ...base, checkupSkipped: true,
+      attempts: [attempt(`${PRACTICE_QUIZ_PREFIX}1`, [...many(d, 40, false), ...many(d, needFor(d), true)])] });
+    const t = p.topics.find((x) => x.domainId === d)!;
+    expect(t.round).toBe(3);
+    expect(t.status).toBe('needs-focus');
+  });
+});
+
+describe('F6: practice-test readiness', () => {
+  const mockAttempt = (quizId: string, passed: boolean, second: number): QuizAttempt => ({
+    id: `m${second}`, quizId, quizTitle: quizId, completedAt: new Date(Date.UTC(2026, 8, 20, 0, 0, second)).toISOString(),
+    scoreRaw: 0, scoreTotal: 0, scorePercent: 0, isPassingSSA: passed, timeElapsedSeconds: 0, answers: {},
+  });
+
+  it('F6: a pass followed by a failed practice test no longer counts as ready', () => {
+    const p = buildPath({ ...base, attempts: [mockAttempt('mock-ssa-01', true, 1), mockAttempt('mock-ssa-02', false, 2)] });
+    expect(p.practiceTestPassedAt).toBeUndefined();
+  });
+
+  it('F6: a failure followed by a pass counts, dated at the pass', () => {
+    const pass = mockAttempt('mock-ssa-02', true, 2);
+    const p = buildPath({ ...base, attempts: [mockAttempt('mock-ssa-01', false, 1), pass] });
+    expect(p.practiceTestPassedAt).toBe(pass.completedAt);
+  });
+
+  it('F6: a grade with one practice-test form flags a repeat once it has been taken', () => {
+    const c3 = getCurriculum(3);
+    const forms = c3.quizzes.filter((q) => q.isMockAssessment);
+    expect(forms).toHaveLength(1); // fixture guard: grades 1-4 have a single form
+    const args = { curriculum: c3, checkupSkipped: true, testDate: '', now: NOW };
+    expect(buildPath({ ...args, attempts: [] }).practiceTestRepeat).toBe(false);
+    expect(buildPath({ ...args, attempts: [mockAttempt(forms[0].id, false, 1)] }).practiceTestRepeat).toBe(true);
+  });
+
+  it('F6: a grade with two forms never flags a repeat after one is taken', () => {
+    expect(buildPath({ ...base, attempts: [mockAttempt('mock-ssa-01', false, 1)] }).practiceTestRepeat).toBe(false);
+  });
+});
+
+describe('timeLeftText (F13)', () => {
+  it.each([
+    [0, 'Test is today'], [1, '1 day left'], [13, '13 days left'],
+    [14, '2 weeks left'], [17, '2 weeks left'], [18, '3 weeks left'], [20, '3 weeks left'], [42, '6 weeks left'],
+  ])('F13: %i days reads "%s"', (days, text) => {
+    expect(timeLeftText(days)).toBe(text);
+  });
+});
+
+describe('localDayKey (F11)', () => {
+  it('F11: is the local calendar day, zero padded', () => {
+    expect(localDayKey(new Date(2026, 0, 5, 23, 59))).toBe('2026-01-05');
+    expect(localDayKey(new Date(2026, 0, 6, 0, 1))).toBe('2026-01-06');
+  });
+});

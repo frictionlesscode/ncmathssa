@@ -193,7 +193,9 @@ every pull request and on pushes to `master`.
 
 The app is published to GitHub Pages at
 **https://frictionlesscode.github.io/ncmathssa/** by
-`.github/workflows/deploy.yml` on every push to `master`.
+`.github/workflows/deploy.yml`, which runs only after the CI workflow succeeds on
+`master` (a red CI never publishes; to redeploy, re-run the deploy workflow from the
+Actions page).
 
 ---
 

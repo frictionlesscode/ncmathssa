@@ -1,14 +1,18 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import type { Grade, GradeCurriculum, StandardCode } from '../curriculum/types';
 import { getCurriculum, standardsOf } from '../curriculum/registry';
 import type { AppStateV2, Profile } from '../state/types';
-import { loadState, saveState, newProfile } from '../state/storage';
+import { getBrowserStorage, loadState, loadStoredState, saveState, newProfile, STORAGE_KEY_V2 } from '../state/storage';
+import { mergeStates } from '../state/merge';
 import type { QuizAttempt } from '../types';
 import type { QuestionRef } from '../engine/questionModel';
-import { masteryByStandard, overallReadiness, type StandardMastery } from '../engine/mastery';
+import {
+  masteryByStandard, overallReadiness, displayPercent, readinessStatus,
+  pointsToGoal as pointsToGoalFor, type StandardMastery,
+} from '../engine/mastery';
 import { recordResult } from '../engine/scheduler';
-import { daysUntil } from '../engine/path';
+import { daysUntil, localDayKey } from '../engine/path';
 
 export interface ProgressContextValue {
   state: AppStateV2;
@@ -36,6 +40,8 @@ export interface ProgressContextValue {
    *  profile (there must always be at least one), and reassigns
    *  activeProfileId to another profile if the active one is removed. */
   deleteProfile(id: string): void;
+  /** False when the last write failed or localStorage is blocked. */
+  saveOk: boolean;
 }
 
 function withAttempt(
@@ -52,7 +58,10 @@ function withAttempt(
       let queue = p.reviewQueue;
       for (const r of results) queue = recordResult(queue, r.ref, r.wasCorrect, now);
       const next = { ...p, attempts: [attempt, ...p.attempts], reviewQueue: queue };
-      if (clearSession) delete next.activeSession;
+      if (clearSession) {
+        delete next.activeSession;
+        next.activeSessionAt = now.toISOString();
+      }
       return next;
     }),
   };
@@ -60,12 +69,46 @@ function withAttempt(
 
 const ProgressContext = createContext<ProgressContextValue | undefined>(undefined);
 
-export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [state, setState] = useState<AppStateV2>(() => loadState(localStorage));
+export const ProgressProvider: React.FC<{ children: React.ReactNode; storageAccess?: () => Storage }> = ({ children, storageAccess }) => {
+  const [store] = useState(() => getBrowserStorage(storageAccess));
+  const [state, setState] = useState<AppStateV2>(() => loadState(store.storage));
+  const [saveOk, setSaveOk] = useState(!store.blocked);
+  // Nothing is written until the user changes something: loading a repaired
+  // or unfamiliar blob must never overwrite it.
+  const dirty = useRef(false);
+  const update = useCallback((fn: (prev: AppStateV2) => AppStateV2) => {
+    dirty.current = true;
+    setState(fn);
+  }, []);
 
   useEffect(() => {
-    saveState(localStorage, state);
-  }, [state]);
+    if (!dirty.current) return;
+    // Re-read what is stored (another tab may have written) and merge before writing.
+    const stored = loadStoredState(store.storage);
+    const merged = stored ? mergeStates(stored, state) : state;
+    if (JSON.stringify(merged) !== JSON.stringify(state)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: adopt the merge with the other tab, then save
+      setState(merged); // this effect runs again and then saves
+      return;
+    }
+    setSaveOk(saveState(store.storage, merged).ok && !store.blocked);
+  }, [state, store]);
+
+  // Another tab wrote: fold its changes in, preferring its newer scalar values.
+  useEffect(() => {
+    const onStorage = (e: StorageEvent) => {
+      if (e.storageArea && e.storageArea !== store.storage) return;
+      if (e.key !== null && e.key !== STORAGE_KEY_V2) return;
+      const stored = loadStoredState(store.storage);
+      if (!stored) return;
+      setState((prev) => {
+        const next = mergeStates(stored, prev, { activeScalars: 'stored' });
+        return JSON.stringify(next) === JSON.stringify(prev) ? prev : next;
+      });
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, [store]);
 
   const profile = useMemo(
     () => state.profiles.find((p) => p.id === state.activeProfileId) ?? state.profiles[0],
@@ -82,57 +125,62 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const readiness = useMemo(() => overallReadiness(mastery, curriculum), [mastery, curriculum]);
 
   const switchProfile = useCallback((id: string) => {
-    setState((prev) => (prev.profiles.some((p) => p.id === id) ? { ...prev, activeProfileId: id } : prev));
-  }, []);
+    update((prev) => (prev.profiles.some((p) => p.id === id) ? { ...prev, activeProfileId: id } : prev));
+  }, [update]);
 
   const addProfile = useCallback((name: string, grade: Grade) => {
-    setState((prev) => {
+    update((prev) => {
       const p = newProfile({ studentName: name, grade });
       return { ...prev, profiles: [...prev.profiles, p], activeProfileId: p.id };
     });
-  }, []);
+  }, [update]);
 
   const recordAttempt = useCallback(
     (attempt: QuizAttempt, results: { ref: QuestionRef; wasCorrect: boolean }[]) =>
-      setState((prev) => withAttempt(prev, attempt, results, false)),
-    [],
+      update((prev) => withAttempt(prev, attempt, results, false)),
+    [update],
   );
 
   const completeSession = useCallback(
     (attempt: QuizAttempt, results: { ref: QuestionRef; wasCorrect: boolean }[]) =>
-      setState((prev) => withAttempt(prev, attempt, results, true)),
-    [],
+      update((prev) => withAttempt(prev, attempt, results, true)),
+    [update],
   );
 
   const updateActiveProfile = useCallback(
     (patch: Partial<Omit<Profile, 'id' | 'attempts' | 'reviewQueue'>>) => {
-      setState((prev) => ({
+      // A change to the saved session is stamped so the multi-tab merge keeps the latest writer's.
+      const stamp = 'activeSession' in patch ? { activeSessionAt: new Date().toISOString() } : {};
+      update((prev) => ({
         ...prev,
-        profiles: prev.profiles.map((p) => (p.id === prev.activeProfileId ? { ...p, ...patch } : p)),
+        profiles: prev.profiles.map((p) => (p.id === prev.activeProfileId ? { ...p, ...patch, ...stamp } : p)),
       }));
     },
-    [],
+    [update],
   );
 
   const clearActiveProfileHistory = useCallback(() => {
-    setState((prev) => ({
+    const at = new Date().toISOString();
+    update((prev) => ({
       ...prev,
       profiles: prev.profiles.map((p) =>
-        p.id === prev.activeProfileId ? { ...p, attempts: [], reviewQueue: {}, activeSession: undefined, checkupSkipped: undefined } : p,
+        p.id === prev.activeProfileId
+          ? { ...p, attempts: [], reviewQueue: {}, activeSession: undefined, checkupSkipped: undefined, historyClearedAt: at, activeSessionAt: at }
+          : p,
       ),
     }));
-  }, []);
+  }, [update]);
 
   const deleteProfile = useCallback((id: string) => {
-    setState((prev) => {
+    update((prev) => {
       if (prev.profiles.length <= 1) return prev;
       const profiles = prev.profiles.filter((p) => p.id !== id);
       if (profiles.length === prev.profiles.length) return prev;
       const activeProfileId =
         prev.activeProfileId === id ? profiles[0].id : prev.activeProfileId;
-      return { ...prev, profiles, activeProfileId };
+      return { ...prev, profiles, activeProfileId, deletedProfileIds: [...(prev.deletedProfileIds ?? []), id] };
     });
-  }, []);
+  }, [update]);
 
   const value: ProgressContextValue = useMemo(
     () => ({
@@ -148,6 +196,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       updateActiveProfile,
       clearActiveProfileHistory,
       deleteProfile,
+      saveOk,
     }),
     [
       state,
@@ -162,6 +211,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       updateActiveProfile,
       clearActiveProfileHistory,
       deleteProfile,
+      saveOk,
     ],
   );
 
@@ -187,6 +237,7 @@ export type { DomainStats } from '../engine/mastery';
  *  `profile`), so it works for any grade rather than assuming Grade 5. */
 export interface ReadinessSummary {
   weightedScore: number;
+  pointsToGoal: number;
   isAccelerationReady: boolean;
   masteredStandardsCount: number;
   totalStandardsCount: number;
@@ -204,6 +255,8 @@ const TARGET_PRACTICE_VOLUME = 150;
 
 export function useReadinessSummary(): ReadinessSummary {
   const { curriculum, mastery, readiness, profile } = useProgress();
+
+  const dayKey = localDayKey(new Date());
 
   return useMemo(() => {
     let totalQuestionsAnswered = 0;
@@ -226,8 +279,9 @@ export function useReadinessSummary(): ReadinessSummary {
       daysUntilExam !== null && daysUntilExam > 0 ? Math.ceil(remainingToPractice / daysUntilExam) : profile.dailyQuestionGoal;
 
     return {
-      weightedScore: Math.round(readiness),
-      isAccelerationReady: readiness >= curriculum.ssa.passingPercent,
+      weightedScore: displayPercent(readiness),
+      isAccelerationReady: readinessStatus(readiness, curriculum.ssa.passingPercent) === 'ready',
+      pointsToGoal: pointsToGoalFor(readiness, curriculum.ssa.passingPercent),
       masteredStandardsCount,
       totalStandardsCount: standardsOf(curriculum).length,
       totalQuestionsAnswered,
@@ -236,5 +290,7 @@ export function useReadinessSummary(): ReadinessSummary {
       daysUntilExam,
       dailyQuestionsPace,
     };
-  }, [curriculum, mastery, readiness, profile.targetExamDate, profile.dailyQuestionGoal]);
+    // `dayKey` is the only signal that the calendar day changed; it is read via `new Date()` above.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [curriculum, mastery, readiness, profile.targetExamDate, profile.dailyQuestionGoal, dayKey]);
 }

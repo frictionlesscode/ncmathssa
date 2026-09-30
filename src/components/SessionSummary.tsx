@@ -3,6 +3,7 @@ import type { QuizAttempt } from '../types';
 import { useProgress } from '../context/ProgressContext';
 import { summarizeAttempt } from '../engine/sessionSummary';
 import { buildPath, roundRank, type Round } from '../engine/path';
+import { formatPercent } from '../engine/mastery';
 
 interface SessionSummaryProps {
   attempt: QuizAttempt;
@@ -27,6 +28,7 @@ export const SessionSummary: React.FC<SessionSummaryProps> = ({ attempt, readine
       <div className="max-w-lg w-full bg-white rounded-xl border border-slate-200 p-6 space-y-5">
         <h1 className="text-xl font-bold text-slate-900">{profile.studentName}&rsquo;s session</h1>
         <p className="text-slate-700">{summary.correct} out of {summary.total} right.</p>
+        {summary.notAnswered > 0 && <p className="text-slate-600">{summary.notAnswered} not answered</p>}
 
         {finishedRound !== null && <p className="text-lg font-semibold text-emerald-700">Round {finishedRound} finished! 🎉</p>}
 
@@ -41,15 +43,32 @@ export const SessionSummary: React.FC<SessionSummaryProps> = ({ attempt, readine
           <div>
             <h2 className="font-semibold text-slate-800">Tricky</h2>
             <ul className="mt-1 space-y-1">
-              {summary.tricky.map((t) => (
-                <li key={t.domainId}>{t.name} <span className="text-slate-500">(missed {t.total - t.correct})</span></li>
-              ))}
+              {summary.tricky.map((t) => {
+                const missed = t.total - t.correct - t.unanswered;
+                return (
+                  <li key={t.domainId}>
+                    {t.name}
+                    {missed > 0 && <span className="text-slate-500"> (missed {missed})</span>}
+                  </li>
+                );
+              })}
             </ul>
             <p className="mt-1 text-sm text-slate-600">These will come back next time.</p>
           </div>
         )}
 
-        <p className="text-slate-700">Readiness: {Math.round(readinessBefore)}% → {Math.round(readiness)}%</p>
+        {summary.alsoPracticed.length > 0 && (
+          <div>
+            <h2 className="font-semibold text-slate-800">Also practiced</h2>
+            <ul className="mt-1 space-y-1">
+              {summary.alsoPracticed.map((t) => (
+                <li key={t.domainId}>{t.name} <span className="text-slate-500">({t.correct} of {t.total} right)</span></li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <p className="text-slate-700">Readiness: {formatPercent(readinessBefore)} → {formatPercent(readiness)}</p>
 
         <button onClick={onHome} className="w-full rounded-md bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700">
           Back to home

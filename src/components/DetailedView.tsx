@@ -9,13 +9,13 @@ import { StudyGuideModal } from './StudyGuideModal';
 import { StudyPaceModal } from './StudyPaceModal';
 import { PrintReportModal } from './PrintReportModal';
 import type { QuizDefinition } from '../types';
-import type { QuestionRef } from '../engine/questionModel';
+import type { ComposedRef } from '../engine/sessionComposer';
 import { createAdaptiveSessionDrill, createMissedQuestionsDrill, createStandardDrill } from '../engine/drills';
 
 /** Today's full tab UI (codes, study guides, per-standard drills), kept for
  *  parents who want the detail, reached from the home page footer (spec 4.4). */
 export const DetailedView: React.FC<{ onStartQuiz: (quiz: QuizDefinition) => void; onBack: () => void }> = ({ onStartQuiz, onBack }) => {
-  const { curriculum } = useProgress();
+  const { curriculum, profile } = useProgress();
   const [currentTab, setCurrentTab] = useState<NavTab>('dashboard');
   const [studyGuideStandard, setStudyGuideStandard] = useState<string | null>(null);
   const [isPaceModalOpen, setIsPaceModalOpen] = useState(false);
@@ -27,7 +27,7 @@ export const DetailedView: React.FC<{ onStartQuiz: (quiz: QuizDefinition) => voi
   };
   const startStandardDrill = (code: string) => onStartQuiz(createStandardDrill(code, curriculum));
   const startCustom = (ids: string[]) => onStartQuiz(createMissedQuestionsDrill(ids));
-  const startAdaptive = (refs: QuestionRef[]) => onStartQuiz(createAdaptiveSessionDrill(refs));
+  const startAdaptive = (composed: ComposedRef[]) => onStartQuiz(createAdaptiveSessionDrill(composed));
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col selection:bg-blue-500 selection:text-white">
@@ -69,7 +69,7 @@ export const DetailedView: React.FC<{ onStartQuiz: (quiz: QuizDefinition) => voi
         onClose={() => setStudyGuideStandard(null)}
         onStartStandardDrill={startStandardDrill}
       />
-      <StudyPaceModal isOpen={isPaceModalOpen} onClose={() => setIsPaceModalOpen(false)} />
+      {isPaceModalOpen && <StudyPaceModal key={profile.id} isOpen onClose={() => setIsPaceModalOpen(false)} />}
       <PrintReportModal isOpen={isReportModalOpen} onClose={() => setIsReportModalOpen(false)} />
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Calculator as CalcIcon, Pen } from 'lucide-react';
 import type { QuizAttempt } from '../types';
 import { useProgress } from '../context/ProgressContext';
@@ -8,6 +8,7 @@ import {
 import { correctOption } from '../engine/questionModel';
 import { Scratchpad } from './Scratchpad';
 import { Calculator } from './Calculator';
+import { PromptDetails } from './PromptDetails';
 
 interface KidPracticeProps {
   session: ActiveSession;
@@ -16,6 +17,13 @@ interface KidPracticeProps {
   onFinish: (attempt: QuizAttempt) => void;
   onDiscard: () => void;
 }
+
+/** Takes focus the moment feedback appears, so keyboard and screen-reader users land on the result. */
+const FeedbackHeading: React.FC<{ className: string; children: React.ReactNode }> = ({ className, children }) => {
+  const ref = useRef<HTMLHeadingElement>(null);
+  useEffect(() => { ref.current?.focus(); }, []);
+  return <h2 ref={ref} tabIndex={-1} className={`${className} outline-none`}>{children}</h2>;
+};
 
 /** Instant-feedback practice for the child (spec 6.2): one question at a
  *  time, no navigator, no retry. Controlled by `session`. */
@@ -84,11 +92,11 @@ export const KidPractice: React.FC<KidPracticeProps> = ({ session, studentName, 
         </div>
         <span className="text-sm text-slate-600">{index + 1} of {questions.length}</span>
         <div className="flex gap-2">
-          <button onClick={() => setScratchOpen(true)} className="flex items-center gap-1 rounded-md border border-slate-300 px-2 py-1 text-sm">
+          <button onClick={() => setScratchOpen(true)} className="flex items-center gap-1 rounded-md border border-slate-300 px-2 py-1 min-h-[44px] text-sm">
             <Pen className="w-4 h-4" /> Scratchpad
           </button>
           {q.calculatorAllowed && (
-            <button onClick={() => setCalcOpen(true)} className="flex items-center gap-1 rounded-md border border-slate-300 px-2 py-1 text-sm">
+            <button onClick={() => setCalcOpen(true)} className="flex items-center gap-1 rounded-md border border-slate-300 px-2 py-1 min-h-[44px] text-sm">
               <CalcIcon className="w-4 h-4" /> Calculator
             </button>
           )}
@@ -98,7 +106,9 @@ export const KidPractice: React.FC<KidPracticeProps> = ({ session, studentName, 
       <main className="flex-1 w-full max-w-2xl mx-auto px-4 py-8 space-y-6">
         <div>
           <p className="text-xl font-semibold text-slate-900 whitespace-pre-line">{q.prompt}</p>
-          {q.promptDetails && <p className="mt-2 text-slate-700 whitespace-pre-line">{q.promptDetails}</p>}
+          {q.promptDetails && (
+            <PromptDetails className="mt-2 p-3 rounded-xl text-base">{q.promptDetails}</PromptDetails>
+          )}
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2">
@@ -109,6 +119,7 @@ export const KidPractice: React.FC<KidPracticeProps> = ({ session, studentName, 
               <button
                 key={o.label}
                 aria-label={`Answer ${o.label}: ${o.text}`}
+                aria-pressed={Boolean(chosen)}
                 disabled={Boolean(answer)}
                 onClick={() => setSelected(o.label)}
                 className={`rounded-xl border-2 px-4 py-3 text-left text-lg ${
@@ -132,19 +143,21 @@ export const KidPractice: React.FC<KidPracticeProps> = ({ session, studentName, 
           </button>
         ) : (
           <div className="space-y-4">
-            {answer.isCorrect ? (
-              <p className="text-2xl font-bold text-emerald-700">Nice!</p>
-            ) : (
-              <div className="rounded-xl bg-amber-50 border border-amber-200 p-4 space-y-3">
-                <p className="text-lg font-semibold text-amber-900">Not quite. The answer is {right.label}.</p>
-                <ol className="list-decimal pl-5 space-y-1 text-slate-800">
-                  {q.explanation.stepByStep.map((step, i) => <li key={i}>{step}</li>)}
-                </ol>
-                {q.explanation.commonMisconception && (
-                  <p className="text-sm text-slate-700"><strong>Watch out:</strong> {q.explanation.commonMisconception}</p>
-                )}
-              </div>
-            )}
+            <div role="status">
+              {answer.isCorrect ? (
+                <FeedbackHeading className="text-2xl font-bold text-emerald-700">Nice!</FeedbackHeading>
+              ) : (
+                <div className="rounded-xl bg-amber-50 border border-amber-200 p-4 space-y-3">
+                  <FeedbackHeading className="text-lg font-semibold text-amber-900">Not quite. The answer is {right.label}.</FeedbackHeading>
+                  <ol className="list-decimal pl-5 space-y-1 text-slate-800">
+                    {q.explanation.stepByStep.map((step, i) => <li key={i}>{step}</li>)}
+                  </ol>
+                  {q.explanation.commonMisconception && (
+                    <p className="text-sm text-slate-700"><strong>Watch out:</strong> {q.explanation.commonMisconception}</p>
+                  )}
+                </div>
+              )}
+            </div>
             <button onClick={next} className="w-full rounded-xl bg-blue-600 px-4 py-3 text-lg font-semibold text-white hover:bg-blue-700">
               {isLast ? 'Finish' : 'Next'}
             </button>
@@ -158,10 +171,10 @@ export const KidPractice: React.FC<KidPracticeProps> = ({ session, studentName, 
             </button>
           ) : (
             <div className="space-y-2">
-              <p className="text-sm text-slate-700">Stop and save your progress?</p>
+              <p className="text-sm text-slate-700">Stop now? Your answers so far are saved and counted.</p>
               <div className="flex justify-center gap-3">
-                <button onClick={stop} className="rounded-md bg-slate-800 px-3 py-1.5 text-sm text-white">Yes, stop</button>
-                <button onClick={() => setConfirmStop(false)} className="rounded-md border border-slate-300 px-3 py-1.5 text-sm">Keep going</button>
+                <button onClick={stop} className="rounded-md bg-slate-800 px-3 py-1.5 min-h-[44px] text-sm text-white">Yes, stop</button>
+                <button onClick={() => setConfirmStop(false)} className="rounded-md border border-slate-300 px-3 py-1.5 min-h-[44px] text-sm">Keep going</button>
               </div>
             </div>
           )}

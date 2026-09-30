@@ -69,3 +69,31 @@ describe('active session', () => {
     expect(resolveSession(s, c)).toHaveLength(1);
   });
 });
+
+describe('isPassingSSA is exact (F3)', () => {
+  it('F3: 2 of 3 does not pass a 66.7 bar even though the 1-decimal score rounds to 66.7', () => {
+    const refs = diagnostic.questionIds.slice(0, 3).map((id) => ({ kind: 'authored' as const, id }));
+    let s = newSession({ kind: 'practice', quizId: 'x', title: 'x', refs, now: NOW });
+    const [q1, q2, q3] = resolveSession(s, c);
+    s = recordAnswer(s, q1, correctOption(q1).label);
+    s = recordAnswer(s, q2, correctOption(q2).label);
+    s = recordAnswer(s, q3, q3.options.find((o) => !o.isCorrect)!.label);
+    const a = sessionToAttempt(s, [q1, q2, q3], 66.7, NOW, { answeredOnly: false });
+    expect(a.scorePercent).toBe(66.7);
+    expect(a.isPassingSSA).toBe(false);
+  });
+});
+
+describe('attempt ids', () => {
+  it('logic-flows Low: two attempts finished in the same millisecond get different ids', () => {
+    const s = newSession({ kind: 'practice', quizId: 'x', title: 'x', refs: [], now: NOW });
+    const a = sessionToAttempt(s, [], 80, NOW, { answeredOnly: true });
+    const b = sessionToAttempt(s, [], 80, NOW, { answeredOnly: true });
+    expect(a.id).toMatch(/^attempt-\d+-[a-z0-9]+$/);
+    expect(a.id).not.toBe(b.id);
+  });
+  it('logic-flows Low: accepts an injected suffix for deterministic tests', () => {
+    const s = newSession({ kind: 'practice', quizId: 'x', title: 'x', refs: [], now: NOW });
+    expect(sessionToAttempt(s, [], 80, NOW, { answeredOnly: true, idSuffix: 'abc' }).id).toBe(`attempt-${NOW.getTime()}-abc`);
+  });
+});

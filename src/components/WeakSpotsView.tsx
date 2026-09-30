@@ -15,6 +15,7 @@ import type { Question, QuestionRef } from '../engine/questionModel';
 import type { QuizAttempt } from '../types';
 import { topMisconceptionFamilies } from '../engine/mastery';
 import { MISCONCEPTIONS, familyLabel } from '../curriculum/misconceptions';
+import { PromptDetails } from './PromptDetails';
 
 interface WeakSpotsViewProps {
   onStartCustomQuiz: (questionIds: string[]) => void;
@@ -332,9 +333,7 @@ export const WeakSpotsView: React.FC<WeakSpotsViewProps> = ({
                             {q.prompt}
                           </p>
                           {q.promptDetails && (
-                            <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 font-mono text-xs font-semibold text-slate-800 whitespace-pre-wrap">
-                              {q.promptDetails}
-                            </div>
+                            <PromptDetails className="p-3 rounded-xl text-xs">{q.promptDetails}</PromptDetails>
                           )}
                         </div>
 

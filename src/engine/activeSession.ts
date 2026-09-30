@@ -1,5 +1,6 @@
 import type { DomainId, GradeCurriculum, StandardCode } from '../curriculum/types';
-import type { QuizAttempt, QuizAttemptAnswer, QuizDefinition } from '../types';
+import type { AnswerOrigin, QuizAttempt, QuizAttemptAnswer, QuizDefinition } from '../types';
+import { isPassing } from './mastery';
 import { checkAnswer } from '../utils/answerChecker';
 import { parseQuestionRef, type Question, type QuestionRef } from './questionModel';
 
@@ -23,6 +24,8 @@ export interface ActiveSession {
   /** Keyed by Question.id (equal to questionRefId(ref)). */
   answers: Record<string, SessionAnswer>;
   flagged: Record<string, boolean>;
+  /** Question.id -> 'review' for refs that came from the due-review queue. Absent means every ref is new. */
+  origins?: Record<string, AnswerOrigin>;
   currentIndex: number;
   startedAt: string;
   secondsElapsed: number;
@@ -54,6 +57,7 @@ export function newSession(args: {
   now: Date;
   domainId?: DomainId;
   standardCode?: StandardCode;
+  origins?: Record<string, AnswerOrigin>;
 }): ActiveSession {
   const { now, ...rest } = args;
   return { ...rest, answers: {}, flagged: {}, currentIndex: 0, startedAt: now.toISOString(), secondsElapsed: 0 };
@@ -68,6 +72,7 @@ export function sessionFromQuiz(quiz: QuizDefinition, kind: SessionKind, now: Da
     now,
     domainId: quiz.domainId,
     standardCode: quiz.standardCode,
+    origins: quiz.origins,
   });
 }
 
@@ -101,7 +106,7 @@ export function sessionToAttempt(
   questions: Question[],
   passingPercent: number,
   now: Date,
-  opts: { answeredOnly: boolean },
+  opts: { answeredOnly: boolean; idSuffix?: string },
 ): QuizAttempt {
   const graded = opts.answeredOnly ? questions.filter((q) => s.answers[q.id]) : questions;
   const answers: Record<string, QuizAttemptAnswer> = {};
@@ -124,12 +129,13 @@ export function sessionToAttempt(
       standardCode: q.standardCode,
       misconception: chosen?.misconception,
       flaggedForReview: s.flagged[q.id],
+      ...(s.origins?.[q.id] === 'review' ? { origin: 'review' as const } : {}),
     };
   }
   const total = graded.length;
   const scorePercent = total === 0 ? 0 : Math.round((raw / total) * 1000) / 10;
   return {
-    id: `attempt-${now.getTime()}`,
+    id: `attempt-${now.getTime()}-${opts.idSuffix ?? Math.random().toString(36).slice(2, 8)}`,
     quizId: s.quizId,
     quizTitle: s.title,
     domainId: s.domainId,
@@ -138,7 +144,7 @@ export function sessionToAttempt(
     scoreRaw: raw,
     scoreTotal: total,
     scorePercent,
-    isPassingSSA: scorePercent >= passingPercent,
+    isPassingSSA: isPassing(raw, total, passingPercent),
     timeElapsedSeconds: s.secondsElapsed,
     answers,
   };
