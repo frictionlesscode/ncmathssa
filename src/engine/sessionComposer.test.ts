@@ -105,3 +105,57 @@ describe('selectSession', () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 });
+
+describe('selectSession with a plan', () => {
+  const now = new Date('2026-09-30T12:00:00Z');
+  const domainOf = (code: string) =>
+    c.domains.find((d) => d.standards.some((s) => s.code === code))!.id;
+  const run = (
+    plan?: Parameters<typeof selectSession>[0]['plan'],
+    queue: ReviewQueue = {},
+    size = 12,
+  ) => selectSession({ curriculum: c, mastery: empty, queue, size, now, seed: 42, plan });
+
+  it('draws new content only from the planned domains', () => {
+    const refs = run({ domains: new Set(['NF']) });
+    expect(refs.length).toBeGreaterThan(0);
+    for (const r of refs) expect(domainOf(c.source.resolve(r).standardCode)).toBe('NF');
+  });
+
+  it('leans toward preferred difficulties', () => {
+    const all = new Set(c.domains.map((d) => d.id));
+    const count = (refs: ReturnType<typeof run>) =>
+      refs.filter((r) => c.source.resolve(r).difficulty === 'stretch').length;
+    const preferred = count(run({ domains: all, prefer: ['stretch'] }));
+    const plain = count(run({ domains: all }));
+    expect(preferred).toBeGreaterThan(0);
+    expect(preferred).toBeGreaterThanOrEqual(plain);
+  });
+
+  it('keeps the review cap and never repeats a question', () => {
+    const size = 6;
+    let queue: ReviewQueue = {};
+    for (const code of c.source.allStandardsWithContent().slice(0, 12)) {
+      const [ref] = c.source.itemsFor(code, { count: 1, seedBase: 1 });
+      if (ref && ref.kind === 'authored') {
+        queue = recordResult(queue, ref, false, new Date('2026-09-01T00:00:00Z'));
+      }
+    }
+    const due = new Set(Object.values(queue).map((e) => reviewKeyId(e.key)));
+    expect(due.size).toBeGreaterThan(Math.ceil(size * MAX_REVIEW_FRACTION));
+    expect(Object.keys(queue).length).toBeGreaterThan(0);
+    for (const plan of [undefined, { domains: new Set(['NF']) }]) {
+      const refs = run(plan, queue, size);
+      const reviews = refs.filter((r) => r.kind === 'authored' && due.has(`a:${r.id}`));
+      expect(reviews.length).toBeGreaterThan(0);
+      expect(reviews.length).toBeLessThanOrEqual(Math.ceil(size * MAX_REVIEW_FRACTION));
+      expect(new Set(refs.map(questionRefId)).size).toBe(refs.length);
+    }
+  });
+
+  it('is unchanged when no plan is given', () => {
+    expect(run(undefined)).toEqual(
+      selectSession({ curriculum: c, mastery: empty, queue: {}, size: 12, now, seed: 42 }),
+    );
+  });
+});

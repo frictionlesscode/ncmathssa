@@ -1,6 +1,6 @@
-import type { GradeCurriculum, StandardCode } from '../curriculum/types';
+import type { DomainId, GradeCurriculum, StandardCode } from '../curriculum/types';
 import { domainWeight, standardsOf } from '../curriculum/registry';
-import type { QuestionRef } from './questionModel';
+import type { Difficulty, QuestionRef } from './questionModel';
 import { questionRefId } from './questionModel';
 import type { StandardMastery } from './mastery';
 import type { ReviewQueue } from './scheduler';
@@ -15,6 +15,17 @@ interface ScoredStandard {
   score: number;
 }
 
+/** Narrows a composed session to the path's current round (spec 5.3). Due
+ *  reviews are not filtered: spaced review of any topic stays valuable. */
+export interface SessionPlan {
+  domains: ReadonlySet<DomainId>;
+  /** A draw outside these is retried up to PREFER_RETRIES times, then kept,
+   *  so thin content degrades to "any difficulty" rather than a short session. */
+  prefer?: readonly Difficulty[];
+}
+
+const PREFER_RETRIES = 3;
+
 export function selectSession(input: {
   curriculum: GradeCurriculum;
   mastery: Map<StandardCode, StandardMastery>;
@@ -22,8 +33,9 @@ export function selectSession(input: {
   size: number;
   now: Date;
   seed: number;
+  plan?: SessionPlan;
 }): QuestionRef[] {
-  const { curriculum: c, mastery, queue, size, now, seed } = input;
+  const { curriculum: c, mastery, queue, size, now, seed, plan } = input;
   const rng = makeRng(seed);
   const refs: QuestionRef[] = [];
 
@@ -52,7 +64,9 @@ export function selectSession(input: {
   // outrank standards already going well — regardless of blueprint
   // weight. Weight only breaks ties within a tier.
   const withContent = new Set(c.source.allStandardsWithContent());
-  const eligible = standardsOf(c).filter((s) => withContent.has(s.code));
+  const eligible = standardsOf(c).filter(
+    (s) => withContent.has(s.code) && (!plan || plan.domains.has(s.domainId)),
+  );
 
   const jitter = () => rng.next() * 5;
 
@@ -77,6 +91,8 @@ export function selectSession(input: {
   coverage.sort((a, b) => b.score - a.score);
 
   let i = 0;
+  let preferMisses = 0;
+  const maxDraws = size * (plan?.prefer ? 40 : 10);
   for (const tier of [struggling, untested, coverage]) {
     if (refs.length >= size) break;
     if (tier.length === 0) continue;
@@ -92,10 +108,19 @@ export function selectSession(input: {
       const s = tier[idx % tier.length];
       idx += 1;
       i += 1;
-      if (i > size * 10) return refs.slice(0, size); // every standard exhausted; stop rather than spin
+      if (i > maxDraws) return refs.slice(0, size); // every standard exhausted; stop rather than spin
 
       const [ref] = c.source.itemsFor(s.code, { count: 1, seedBase: rng.int(0, 2 ** 31 - 1) });
       if (!ref) { stall += 1; continue; }
+      if (
+        plan?.prefer &&
+        preferMisses < PREFER_RETRIES &&
+        !plan.prefer.includes(c.source.resolve(ref).difficulty)
+      ) {
+        preferMisses += 1;
+        continue;
+      }
+      preferMisses = 0;
 
       const key = questionRefId(ref);
       if (used.has(key)) { stall += 1; continue; }
