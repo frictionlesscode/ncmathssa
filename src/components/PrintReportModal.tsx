@@ -127,7 +127,7 @@ export const PrintReportModal: React.FC<PrintReportModalProps> = ({ isOpen, onCl
               <p className="text-xs mt-1 font-medium max-w-lg">
                 {readiness.isAccelerationReady
                   ? `Candidate has achieved the ${passingPercent}% acceleration threshold across tested standards. Continue maintaining readiness with timed full mock exams.`
-                  : `Currently ${passingPercent - readiness.weightedScore}% below the ${passingPercent}% WCPSS qualifying bar. ${curriculum.weighting.kind === 'ncdpi-blueprint' ? 'Focused drill on high-weight domains is recommended.' : 'Focused drill on the domains furthest below the bar is recommended.'}`}
+                  : `Currently ${readiness.pointsToGoal}% below the ${passingPercent}% WCPSS qualifying bar. ${curriculum.weighting.kind === 'ncdpi-blueprint' ? 'Focused drill on high-weight domains is recommended.' : 'Focused drill on the domains furthest below the bar is recommended.'}`}
               </p>
             </div>
             <div className="text-right flex flex-col items-end">
@@ -177,7 +177,7 @@ export const PrintReportModal: React.FC<PrintReportModalProps> = ({ isOpen, onCl
                         {dm.status === 'untested' ? (
                           <span className="text-slate-400">Untested</span>
                         ) : (
-                          <span className={dm.masteryPercent >= passingPercent ? 'text-emerald-600 font-extrabold' : 'text-amber-600 font-extrabold'}>
+                          <span className={dm.status === 'acceleration-ready' ? 'text-emerald-600 font-extrabold' : 'text-amber-600 font-extrabold'}>
                             {dm.masteryPercent}%
                           </span>
                         )}

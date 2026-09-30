@@ -3,6 +3,7 @@ import type { QuizAttempt } from '../types';
 import { useProgress } from '../context/ProgressContext';
 import { summarizeAttempt } from '../engine/sessionSummary';
 import { buildPath, roundRank, type Round } from '../engine/path';
+import { formatPercent } from '../engine/mastery';
 
 interface SessionSummaryProps {
   attempt: QuizAttempt;
@@ -49,7 +50,7 @@ export const SessionSummary: React.FC<SessionSummaryProps> = ({ attempt, readine
           </div>
         )}
 
-        <p className="text-slate-700">Readiness: {Math.round(readinessBefore)}% → {Math.round(readiness)}%</p>
+        <p className="text-slate-700">Readiness: {formatPercent(readinessBefore)} → {formatPercent(readiness)}</p>
 
         <button onClick={onHome} className="w-full rounded-md bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700">
           Back to home

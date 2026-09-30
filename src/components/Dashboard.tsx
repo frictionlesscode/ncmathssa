@@ -12,6 +12,7 @@ import { useProgress, useReadinessSummary, domainStatsFor } from '../context/Pro
 import { standardsOf, weightCompactLabel } from '../curriculum/registry';
 import { dueEntries } from '../engine/scheduler';
 import { countdownText } from '../engine/path';
+import { isPassing } from '../engine/mastery';
 import type { NavTab } from './Navbar';
 
 interface DashboardProps {
@@ -76,7 +77,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               {readiness.isAccelerationReady ? (
                 <span className="text-emerald-400 font-bold">Currently Meeting Bar!</span>
               ) : (
-                <span>Need {Math.max(0, passingPercent - readiness.weightedScore)}% more for SSA threshold</span>
+                <span>Need {readiness.pointsToGoal}% more for SSA threshold</span>
               )}
             </p>
           </div>
@@ -101,7 +102,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 </p>
               </div>
             </div>
-            <span className={`text-xs font-extrabold px-3 py-1 rounded-full border ${
+            <span data-testid="readiness-badge" data-readiness-state={readiness.isAccelerationReady ? 'ready' : 'building'} className={`text-xs font-extrabold px-3 py-1 rounded-full border ${
               readiness.isAccelerationReady
                 ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
                 : 'bg-amber-100 text-amber-800 border-amber-300'
@@ -243,7 +244,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
           <h2 className="text-2xl font-black tracking-tight">
             {!hasTakenDiagnostic
               ? `Step 1: Take the ${diagnosticQuiz?.questionIds.length ?? totalStandardsCount}-Question Baseline Diagnostic`
-              : readiness.weightedScore >= passingPercent
+              : readiness.isAccelerationReady
               ? 'Acceleration Ready! Complete a Full 60-Minute Mock Exam'
               : curriculum.weighting.kind === 'ncdpi-blueprint'
               ? `Drill High-Weight Domains to Reach the ${passingPercent}% Benchmark`
@@ -309,7 +310,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {curriculum.domains.map(domain => {
             const dm = domainStatsFor(domain, mastery, passingPercent);
-            const isReady = dm.masteryPercent >= passingPercent;
+            const isReady = dm.status === 'acceleration-ready';
+            const meetsBarWithThinEvidence =
+              !isReady && isPassing(dm.totalCorrect, dm.totalQuestionsAnswered, passingPercent);
 
             // Find drill quiz for this domain
             const drillQuiz = curriculum.quizzes.find(q => q.domainId === domain.id);
@@ -344,7 +347,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                             {dm.masteryPercent}%
                           </span>
                           <span className={`block text-[10px] font-bold uppercase ${isReady ? 'text-emerald-700' : 'text-amber-700'}`}>
-                            {isReady ? 'Ready' : `Below ${passingPercent}%`}
+                            {isReady ? 'Ready' : meetsBarWithThinEvidence ? 'Needs more answers' : `Below ${passingPercent}%`}
                           </span>
                         </div>
                       )}

@@ -13,6 +13,7 @@ import type { QuizDefinition } from '../types';
 import { AdaptiveSessionCard } from './AdaptiveSessionCard';
 import type { QuestionRef } from '../engine/questionModel';
 import { parseQuestionRef } from '../engine/questionModel';
+import { isPassing as meetsBar } from '../engine/mastery';
 
 interface QuizzesListViewProps {
   onStartQuiz: (quizId: string) => void;
@@ -35,6 +36,10 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
     if (attempts.length === 0) return null;
     return Math.max(...attempts.map(a => a.scorePercent));
   };
+
+  // Pass is decided from raw counts, never from the rounded percent (F5).
+  const hasPassed = (quizId: string) =>
+    profile.attempts.some(a => a.quizId === quizId && meetsBar(a.scoreRaw, a.scoreTotal, passingPercent));
 
   const diagnosticQuiz = curriculum.quizzes.find(q => q.isDiagnostic);
   const mockQuizzes = curriculum.quizzes.filter(q => q.isMockAssessment);
@@ -122,7 +127,7 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
                 <div className="text-right">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Best Score</span>
                   <span className={`text-xl font-black ${
-                    (getBestScore(diagnosticQuiz.id) ?? 0) >= passingPercent ? 'text-emerald-600' : 'text-amber-600'
+                    hasPassed(diagnosticQuiz.id) ? 'text-emerald-600' : 'text-amber-600'
                   }`}>
                     {getBestScore(diagnosticQuiz.id)}%
                   </span>
@@ -154,7 +159,7 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
         <div className="grid md:grid-cols-2 gap-5">
           {mockQuizzes.map(quiz => {
             const best = getBestScore(quiz.id);
-            const isPassing = best !== null && best >= passingPercent;
+            const isPassing = hasPassed(quiz.id);
 
             return (
               <div
@@ -213,7 +218,7 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
           {moduleDrills.map(quiz => {
             const best = getBestScore(quiz.id);
             const domain = curriculum.domains.find(d => d.id === quiz.domainId);
-            const isPassing = best !== null && best >= passingPercent;
+            const isPassing = hasPassed(quiz.id);
 
             return (
               <div

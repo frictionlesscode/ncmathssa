@@ -6,7 +6,10 @@ import type { AppStateV2, Profile } from '../state/types';
 import { loadState, saveState, newProfile } from '../state/storage';
 import type { QuizAttempt } from '../types';
 import type { QuestionRef } from '../engine/questionModel';
-import { masteryByStandard, overallReadiness, type StandardMastery } from '../engine/mastery';
+import {
+  masteryByStandard, overallReadiness, displayPercent, readinessStatus,
+  pointsToGoal as pointsToGoalFor, type StandardMastery,
+} from '../engine/mastery';
 import { recordResult } from '../engine/scheduler';
 import { daysUntil } from '../engine/path';
 
@@ -187,6 +190,7 @@ export type { DomainStats } from '../engine/mastery';
  *  `profile`), so it works for any grade rather than assuming Grade 5. */
 export interface ReadinessSummary {
   weightedScore: number;
+  pointsToGoal: number;
   isAccelerationReady: boolean;
   masteredStandardsCount: number;
   totalStandardsCount: number;
@@ -226,8 +230,9 @@ export function useReadinessSummary(): ReadinessSummary {
       daysUntilExam !== null && daysUntilExam > 0 ? Math.ceil(remainingToPractice / daysUntilExam) : profile.dailyQuestionGoal;
 
     return {
-      weightedScore: Math.round(readiness),
-      isAccelerationReady: readiness >= curriculum.ssa.passingPercent,
+      weightedScore: displayPercent(readiness),
+      isAccelerationReady: readinessStatus(readiness, curriculum.ssa.passingPercent) === 'ready',
+      pointsToGoal: pointsToGoalFor(readiness, curriculum.ssa.passingPercent),
       masteredStandardsCount,
       totalStandardsCount: standardsOf(curriculum).length,
       totalQuestionsAnswered,

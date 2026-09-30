@@ -5,6 +5,7 @@ import { ProgressProvider } from '../context/ProgressContext';
 import { ParentHome } from './ParentHome';
 import { newProfile, saveState } from '../state/storage';
 import type { Profile } from '../state/types';
+import { buildReadinessAttempt } from '../state/readiness.testkit';
 
 const ymd = (daysFromNow: number) => {
   const d = new Date();
@@ -131,5 +132,20 @@ describe('ParentHome short-on-time path (F1)', () => {
     expect(screen.getByText(/round 1: try every topic \(skipped\)/i)).toBeInTheDocument();
     expect(container.textContent).not.toMatch(/✔ Round 1/);
     expect(container.textContent).not.toMatch(/ahead/i);
+  });
+});
+
+describe('ParentHome readiness and topic captions', () => {
+  beforeEach(() => localStorage.clear());
+
+  it('F3: 79.6% shows as 79% and not ready', () => {
+    renderHome({ attempts: [buildReadinessAttempt(250, 199)] });
+    expect(screen.getByTestId('readiness-tracker')).toHaveTextContent(/79% ready/);
+    expect(screen.getByTestId('readiness-tracker')).toHaveAttribute('data-readiness-state', 'building');
+  });
+
+  it('F7: explains that topic labels use every answer while rounds use the recent ones', () => {
+    renderHome();
+    expect(screen.getByText(/topics are labelled from all answers so far/i)).toBeInTheDocument();
   });
 });

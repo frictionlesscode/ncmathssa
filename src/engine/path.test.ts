@@ -210,3 +210,14 @@ describe('F1: short-on-time progress', () => {
     expect(p.roundsTotal).toBe(domainIds.length * 3);
   });
 });
+
+describe('F7: round exits use recent answers, labels use lifetime accuracy', () => {
+  it('F7: 40 misses then a strong run finishes Round 2 while the topic label stays "needs-focus" (documented behaviour)', () => {
+    const d = domainIds[0];
+    const p = buildPath({ ...base, checkupSkipped: true,
+      attempts: [attempt(`${PRACTICE_QUIZ_PREFIX}1`, [...many(d, 40, false), ...many(d, needFor(d), true)])] });
+    const t = p.topics.find((x) => x.domainId === d)!;
+    expect(t.round).toBe(3);
+    expect(t.status).toBe('needs-focus');
+  });
+});

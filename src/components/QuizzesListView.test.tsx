@@ -5,6 +5,7 @@ import { QuizzesListView } from './QuizzesListView';
 import { newProfile, saveState } from '../state/storage';
 import type { AppStateV2 } from '../state/types';
 import type { Grade } from '../curriculum/types';
+import { getCurriculum } from '../curriculum/registry';
 
 function stateForGrade(grade: Grade): AppStateV2 {
   const profile = newProfile({ id: `p-${grade}`, studentName: 'Test', grade });
@@ -76,5 +77,35 @@ describe('QuizzesListView mock assessment header (Finding F3)', () => {
     renderView();
     expect(screen.getByText('Timed 40 Minutes')).toBeInTheDocument();
     expect(screen.queryByText(/Calculator/)).not.toBeInTheDocument();
+  });
+});
+
+function stateWithDrillAttempt(scoreRaw: number, scoreTotal: number, scorePercent: number): AppStateV2 {
+  const quiz = getCurriculum(5).quizzes.find((q) => q.domainId && !q.isMockAssessment)!;
+  const profile = newProfile({
+    id: 'p', studentName: 'T',
+    attempts: [{
+      id: 'a1', quizId: quiz.id, quizTitle: quiz.title, completedAt: '2026-09-30T00:00:00.000Z',
+      scoreRaw, scoreTotal, scorePercent, isPassingSSA: false, timeElapsedSeconds: 1, answers: {},
+    }],
+  });
+  return { version: 2, profiles: [profile], activeProfileId: 'p' };
+}
+
+describe('QuizzesListView pass check (F5)', () => {
+  beforeEach(() => localStorage.clear());
+
+  it('F5: a best attempt of 63 of 79 (shows 80%) is not shown as passed', () => {
+    saveState(localStorage, stateWithDrillAttempt(63, 79, 80));
+    renderView();
+    const best = screen.getByText('Best: 80%');
+    expect(best.className).toContain('text-amber-600');
+    expect(best.className).not.toContain('text-emerald-600');
+  });
+
+  it('F5: an exact-bar attempt of 4 of 5 is shown as passed', () => {
+    saveState(localStorage, stateWithDrillAttempt(4, 5, 80));
+    renderView();
+    expect(screen.getByText('Best: 80%').className).toContain('text-emerald-600');
   });
 });

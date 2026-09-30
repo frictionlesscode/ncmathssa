@@ -86,7 +86,7 @@ export const CurriculumView: React.FC<CurriculumViewProps> = ({
       <div className="space-y-10">
         {filteredDomains.map(domain => {
           const dm = domainStatsFor(domain, mastery, passingPercent);
-          const isDomainReady = dm.masteryPercent >= passingPercent;
+          const isDomainReady = dm.status === 'acceleration-ready';
 
           return (
             <div key={domain.id} className="space-y-4">

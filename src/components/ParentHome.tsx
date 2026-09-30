@@ -1,9 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import { useProgress } from '../context/ProgressContext';
-import { buildPath, roundRank, type NextStep, type Round } from '../engine/path';
+import { buildPath, roundRank, ROUND_SAMPLE, type NextStep, type Round } from '../engine/path';
 import { computePace, type PaceStatus } from '../engine/pace';
 import { answeredCount, sessionSizeOf } from '../engine/activeSession';
-import type { MasteryStatus } from '../engine/mastery';
+import { formatPercent, readinessStatus, type MasteryStatus } from '../engine/mastery';
 import { StudyPaceModal } from './StudyPaceModal';
 import { PrintReportModal } from './PrintReportModal';
 
@@ -102,7 +102,7 @@ export const ParentHome: React.FC<ParentHomeProps> = ({
     <div className="min-h-screen bg-slate-50">
       <div className="max-w-2xl mx-auto px-4 py-8 space-y-6">
         {/* 1. Tracker */}
-        <section className="bg-white rounded-xl border border-slate-200 p-5 space-y-3">
+        <section data-testid="readiness-tracker" data-readiness-state={readinessStatus(readiness, passing)} className="bg-white rounded-xl border border-slate-200 p-5 space-y-3">
           <h1 className="text-xl font-bold text-slate-900">{profile.studentName} · Grade {curriculum.grade} math</h1>
           <div>
             <div className="relative h-3 rounded-full bg-slate-200 overflow-hidden" aria-hidden="true">
@@ -110,7 +110,7 @@ export const ParentHome: React.FC<ParentHomeProps> = ({
               <div className="absolute top-0 h-full w-0.5 bg-slate-800" style={{ left: `${passing}%` }} />
             </div>
             <p className="mt-2 text-slate-800">
-              <strong>{Math.round(readiness)}% ready</strong> — goal: {passing}%
+              <strong>{formatPercent(readiness)} ready</strong> — goal: {passing}%
             </p>
             <p className="text-xs text-slate-500">This is practice readiness, not a prediction of the real test.</p>
           </div>
@@ -146,6 +146,9 @@ export const ParentHome: React.FC<ParentHomeProps> = ({
               </li>
             ))}
           </ul>
+          <p className="mt-2 text-xs text-slate-500">
+            Topics are labelled from all answers so far. A round counts as finished when the most recent {ROUND_SAMPLE} answers are strong.
+          </p>
         </section>
 
         {/* 3. Path */}

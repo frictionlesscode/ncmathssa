@@ -351,6 +351,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Readiness Gauge Pill */}
             <div
               onClick={onOpenReportModal}
+              data-testid="readiness-pill"
+              data-readiness-state={readiness.isAccelerationReady ? 'ready' : 'building'}
               className="cursor-pointer hidden sm:flex items-center gap-2 px-3 py-1.5 bg-slate-50 border border-slate-200 hover:border-slate-300 rounded-xl transition-all shadow-xs"
               title="Click to view full parent progress report"
             >
