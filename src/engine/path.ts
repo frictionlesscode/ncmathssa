@@ -1,7 +1,7 @@
 import type { DomainId, GradeCurriculum, StandardCode } from '../curriculum/types';
 import { topicName } from '../curriculum/registry';
 import type { QuizAttempt } from '../types';
-import { domainStatsFor, masteryByStandard, type MasteryStatus } from './mastery';
+import { domainStatsFor, isPassing, masteryByStandard, type MasteryStatus } from './mastery';
 
 /** How many recent answers a round's exit rule looks at (spec 5.3). */
 export const ROUND_SAMPLE = 8;
@@ -96,8 +96,9 @@ export function sampleSizeFor(c: GradeCurriculum, standards: StandardCode[]): nu
   return Math.max(1, Math.min(ROUND_SAMPLE, authored));
 }
 
-function percent(xs: boolean[]): number {
-  return xs.length === 0 ? 0 : (xs.filter(Boolean).length / xs.length) * 100;
+/** True when the list is non-empty and meets the bar exactly (no rounding). */
+function meetsBar(xs: boolean[], passing: number): boolean {
+  return isPassing(xs.filter(Boolean).length, xs.length, passing);
 }
 
 function push<K, V>(m: Map<K, V[]>, k: K, v: V) {
@@ -147,7 +148,7 @@ export function buildPath(input: {
       const d = domainByStandard.get(ans.standardCode);
       if (d) push(byDomain, d, ans.isCorrect);
     }
-    for (const [d, xs] of byDomain) if (percent(xs) >= passing) checkupStrong.add(d);
+    for (const [d, xs] of byDomain) if (meetsBar(xs, passing)) checkupStrong.add(d);
   }
 
   const mastery = masteryByStandard(attempts, c);
@@ -159,7 +160,7 @@ export function buildPath(input: {
       const need = sampleSizeFor(c, codes);
       const xs = all.get(d.id) ?? [];
       const r3xs = round3.get(d.id) ?? [];
-      const passes = (list: boolean[]) => list.length >= need && percent(list.slice(-need)) >= passing;
+      const passes = (list: boolean[]) => list.length >= need && meetsBar(list.slice(-need), passing);
       const status = domainStatsFor(d, mastery, passing).status;
       const strongFromCheckup = checkupStrong.has(d.id);
 

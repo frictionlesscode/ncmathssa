@@ -1,5 +1,6 @@
 import type { DomainId, GradeCurriculum, StandardCode } from '../curriculum/types';
 import type { QuizAttempt, QuizAttemptAnswer, QuizDefinition } from '../types';
+import { isPassing } from './mastery';
 import { checkAnswer } from '../utils/answerChecker';
 import { parseQuestionRef, type Question, type QuestionRef } from './questionModel';
 
@@ -138,7 +139,7 @@ export function sessionToAttempt(
     scoreRaw: raw,
     scoreTotal: total,
     scorePercent,
-    isPassingSSA: scorePercent >= passingPercent,
+    isPassingSSA: isPassing(raw, total, passingPercent),
     timeElapsedSeconds: s.secondsElapsed,
     answers,
   };

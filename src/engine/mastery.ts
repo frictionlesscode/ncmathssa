@@ -5,8 +5,6 @@ import { familyOf, type MisconceptionFamily } from '../curriculum/misconceptions
 
 export type MasteryStatus = 'acceleration-ready' | 'approaching' | 'needs-focus' | 'untested';
 
-/** Below this many attempts, a perfect score is noise rather than mastery. */
-const MIN_SAMPLE_FOR_MASTERY = 4;
 
 export interface StandardMastery {
   standardCode: StandardCode;
@@ -18,11 +16,45 @@ export interface StandardMastery {
   misconceptions: Record<string, number>;
 }
 
-export function masteryStatus(percent: number, total: number, passing: number): MasteryStatus {
+/** Below this many attempts, a perfect score is noise rather than mastery. */
+export const MIN_SAMPLE_FOR_MASTERY = 4;
+/** Accuracy at which a topic stops being "needs focus". */
+export const APPROACHING_PERCENT = 60;
+/** Weights sum to 100 only up to floating-point noise (Grade 4 sums to 99.99999999999999). */
+const READINESS_EPSILON = 1e-9;
+
+/** True when correct/total meets the bar exactly. Integer arithmetic, so no
+ *  rounding or floating-point error can move a boundary. */
+export function isPassing(correct: number, total: number, passing: number): boolean {
+  return total > 0 && correct * 100 >= passing * total;
+}
+
+export function masteryStatus(correct: number, total: number, passing: number): MasteryStatus {
   if (total === 0) return 'untested';
-  if (percent >= passing && total >= MIN_SAMPLE_FOR_MASTERY) return 'acceleration-ready';
-  if (percent >= 60) return 'approaching';
+  if (total >= MIN_SAMPLE_FOR_MASTERY && isPassing(correct, total, passing)) return 'acceleration-ready';
+  if (correct * 100 >= APPROACHING_PERCENT * total) return 'approaching';
   return 'needs-focus';
+}
+
+export type ReadinessStatus = 'ready' | 'building';
+
+/** The one place that decides whether an overall readiness value meets the goal. */
+export function readinessStatus(readiness: number, passing: number): ReadinessStatus {
+  return readiness + READINESS_EPSILON >= passing ? 'ready' : 'building';
+}
+
+/** Readiness as shown to people: floored, so a value below the goal never displays as the goal. */
+export function displayPercent(value: number): number {
+  return Math.floor(value + READINESS_EPSILON);
+}
+
+export function formatPercent(value: number): string {
+  return `${displayPercent(value)}%`;
+}
+
+/** Whole points still needed to reach the goal (0 once reached). */
+export function pointsToGoal(readiness: number, passing: number): number {
+  return Math.max(0, Math.ceil(passing - readiness - READINESS_EPSILON));
 }
 
 export function masteryByStandard(
@@ -55,13 +87,14 @@ export function masteryByStandard(
 
   for (const m of out.values()) {
     m.percent = m.total === 0 ? 0 : (m.correct / m.total) * 100;
-    m.status = masteryStatus(m.percent, m.total, c.ssa.passingPercent);
+    m.status = masteryStatus(m.correct, m.total, c.ssa.passingPercent);
   }
   return out;
 }
 
 /** Blueprint-weighted composite, 0-100. Untested standards count as 0:
- *  readiness means readiness for the whole assessment. */
+ *  readiness means readiness for the whole assessment. Unrounded: compare it
+ *  with readinessStatus and show it with formatPercent. */
 export function overallReadiness(
   mastery: Map<StandardCode, StandardMastery>,
   c: GradeCurriculum,
@@ -75,7 +108,7 @@ export function overallReadiness(
       d.standards.length;
     total += (weight / 100) * domainPercent;
   }
-  return Math.round(total * 10) / 10;
+  return total;
 }
 
 export function topMisconceptions(
@@ -175,7 +208,7 @@ export function domainStatsFor(
     masteryPercent,
     totalQuestionsAnswered,
     totalCorrect,
-    status: masteryStatus(masteryPercent, totalQuestionsAnswered, passingPercent),
+    status: masteryStatus(totalCorrect, totalQuestionsAnswered, passingPercent),
     standardsCount: domain.standards.length,
     standardsMastered,
   };
