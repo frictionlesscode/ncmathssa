@@ -7,6 +7,7 @@ import { KidPractice } from './KidPractice';
 import { getCurriculum } from '../curriculum/registry';
 import { newSession, recordAnswer, type ActiveSession } from '../engine/activeSession';
 import { correctOption } from '../engine/questionModel';
+import { newProfile, saveState } from '../state/storage';
 
 const c = getCurriculum(5);
 const diagnostic = c.quizzes.find((q) => q.isDiagnostic)!;
@@ -119,5 +120,23 @@ describe('KidPractice', () => {
     const text = container.textContent ?? '';
     expect(text).not.toContain(q1.standardCode);
     expect(text).not.toMatch(/\d\.[A-Z]{2,3}\.\d/);
+  });
+});
+
+describe('KidPractice text diagrams (content-g3 CRITICAL display)', () => {
+  beforeEach(() => localStorage.clear());
+
+  it('g3 nf2: promptDetails render monospace with exact spacing', () => {
+    saveState(localStorage, {
+      version: 2, activeProfileId: 'p3',
+      profiles: [newProfile({ id: 'p3', studentName: 'Sam', grade: 3 })],
+    });
+    const ref = { kind: 'generated' as const, templateId: 'g3.nf2.fraction-on-a-number-line', seed: 7 };
+    const q = getCurriculum(3).source.resolve(ref);
+    expect(q.promptDetails).toBeTruthy();
+    setup(newSession({ kind: 'practice', quizId: 'path-practice-1', title: 't', refs: [ref], now: new Date() }));
+    const box = screen.getByTestId('prompt-details');
+    expect(box.textContent).toBe(q.promptDetails);
+    expect(box).toHaveClass('font-mono', 'whitespace-pre', 'overflow-x-auto');
   });
 });

@@ -15,6 +15,7 @@ import type { Question, QuizAttempt } from '../types';
 import { correctOption, parseQuestionRef } from '../engine/questionModel';
 import { useProgress } from '../context/ProgressContext';
 import { formatTime } from '../utils/answerChecker';
+import { PromptDetails } from './PromptDetails';
 
 interface QuizResultsProps {
   attempt: QuizAttempt;
@@ -298,9 +299,7 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
                     {q.prompt}
                   </p>
                   {q.promptDetails && (
-                    <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 font-mono text-sm font-semibold text-slate-800 whitespace-pre-wrap">
-                      {q.promptDetails}
-                    </div>
+                    <PromptDetails className="p-3.5 rounded-xl text-sm">{q.promptDetails}</PromptDetails>
                   )}
                 </div>
 

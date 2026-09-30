@@ -8,6 +8,7 @@ import {
 import { correctOption } from '../engine/questionModel';
 import { Scratchpad } from './Scratchpad';
 import { Calculator } from './Calculator';
+import { PromptDetails } from './PromptDetails';
 
 interface KidPracticeProps {
   session: ActiveSession;
@@ -98,7 +99,9 @@ export const KidPractice: React.FC<KidPracticeProps> = ({ session, studentName, 
       <main className="flex-1 w-full max-w-2xl mx-auto px-4 py-8 space-y-6">
         <div>
           <p className="text-xl font-semibold text-slate-900 whitespace-pre-line">{q.prompt}</p>
-          {q.promptDetails && <p className="mt-2 text-slate-700 whitespace-pre-line">{q.promptDetails}</p>}
+          {q.promptDetails && (
+            <PromptDetails className="mt-2 p-3 rounded-xl text-base">{q.promptDetails}</PromptDetails>
+          )}
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2">

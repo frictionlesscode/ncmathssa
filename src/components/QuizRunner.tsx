@@ -15,6 +15,7 @@ import { resolveSession, sessionToAttempt, type ActiveSession, type SessionAnswe
 import { checkAnswer, formatTime } from '../utils/answerChecker';
 import { Scratchpad } from './Scratchpad';
 import { Calculator } from './Calculator';
+import { PromptDetails } from './PromptDetails';
 
 interface QuizRunnerProps {
   session: ActiveSession;
@@ -232,9 +233,7 @@ export const QuizRunner: React.FC<QuizRunnerProps> = ({ session, onChange, onFin
             </h2>
 
             {currentQ.promptDetails && (
-              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 font-mono text-base font-semibold text-slate-800 whitespace-pre-wrap">
-                {currentQ.promptDetails}
-              </div>
+              <PromptDetails className="p-4 rounded-2xl text-base">{currentQ.promptDetails}</PromptDetails>
             )}
           </div>
 
