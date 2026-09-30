@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { migrate, initialState, loadState, saveState, STORAGE_KEY_V1, STORAGE_KEY_V2 } from './storage';
+import { migrate, newProfile, initialState, loadState, saveState, STORAGE_KEY_V1, STORAGE_KEY_V2 } from './storage';
 import { reviewKeyId } from '../engine/questionModel';
 import type { AppStateV2 } from './types';
 import v1Real from './__fixtures__/v1-real.json';
@@ -239,5 +239,31 @@ describe('saveState', () => {
     expect(() => saveState(throwingStorage, initialState())).not.toThrow();
     expect(consoleErrorSpy).toHaveBeenCalled();
     consoleErrorSpy.mockRestore();
+  });
+});
+
+describe('saved sessions in storage (no version bump)', () => {
+  it('loads a v2 blob without the new fields and keeps it intact', () => {
+    const p = newProfile({ id: 'p1', studentName: 'Ada' });
+    const out = migrate({ version: 2, profiles: [p], activeProfileId: 'p1' });
+    expect(out.profiles[0]).toEqual(p);
+    expect(out.profiles[0].activeSession).toBeUndefined();
+  });
+
+  it('round-trips an active session through save and load', () => {
+    const store = new Map<string, string>();
+    const storage = {
+      getItem: (k: string) => store.get(k) ?? null,
+      setItem: (k: string, v: string) => void store.set(k, v),
+    } as unknown as Storage;
+    const activeSession = {
+      kind: 'practice' as const, quizId: 'path-practice-1', title: 'Round 1 practice',
+      refs: [{ kind: 'authored' as const, id: 'nf1-01' }],
+      answers: { 'nf1-01': { selected: 'B', isCorrect: true } }, flagged: {},
+      currentIndex: 0, startedAt: '2026-09-30T00:00:00.000Z', secondsElapsed: 42,
+    };
+    const p = newProfile({ id: 'p1', studentName: 'Ada', activeSession, checkupSkipped: true, sessionSize: 10 });
+    saveState(storage, { version: 2, profiles: [p], activeProfileId: 'p1' });
+    expect(loadState(storage).profiles[0]).toEqual(p);
   });
 });

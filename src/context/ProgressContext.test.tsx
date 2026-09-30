@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { render, screen, act } from '@testing-library/react';
+import { render, screen, act, renderHook } from '@testing-library/react';
 import { ProgressProvider, useProgress } from './ProgressContext';
 import type { QuizAttempt } from '../types';
 
@@ -111,5 +111,27 @@ describe('ProgressProvider', () => {
 
     act(() => screen.getByText('right').click());
     expect(screen.getByTestId('box')).toHaveTextContent('2');
+  });
+});
+
+describe('completeSession', () => {
+  it('records the attempt and clears the saved session in one step', () => {
+    localStorage.clear();
+    const wrapper = ({ children }: { children: React.ReactNode }) => <ProgressProvider>{children}</ProgressProvider>;
+    const { result } = renderHook(() => useProgress(), { wrapper });
+    act(() => result.current.updateActiveProfile({
+      activeSession: { kind: 'practice', quizId: 'path-practice-1', title: 't', refs: [], answers: {}, flagged: {},
+        currentIndex: 0, startedAt: '2026-09-30T00:00:00.000Z', secondsElapsed: 0 },
+    }));
+    expect(result.current.profile.activeSession).toBeDefined();
+    // A wrong answer is what enqueues an unseen item for review.
+    act(() => result.current.completeSession({
+      id: 'a1', quizId: 'path-practice-1', quizTitle: 't', completedAt: '2026-09-30T00:01:00.000Z',
+      scoreRaw: 0, scoreTotal: 1, scorePercent: 0, isPassingSSA: false, timeElapsedSeconds: 5,
+      answers: { 'nf1-01': { questionId: 'nf1-01', studentAnswer: 'A', isCorrect: false, standardCode: 'NC.5.NF.1' } },
+    }, [{ ref: { kind: 'authored', id: 'nf1-01' }, wasCorrect: false }]));
+    expect(result.current.profile.activeSession).toBeUndefined();
+    expect(result.current.profile.attempts).toHaveLength(1);
+    expect(Object.keys(result.current.profile.reviewQueue)).toContain('a:nf1-01');
   });
 });

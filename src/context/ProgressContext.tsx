@@ -18,6 +18,10 @@ export interface ProgressContextValue {
   switchProfile(id: string): void;
   addProfile(name: string, grade: Grade): void;
   recordAttempt(attempt: QuizAttempt, results: { ref: QuestionRef; wasCorrect: boolean }[]): void;
+  /** Records a finished session's attempt and clears profile.activeSession
+   *  in one state update, so a crash between the two can't leave a
+   *  finished session resumable. */
+  completeSession(attempt: QuizAttempt, results: { ref: QuestionRef; wasCorrect: boolean }[]): void;
   /** Patches the active profile's own fields (name, target exam date, daily
    *  goal). Not part of the Task 13 interface contract, but every settings
    *  UI needs some way to persist an edit, and the profile record is where
@@ -31,6 +35,26 @@ export interface ProgressContextValue {
    *  profile (there must always be at least one), and reassigns
    *  activeProfileId to another profile if the active one is removed. */
   deleteProfile(id: string): void;
+}
+
+function withAttempt(
+  prev: AppStateV2,
+  attempt: QuizAttempt,
+  results: { ref: QuestionRef; wasCorrect: boolean }[],
+  clearSession: boolean,
+): AppStateV2 {
+  const now = new Date();
+  return {
+    ...prev,
+    profiles: prev.profiles.map((p) => {
+      if (p.id !== prev.activeProfileId) return p;
+      let queue = p.reviewQueue;
+      for (const r of results) queue = recordResult(queue, r.ref, r.wasCorrect, now);
+      const next = { ...p, attempts: [attempt, ...p.attempts], reviewQueue: queue };
+      if (clearSession) delete next.activeSession;
+      return next;
+    }),
+  };
 }
 
 const ProgressContext = createContext<ProgressContextValue | undefined>(undefined);
@@ -68,22 +92,14 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }, []);
 
   const recordAttempt = useCallback(
-    (attempt: QuizAttempt, results: { ref: QuestionRef; wasCorrect: boolean }[]) => {
-      setState((prev) => {
-        const now = new Date();
-        return {
-          ...prev,
-          profiles: prev.profiles.map((p) => {
-            if (p.id !== prev.activeProfileId) return p;
-            let queue = p.reviewQueue;
-            for (const r of results) {
-              queue = recordResult(queue, r.ref, r.wasCorrect, now);
-            }
-            return { ...p, attempts: [attempt, ...p.attempts], reviewQueue: queue };
-          }),
-        };
-      });
-    },
+    (attempt: QuizAttempt, results: { ref: QuestionRef; wasCorrect: boolean }[]) =>
+      setState((prev) => withAttempt(prev, attempt, results, false)),
+    [],
+  );
+
+  const completeSession = useCallback(
+    (attempt: QuizAttempt, results: { ref: QuestionRef; wasCorrect: boolean }[]) =>
+      setState((prev) => withAttempt(prev, attempt, results, true)),
     [],
   );
 
@@ -127,6 +143,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       switchProfile,
       addProfile,
       recordAttempt,
+      completeSession,
       updateActiveProfile,
       clearActiveProfileHistory,
       deleteProfile,
@@ -140,6 +157,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       switchProfile,
       addProfile,
       recordAttempt,
+      completeSession,
       updateActiveProfile,
       clearActiveProfileHistory,
       deleteProfile,
