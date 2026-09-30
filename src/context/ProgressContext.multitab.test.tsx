@@ -5,6 +5,11 @@ import { createMemoryStorage } from '../state/memoryStorage';
 import { loadState, saveState, newProfile, STORAGE_KEY_V2 } from '../state/storage';
 import type { AppStateV2 } from '../state/types';
 import { att } from '../state/state.testkit';
+import type { ReviewQueue } from '../engine/scheduler';
+
+const queued: ReviewQueue = {
+  'a:x': { key: { kind: 'authored', id: 'x' }, box: 1, dueAt: '2020-01-02T00:00:00.000Z', lastSeenAt: '2020-01-01T00:00:00.000Z' },
+};
 
 function TabProbe() {
   const { profile, state, updateActiveProfile, clearActiveProfileHistory, deleteProfile } = useProgress();
@@ -65,7 +70,7 @@ describe('multi-tab', () => {
     saveState(s, {
       ...base,
       profiles: [
-        { ...base.profiles[0], attempts: [att('old', '2020-01-01T00:00:00.000Z')], reviewQueue: { 'x': { box: 1, dueAt: '2020-01-02T00:00:00.000Z' } } as never, checkupSkipped: true },
+        { ...base.profiles[0], attempts: [att('old', '2020-01-01T00:00:00.000Z')], reviewQueue: queued, checkupSkipped: true },
         base.profiles[1],
       ],
     });
@@ -85,13 +90,13 @@ describe('multi-tab', () => {
     saveState(s, {
       ...base,
       profiles: [
-        { ...base.profiles[0], reviewQueue: { 'x': { box: 1, dueAt: '2020-01-02T00:00:00.000Z' } } as never, checkupSkipped: true },
+        { ...base.profiles[0], reviewQueue: queued, checkupSkipped: true },
         base.profiles[1],
       ],
     });
     mount(s); // this tab now holds the stale copy
     // The other tab clears history and saves.
-    const cleared = { ...base.profiles[0], attempts: [], reviewQueue: {}, historyClearedAt: new Date().toISOString() };
+    const cleared = { ...base.profiles[0], attempts: [], reviewQueue: {}, historyClearedAt: '2026-09-30T09:00:00.000Z' };
     delete (cleared as { checkupSkipped?: boolean }).checkupSkipped;
     saveState(s, { ...base, profiles: [cleared, base.profiles[1]] });
     click('rename'); // no storage event: the merge on save must do it
@@ -112,6 +117,25 @@ describe('multi-tab', () => {
     storageEvent();
     expect(screen.getByTestId('profiles')).toHaveTextContent('p1');
     expect(screen.getByTestId('profiles')).not.toHaveTextContent('p2');
+    // The event itself does not write; this tab's next save must put the tombstoned state back.
+    click('rename');
+    expect(loadState(s).profiles.map((p) => p.id)).toEqual(['p1']);
+  });
+
+  it('logic-flows High: a stale tab that never saw the delete does not bring the student back when it saves', () => {
+    const s = createMemoryStorage();
+    const base = seed(s);
+    mount(s); // stale: holds p1 and p2
+    // The other tab deletes p2 and records an attempt on p1.
+    saveState(s, {
+      ...base,
+      profiles: [{ ...base.profiles[0], attempts: [att('other-tab', '2026-09-30T10:00:00.000Z')] }],
+      deletedProfileIds: ['p2'],
+    });
+    click('rename'); // no storage event
+    expect(loadState(s).profiles.map((p) => p.id)).toEqual(['p1']);
+    expect(screen.getByTestId('profiles')).not.toHaveTextContent('p2');
+    expect(loadState(s).profiles[0].attempts.map((a) => a.id)).toEqual(['other-tab']);
   });
 
   it('stamps activeSessionAt when the saved session changes or is cleared', () => {
