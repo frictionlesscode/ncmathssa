@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { render, screen, act } from '@testing-library/react';
-import { ProgressProvider, useProgress } from './ProgressContext';
+import { render, screen, act, renderHook } from '@testing-library/react';
+import { ProgressProvider, useProgress, useReadinessSummary } from './ProgressContext';
 import type { QuizAttempt } from '../types';
 
 function Probe() {
@@ -111,5 +111,71 @@ describe('ProgressProvider', () => {
 
     act(() => screen.getByText('right').click());
     expect(screen.getByTestId('box')).toHaveTextContent('2');
+  });
+});
+
+describe('completeSession', () => {
+  it('records the attempt and clears the saved session in one step', () => {
+    localStorage.clear();
+    const wrapper = ({ children }: { children: React.ReactNode }) => <ProgressProvider>{children}</ProgressProvider>;
+    const { result } = renderHook(() => useProgress(), { wrapper });
+    act(() => result.current.updateActiveProfile({
+      activeSession: { kind: 'practice', quizId: 'path-practice-1', title: 't', refs: [], answers: {}, flagged: {},
+        currentIndex: 0, startedAt: '2026-09-30T00:00:00.000Z', secondsElapsed: 0 },
+    }));
+    expect(result.current.profile.activeSession).toBeDefined();
+    // A wrong answer is what enqueues an unseen item for review.
+    act(() => result.current.completeSession({
+      id: 'a1', quizId: 'path-practice-1', quizTitle: 't', completedAt: '2026-09-30T00:01:00.000Z',
+      scoreRaw: 0, scoreTotal: 1, scorePercent: 0, isPassingSSA: false, timeElapsedSeconds: 5,
+      answers: { 'nf1-01': { questionId: 'nf1-01', studentAnswer: 'A', isCorrect: false, standardCode: 'NC.5.NF.1' } },
+    }, [{ ref: { kind: 'authored', id: 'nf1-01' }, wasCorrect: false }]));
+    expect(result.current.profile.activeSession).toBeUndefined();
+    expect(result.current.profile.attempts).toHaveLength(1);
+    expect(Object.keys(result.current.profile.reviewQueue)).toContain('a:nf1-01');
+  });
+});
+
+describe('clearActiveProfileHistory', () => {
+  it('also clears the saved session and checkup flag', () => {
+    localStorage.clear();
+    const wrapper = ({ children }: { children: React.ReactNode }) => <ProgressProvider>{children}</ProgressProvider>;
+    const { result } = renderHook(() => useProgress(), { wrapper });
+    act(() => result.current.updateActiveProfile({
+      checkupSkipped: true,
+      activeSession: { kind: 'practice', quizId: 'path-practice-1', title: 't', refs: [], answers: {}, flagged: {},
+        currentIndex: 0, startedAt: '2026-09-30T00:00:00.000Z', secondsElapsed: 0 },
+    }));
+    act(() => result.current.clearActiveProfileHistory());
+    expect(result.current.profile.activeSession).toBeUndefined();
+    expect(result.current.profile.checkupSkipped).toBeUndefined();
+  });
+});
+
+describe('useReadinessSummary daysUntilExam', () => {
+  const wrapper = ({ children }: { children: React.ReactNode }) => <ProgressProvider>{children}</ProgressProvider>;
+
+  it('is null when there is no test date', () => {
+    localStorage.clear();
+    const { result } = renderHook(() => useReadinessSummary(), { wrapper });
+    expect(result.current.daysUntilExam).toBeNull();
+    expect(result.current.dailyQuestionsPace).toBeGreaterThan(0);
+  });
+
+  it('is null for an invalid date and a number for a valid one', () => {
+    localStorage.clear();
+    const { result } = renderHook(() => ({ p: useProgress(), r: useReadinessSummary() }), { wrapper });
+    act(() => result.current.p.updateActiveProfile({ targetExamDate: 'garbage' }));
+    expect(result.current.r.daysUntilExam).toBeNull();
+    act(() => result.current.p.updateActiveProfile({ targetExamDate: '2099-01-01' }));
+    expect(result.current.r.daysUntilExam).toBeGreaterThan(0);
+  });
+
+  it('is negative for a past date and keeps the pace finite', () => {
+    localStorage.clear();
+    const { result } = renderHook(() => ({ p: useProgress(), r: useReadinessSummary() }), { wrapper });
+    act(() => result.current.p.updateActiveProfile({ targetExamDate: '2020-01-01' }));
+    expect(result.current.r.daysUntilExam).toBeLessThan(0);
+    expect(Number.isFinite(result.current.r.dailyQuestionsPace)).toBe(true);
   });
 });

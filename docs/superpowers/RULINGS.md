@@ -103,3 +103,4 @@ Parked — Navbar gear menu and add-profile popover can open simultaneously and 
 Parked — NC.5.MD.4 has only ONE authored question, not the 2-4 assumed. The badge is
   truthful but that standard repeats immediately. Highest-priority item for the
   follow-on content plan.
+- **Closed 2026-09-30:** drill factories moved from curriculum/grade5/quizzes.ts to src/engine/drills.ts (parent-path plan, Task 7).

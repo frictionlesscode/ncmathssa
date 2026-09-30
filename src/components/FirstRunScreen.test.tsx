@@ -64,3 +64,15 @@ describe('FirstRunScreen', () => {
     expect(onComplete).toHaveBeenCalledWith({ studentName: 'Alex', grade: highest });
   });
 });
+
+describe('FirstRunScreen cancel', () => {
+  it('offers Cancel only when adding another student', async () => {
+    const onCancel = vi.fn();
+    const { unmount } = render(<FirstRunScreen onComplete={vi.fn()} />);
+    expect(screen.queryByRole('button', { name: /cancel/i })).not.toBeInTheDocument();
+    unmount();
+    render(<FirstRunScreen onComplete={vi.fn()} onCancel={onCancel} />);
+    await userEvent.click(screen.getByRole('button', { name: /cancel/i }));
+    expect(onCancel).toHaveBeenCalledTimes(1);
+  });
+});

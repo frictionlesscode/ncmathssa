@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Calendar, Target, X, Check, ArrowRight } from 'lucide-react';
+import { Calendar, Target, X, Check, ArrowRight, RotateCcw, Trash2 } from 'lucide-react';
 
 import { useProgress, useReadinessSummary } from '../context/ProgressContext';
 import { standardsOf } from '../curriculum/registry';
+import { sessionSizeOf } from '../engine/activeSession';
+import { countdownText } from '../engine/path';
 
 interface StudyPaceModalProps {
   isOpen: boolean;
@@ -10,13 +12,15 @@ interface StudyPaceModalProps {
 }
 
 export const StudyPaceModal: React.FC<StudyPaceModalProps> = ({ isOpen, onClose }) => {
-  const { profile, curriculum, updateActiveProfile } = useProgress();
+  const { state, profile, curriculum, updateActiveProfile, clearActiveProfileHistory, deleteProfile } = useProgress();
   const readiness = useReadinessSummary();
   const totalStandardsCount = standardsOf(curriculum).length;
   const [name, setName] = useState(profile.studentName);
   const [examDate, setExamDate] = useState(profile.targetExamDate);
   const [dailyGoal, setDailyGoal] = useState(profile.dailyQuestionGoal);
+  const [sessionSize, setSessionSize] = useState(String(sessionSizeOf(profile)));
   const [saved, setSaved] = useState(false);
+  const [confirmingAction, setConfirmingAction] = useState<'clear' | 'delete' | null>(null);
 
   if (!isOpen) return null;
 
@@ -25,7 +29,8 @@ export const StudyPaceModal: React.FC<StudyPaceModalProps> = ({ isOpen, onClose 
     updateActiveProfile({
       studentName: name,
       targetExamDate: examDate,
-      dailyQuestionGoal: Number(dailyGoal)
+      dailyQuestionGoal: Number(dailyGoal),
+      sessionSize: sessionSizeOf({ sessionSize: Number(sessionSize) }),
     });
     setSaved(true);
     setTimeout(() => {
@@ -83,9 +88,13 @@ export const StudyPaceModal: React.FC<StudyPaceModalProps> = ({ isOpen, onClose 
               className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500"
               required
             />
-            <p className="text-[11px] text-slate-500 mt-1">
-              {readiness.daysUntilExam} days remaining until test window.
-            </p>
+            {readiness.daysUntilExam !== null && (
+              <p className="text-[11px] text-slate-500 mt-1">
+                {readiness.daysUntilExam > 0
+                  ? `${countdownText(readiness.daysUntilExam, 'days remaining')} until test window.`
+                  : countdownText(readiness.daysUntilExam, 'days remaining')}
+              </p>
+            )}
           </div>
 
           {/* Goals */}
@@ -104,6 +113,20 @@ export const StudyPaceModal: React.FC<StudyPaceModalProps> = ({ isOpen, onClose 
             />
           </div>
 
+          {/* Questions per session */}
+          <div>
+            <label htmlFor="pace-session-size" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              Questions per session
+            </label>
+            <input
+              id="pace-session-size"
+              type="number"
+              value={sessionSize}
+              onChange={(e) => setSessionSize(e.target.value)}
+              className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm"
+            />
+          </div>
+
           {/* Pace Analysis Card */}
           <div className="bg-emerald-50/70 border border-emerald-200 rounded-2xl p-4 text-xs space-y-2">
             <div className="flex items-center justify-between font-bold text-emerald-950">
@@ -115,6 +138,77 @@ export const StudyPaceModal: React.FC<StudyPaceModalProps> = ({ isOpen, onClose 
             <p className="text-emerald-800 leading-relaxed">
               At this pace, you will cover all {totalStandardsCount} Grade {curriculum.grade} NCSCOS standards, reinforce weak spots, and complete full mock assessments well before testing.
             </p>
+          </div>
+
+          {/* Data controls */}
+          <div className="space-y-2 border-t border-slate-100 pt-4">
+            {confirmingAction === 'clear' ? (
+              <div className="space-y-2 p-3 bg-rose-50 border border-rose-200 rounded-xl">
+                <p className="text-[11px] font-semibold text-rose-800">
+                  Erase all test history and review queue for this student? This also restarts their path. This cannot be undone.
+                </p>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => { clearActiveProfileHistory(); setConfirmingAction(null); }}
+                    className="flex-1 px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-[11px] rounded-lg transition-colors"
+                  >
+                    Yes, erase history
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setConfirmingAction(null)}
+                    className="flex-1 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] rounded-lg transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setConfirmingAction('clear')}
+                className="w-full flex items-center gap-2 px-3 py-2 text-left text-xs font-bold text-slate-700 hover:bg-slate-50 rounded-xl transition-colors"
+              >
+                <RotateCcw className="w-3.5 h-3.5 text-slate-500" />
+                Clear history
+              </button>
+            )}
+
+            {state.profiles.length > 1 && (
+              confirmingAction === 'delete' ? (
+                <div className="space-y-2 p-3 bg-rose-50 border border-rose-200 rounded-xl">
+                  <p className="text-[11px] font-semibold text-rose-800">
+                    Delete this student, including their history? This cannot be undone.
+                  </p>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => { deleteProfile(profile.id); setConfirmingAction(null); onClose(); }}
+                      className="flex-1 px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-[11px] rounded-lg transition-colors"
+                    >
+                      Yes, delete student
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setConfirmingAction(null)}
+                      className="flex-1 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] rounded-lg transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setConfirmingAction('delete')}
+                  className="w-full flex items-center gap-2 px-3 py-2 text-left text-xs font-bold text-rose-600 hover:bg-rose-50 rounded-xl transition-colors"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  Delete student
+                </button>
+              )
+            )}
           </div>
 
           <div className="flex items-center justify-end gap-2.5 pt-2">

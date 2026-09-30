@@ -1,13 +1,14 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-import type { Grade, GradeCurriculum, StandardCode, DomainInfo } from '../curriculum/types';
+import type { Grade, GradeCurriculum, StandardCode } from '../curriculum/types';
 import { getCurriculum, standardsOf } from '../curriculum/registry';
 import type { AppStateV2, Profile } from '../state/types';
 import { loadState, saveState, newProfile } from '../state/storage';
 import type { QuizAttempt } from '../types';
 import type { QuestionRef } from '../engine/questionModel';
-import { masteryByStandard, overallReadiness, masteryStatus, type StandardMastery, type MasteryStatus } from '../engine/mastery';
+import { masteryByStandard, overallReadiness, type StandardMastery } from '../engine/mastery';
 import { recordResult } from '../engine/scheduler';
+import { daysUntil } from '../engine/path';
 
 export interface ProgressContextValue {
   state: AppStateV2;
@@ -18,6 +19,10 @@ export interface ProgressContextValue {
   switchProfile(id: string): void;
   addProfile(name: string, grade: Grade): void;
   recordAttempt(attempt: QuizAttempt, results: { ref: QuestionRef; wasCorrect: boolean }[]): void;
+  /** Records a finished session's attempt and clears profile.activeSession
+   *  in one state update, so a crash between the two can't leave a
+   *  finished session resumable. */
+  completeSession(attempt: QuizAttempt, results: { ref: QuestionRef; wasCorrect: boolean }[]): void;
   /** Patches the active profile's own fields (name, target exam date, daily
    *  goal). Not part of the Task 13 interface contract, but every settings
    *  UI needs some way to persist an edit, and the profile record is where
@@ -31,6 +36,26 @@ export interface ProgressContextValue {
    *  profile (there must always be at least one), and reassigns
    *  activeProfileId to another profile if the active one is removed. */
   deleteProfile(id: string): void;
+}
+
+function withAttempt(
+  prev: AppStateV2,
+  attempt: QuizAttempt,
+  results: { ref: QuestionRef; wasCorrect: boolean }[],
+  clearSession: boolean,
+): AppStateV2 {
+  const now = new Date();
+  return {
+    ...prev,
+    profiles: prev.profiles.map((p) => {
+      if (p.id !== prev.activeProfileId) return p;
+      let queue = p.reviewQueue;
+      for (const r of results) queue = recordResult(queue, r.ref, r.wasCorrect, now);
+      const next = { ...p, attempts: [attempt, ...p.attempts], reviewQueue: queue };
+      if (clearSession) delete next.activeSession;
+      return next;
+    }),
+  };
 }
 
 const ProgressContext = createContext<ProgressContextValue | undefined>(undefined);
@@ -68,22 +93,14 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }, []);
 
   const recordAttempt = useCallback(
-    (attempt: QuizAttempt, results: { ref: QuestionRef; wasCorrect: boolean }[]) => {
-      setState((prev) => {
-        const now = new Date();
-        return {
-          ...prev,
-          profiles: prev.profiles.map((p) => {
-            if (p.id !== prev.activeProfileId) return p;
-            let queue = p.reviewQueue;
-            for (const r of results) {
-              queue = recordResult(queue, r.ref, r.wasCorrect, now);
-            }
-            return { ...p, attempts: [attempt, ...p.attempts], reviewQueue: queue };
-          }),
-        };
-      });
-    },
+    (attempt: QuizAttempt, results: { ref: QuestionRef; wasCorrect: boolean }[]) =>
+      setState((prev) => withAttempt(prev, attempt, results, false)),
+    [],
+  );
+
+  const completeSession = useCallback(
+    (attempt: QuizAttempt, results: { ref: QuestionRef; wasCorrect: boolean }[]) =>
+      setState((prev) => withAttempt(prev, attempt, results, true)),
     [],
   );
 
@@ -101,7 +118,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setState((prev) => ({
       ...prev,
       profiles: prev.profiles.map((p) =>
-        p.id === prev.activeProfileId ? { ...p, attempts: [], reviewQueue: {} } : p,
+        p.id === prev.activeProfileId ? { ...p, attempts: [], reviewQueue: {}, activeSession: undefined, checkupSkipped: undefined } : p,
       ),
     }));
   }, []);
@@ -127,6 +144,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       switchProfile,
       addProfile,
       recordAttempt,
+      completeSession,
       updateActiveProfile,
       clearActiveProfileHistory,
       deleteProfile,
@@ -140,6 +158,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       switchProfile,
       addProfile,
       recordAttempt,
+      completeSession,
       updateActiveProfile,
       clearActiveProfileHistory,
       deleteProfile,
@@ -157,48 +176,10 @@ export const useProgress = (): ProgressContextValue => {
   return context;
 };
 
-/** Domain-level rollup of the per-standard mastery map. Components used to
- *  get this from a single-grade `getDomainMastery` helper on the old
- *  context; it is derived here from the same `mastery` map every component
- *  already reads, so it works for any grade's domain shape. */
-export interface DomainStats {
-  masteryPercent: number;
-  totalQuestionsAnswered: number;
-  totalCorrect: number;
-  status: MasteryStatus;
-  standardsCount: number;
-  standardsMastered: number;
-}
-
-export function domainStatsFor(
-  domain: DomainInfo,
-  mastery: Map<StandardCode, StandardMastery>,
-  passingPercent: number,
-): DomainStats {
-  let totalQuestionsAnswered = 0;
-  let totalCorrect = 0;
-  let standardsMastered = 0;
-
-  for (const s of domain.standards) {
-    const m = mastery.get(s.code);
-    if (!m) continue;
-    totalQuestionsAnswered += m.total;
-    totalCorrect += m.correct;
-    if (m.status === 'acceleration-ready') standardsMastered += 1;
-  }
-
-  const masteryPercent =
-    totalQuestionsAnswered === 0 ? 0 : Math.round((totalCorrect / totalQuestionsAnswered) * 100);
-
-  return {
-    masteryPercent,
-    totalQuestionsAnswered,
-    totalCorrect,
-    status: masteryStatus(masteryPercent, totalQuestionsAnswered, passingPercent),
-    standardsCount: domain.standards.length,
-    standardsMastered,
-  };
-}
+// Moved to the engine so pure modules (engine/path.ts) can use it without
+// importing React context; re-exported so existing imports keep working.
+export { domainStatsFor } from '../engine/mastery';
+export type { DomainStats } from '../engine/mastery';
 
 /** Composite readiness figures the old context exposed as a single
  *  `overallReadiness` object. Every field is derived from the primitives
@@ -212,7 +193,8 @@ export interface ReadinessSummary {
   totalQuestionsAnswered: number;
   totalCorrectAnswered: number;
   overallAccuracy: number;
-  daysUntilExam: number;
+  /** Null when the profile has no (valid) test date; negative once it has passed, 0 on the day. */
+  daysUntilExam: number | null;
   dailyQuestionsPace: number;
 }
 
@@ -237,15 +219,11 @@ export function useReadinessSummary(): ReadinessSummary {
     const overallAccuracy =
       totalQuestionsAnswered > 0 ? Math.round((totalCorrectAnswered / totalQuestionsAnswered) * 100) : 0;
 
-    const targetDate = profile.targetExamDate ? new Date(profile.targetExamDate) : null;
-    const daysUntilExam =
-      targetDate && !Number.isNaN(targetDate.getTime())
-        ? Math.max(0, Math.ceil((targetDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
-        : 0;
+    const daysUntilExam = profile.targetExamDate ? daysUntil(profile.targetExamDate, new Date()) : null;
 
     const remainingToPractice = Math.max(0, TARGET_PRACTICE_VOLUME - totalQuestionsAnswered);
     const dailyQuestionsPace =
-      daysUntilExam > 0 ? Math.ceil(remainingToPractice / daysUntilExam) : profile.dailyQuestionGoal;
+      daysUntilExam !== null && daysUntilExam > 0 ? Math.ceil(remainingToPractice / daysUntilExam) : profile.dailyQuestionGoal;
 
     return {
       weightedScore: Math.round(readiness),

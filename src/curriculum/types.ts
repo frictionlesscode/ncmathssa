@@ -21,6 +21,10 @@ export interface DomainInfo {
   id: DomainId;
   name: string;
   shortName: string;
+  /** What a parent sees on the home page: plain words, no codes. Optional in
+   *  the type so hand-built test fixtures stay valid; the registry test
+   *  asserts every shipped domain has one. Read it through topicName(). */
+  parentName?: string;
   /** The published band, e.g. '19–23%'. When this domain belongs to a
    *  weightGroup the band describes the GROUP, not this domain alone. Grades
    *  1-2 have no published band at all: this field holds a placeholder

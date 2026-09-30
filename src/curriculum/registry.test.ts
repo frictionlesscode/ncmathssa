@@ -8,6 +8,7 @@ import {
   weightHeading,
   weightValue,
   weightCompactLabel,
+  topicName,
 } from './registry';
 import type { Grade, GradeCurriculum } from './types';
 import { makeQuestionSource } from '../engine/questionSource';
@@ -199,5 +200,22 @@ describe('weightCompactLabel (Finding F1)', () => {
   it('returns empty for an unknown domain, agreeing with weightValue', () => {
     const g5 = getCurriculum(5);
     expect(weightCompactLabel(g5, 'ZZZ')).toBe('');
+  });
+});
+
+describe('parent-facing topic names', () => {
+  it('gives every domain in every grade a plain parentName with no codes', () => {
+    for (const c of listCurricula()) {
+      for (const d of c.domains) {
+        expect(d.parentName, `grade ${c.grade} ${d.id}`).toBeTruthy();
+        expect(d.parentName).not.toMatch(/NC\.|\b(OA|NBT|NF|MD|G)\b/);
+      }
+    }
+  });
+
+  it('topicName prefers parentName and falls back to shortName', () => {
+    const d = getCurriculum(5).domains[0];
+    expect(topicName(d)).toBe(d.parentName);
+    expect(topicName({ ...d, parentName: undefined })).toBe(d.shortName);
   });
 });

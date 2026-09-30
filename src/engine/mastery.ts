@@ -1,4 +1,4 @@
-import type { StandardCode, GradeCurriculum } from '../curriculum/types';
+import type { StandardCode, GradeCurriculum, DomainInfo } from '../curriculum/types';
 import { domainWeight, standardsOf } from '../curriculum/registry';
 import type { QuizAttempt } from '../types';
 import { familyOf, type MisconceptionFamily } from '../curriculum/misconceptions';
@@ -136,4 +136,47 @@ export function topMisconceptionFamilies(
     })
     .sort((a, b) => b.count - a.count || a.family.localeCompare(b.family))
     .slice(0, limit);
+}
+
+/** Domain-level rollup of the per-standard mastery map. Components used to
+ *  get this from a single-grade `getDomainMastery` helper on the old
+ *  context; it is derived here from the same `mastery` map every component
+ *  already reads, so it works for any grade's domain shape. */
+export interface DomainStats {
+  masteryPercent: number;
+  totalQuestionsAnswered: number;
+  totalCorrect: number;
+  status: MasteryStatus;
+  standardsCount: number;
+  standardsMastered: number;
+}
+
+export function domainStatsFor(
+  domain: DomainInfo,
+  mastery: Map<StandardCode, StandardMastery>,
+  passingPercent: number,
+): DomainStats {
+  let totalQuestionsAnswered = 0;
+  let totalCorrect = 0;
+  let standardsMastered = 0;
+
+  for (const s of domain.standards) {
+    const m = mastery.get(s.code);
+    if (!m) continue;
+    totalQuestionsAnswered += m.total;
+    totalCorrect += m.correct;
+    if (m.status === 'acceleration-ready') standardsMastered += 1;
+  }
+
+  const masteryPercent =
+    totalQuestionsAnswered === 0 ? 0 : Math.round((totalCorrect / totalQuestionsAnswered) * 100);
+
+  return {
+    masteryPercent,
+    totalQuestionsAnswered,
+    totalCorrect,
+    status: masteryStatus(masteryPercent, totalQuestionsAnswered, passingPercent),
+    standardsCount: domain.standards.length,
+    standardsMastered,
+  };
 }

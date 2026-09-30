@@ -1,4 +1,4 @@
-import type { Grade, GradeCurriculum, DomainId, StandardInfo } from './types';
+import type { Grade, GradeCurriculum, DomainId, StandardInfo, DomainInfo } from './types';
 import { GRADE_1 } from './grade1';
 import { GRADE_2 } from './grade2';
 import { GRADE_3 } from './grade3';
@@ -105,4 +105,9 @@ export function weightCompactLabel(c: GradeCurriculum, domainId: DomainId): stri
     .filter((d) => d.weightGroup === domain.weightGroup && d.id !== domain.id)
     .map((d) => d.id);
   return `${domain.officialWeightRange} with ${otherIds.join(' & ')}`;
+}
+
+/** The parent-facing name of a topic (domain): plain words, never a code. */
+export function topicName(domain: DomainInfo): string {
+  return domain.parentName ?? domain.shortName;
 }
