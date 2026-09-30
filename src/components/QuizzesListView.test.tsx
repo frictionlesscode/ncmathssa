@@ -95,12 +95,19 @@ function stateWithDrillAttempt(scoreRaw: number, scoreTotal: number, scorePercen
 describe('QuizzesListView pass check (F5)', () => {
   beforeEach(() => localStorage.clear());
 
-  it('F5: a best attempt of 63 of 79 (shows 80%) is not shown as passed', () => {
+  it('F5: a best attempt of 63 of 79 shows 79%, not 80%, and is not shown as passed', () => {
     saveState(localStorage, stateWithDrillAttempt(63, 79, 80));
     renderView();
-    const best = screen.getByText('Best: 80%');
+    const best = screen.getByText('Best: 79%');
+    expect(screen.queryByText('Best: 80%')).toBeNull();
     expect(best.className).toContain('text-amber-600');
     expect(best.className).not.toContain('text-emerald-600');
+  });
+
+  it('F5: a best attempt stored as 79.7 that did not pass displays 79%, not 80%', () => {
+    saveState(localStorage, stateWithDrillAttempt(0, 0, 79.7));
+    renderView();
+    expect(screen.getByText('Best: 79%').className).toContain('text-amber-600');
   });
 
   it('F5: an exact-bar attempt of 4 of 5 is shown as passed', () => {

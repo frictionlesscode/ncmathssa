@@ -13,7 +13,7 @@ import type { QuizDefinition } from '../types';
 import { AdaptiveSessionCard } from './AdaptiveSessionCard';
 import type { QuestionRef } from '../engine/questionModel';
 import { parseQuestionRef } from '../engine/questionModel';
-import { isPassing as meetsBar } from '../engine/mastery';
+import { isPassing as meetsBar, displayPercent } from '../engine/mastery';
 
 interface QuizzesListViewProps {
   onStartQuiz: (quizId: string) => void;
@@ -34,7 +34,9 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
   const getBestScore = (quizId: string) => {
     const attempts = profile.attempts.filter(a => a.quizId === quizId);
     if (attempts.length === 0) return null;
-    return Math.max(...attempts.map(a => a.scorePercent));
+    // Shown floored from raw counts so a miss never displays as the goal (F5).
+    return displayPercent(Math.max(...attempts.map(a =>
+      a.scoreTotal > 0 ? (a.scoreRaw * 100) / a.scoreTotal : a.scorePercent)));
   };
 
   // Pass is decided from raw counts, never from the rounded percent (F5).

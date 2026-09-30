@@ -210,7 +210,7 @@ export function domainStatsFor(
   }
 
   const masteryPercent =
-    totalQuestionsAnswered === 0 ? 0 : Math.round((totalCorrect / totalQuestionsAnswered) * 100);
+    totalQuestionsAnswered === 0 ? 0 : Math.floor((totalCorrect * 100) / totalQuestionsAnswered);
 
   return {
     masteryPercent,

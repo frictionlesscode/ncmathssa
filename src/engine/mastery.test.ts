@@ -95,14 +95,14 @@ describe('domainStatsFor (F5)', () => {
       standardCode: domain.standards[0].code, total, correct, percent: (correct / total) * 100,
       status: 'approaching' as const, misconceptions: {},
     }]]);
-  it('F5: 63 of 79 in a domain is approaching although it displays 80', () => {
+  it('F5: 63 of 79 in a domain is approaching and displays 79, never the goal', () => {
     const s = domainStatsFor(domain, only(63, 79), 80);
-    expect(s.masteryPercent).toBe(80);
+    expect(s.masteryPercent).toBe(79);
     expect(s.status).toBe('approaching');
   });
-  it('F5: 119 of 200 is needs-focus although it displays 60', () => {
+  it('F5: 119 of 200 is needs-focus and displays 59', () => {
     const s = domainStatsFor(domain, only(119, 200), 80);
-    expect(s.masteryPercent).toBe(60);
+    expect(s.masteryPercent).toBe(59);
     expect(s.status).toBe('needs-focus');
   });
 });

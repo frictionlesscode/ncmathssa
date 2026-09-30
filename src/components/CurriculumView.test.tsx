@@ -85,7 +85,7 @@ describe('CurriculumView weight labeling', () => {
 describe('CurriculumView domain ready check (F5)', () => {
   beforeEach(() => localStorage.clear());
 
-  it('F5: a domain with 63 of 79 right (shows 80%) is not treated as ready', () => {
+  it('F5: a domain with 63 of 79 right (shows 79%, not 80%) is not treated as ready', () => {
     const code = getCurriculum(5).domains.find((d) => d.id === 'NF')!.standards[0].code;
     const attempt: QuizAttempt = {
       id: 'a1', quizId: 'x', quizTitle: 'x', completedAt: '2026-09-30T00:00:00.000Z',
@@ -94,8 +94,12 @@ describe('CurriculumView domain ready check (F5)', () => {
     };
     saveState(localStorage, { version: 2, activeProfileId: 'p', profiles: [newProfile({ id: 'p', studentName: 'T', attempts: [attempt] })] });
     renderView();
-    const score = screen.getByText('80%');
+    const score = screen.getByText('79%');
+    expect(screen.queryByText('80%')).toBeNull();
     expect(score.className).toContain('text-amber-600');
     expect(score.className).not.toContain('text-emerald-600');
+    // F3: the per-standard pill agrees with the number and never reads as ready.
+    expect(screen.getByText(/Approaching \(79%\)/)).toBeInTheDocument();
+    expect(screen.queryByText(/Ready \(/)).toBeNull();
   });
 });

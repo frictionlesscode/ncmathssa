@@ -7,6 +7,7 @@ import {
   ChevronUp,
   HelpCircle
 } from 'lucide-react';
+import { formatPercent } from '../engine/mastery';
 import { useProgress, domainStatsFor } from '../context/ProgressContext';
 import { weightHeading, weightValue, weightCompactLabel } from '../curriculum/registry';
 
@@ -182,17 +183,17 @@ export const CurriculumView: React.FC<CurriculumViewProps> = ({
                           <div className="text-right mr-2">
                             {sm?.status === 'acceleration-ready' && (
                               <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-50 text-emerald-700 font-extrabold text-xs rounded-full border border-emerald-200">
-                                <CheckCircle className="w-3.5 h-3.5" /> Ready ({Math.round(sm.percent)}%)
+                                <CheckCircle className="w-3.5 h-3.5" /> Ready ({formatPercent(sm.percent)})
                               </span>
                             )}
                             {sm?.status === 'approaching' && (
                               <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-amber-50 text-amber-700 font-extrabold text-xs rounded-full border border-amber-200">
-                                Approaching ({Math.round(sm.percent)}%)
+                                Approaching ({formatPercent(sm.percent)})
                               </span>
                             )}
                             {sm?.status === 'needs-focus' && (
                               <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-rose-50 text-rose-700 font-extrabold text-xs rounded-full border border-rose-200">
-                                Needs Focus ({Math.round(sm.percent)}%)
+                                Needs Focus ({formatPercent(sm.percent)})
                               </span>
                             )}
                             {(!sm || sm.status === 'untested') && (

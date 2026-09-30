@@ -2,7 +2,7 @@ import React from 'react';
 import { Printer, X, Award, CheckCircle, AlertTriangle, HelpCircle } from 'lucide-react';
 import { useProgress, useReadinessSummary, domainStatsFor } from '../context/ProgressContext';
 import { standardsOf, weightHeading, weightValue } from '../curriculum/registry';
-import { topMisconceptionFamilies } from '../engine/mastery';
+import { topMisconceptionFamilies, formatPercent } from '../engine/mastery';
 import { MISCONCEPTIONS, familyLabel } from '../curriculum/misconceptions';
 
 interface PrintReportModalProps {
@@ -231,7 +231,7 @@ export const PrintReportModal: React.FC<PrintReportModalProps> = ({ isOpen, onCl
                     <div>
                       {sm?.status === 'acceleration-ready' ? (
                         <span className="flex items-center gap-1 text-emerald-600 font-bold text-[11px]">
-                          <CheckCircle className="w-3.5 h-3.5" /> {Math.round(sm.percent)}%
+                          <CheckCircle className="w-3.5 h-3.5" /> {formatPercent(sm.percent)}
                         </span>
                       ) : !sm || sm.status === 'untested' ? (
                         <span className="text-slate-400 text-[11px] flex items-center gap-1">
@@ -239,7 +239,7 @@ export const PrintReportModal: React.FC<PrintReportModalProps> = ({ isOpen, onCl
                         </span>
                       ) : (
                         <span className="text-amber-600 font-bold text-[11px] flex items-center gap-1">
-                          <AlertTriangle className="w-3.5 h-3.5" /> {Math.round(sm.percent)}%
+                          <AlertTriangle className="w-3.5 h-3.5" /> {formatPercent(sm.percent)}
                         </span>
                       )}
                     </div>
