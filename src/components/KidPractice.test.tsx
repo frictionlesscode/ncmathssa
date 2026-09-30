@@ -74,7 +74,7 @@ describe('KidPractice', () => {
   it('stopping with nothing answered discards', async () => {
     const { onDiscard, onFinish } = setup();
     await userEvent.click(screen.getByRole('button', { name: /stop for today/i }));
-    expect(screen.getByText(/stop and save your progress\?/i)).toBeInTheDocument();
+    expect(screen.getByText(/stop now\? your answers so far are saved and counted/i)).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: /yes, stop/i }));
     expect(onDiscard).toHaveBeenCalledTimes(1);
     expect(onFinish).not.toHaveBeenCalled();
@@ -138,5 +138,31 @@ describe('KidPractice text diagrams (content-g3 CRITICAL display)', () => {
     const box = screen.getByTestId('prompt-details');
     expect(box.textContent).toBe(q.promptDetails);
     expect(box).toHaveClass('font-mono', 'whitespace-pre', 'overflow-x-auto');
+  });
+});
+
+describe('KidPractice accessibility (logic-flows Medium)', () => {
+  beforeEach(() => localStorage.clear());
+
+  it('moves focus to the feedback heading, which sits in a status region', async () => {
+    setup();
+    await choose(correctOption(q1).label);
+    const heading = screen.getByRole('heading', { name: /nice!/i });
+    expect(heading).toHaveFocus();
+    expect(screen.getByRole('status')).toContainElement(heading);
+  });
+
+  it('options expose selection with aria-pressed', async () => {
+    setup();
+    const label = q1.options[0].label;
+    expect(option(label)).toHaveAttribute('aria-pressed', 'false');
+    await userEvent.click(option(label));
+    expect(option(label)).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('spec 2.6: the stop confirm says answers are saved and counted', async () => {
+    setup();
+    await userEvent.click(screen.getByRole('button', { name: /stop for today/i }));
+    expect(screen.getByText('Stop now? Your answers so far are saved and counted.')).toBeInTheDocument();
   });
 });

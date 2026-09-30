@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ProgressProvider, useProgress } from '../context/ProgressContext';
@@ -88,5 +88,22 @@ describe('StudyPaceModal', () => {
     seed();
     renderModal();
     expect(screen.queryByRole('button', { name: /delete student/i })).not.toBeInTheDocument();
+  });
+});
+
+describe('StudyPaceModal accessibility (logic-flows Medium)', () => {
+  beforeEach(() => localStorage.clear());
+
+  it('is a labelled dialog that Escape closes, with associated field labels', async () => {
+    seed();
+    const onClose = vi.fn();
+    render(<ProgressProvider><StudyPaceModal isOpen onClose={onClose} /><Probe /></ProgressProvider>);
+    expect(screen.getByRole('dialog', { name: /study plan/i })).toBeInTheDocument();
+    expect(screen.getByLabelText(/student name/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/testing date/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/daily questions/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /close/i })).toBeInTheDocument();
+    await userEvent.keyboard('{Escape}');
+    expect(onClose).toHaveBeenCalled();
   });
 });

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useEscapeKey } from './useEscapeKey';
 import { Calendar, Target, X, Check, ArrowRight, RotateCcw, Trash2 } from 'lucide-react';
 
 import { useProgress, useReadinessSummary } from '../context/ProgressContext';
@@ -22,6 +23,8 @@ export const StudyPaceModal: React.FC<StudyPaceModalProps> = ({ isOpen, onClose 
   const [saved, setSaved] = useState(false);
   const [confirmingAction, setConfirmingAction] = useState<'clear' | 'delete' | null>(null);
 
+  useEscapeKey(isOpen, onClose);
+
   if (!isOpen) return null;
 
   const handleSave = (e: React.FormEvent) => {
@@ -41,19 +44,20 @@ export const StudyPaceModal: React.FC<StudyPaceModalProps> = ({ isOpen, onClose 
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+      <div role="dialog" aria-modal="true" aria-labelledby="pace-title" className="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-150">
         <div className="p-6 border-b border-slate-100 bg-gradient-to-r from-emerald-50 to-teal-50 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <span className="p-2.5 bg-emerald-600 text-white rounded-2xl shadow-md shadow-emerald-500/20">
               <Target className="w-5 h-5" />
             </span>
             <div>
-              <h3 className="text-lg font-bold text-slate-900">Study Plan & Testing Pace</h3>
+              <h3 id="pace-title" className="text-lg font-bold text-slate-900">Study Plan & Testing Pace</h3>
               <p className="text-xs text-slate-500">Wake County SSA Exam Timeline & Daily Target</p>
             </div>
           </div>
           <button
             onClick={onClose}
+            aria-label="Close"
             className="p-1.5 text-slate-400 hover:text-slate-700 rounded-xl hover:bg-slate-100 transition-colors"
           >
             <X className="w-5 h-5" />

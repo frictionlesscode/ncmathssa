@@ -95,3 +95,39 @@ describe('QuizRunner text diagrams (content-g3 HIGH display)', () => {
     expect(screen.getByTestId('prompt-details')).toHaveClass('whitespace-pre', 'overflow-x-auto');
   });
 });
+
+describe('QuizRunner accessibility and saving (logic-flows Medium, Low)', () => {
+  beforeEach(() => localStorage.clear());
+
+  it('icon-only header buttons have real names', () => {
+    renderRunner(base());
+    expect(screen.getByRole('button', { name: /stop for today/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /pause timer/i })).toBeInTheDocument();
+  });
+
+  it('the question navigator is a dialog that Escape closes', async () => {
+    renderRunner(base());
+    await userEvent.click(screen.getByRole('button', { name: /question grid/i }));
+    expect(screen.getByRole('dialog', { name: /question navigator/i })).toBeInTheDocument();
+    await userEvent.keyboard('{Escape}');
+    expect(screen.queryByRole('dialog', { name: /question navigator/i })).not.toBeInTheDocument();
+  });
+
+  it('the unanswered-questions confirm is a dialog that Escape closes', async () => {
+    renderRunner(base());
+    await userEvent.click(screen.getByRole('button', { name: /^submit$/i }));
+    expect(screen.getByRole('dialog', { name: /unanswered questions/i })).toBeInTheDocument();
+    await userEvent.keyboard('{Escape}');
+    expect(screen.queryByRole('dialog', { name: /unanswered questions/i })).not.toBeInTheDocument();
+  });
+
+  it('logic-flows Low: answers for questions that no longer resolve are kept on the next save', async () => {
+    const s0 = base();
+    const s = { ...s0, answers: { ...s0.answers, 'gone-q': { selected: 'A', isCorrect: false } } };
+    const h = renderRunner(s);
+    const q = c.source.resolve(s.refs[0]);
+    await userEvent.click(screen.getAllByText(q.options[0].text).find((e) => e.closest('button'))!);
+    const last = h.onChange.mock.calls.at(-1)![0] as ActiveSession;
+    expect(last.answers['gone-q']).toEqual({ selected: 'A', isCorrect: false });
+  });
+});
