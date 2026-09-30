@@ -13,9 +13,30 @@ import {
 } from 'lucide-react';
 import type { Question, QuizAttempt } from '../types';
 import { correctOption, parseQuestionRef } from '../engine/questionModel';
+import { isMockQuiz } from '../engine/attempts';
 import { useProgress } from '../context/ProgressContext';
 import { formatTime } from '../utils/answerChecker';
 import { PromptDetails } from './PromptDetails';
+
+// Presentation per outcome. Only a full practice test can claim an SSA pass;
+// a drill is just practice (F10).
+const TONES = {
+  pass: {
+    card: 'bg-gradient-to-br from-emerald-50 via-teal-50 to-white border-emerald-300',
+    badge: 'bg-emerald-600 text-white border-emerald-700',
+    score: 'text-emerald-600',
+  },
+  practice: {
+    card: 'bg-gradient-to-br from-amber-50 via-orange-50 to-white border-amber-300',
+    badge: 'bg-amber-500 text-white border-amber-600',
+    score: 'text-amber-600',
+  },
+  drill: {
+    card: 'bg-gradient-to-br from-blue-50 via-sky-50 to-white border-blue-200',
+    badge: 'bg-blue-600 text-white border-blue-700',
+    score: 'text-blue-700',
+  },
+} as const;
 
 interface QuizResultsProps {
   attempt: QuizAttempt;
@@ -37,9 +58,24 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
   const [filter, setFilter] = useState<'all' | 'missed' | 'correct' | 'flagged'>('all');
   const [retryResults, setRetryResults] = useState<Record<string, boolean | null>>({});
 
-  // Confetti effect if passed the SSA bar
+  const isMock = isMockQuiz(curriculum, attempt.quizId);
+  const celebrate = isMock && attempt.isPassingSSA;
+  const tone = isMock ? (attempt.isPassingSSA ? 'pass' : 'practice') : 'drill';
+  const style = TONES[tone];
+  const badgeText = {
+    pass: `★ SSA Acceleration-Ready (Passed ≥ ${passingPercent}%)`,
+    practice: `Needs Practice (Below ${passingPercent}% Cutoff)`,
+    drill: 'Nice work',
+  }[tone];
+  const explanation = {
+    pass: `Excellent mastery! Scoring at or above ${passingPercent}% satisfies the Wake County Single Subject Acceleration performance benchmark on this module.`,
+    practice: `Wake County SSA requires a ${passingPercent}% or higher score to accelerate. Review the missed questions below to identify and master weak concepts.`,
+    drill: `You got ${attempt.scoreRaw} of ${attempt.scoreTotal} right. Review anything you missed below.`,
+  }[tone];
+
+  // Confetti effect if a practice test passed the SSA bar
   useEffect(() => {
-    if (attempt.isPassingSSA) {
+    if (celebrate) {
       try {
         confetti({
           particleCount: 80,
@@ -50,7 +86,7 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
         // ignore if canvas-confetti fails
       }
     }
-  }, [attempt.isPassingSSA]);
+  }, [celebrate]);
 
   // Collect question objects. Most answer ids are authored ids, but a
   // custom "practice due reviews" drill can carry generated refs too
@@ -92,20 +128,12 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-8 animate-in fade-in duration-200">
       {/* Score Header Card */}
-      <div className={`rounded-3xl p-6 sm:p-8 border shadow-lg relative overflow-hidden ${
-        attempt.isPassingSSA
-          ? 'bg-gradient-to-br from-emerald-50 via-teal-50 to-white border-emerald-300'
-          : 'bg-gradient-to-br from-amber-50 via-orange-50 to-white border-amber-300'
-      }`}>
+      <div className={`rounded-3xl p-6 sm:p-8 border shadow-lg relative overflow-hidden ${style.card}`}>
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider border shadow-xs ${
-                attempt.isPassingSSA
-                  ? 'bg-emerald-600 text-white border-emerald-700'
-                  : 'bg-amber-500 text-white border-amber-600'
-              }`}>
-                {attempt.isPassingSSA ? `★ SSA Acceleration-Ready (Passed ≥ ${passingPercent}%)` : `Needs Practice (Below ${passingPercent}% Cutoff)`}
+              <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider border shadow-xs ${style.badge}`}>
+                {badgeText}
               </span>
               <span className="text-xs text-slate-500 font-mono">
                 {formatTime(attempt.timeElapsedSeconds)} Elapsed
@@ -115,9 +143,7 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
               {attempt.quizTitle}
             </h1>
             <p className="text-xs sm:text-sm text-slate-600 max-w-xl">
-              {attempt.isPassingSSA
-                ? `Excellent mastery! Scoring at or above ${passingPercent}% satisfies the Wake County Single Subject Acceleration performance benchmark on this module.`
-                : `Wake County SSA requires a ${passingPercent}% or higher score to accelerate. Review the missed questions below to identify and master weak concepts.`}
+              {explanation}
             </p>
           </div>
 
@@ -126,17 +152,17 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
             <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
               Overall Score
             </span>
-            <div className={`text-4xl font-black tracking-tight ${
-              attempt.isPassingSSA ? 'text-emerald-600' : 'text-amber-600'
-            }`}>
+            <div className={`text-4xl font-black tracking-tight ${style.score}`}>
               {attempt.scorePercent}%
             </div>
             <div className="text-xs font-bold text-slate-700 mt-1">
               {attempt.scoreRaw} of {attempt.scoreTotal} Correct
             </div>
-            <div className="text-[11px] text-slate-500 mt-0.5">
-              Qualifying Bar: {passingPercent}%
-            </div>
+            {isMock && (
+              <div className="text-[11px] text-slate-500 mt-0.5">
+                Qualifying Bar: {passingPercent}%
+              </div>
+            )}
           </div>
         </div>
 

@@ -156,3 +156,17 @@ describe('Dashboard readiness labels (F3, F4)', () => {
     expect(screen.getByText(/Drill High-Weight Domains/)).toBeInTheDocument();
   });
 });
+
+describe('Dashboard history chips (F10)', () => {
+  beforeEach(() => localStorage.clear());
+  it('F10: a passed drill is not labelled "SSA Passed"', () => {
+    const attempt: QuizAttempt = {
+      id: 'd1', quizId: 'drill-nf1', quizTitle: 'NF drill', completedAt: '2026-09-30T00:00:00.000Z',
+      scoreRaw: 4, scoreTotal: 5, scorePercent: 80, isPassingSSA: true, timeElapsedSeconds: 60, answers: {},
+    };
+    saveState(localStorage, { version: 2, activeProfileId: 'p', profiles: [newProfile({ id: 'p', studentName: 'T', attempts: [attempt] })] });
+    renderDashboard();
+    expect(screen.queryByText(/SSA Passed/)).not.toBeInTheDocument();
+    expect(screen.getByText('Practice')).toBeInTheDocument();
+  });
+});

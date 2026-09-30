@@ -13,6 +13,7 @@ import { standardsOf, weightCompactLabel } from '../curriculum/registry';
 import { dueEntries } from '../engine/scheduler';
 import { countdownText } from '../engine/path';
 import { isPassing } from '../engine/mastery';
+import { isMockQuiz } from '../engine/attempts';
 import type { NavTab } from './Navbar';
 
 interface DashboardProps {
@@ -402,7 +403,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-base font-black text-slate-900">Recent Test History & Scores</h3>
-              <p className="text-xs text-slate-500">All tests taken in test conditions with {passingPercent}% benchmark validation</p>
+              <p className="text-xs text-slate-500">Practice tests are checked against the {passingPercent}% bar; drills are practice.</p>
             </div>
             <button
               onClick={onOpenReportModal}
@@ -413,17 +414,21 @@ export const Dashboard: React.FC<DashboardProps> = ({
           </div>
 
           <div className="divide-y divide-slate-100">
-            {profile.attempts.slice(0, 5).map(attempt => (
+            {profile.attempts.slice(0, 5).map(attempt => {
+              const isMock = isMockQuiz(curriculum, attempt.quizId);
+              return (
               <div key={attempt.id} className="py-3.5 flex items-center justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="font-bold text-sm text-slate-900">{attempt.quizTitle}</span>
                     <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full border ${
-                      attempt.isPassingSSA
+                      !isMock
+                        ? 'bg-blue-50 text-blue-800 border-blue-200'
+                        : attempt.isPassingSSA
                         ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
                         : 'bg-amber-100 text-amber-800 border-amber-300'
                     }`}>
-                      {attempt.isPassingSSA ? `SSA Passed (≥${passingPercent}%)` : `Needs Practice (<${passingPercent}%)`}
+                      {!isMock ? 'Practice' : attempt.isPassingSSA ? `SSA Passed (≥${passingPercent}%)` : `Needs Practice (<${passingPercent}%)`}
                     </span>
                   </div>
                   <div className="text-xs text-slate-500 mt-0.5">
@@ -434,7 +439,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 <div className="text-right flex items-center gap-4">
                   <div>
                     <span className={`text-lg font-black ${
-                      attempt.isPassingSSA ? 'text-emerald-600' : 'text-amber-600'
+                      !isMock ? 'text-blue-700' : attempt.isPassingSSA ? 'text-emerald-600' : 'text-amber-600'
                     }`}>
                       {attempt.scorePercent}%
                     </span>
@@ -444,7 +449,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   </div>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}

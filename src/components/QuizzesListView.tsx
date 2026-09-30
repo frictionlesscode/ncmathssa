@@ -91,7 +91,7 @@ export const QuizzesListView: React.FC<QuizzesListViewProps> = ({
           NCSCOS Grade {curriculum.grade} Assessment Library
         </h1>
         <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl">
-          Take full timed mock exams, comprehensive module assessments, or drill individual standards. Every quiz is benchmarked against Wake County's {passingPercent}% passing bar.
+          Take full timed mock exams, comprehensive module assessments, or drill individual standards. Practice tests are scored against the {passingPercent}% SSA bar; module quizzes and drills are practice.
         </p>
       </div>
 
