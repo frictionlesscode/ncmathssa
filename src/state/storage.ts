@@ -99,6 +99,7 @@ function normaliseSession(v: unknown): ActiveSession | undefined {
     startedAt: isString(v.startedAt) ? v.startedAt : '',
     secondsElapsed: isFiniteNumber(v.secondsElapsed) ? v.secondsElapsed : 0,
   };
+  if (!isRecord(v.origins)) delete out.origins;
   return out;
 }
 

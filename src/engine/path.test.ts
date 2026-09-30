@@ -1,20 +1,13 @@
 import { describe, it, expect } from 'vitest';
-import { getCurriculum } from '../curriculum/registry';
 import type { GradeCurriculum, StandardCode } from '../curriculum/types';
 import type { QuizAttempt, QuizAttemptAnswer } from '../types';
 import {
   buildPath, daysUntil, isShortOnTime, sampleSizeFor,
   ROUND_SAMPLE, ROUND3_QUIZ_PREFIX, PRACTICE_QUIZ_PREFIX, roundRank,
 } from './path';
+import { c5, codeOf, domainIds, needFor } from './path.testkit';
 
-const c5 = getCurriculum(5);
 const NOW = new Date(2026, 8, 30, 12); // 30 Sep 2026, local noon
-const withContent = new Set(c5.source.allStandardsWithContent());
-const domainIds = c5.domains.filter((d) => d.standards.some((s) => withContent.has(s.code))).map((d) => d.id);
-const codeOf = (domainId: string): StandardCode =>
-  c5.domains.find((d) => d.id === domainId)!.standards.find((s) => withContent.has(s.code))!.code;
-const needFor = (domainId: string) =>
-  sampleSizeFor(c5, c5.domains.find((d) => d.id === domainId)!.standards.map((s) => s.code).filter((c) => withContent.has(c)));
 
 let seq = 0;
 function attempt(quizId: string, answers: [StandardCode, boolean][], passing?: boolean): QuizAttempt {

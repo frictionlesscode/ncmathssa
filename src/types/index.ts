@@ -40,6 +40,9 @@ export interface QuizDefinition {
   questionIds: string[];
 }
 
+/** Where a question came from in its session: fresh content or a due review. Missing means 'new'. */
+export type AnswerOrigin = 'new' | 'review';
+
 export interface QuizAttemptAnswer {
   questionId: string;
   studentAnswer: string;
@@ -48,6 +51,7 @@ export interface QuizAttemptAnswer {
   misconception?: string;        // tag of the distractor chosen, when wrong
   timeSpentSeconds?: number;
   flaggedForReview?: boolean;
+  origin?: AnswerOrigin;         // absent means 'new'; only 'review' is written
 }
 
 export interface QuizAttempt {

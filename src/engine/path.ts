@@ -129,14 +129,17 @@ export function buildPath(input: {
   const checkups = diagnostic ? chronological.filter((a) => a.quizId === diagnostic.id) : [];
   const lastCheckup = checkups[checkups.length - 1];
 
-  const all = new Map<DomainId, boolean[]>();
-  const round3 = new Map<DomainId, boolean[]>();
+  const all = new Map<DomainId, boolean[]>();      // every answer: Round 1 volume, topic label
+  const fresh = new Map<DomainId, boolean[]>();    // without due reviews: the Round 2 exit window
+  const round3 = new Map<DomainId, boolean[]>();   // Round 3 sessions without due reviews: the Round 3 exit window
   for (const a of chronological) {
     const isRound3 = a.quizId.startsWith(ROUND3_QUIZ_PREFIX);
     for (const ans of Object.values(a.answers)) {
       const d = domainByStandard.get(ans.standardCode);
       if (!d) continue; // another grade's content
       push(all, d, ans.isCorrect);
+      if (ans.origin === 'review') continue; // due reviews of finished topics must not pull them back (F8)
+      push(fresh, d, ans.isCorrect);
       if (isRound3) push(round3, d, ans.isCorrect);
     }
   }
@@ -159,6 +162,7 @@ export function buildPath(input: {
     .map(({ d, codes }) => {
       const need = sampleSizeFor(c, codes);
       const xs = all.get(d.id) ?? [];
+      const freshXs = fresh.get(d.id) ?? [];
       const r3xs = round3.get(d.id) ?? [];
       const passes = (list: boolean[]) => list.length >= need && meetsBar(list.slice(-need), passing);
       const status = domainStatsFor(d, mastery, passing).status;
@@ -171,7 +175,7 @@ export function buildPath(input: {
       // Navigation only: short on time never sends a child back to Round 1.
       const r1 = shortOnTime || round1Done;
       // Short on time: Round 2 is only for the red and yellow topics.
-      const r2 = r1 && (passes(xs) || (shortOnTime && status === 'acceleration-ready'));
+      const r2 = r1 && (passes(freshXs) || (shortOnTime && status === 'acceleration-ready'));
       const r3 = r2 && passes(r3xs);
       const position = r3 ? 3 : r2 ? 2 : r1 ? 1 : 0; // where the path sends the child
       const roundsFinished = (round1Done ? 1 : 0) + (r2 ? 1 : 0) + (r3 ? 1 : 0); // what the child did

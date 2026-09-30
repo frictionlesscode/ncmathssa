@@ -6,6 +6,7 @@ import type { StandardMastery } from './mastery';
 import type { ReviewQueue } from './scheduler';
 import { dueEntries } from './scheduler';
 import { makeRng } from './rng';
+import type { AnswerOrigin } from '../types';
 
 /** A bad week should not turn every session into remediation. */
 export const MAX_REVIEW_FRACTION = 0.4;
@@ -26,7 +27,7 @@ export interface SessionPlan {
 
 const PREFER_RETRIES = 3;
 
-export function selectSession(input: {
+export interface SelectSessionInput {
   curriculum: GradeCurriculum;
   mastery: Map<StandardCode, StandardMastery>;
   queue: ReviewQueue;
@@ -34,10 +35,22 @@ export function selectSession(input: {
   now: Date;
   seed: number;
   plan?: SessionPlan;
-}): QuestionRef[] {
+}
+
+export interface ComposedRef {
+  ref: QuestionRef;
+  origin: AnswerOrigin;
+}
+
+/** The refs of composeSession, for callers that do not care where each came from. */
+export function selectSession(input: SelectSessionInput): QuestionRef[] {
+  return composeSession(input).map((c) => c.ref);
+}
+
+export function composeSession(input: SelectSessionInput): ComposedRef[] {
   const { curriculum: c, mastery, queue, size, now, seed, plan } = input;
   const rng = makeRng(seed);
-  const refs: QuestionRef[] = [];
+  const refs: ComposedRef[] = [];
 
   // Every ref already chosen, keyed by its exact identity (template + seed
   // for a generated ref, id for an authored one) — a session must never
@@ -55,7 +68,7 @@ export function selectSession(input: {
       entry.key.kind === 'authored'
         ? { kind: 'authored', id: entry.key.id }
         : { kind: 'generated', templateId: entry.key.templateId, seed: rng.int(0, 2 ** 31 - 1) };
-    refs.push(ref);
+    refs.push({ ref, origin: 'review' });
     used.add(questionRefId(ref));
   }
 
@@ -125,7 +138,7 @@ export function selectSession(input: {
       const key = questionRefId(ref);
       if (used.has(key)) { stall += 1; continue; }
 
-      refs.push(ref);
+      refs.push({ ref, origin: 'new' });
       used.add(key);
       stall = 0;
     }
