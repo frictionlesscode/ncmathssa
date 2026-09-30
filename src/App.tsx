@@ -17,6 +17,7 @@ import type { QuizAttempt, QuizDefinition } from './types';
 import { standardsOf } from './curriculum/registry';
 import { parseQuestionRef } from './engine/questionModel';
 import type { QuestionRef } from './engine/questionModel';
+import { sessionFromQuiz } from './engine/activeSession';
 import {
   createAdaptiveSessionDrill,
   createMissedQuestionsDrill,
@@ -120,9 +121,11 @@ const MainApp: React.FC = () => {
   if (activeQuiz) {
     return (
       <QuizRunner
-        quiz={activeQuiz}
+        session={sessionFromQuiz(activeQuiz, 'drill', new Date())}
+        onChange={() => {}}
         onFinish={handleFinishQuiz}
-        onExit={() => setActiveQuiz(null)}
+        onPause={() => setActiveQuiz(null)}
+        onDiscard={() => setActiveQuiz(null)}
       />
     );
   }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   AlertCircle,
   ArrowLeft,
@@ -9,44 +9,54 @@ import {
   Pen,
   X
 } from 'lucide-react';
-import type { Question, QuizAttempt, QuizAttemptAnswer, QuizDefinition } from '../types';
+import type { Question, QuizAttempt } from '../types';
 import { useProgress } from '../context/ProgressContext';
-import { parseQuestionRef } from '../engine/questionModel';
+import { resolveSession, sessionToAttempt, type ActiveSession, type SessionAnswer } from '../engine/activeSession';
 import { checkAnswer, formatTime } from '../utils/answerChecker';
 import { Scratchpad } from './Scratchpad';
 import { Calculator } from './Calculator';
 
 interface QuizRunnerProps {
-  quiz: QuizDefinition;
+  session: ActiveSession;
+  onChange: (s: ActiveSession) => void; // called after every answer, navigate, flag, pause
   onFinish: (attempt: QuizAttempt) => void;
-  onExit: () => void;
+  onPause: () => void; // "Stop for today": session stays saved
+  onDiscard: () => void; // only offered when no question resolves
 }
 
-export const QuizRunner: React.FC<QuizRunnerProps> = ({ quiz, onFinish, onExit }) => {
+export const QuizRunner: React.FC<QuizRunnerProps> = ({ session, onChange, onFinish, onPause, onDiscard }) => {
   const { curriculum } = useProgress();
   const passingPercent = curriculum.ssa.passingPercent;
 
-  // Load questions for this quiz. Most quiz ids are authored ids, but a
-  // custom "practice due reviews" drill can carry generated refs too,
-  // encoded as `templateId#seed` (Ruling from Task 13 fix round 1) - parse
-  // each id back into a QuestionRef and resolve it through the curriculum.
-  const questions: Question[] = quiz.questionIds
-    .map(id => {
-      try {
-        return curriculum.source.resolve(parseQuestionRef(id));
-      } catch {
-        return undefined;
-      }
-    })
-    .filter((q): q is Question => q !== undefined);
+  const questions: Question[] = resolveSession(session, curriculum);
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [flagged, setFlagged] = useState<Record<string, boolean>>({});
-  const [secondsElapsed, setSecondsElapsed] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(() => Math.min(session.currentIndex, Math.max(0, questions.length - 1)));
+  const [answers, setAnswers] = useState<Record<string, string>>(() =>
+    Object.fromEntries(Object.entries(session.answers).map(([id, a]) => [id, a.selected])));
+  const [flagged, setFlagged] = useState<Record<string, boolean>>(session.flagged);
+  const [secondsElapsed, setSecondsElapsed] = useState(session.secondsElapsed);
   const [isPaused, setIsPaused] = useState(false);
   const [showNavigator, setShowNavigator] = useState(false);
   const [showConfirmSubmit, setShowConfirmSubmit] = useState(false);
+
+  const secondsRef = useRef(secondsElapsed);
+  secondsRef.current = secondsElapsed;
+
+  const snapshot = (): ActiveSession => {
+    const saved: Record<string, SessionAnswer> = {};
+    for (const q of questions) {
+      const sel = answers[q.id];
+      if (sel?.trim()) saved[q.id] = { selected: sel, isCorrect: checkAnswer(q, sel) };
+    }
+    return { ...session, answers: saved, flagged, currentIndex, secondsElapsed: secondsRef.current };
+  };
+
+  // Persist on every interaction (spec 7): answer, navigate, flag, pause.
+  // Not on the per-second tick; `snapshot` reads the latest seconds via ref.
+  useEffect(() => {
+    onChange(snapshot());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [answers, flagged, currentIndex, isPaused]);
 
   // Scratchpad & Calculator modal toggles
   const [isScratchpadOpen, setIsScratchpadOpen] = useState(false);
@@ -67,13 +77,13 @@ export const QuizRunner: React.FC<QuizRunnerProps> = ({ quiz, onFinish, onExit }
     return (
       <div className="max-w-2xl mx-auto p-12 text-center">
         <AlertCircle className="w-12 h-12 text-amber-500 mx-auto mb-4" />
-        <h2 className="text-xl font-bold text-slate-800">No Questions Found</h2>
-        <p className="text-sm text-slate-500 mt-2">This quiz does not have matching questions.</p>
+        <h2 className="text-xl font-bold text-slate-800">This session can't continue</h2>
+        <p className="text-sm text-slate-500 mt-2">Its questions are no longer available. Discard it to get back on track.</p>
         <button
-          onClick={onExit}
+          onClick={onDiscard}
           className="mt-6 px-6 py-2.5 bg-blue-600 text-white font-bold rounded-xl text-sm"
         >
-          Return to Dashboard
+          Discard this session
         </button>
       </div>
     );
@@ -88,52 +98,7 @@ export const QuizRunner: React.FC<QuizRunnerProps> = ({ quiz, onFinish, onExit }
   };
 
   const handleSubmit = () => {
-    // Grade all answers
-    const evaluatedAnswers: Record<string, QuizAttemptAnswer> = {};
-    let rawScore = 0;
-
-    questions.forEach(q => {
-      const studentAns = answers[q.id] || '';
-      const isCorrect = checkAnswer(q, studentAns);
-      if (isCorrect) rawScore++;
-
-      const selectedOption = !isCorrect
-        ? q.options.find(
-            o =>
-              o.label.toLowerCase() === studentAns.trim().toLowerCase() ||
-              o.text.trim().toLowerCase() === studentAns.trim().toLowerCase()
-          )
-        : undefined;
-
-      evaluatedAnswers[q.id] = {
-        questionId: q.id,
-        studentAnswer: studentAns,
-        isCorrect,
-        standardCode: q.standardCode,
-        misconception: selectedOption?.misconception,
-        flaggedForReview: flagged[q.id]
-      };
-    });
-
-    const scorePercent = Math.round((rawScore / questions.length) * 1000) / 10;
-    const isPassingSSA = scorePercent >= passingPercent;
-
-    const attempt: QuizAttempt = {
-      id: `attempt-${Date.now()}`,
-      quizId: quiz.id,
-      quizTitle: quiz.title,
-      domainId: quiz.domainId,
-      standardCode: quiz.standardCode,
-      completedAt: new Date().toISOString(),
-      scoreRaw: rawScore,
-      scoreTotal: questions.length,
-      scorePercent,
-      isPassingSSA,
-      timeElapsedSeconds: secondsElapsed,
-      answers: evaluatedAnswers
-    };
-
-    onFinish(attempt);
+    onFinish(sessionToAttempt(snapshot(), questions, passingPercent, new Date(), { answeredOnly: false }));
   };
 
   const answeredCount = Object.keys(answers).filter(k => answers[k]?.trim().length > 0).length;
@@ -145,13 +110,9 @@ export const QuizRunner: React.FC<QuizRunnerProps> = ({ quiz, onFinish, onExit }
       <header className="bg-slate-900 text-white px-4 sm:px-8 py-3.5 shadow-md flex items-center justify-between sticky top-0 z-30">
         <div className="flex items-center gap-3">
           <button
-            onClick={() => {
-              if (window.confirm('Leave test? Your progress on this quiz will not be saved.')) {
-                onExit();
-              }
-            }}
+            onClick={() => { onChange(snapshot()); onPause(); }}
             className="p-1.5 text-slate-400 hover:text-white rounded-lg transition-colors"
-            title="Exit test"
+            title="Stop for today (your progress is saved)"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
@@ -160,7 +121,7 @@ export const QuizRunner: React.FC<QuizRunnerProps> = ({ quiz, onFinish, onExit }
               SECURE TEST MODE • NO MID-QUIZ FEEDBACK
             </span>
             <h1 className="text-sm sm:text-base font-black truncate max-w-md">
-              {quiz.title}
+              {session.title}
             </h1>
           </div>
         </div>
@@ -238,9 +199,11 @@ export const QuizRunner: React.FC<QuizRunnerProps> = ({ quiz, onFinish, onExit }
           {/* Question Metadata Header */}
           <div className="flex items-center justify-between pb-4 mb-6 border-b border-slate-100">
             <div className="flex items-center gap-2">
-              <span className="font-mono font-bold text-xs px-2.5 py-1 bg-slate-100 text-slate-800 rounded-lg border border-slate-200">
-                {currentQ.standardCode}
-              </span>
+              {session.kind === 'drill' && (
+                <span className="font-mono font-bold text-xs px-2.5 py-1 bg-slate-100 text-slate-800 rounded-lg border border-slate-200">
+                  {currentQ.standardCode}
+                </span>
+              )}
               {currentQ.isStretch && (
                 <span className="text-[11px] font-bold px-2.5 py-0.5 bg-amber-100 text-amber-800 rounded-full border border-amber-300">
                   Above-Grade Stretch Item
@@ -284,6 +247,7 @@ export const QuizRunner: React.FC<QuizRunnerProps> = ({ quiz, onFinish, onExit }
                 <button
                   key={option.label}
                   onClick={() => handleSelectAnswer(option.label)}
+                  aria-pressed={isSelected}
                   className={`w-full text-left p-4 rounded-2xl border text-sm font-semibold transition-all flex items-center justify-between gap-4 ${
                     isSelected
                       ? 'bg-blue-50/80 border-blue-600 text-blue-900 ring-2 ring-blue-500/20 shadow-xs'
