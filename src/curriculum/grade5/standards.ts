@@ -215,16 +215,16 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
     officialWeightMidpoint: 11,
     color: 'violet',
     badgeBg: 'bg-violet-100 text-violet-800 border-violet-300',
-    description: 'Covers numerical expressions with parentheses, brackets, order of operations, properties of operations, and generating/graphing numerical patterns.',
+    description: 'Covers numerical expressions with parentheses, order of operations, properties of operations, and generating/graphing numerical patterns.',
     standards: [
       {
         code: 'NC.5.OA.2',
         domainId: 'OA',
         title: 'Numerical Expressions, Order of Operations & Properties',
-        description: 'Write, explain, and evaluate numerical expressions with the four operations (up to two steps); parentheses, brackets; commutative, associative, distributive properties.',
+        description: 'Write, explain, and evaluate numerical expressions with the four operations (up to two steps), including parentheses; commutative, associative, distributive properties.',
         weightCategory: 'Core (OA band 9–13%)',
         keyConcepts: [
-          'Order of Operations: Parentheses/brackets first, then multiplication & division (left to right), then addition & subtraction (left to right)',
+          'Order of Operations: Parentheses first, then multiplication & division (left to right), then addition & subtraction (left to right)',
           'Translating word phrases into expressions: "Add 9 and 7, then multiply by 3" -> 3 × (9 + 7)',
           'Interpreting expressions without evaluating: 3 × (14,285 + 710) is three times as large as (14,285 + 710)',
           'Distributive property: a × (b + c) = (a × b) + (a × c)'

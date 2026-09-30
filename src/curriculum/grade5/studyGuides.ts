@@ -4,15 +4,15 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
   'NC.5.OA.2': {
     standardCode: 'NC.5.OA.2',
     title: 'Order of Operations & Evaluating Numerical Expressions',
-    coreConcept: 'Expressions must be evaluated in strict mathematical order (PEMDAS/GEMS). In word problems, operations grouped inside parentheses or brackets must happen first.',
+    coreConcept: 'Expressions must be evaluated in strict mathematical order (PEMDAS/GEMS). In word problems, operations grouped inside parentheses must happen first.',
     rulesAndFormulas: [
-      { label: 'Parentheses / Grouping [ ] ( )', detail: 'Always compute expressions inside innermost grouping symbols first.' },
+      { label: 'Parentheses ( )', detail: 'Always compute the expressions inside parentheses first.' },
       { label: 'Multiplication & Division (Left to Right)', detail: 'Neither takes priority over the other; compute them in order from left to right as you read.' },
       { label: 'Addition & Subtraction (Left to Right)', detail: 'Compute additions and subtractions from left to right after all multiplication and division are complete.' },
       { label: 'Distributive Property', detail: 'a × (b + c) = (a × b) + (a × c). Often used to break large numbers apart.' }
     ],
     stepByStepMethod: [
-      'Step 1: Scan for parentheses/brackets. If found, evaluate inside first using standard order of operations.',
+      'Step 1: Scan for parentheses. If found, evaluate inside first using standard order of operations.',
       'Step 2: Move left to right, solving any multiplication (×) or division (÷).',
       'Step 3: Move left to right, solving any addition (+) or subtraction (-).'
     ],
@@ -21,15 +21,14 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       'Forgetting parentheses when translating word problems (e.g. "add 6 and 4, then multiply by 5" is (6 + 4) × 5 = 50, NOT 6 + 4 × 5 = 26).'
     ],
     workedExample: {
-      problem: 'Evaluate the expression: 40 - [3 × (2 + 6)] + 18 ÷ 3',
+      problem: 'Evaluate the expression: 40 - 3 × (2 + 6) + 18 ÷ 3',
       steps: [
-        '1. Innermost parentheses: (2 + 6) = 8. Expression is now: 40 - [3 × 8] + 18 ÷ 3',
-        '2. Inside brackets: [3 × 8] = 24. Expression is now: 40 - 24 + 18 ÷ 3',
-        '3. Division: 18 ÷ 3 = 6. Expression is now: 40 - 24 + 6',
-        '4. Left-to-right addition/subtraction: 40 - 24 = 16, then 16 + 6 = 22.'
+        '1. Parentheses: (2 + 6) = 8. Expression is now: 40 - 3 × 8 + 18 ÷ 3',
+        '2. Multiplication and division, left to right: 3 × 8 = 24 and 18 ÷ 3 = 6. Expression is now: 40 - 24 + 6',
+        '3. Left-to-right addition/subtraction: 40 - 24 = 16, then 16 + 6 = 22.'
       ],
       answer: '22',
-      whyItMattersForSSA: 'CASE questions frequently test nested grouping symbols to verify that the student does not make left-to-right priority errors.'
+      whyItMattersForSSA: 'Test questions often mix parentheses with several operations to check that the student does not simply work left to right.'
     }
   },
 

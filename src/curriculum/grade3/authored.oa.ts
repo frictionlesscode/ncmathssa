@@ -732,9 +732,9 @@ export const GRADE_3_OA_AUTHORED: Question[] = [
         'Step 4: The correct choice is p = (5 × 6) + 12, so p = 42.',
       ],
       conceptSummary:
-        'Writing a two-step problem as one equation with a letter for the unknown shows which step happens first, and the brackets are how the equation says so.',
+        'Writing a two-step problem as one equation with a letter for the unknown shows which step happens first, and the parentheses are how the equation says so.',
       commonMisconception:
-        'Putting the 12 inside the brackets gives 90, because it puts 12 extra pencils into every one of the 5 boxes.',
+        'Putting the 12 inside the parentheses gives 90, because it puts 12 extra pencils into every one of the 5 boxes.',
     },
   },
 

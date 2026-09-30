@@ -25,28 +25,27 @@ export const GRADE_5_AUTHORED: Question[] = [
     standardCode: 'NC.5.OA.2',
     domainId: 'OA',
     prompt: 'Evaluate the expression below following the standard order of operations:',
-    promptDetails: '24 ÷ [ (7 - 4) × 2 ] + 5 × 3',
+    promptDetails: '36 ÷ (6 - 3) + 5 × 3',
     options: labelOptions([
-      // 24 ÷ (7 - 4) = 8, dropping the × 2 inside the brackets; 8 + 15 = 23.
-      { text: '23', isCorrect: false, misconception: 'incomplete-grouping-evaluation' },
-      // 24 ÷ 6 = 4, then 4 + 5 = 9, then 9 × 3 = 27.
-      { text: '27', isCorrect: false, misconception: 'order-of-operations-left-to-right' },
-      { text: '19', isCorrect: true },
-      // Brackets ignored: 24 ÷ 3 × 2 = 16, then 16 + 15 = 31.
-      { text: '31', isCorrect: false, misconception: 'ignored-grouping-symbols' },
+      // Parentheses ignored: 36 ÷ 6 = 6, then 6 - 3 + 15 = 18.
+      { text: '18', isCorrect: false, misconception: 'ignored-grouping-symbols' },
+      // 36 ÷ 3 = 12, then 12 + 5 = 17, then 17 × 3 = 51.
+      { text: '51', isCorrect: false, misconception: 'order-of-operations-left-to-right' },
+      { text: '27', isCorrect: true },
+      // Stopped at 36 ÷ 3 = 12 and never added 5 × 3.
+      { text: '12', isCorrect: false, misconception: 'forgot-the-final-step' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
     explanation: {
       stepByStep: [
-        'Step 1: Evaluate the innermost parentheses: (7 - 4) = 3.',
-        'Step 2: Evaluate inside the brackets: [ 3 × 2 ] = 6. The expression is now: 24 ÷ 6 + 5 × 3.',
-        'Step 3: Perform multiplication and division from left to right: 24 ÷ 6 = 4, and 5 × 3 = 15.',
-        'Step 4: Perform addition: 4 + 15 = 19.'
+        'Step 1: Evaluate inside the parentheses: (6 - 3) = 3. The expression is now: 36 ÷ 3 + 5 × 3.',
+        'Step 2: Perform multiplication and division from left to right: 36 ÷ 3 = 12, and 5 × 3 = 15.',
+        'Step 3: Perform addition: 12 + 15 = 27.'
       ],
-      conceptSummary: 'Operations inside parentheses and brackets take highest priority, followed by multiplication/division from left to right, then addition/subtraction.',
-      commonMisconception: 'Adding 6 + 5 before multiplying 5 × 3 would result in an incorrect answer.'
+      conceptSummary: 'Operations inside parentheses take highest priority, followed by multiplication/division from left to right, then addition/subtraction.',
+      commonMisconception: 'Adding 12 + 5 before multiplying 5 × 3 gives 17 × 3 = 51, which is incorrect.'
     }
   },
   {
@@ -81,14 +80,14 @@ export const GRADE_5_AUTHORED: Question[] = [
     standardCode: 'NC.5.OA.2',
     domainId: 'OA',
     prompt: 'Evaluate the expression without using a calculator:',
-    promptDetails: '{ [ (18 - 6) ÷ 3 ] + 8 } × 4 - 15',
+    promptDetails: '(18 - 6) ÷ 3 × (4 + 8) - 15',
     options: labelOptions([
-      // Multiplied the bracket by 4 before adding 8: (4 × 4) + 8 - 15 = 9.
+      // Dropped the second parentheses: 4 × 4 + 8 - 15 = 9.
       { text: '9', isCorrect: false, misconception: 'incomplete-grouping-evaluation' },
-      // Stopped at 12 × 4 = 48 and never subtracted 15.
+      // Stopped at 4 × 12 = 48 and never subtracted 15.
       { text: '48', isCorrect: false, misconception: 'forgot-the-final-step' },
-      // Divided before subtracting: 18 - (6 ÷ 3) = 16; (16 + 8) × 4 - 15 = 81.
-      { text: '81', isCorrect: false, misconception: 'ignored-grouping-symbols' },
+      // Parentheses ignored: 18 - 6 ÷ 3 × 4 + 8 - 15 = 18 - 8 + 8 - 15 = 3.
+      { text: '3', isCorrect: false, misconception: 'ignored-grouping-symbols' },
       { text: '33', isCorrect: true },
     ]),
     calculatorAllowed: false,
@@ -96,14 +95,13 @@ export const GRADE_5_AUTHORED: Question[] = [
     difficulty: 'stretch',
     explanation: {
       stepByStep: [
-        'Step 1: Innermost parentheses: 18 - 6 = 12.',
-        'Step 2: Inside brackets: 12 ÷ 3 = 4.',
-        'Step 3: Inside braces: 4 + 8 = 12. Expression is now: 12 × 4 - 15.',
-        'Step 4: Multiplication: 12 × 4 = 48.',
-        'Step 5: Subtraction: 48 - 15 = 33.'
+        'Step 1: First parentheses: 18 - 6 = 12.',
+        'Step 2: Second parentheses: 4 + 8 = 12. Expression is now: 12 ÷ 3 × 12 - 15.',
+        'Step 3: Division and multiplication, left to right: 12 ÷ 3 = 4, then 4 × 12 = 48.',
+        'Step 4: Subtraction: 48 - 15 = 33.'
       ],
-      conceptSummary: 'Multiple layers of grouping (parentheses, brackets, and braces) must be resolved from inside out before multiplying.',
-      commonMisconception: 'Subtracting 15 from 4 before multiplying by 12.'
+      conceptSummary: 'Evaluate every set of parentheses first, then multiply and divide from left to right, then add and subtract.',
+      commonMisconception: 'Forgetting the second set of parentheses and multiplying 4 × 4 before adding 8.'
     }
   },
   {
