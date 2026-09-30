@@ -59,4 +59,21 @@ describe('ErrorBoundary', () => {
     expect(storage.getItem(STORAGE_KEY_V2)).toBe(STORED);
     expect(onReload).not.toHaveBeenCalled();
   });
+
+  it('logic-flows High: Start over never deletes data it could not back up', async () => {
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    const inner = createMemoryStorage();
+    inner.setItem(STORAGE_KEY_V2, STORED);
+    const storage = Object.create(inner) as Storage;
+    storage.setItem = (k: string, v: string) => {
+      if (k.startsWith(CORRUPT_KEY_PREFIX)) throw new Error('QuotaExceededError');
+      inner.setItem(k, v);
+    };
+    const onReload = vi.fn();
+    render(<ErrorBoundary storage={storage} download={vi.fn()} onReload={onReload}><Boom /></ErrorBoundary>);
+    await userEvent.click(screen.getByRole('button', { name: /start over/i }));
+    expect(inner.getItem(STORAGE_KEY_V2)).toBe(STORED);
+    expect(screen.getByText(/couldn't make a backup copy, so nothing was deleted/i)).toBeInTheDocument();
+    expect(onReload).not.toHaveBeenCalled();
+  });
 });

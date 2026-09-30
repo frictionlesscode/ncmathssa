@@ -217,16 +217,20 @@ export function migrate(raw: unknown, opts: MigrateOptions = {}): AppStateV2 {
 }
 
 /** Keeps a copy of a blob we cannot use as-is. Skips it when an identical
- *  copy is already stored, so repeated loads do not pile up backups. */
-export function backupRaw(storage: Storage, raw: string, now: Date): void {
+ *  copy is already stored, so repeated loads do not pile up backups.
+ *  Returns true when a copy of `raw` exists afterwards (including the
+ *  already-backed-up case), false when it could not be saved. */
+export function backupRaw(storage: Storage, raw: string, now: Date): boolean {
   try {
     for (let i = 0; i < storage.length; i++) {
       const k = storage.key(i);
-      if (k && k.startsWith(CORRUPT_KEY_PREFIX) && storage.getItem(k) === raw) return;
+      if (k && k.startsWith(CORRUPT_KEY_PREFIX) && storage.getItem(k) === raw) return true;
     }
     storage.setItem(`${CORRUPT_KEY_PREFIX}${now.toISOString()}`, raw);
+    return true;
   } catch {
     // Nothing more can be done; the original blob is still untouched.
+    return false;
   }
 }
 

@@ -12,6 +12,7 @@ interface ErrorBoundaryProps {
 
 interface ErrorBoundaryState {
   error: Error | null;
+  backupFailed?: boolean;
 }
 
 /** Last line of defence: a render crash shows a way to save the data and
@@ -41,14 +42,22 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     if (!window.confirm('Start over? A backup copy of your saved data stays on this device, but the app will start empty.')) return;
     const storage = this.storage();
     const now = new Date();
+    let backupFailed = false;
     try {
       for (const key of [STORAGE_KEY_V2, STORAGE_KEY_V1]) {
         const raw = storage.getItem(key);
-        if (raw) backupRaw(storage, raw, now);
+        if (raw && !backupRaw(storage, raw, now)) {
+          backupFailed = true; // never delete what we could not copy
+          continue;
+        }
         storage.removeItem(key);
       }
     } catch {
       // Storage is unusable; reloading is still the best we can do.
+    }
+    if (backupFailed) {
+      this.setState({ backupFailed: true });
+      return;
     }
     (this.props.onReload ?? (() => window.location.reload()))();
   };
@@ -62,6 +71,11 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
           <p className="text-sm text-slate-600">
             Your saved progress has not been deleted. If you are unsure, export a copy first.
           </p>
+          {this.state.backupFailed && (
+            <p className="text-sm text-red-700">
+              Couldn't make a backup copy, so nothing was deleted. Use Export first.
+            </p>
+          )}
           <div className="flex flex-col gap-2">
             <button onClick={this.exportData} className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">
               Export my data
