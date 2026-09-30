@@ -281,6 +281,17 @@ export function loadState(storage: Storage, opts: MigrateOptions = {}): AppState
   return initialState(newId);
 }
 
+/** The stored v2 state, normalised, or null when absent or unusable. Read-only:
+ *  used to merge another tab's writes; it never backs up or writes. */
+export function loadStoredState(storage: Storage): AppStateV2 | null {
+  try {
+    const raw = storage.getItem(STORAGE_KEY_V2);
+    return raw ? (normaliseState(JSON.parse(raw))?.state ?? null) : null;
+  } catch {
+    return null;
+  }
+}
+
 export function saveState(storage: Storage, state: AppStateV2): { ok: boolean } {
   try {
     storage.setItem(STORAGE_KEY_V2, JSON.stringify(state));

@@ -3,7 +3,8 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useR
 import type { Grade, GradeCurriculum, StandardCode } from '../curriculum/types';
 import { getCurriculum, standardsOf } from '../curriculum/registry';
 import type { AppStateV2, Profile } from '../state/types';
-import { getBrowserStorage, loadState, saveState, newProfile } from '../state/storage';
+import { getBrowserStorage, loadState, loadStoredState, saveState, newProfile, STORAGE_KEY_V2 } from '../state/storage';
+import { mergeStates } from '../state/merge';
 import type { QuizAttempt } from '../types';
 import type { QuestionRef } from '../engine/questionModel';
 import {
@@ -57,7 +58,10 @@ function withAttempt(
       let queue = p.reviewQueue;
       for (const r of results) queue = recordResult(queue, r.ref, r.wasCorrect, now);
       const next = { ...p, attempts: [attempt, ...p.attempts], reviewQueue: queue };
-      if (clearSession) delete next.activeSession;
+      if (clearSession) {
+        delete next.activeSession;
+        next.activeSessionAt = now.toISOString();
+      }
       return next;
     }),
   };
@@ -79,8 +83,32 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode; storageAcce
 
   useEffect(() => {
     if (!dirty.current) return;
-    setSaveOk(saveState(store.storage, state).ok && !store.blocked);
+    // Re-read what is stored (another tab may have written) and merge before writing.
+    const stored = loadStoredState(store.storage);
+    const merged = stored ? mergeStates(stored, state) : state;
+    if (JSON.stringify(merged) !== JSON.stringify(state)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: adopt the merge with the other tab, then save
+      setState(merged); // this effect runs again and then saves
+      return;
+    }
+    setSaveOk(saveState(store.storage, merged).ok && !store.blocked);
   }, [state, store]);
+
+  // Another tab wrote: fold its changes in, preferring its newer scalar values.
+  useEffect(() => {
+    const onStorage = (e: StorageEvent) => {
+      if (e.storageArea && e.storageArea !== store.storage) return;
+      if (e.key !== null && e.key !== STORAGE_KEY_V2) return;
+      const stored = loadStoredState(store.storage);
+      if (!stored) return;
+      setState((prev) => {
+        const next = mergeStates(stored, prev, { activeScalars: 'stored' });
+        return JSON.stringify(next) === JSON.stringify(prev) ? prev : next;
+      });
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, [store]);
 
   const profile = useMemo(
     () => state.profiles.find((p) => p.id === state.activeProfileId) ?? state.profiles[0],
@@ -121,19 +149,24 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode; storageAcce
 
   const updateActiveProfile = useCallback(
     (patch: Partial<Omit<Profile, 'id' | 'attempts' | 'reviewQueue'>>) => {
+      // A change to the saved session is stamped so the multi-tab merge keeps the latest writer's.
+      const stamp = 'activeSession' in patch ? { activeSessionAt: new Date().toISOString() } : {};
       update((prev) => ({
         ...prev,
-        profiles: prev.profiles.map((p) => (p.id === prev.activeProfileId ? { ...p, ...patch } : p)),
+        profiles: prev.profiles.map((p) => (p.id === prev.activeProfileId ? { ...p, ...patch, ...stamp } : p)),
       }));
     },
     [update],
   );
 
   const clearActiveProfileHistory = useCallback(() => {
+    const at = new Date().toISOString();
     update((prev) => ({
       ...prev,
       profiles: prev.profiles.map((p) =>
-        p.id === prev.activeProfileId ? { ...p, attempts: [], reviewQueue: {}, activeSession: undefined, checkupSkipped: undefined } : p,
+        p.id === prev.activeProfileId
+          ? { ...p, attempts: [], reviewQueue: {}, activeSession: undefined, checkupSkipped: undefined, historyClearedAt: at, activeSessionAt: at }
+          : p,
       ),
     }));
   }, [update]);
@@ -145,7 +178,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode; storageAcce
       if (profiles.length === prev.profiles.length) return prev;
       const activeProfileId =
         prev.activeProfileId === id ? profiles[0].id : prev.activeProfileId;
-      return { ...prev, profiles, activeProfileId };
+      return { ...prev, profiles, activeProfileId, deletedProfileIds: [...(prev.deletedProfileIds ?? []), id] };
     });
   }, [update]);
 
