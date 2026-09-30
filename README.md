@@ -61,56 +61,22 @@ Grades 1–4 as well (`src/curriculum/grade1/` through `grade4/`).
 
 ---
 
-## Core Application Features
+## How it works
 
-1. **Overall SSA Readiness Gauge**:
-   - Composite score dynamically weighted according to official NCDPI EOG weight midpoints (Fractions 41%, Base Ten 27%, Measurement & Data 13%, Algebraic Thinking 11%, Geometry 8%).
-   - Visual gauge with prominent **80% WCPSS SSA benchmark marker**.
-   - Tracks how many of the 17 standards have reached the Acceleration-Ready tier.
+1. **Set up.** After agreeing to the disclaimer, enter the student's name and grade.
+2. **Parent home.** One page shows how ready the student is (goal: 80%), how they're doing on each topic, and whether they're on track for the test date. One button always says what to do next.
+3. **Check-up (optional).** A short test that finds topics the student already knows, so practice skips them.
+4. **Three rounds across every topic.**
+   - Round 1: try every topic.
+   - Round 2: get every topic to 80%.
+   - Round 3: test-ready practice under test conditions.
+5. **Practice test.** A full practice test. Scoring 80% or better shows "Ready to try for SSA".
 
-2. **Test-Taking Environment**:
-   - Realistic test conditions with a timer and pause toggle.
-   - Question Navigator Drawer to jump between answered, flagged, and unanswered questions.
-   - **Calculator Inactive vs Calculator Active Sections**:
-     - Strict "Calculator Inactive" banner on mental/computational problems.
-     - Accessible built-in 4-function on-screen calculator on questions allowing calculators.
-   - **Interactive Scratchpad Whiteboard**:
-     - Built-in drawing canvas with pen, eraser, color swatches, and clear tool for working out long division, fraction math, and scratchwork directly on the screen.
+Hand the device to the student for each session. Practice gives feedback after every question, and missed questions come back in later sessions. At the end the student hands it back and the parent sees a short summary. Progress is saved after every answer, so closing the tab loses nothing.
 
-3. **Adaptive Practice Engine**:
-   - Every session is composed by the engine, not hand-picked: due spaced-review items first (capped so a bad week doesn't turn every session into remediation), then standards the student is struggling with, then untested standards, then standards already going well — weight only breaks ties within a tier.
-   - A Leitner-style review scheduler tracks every missed question by a stable key (an authored item's id, or a generator template's id) and re-serves it on an expanding schedule (1, 3, 7, 16, 35 days); a correct answer promotes it, a miss sends it back to day 1, and enough correct answers in a row retires it from the queue.
-   - Per-standard mastery requires a minimum sample size before a perfect run counts as "acceleration-ready" — a lucky streak of 3 questions doesn't flip the gauge.
+**Short on time?** Set a test date within two weeks and the path skips ahead to the weakest topics, then the practice test.
 
-4. **Difficulty Bias & Stretch Challenges**:
-   - Questions trend toward the upper end of each standard (multi-step problems, reasoning over rote recall).
-   - Includes **Above-Grade Stretch Questions** bridging 5th grade into 6th grade math (e.g. dividing fractions by fractions, rate ratios, composite prism volume) flagged clearly so pace tracking stays honest.
-
-5. **Diagnostic Answer Options**:
-   - Every incorrect multiple-choice option is tagged with the specific misconception that produces it (e.g. "found a common denominator but forgot to convert the numerator"), so a miss tells you *why*, not just *that*.
-
-6. **Post-Quiz Diagnostic Review**:
-   - Immediate score percentage and pass/fail indicator against the 80% cutoff.
-   - Confetti burst when scoring $\ge 80\%$.
-   - Question-by-question breakdown showing the student's chosen option vs the correct one.
-   - Complete step-by-step worked solutions from NCDPI unpacking guides.
-   - "Watch Out!" common misconception callouts, tied to the misconception tags above.
-
-7. **Weak Spots & Error Bank**:
-   - Automatically tracks every question missed on any quiz until mastered, via the Leitner review queue.
-   - 1-click **"Practice Missed Questions"** custom test builder.
-
-8. **Multiple Student Profiles**:
-   - State supports more than one profile (e.g. multiple children) under one browser, with an active-profile switch.
-   - Older single-profile save data is migrated automatically and losslessly the first time the app loads the new format — a prior error bank becomes due-immediately review entries rather than being discarded.
-
-9. **Parent & Student Report Card**:
-   - Clean, professional report formatted for printing or saving to PDF (`window.print()`).
-   - Shows domain-by-domain mastery, the 17-standard checklist, and test history.
-
-10. **Study Pace & Countdown Planner**:
-    - Set target SSA exam date (e.g., Spring WCPSS window) and daily question goals.
-    - Calculates daily questions required to complete full preparation on time.
+The "Detailed view" link on the home page keeps the full breakdown by NC standard, study guides and per-standard drills.
 
 ---
 
