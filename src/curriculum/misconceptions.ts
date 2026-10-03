@@ -525,6 +525,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       "Used the exclusive definition of a trapezoid (exactly one pair of parallel sides) instead of NC's inclusive definition (at least one pair).",
     ),
     entry(
+      'inclusive-trapezoid-definition',
+      'shape-classification',
+      "Used the inclusive definition of a trapezoid (at least one pair of parallel sides) instead of NC's exclusive definition (exactly one pair), so a parallelogram, rectangle, rhombus or square was called a trapezoid.",
+    ),
+    entry(
       'forgot-the-final-step',
       'incomplete-procedure',
       'Completed an early step of a multi-step problem and reported that intermediate result instead of finishing the procedure.',
