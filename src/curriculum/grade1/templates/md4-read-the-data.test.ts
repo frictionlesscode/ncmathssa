@@ -19,6 +19,18 @@ function typeOf(prompt: string): 'total' | 'category' | 'compare' {
 }
 
 describe('g1.md4.read-the-data', () => {
+  // content-g1 audit (Low): "Reading apples's count" and "apples and bananas
+  // are different categories" starting a sentence in lowercase.
+  it('Low: explanations capitalise a sentence start and never write a plural possessive', () => {
+    for (let seed = 0; seed < 300; seed++) {
+      const g = md4ReadTheData.generate(makeRng(seed));
+      for (const line of [...g.explanation.stepByStep, g.explanation.commonMisconception ?? '']) {
+        expect(line, `seed ${seed}`).not.toMatch(/s's /);
+        expect(line, `seed ${seed}: "${line}"`).not.toMatch(/(?:^|\. )[a-z]/);
+      }
+    }
+  });
+
   it('is sound at every seed', () => {
     assertTemplateSound(md4ReadTheData);
   });

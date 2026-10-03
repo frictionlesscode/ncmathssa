@@ -530,6 +530,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       "Took a parallelogram's two pairs of parallel sides as the requirement for a trapezoid, instead of exactly one pair.",
     ),
     entry(
+      'said-the-same-number-twice-while-counting',
+      'patterns-and-sequences',
+      'While counting on by ones, said the same number twice in a row instead of moving on to the next number.',
+    ),
+    entry(
       'forgot-the-final-step',
       'incomplete-procedure',
       'Completed an early step of a multi-step problem and reported that intermediate result instead of finishing the procedure.',

@@ -35,8 +35,8 @@ function expected(start: number) {
     skip: from(ten + 10),
     omit: from(ten + 1),
     early: [start, start + 1, start + 2],
-    // Ten ones written beside the old tens: 119 -> "1110", then "1111".
-    sideBySide: key.map((n, i) => (i < at ? `${n}` : `${ten / 10 - 1}${10 + (i - at)}`)).join(', '),
+    // The second number said twice: 20, 21, 22 -> 20, 21, 21.
+    repeated: [key[0], key[1], key[1]],
   };
 }
 
@@ -46,13 +46,18 @@ const optionsOf = (d: CountDraw) => {
     e.key.join(', '),
     (d.tenSlip === 'back' ? e.back : e.skip).join(', '),
     (d.countSlip === 'early' ? e.early : e.omit).join(', '),
-    e.sideBySide,
+    e.repeated.join(', '),
   ];
 };
-/** Every number an option prints, except the side-by-side error form. */
+/** Every number an option prints, except the repeated-number error form (its
+ *  numbers are all ones the key prints). */
 const printed = (d: CountDraw) => optionsOf(d).slice(0, 3).flatMap(numbersIn);
 
 describe('g1.nbt1.count-past-a-ten', () => {
+  it('bumps its content version: a distractor was replaced', () => {
+    expect(nbt1CountPastATen.contentVersion).toBe(2);
+  });
+
   it('is sound at every seed', () => {
     assertTemplateSound(nbt1CountPastATen);
   });
@@ -109,9 +114,12 @@ describe('g1.nbt1.count-past-a-ten', () => {
       expect(!!early !== !!omit, `seed ${seed}: exactly one count slip`).toBe(true);
       if (early) expect(early.text, `seed ${seed}`).toBe(e.early.join(', '));
       if (omit) expect(omit.text, `seed ${seed}`).toBe(e.omit.join(', '));
-      expect(byTag(g, 'wrote-the-digits-side-by-side-instead-of-adding-the-values')!.text, `seed ${seed}`).toBe(
-        e.sideBySide,
+      expect(byTag(g, 'said-the-same-number-twice-while-counting')!.text, `seed ${seed}`).toBe(
+        e.repeated.join(', '),
       );
+      // content-g1 audit (Medium): the old side-by-side option printed junk
+      // such as "49, 410, 411", which no child writes.
+      expect(g.options.every((o) => numbersIn(o.text).every((n) => n <= 150)), `seed ${seed}`).toBe(true);
     }
   });
 
@@ -169,13 +177,13 @@ describe('g1.nbt1.count-past-a-ten', () => {
     const g = gen(7);
     expect(g.prompt).toBe('Count on from 19. What are the next three numbers?');
     expect(g.answerText).toBe('20, 21, 22');
-    expect(g.options.map((o) => o.text)).toEqual(['110, 111, 112', '10, 11, 12', '21, 22, 23', '20, 21, 22']);
+    expect(g.options.map((o) => o.text)).toEqual(['20, 21, 21', '10, 11, 12', '21, 22, 23', '20, 21, 22']);
   });
 
   it('pins seed 100', () => {
     const g = gen(100);
     expect(g.prompt).toBe('Count on from 38. What are the next three numbers?');
     expect(g.answerText).toBe('39, 40, 41');
-    expect(g.options.map((o) => o.text)).toEqual(['39, 40, 41', '39, 41, 42', '39, 310, 311', '39, 50, 51']);
+    expect(g.options.map((o) => o.text)).toEqual(['39, 40, 41', '39, 41, 42', '39, 40, 40', '39, 50, 51']);
   });
 });

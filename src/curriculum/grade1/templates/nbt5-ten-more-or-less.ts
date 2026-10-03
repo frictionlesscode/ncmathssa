@@ -12,10 +12,11 @@ import { unitCount } from './placeValue';
  * digit — the standard's own point, "without having to count" — so the ones
  * digit of every distractor still matches the ones digit of the number.
  *
- * 10 more of a number in the nineties crosses into a new hundred (94 -> 104);
- * 10 less of a number in the teens or twenties can reach single digits
- * (13 -> 3) but never goes below 0, since the smallest draw is 10 (10 less
- * than 10 is 0).
+ * "10 more" is only drawn for 10 to 89, so the answer stays a two-digit number
+ * (84 -> 94): trading 10 tens for a new hundred is Grade 2 place value, not
+ * NC.1.NBT.5. 10 less of a number in the teens or twenties can reach single
+ * digits (13 -> 3) but never goes below 0, since the smallest draw is 10 (10
+ * less than 10 is 0).
  *
  * ---------------------------------------------------------------------------
  *   answer                                          n + 10  or  n - 10
@@ -45,7 +46,11 @@ function optionsFor(n: number, direction: 'more' | 'less'): string[] {
 }
 
 export const TEN_DRAWS: TenMoreOrLessDraw[] = ALL_TEN_DRAWS.filter(
-  (d) => new Set(optionsFor(d.n, d.direction)).size === 4 && optionsFor(d.n, d.direction).every((t) => Number(t) >= 0),
+  (d) =>
+    new Set(optionsFor(d.n, d.direction)).size === 4 &&
+    optionsFor(d.n, d.direction).every((t) => Number(t) >= 0) &&
+    // Stay two-digit: 10 more than 90 or more would be a hundred.
+    (d.direction === 'less' || d.n + 10 <= 99),
 );
 
 export const nbt5TenMoreOrLess: QuestionTemplate = {
@@ -55,6 +60,7 @@ export const nbt5TenMoreOrLess: QuestionTemplate = {
   difficulty: 'mastery',
   calculatorAllowed: false,
   isStretch: false,
+  contentVersion: 2, // "10 more" no longer reaches 100 or more
 
   generate(rng: Rng): GeneratedQuestion {
     const { n, direction } = rng.pick(TEN_DRAWS);
