@@ -6,7 +6,7 @@ import { recordResult } from './scheduler';
 import { composeSession, selectSession } from './sessionComposer';
 import { sessionForStep } from './pathSession';
 import { createAdaptiveSessionDrill } from './drills';
-import { newSession, sessionFromQuiz, recordAnswer, resolveSession, sessionToAttempt } from './activeSession';
+import { newSession, sessionFromQuiz, recordAnswer, resolveSession, sessionToAttempt, stampContentVersions } from './activeSession';
 import { buildPath, PRACTICE_QUIZ_PREFIX, ROUND3_QUIZ_PREFIX } from './path';
 import { correctOption } from './questionModel';
 import { normaliseState, newProfile } from '../state/storage';
@@ -51,7 +51,7 @@ describe('attempts record the origin', () => {
   it('F8: a review answer is marked, a new one is not', () => {
     const quiz = c5.quizzes.find((q) => q.isDiagnostic)!;
     const refs = quiz.questionIds.slice(0, 2).map((id) => ({ kind: 'authored' as const, id }));
-    let s = newSession({ kind: 'practice', quizId: 'x', title: 'x', refs, now: NOW, origins: { [refs[0].id]: 'review' } });
+    let s = stampContentVersions(newSession({ kind: 'practice', quizId: 'x', title: 'x', refs, now: NOW, origins: { [refs[0].id]: 'review' } }), c5);
     const [q1, q2] = resolveSession(s, c5);
     s = recordAnswer(recordAnswer(s, q1, correctOption(q1).label), q2, correctOption(q2).label);
     const a = sessionToAttempt(s, [q1, q2], 80, NOW, { answeredOnly: true });

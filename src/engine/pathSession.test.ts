@@ -3,7 +3,7 @@ import { getCurriculum } from '../curriculum/registry';
 import { masteryByStandard } from './mastery';
 import { sessionForStep } from './pathSession';
 import { buildPath, ROUND3_QUIZ_PREFIX, PRACTICE_QUIZ_PREFIX } from './path';
-import { resolveSession, recordAnswer, sessionToAttempt } from './activeSession';
+import { resolveSession, recordAnswer, sessionToAttempt, stampContentVersions } from './activeSession';
 import { correctOption } from './questionModel';
 
 const c = getCurriculum(5);
@@ -33,12 +33,12 @@ describe('sessionForStep', () => {
   });
 
   it('marks Round 3 sessions so the path counts them', () => {
-    const s = sessionForStep({
+    const s = stampContentVersions(sessionForStep({
       ...common,
       size: 30,
       activeDomains: c.domains.map((d) => d.id),
       step: { kind: 'round3' },
-    })!;
+    })!, c);
     expect(s.kind).toBe('round3');
     expect(s.title).toBe('Test-ready practice');
     expect(s.quizId.startsWith(ROUND3_QUIZ_PREFIX)).toBe(true);

@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { ProgressProvider } from '../context/ProgressContext';
 import { KidPractice } from './KidPractice';
 import { getCurriculum } from '../curriculum/registry';
-import { newSession, recordAnswer, type ActiveSession } from '../engine/activeSession';
+import { newSession, recordAnswer, stampContentVersions, type ActiveSession } from '../engine/activeSession';
 import { correctOption } from '../engine/questionModel';
 import { newProfile, saveState } from '../state/storage';
 
@@ -14,7 +14,8 @@ const diagnostic = c.quizzes.find((q) => q.isDiagnostic)!;
 const refs = diagnostic.questionIds.slice(0, 2).map((id) => ({ kind: 'authored' as const, id }));
 const q1 = c.source.resolve(refs[0]);
 const q2 = c.source.resolve(refs[1]);
-const fresh = () => newSession({ kind: 'practice', quizId: 'path-practice-1', title: 'Round 1 practice', refs, now: new Date() });
+// Stamped like a real session start, so rewritten (version 2) items still run.
+const fresh = () => stampContentVersions(newSession({ kind: 'practice', quizId: 'path-practice-1', title: 'Round 1 practice', refs, now: new Date() }), c);
 
 function Harness({ initial, onFinish, onDiscard }: { initial: ActiveSession; onFinish: (a: unknown) => void; onDiscard: () => void }) {
   const [s, setS] = useState(initial);
@@ -106,7 +107,7 @@ describe('KidPractice', () => {
     const without = all.find((r) => !c.source.resolve(r).calculatorAllowed);
     expect(withCalc).toBeDefined();
     expect(without).toBeDefined();
-    const mk = (r: typeof all[number]) => newSession({ kind: 'practice', quizId: 'p', title: 'p', refs: [r], now: new Date() });
+    const mk = (r: typeof all[number]) => stampContentVersions(newSession({ kind: 'practice', quizId: 'p', title: 'p', refs: [r], now: new Date() }), c);
     const first = render(<ProgressProvider><Harness initial={mk(withCalc!)} onFinish={vi.fn()} onDiscard={vi.fn()} /></ProgressProvider>);
     expect(screen.getByRole('button', { name: /calculator/i })).toBeInTheDocument();
     first.unmount();
@@ -134,7 +135,7 @@ describe('KidPractice text diagrams (content-g3 CRITICAL display)', () => {
     const ref = { kind: 'generated' as const, templateId: 'g3.nf2.fraction-on-a-number-line', seed: 7 };
     const q = getCurriculum(3).source.resolve(ref);
     expect(q.promptDetails).toBeTruthy();
-    setup(newSession({ kind: 'practice', quizId: 'path-practice-1', title: 't', refs: [ref], now: new Date() }));
+    setup(stampContentVersions(newSession({ kind: 'practice', quizId: 'path-practice-1', title: 't', refs: [ref], now: new Date() }), c));
     const box = screen.getByTestId('prompt-details');
     expect(box.textContent).toBe(q.promptDetails);
     expect(box).toHaveClass('font-mono', 'whitespace-pre', 'overflow-x-auto');

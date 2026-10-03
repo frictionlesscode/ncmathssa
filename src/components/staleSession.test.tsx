@@ -5,7 +5,7 @@ import { ProgressProvider } from '../context/ProgressContext';
 import { KidPractice } from './KidPractice';
 import { QuizRunner } from './QuizRunner';
 import { getCurriculum } from '../curriculum/registry';
-import { newSession, type ActiveSession } from '../engine/activeSession';
+import { newSession, stampContentVersions, type ActiveSession } from '../engine/activeSession';
 
 // Spec 3.3: a saved session whose question was rewritten since it started
 // shows the existing "can't continue" discard screen, in both runners. The
@@ -51,10 +51,10 @@ describe('a session whose question was rewritten cannot continue', () => {
     expect(onDiscard).toHaveBeenCalledTimes(1);
   });
 
-  it('a session with matching versions, or with none recorded, still runs', () => {
+  it('a session with matching versions still runs', () => {
     render(
       <ProgressProvider>
-        <QuizRunner session={started('checkup')} onChange={vi.fn()} onFinish={vi.fn()} onPause={vi.fn()} onDiscard={vi.fn()} />
+        <QuizRunner session={stampContentVersions(started('checkup'), c)} onChange={vi.fn()} onFinish={vi.fn()} onPause={vi.fn()} onDiscard={vi.fn()} />
       </ProgressProvider>,
     );
     expect(screen.queryByText(/can't continue/i)).not.toBeInTheDocument();
