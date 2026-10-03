@@ -3,6 +3,9 @@ import type { QuestionTemplate, GeneratedQuestion } from '../../../engine/templa
 import { labelOptions } from '../../../engine/questionModel';
 
 interface Context {
+  /** The largest answer that is a length a child has seen for this thing:
+   *  99 x 9 = 891 made a bookshelf 891 centimeters tall. */
+  maxProduct: number;
   /** Plural noun for the thing being measured. */
   thing: string;
   /** Adjective for the shorter one, then the longer one. */
@@ -14,10 +17,10 @@ interface Context {
 }
 
 const CONTEXTS: Context[] = [
-  { thing: 'climbing rope', small: 'blue', large: 'red', unit: 'feet', measure: 'long' },
-  { thing: 'ribbon', small: 'green', large: 'yellow', unit: 'inches', measure: 'long' },
-  { thing: 'garden path', small: 'gravel', large: 'brick', unit: 'meters', measure: 'long' },
-  { thing: 'bookshelf', small: 'oak', large: 'pine', unit: 'centimeters', measure: 'tall' },
+  { maxProduct: 300, thing: 'climbing rope', small: 'blue', large: 'red', unit: 'feet', measure: 'long' },
+  { maxProduct: 300, thing: 'ribbon', small: 'green', large: 'yellow', unit: 'inches', measure: 'long' },
+  { maxProduct: 200, thing: 'garden path', small: 'gravel', large: 'brick', unit: 'meters', measure: 'long' },
+  { maxProduct: 250, thing: 'bookshelf', small: 'oak', large: 'pine', unit: 'centimeters', measure: 'tall' },
 ];
 
 const FACTORS = [2, 3, 4, 5, 6, 7, 8, 9];
@@ -64,19 +67,31 @@ const FACTORS = [2, 3, 4, 5, 6, 7, 8, 9];
  * output — authored and generated items carry different review keys, so a
  * question reachable both ways would reach a child twice under two identities.
  */
-function admissibleMultipliers(k: number): number[] {
+/**
+ * The multipliers m for which b = m*k is a two-digit length whose ones digit
+ * carries, and whose answer b*k stays within `maxProduct` (content-g4 audit:
+ * without the cap a bookshelf came out 891 centimeters tall). The cap removes
+ * draws and never adds one, so the collision argument above still holds.
+ */
+export function admissibleMultipliers(k: number, maxProduct: number): number[] {
   const out: number[] = [];
   for (let m = 2; m * k <= 99; m++) {
     const b = m * k;
     if (b < 10) continue;
+    if (b * k > maxProduct) continue;
     if ((b % 10) * k >= 10) out.push(m);
   }
   return out;
 }
 
-/** Precomputed once so the filter is not rerun on every generate() call. */
-const MULTIPLIERS: Record<number, number[]> = Object.fromEntries(
-  FACTORS.map((k) => [k, admissibleMultipliers(k)]),
+/** Precomputed once so the filter is not rerun on every generate() call. Per
+ *  context, per factor; every list is non-empty (the smallest length that
+ *  carries for k = 9 is 18, and 18 x 9 = 162 is within every cap). */
+export const MULTIPLIERS: Record<string, Record<number, number[]>> = Object.fromEntries(
+  CONTEXTS.map((c) => [
+    c.thing,
+    Object.fromEntries(FACTORS.map((k) => [k, admissibleMultipliers(k, c.maxProduct)])),
+  ]),
 );
 
 /**
@@ -96,11 +111,12 @@ export const oa1TimesAsMany: QuestionTemplate = {
   difficulty: 'mastery',
   calculatorAllowed: false,
   isStretch: false,
+  contentVersion: 2, // lengths are capped per context, so the numbers changed
 
   generate(rng: Rng): GeneratedQuestion {
     const ctx = rng.pick(CONTEXTS);
     const k = rng.pick(FACTORS);
-    const m = rng.pick(MULTIPLIERS[k]);
+    const m = rng.pick(MULTIPLIERS[ctx.thing][k]);
 
     const b = k * m;
     const t = Math.floor(b / 10);
