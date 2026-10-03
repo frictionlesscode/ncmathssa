@@ -330,6 +330,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Chose a survey question whose answers are names or categories when numerical data was asked for, or the reverse.',
     ),
     entry(
+      'confused-the-kind-of-data',
+      'geometry-and-measurement',
+      'Named the wrong kind of data for a survey question, mixing up categorical data (answers are names), numerical data (answers are numbers at one time) and data that changes over time (the same thing measured again and again).',
+    ),
+    entry(
       'counted-past-sixty-minutes',
       'time-intervals',
       'Let a count of minutes run past 60 instead of trading 60 minutes for one hour, producing a time no clock shows.',
@@ -393,11 +398,6 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'computed-surface-area',
       'geometry-and-measurement',
       'Calculated the surface area of the solid instead of its volume.',
-    ),
-    entry(
-      'concatenated-the-mixed-units',
-      'unit-conversion',
-      'Ran two units together as if they were digits of one number, instead of converting each unit separately.',
     ),
     entry(
       'confused-factor-with-multiple',
@@ -625,19 +625,9 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Treated the larger denominator as the larger fraction — judging 1/8 greater than 1/3 because 8 is greater than 3 — reading the denominator as a count of parts owned rather than as the size of each part.',
     ),
     entry(
-      'miscounted-the-frequency',
-      'geometry-and-measurement',
-      'Miscounted how many data points shared a given measurement, undercounting the total.',
-    ),
-    entry(
       'misgrouped-the-subtraction',
       'order-of-operations',
       'Applied a subtraction to the wrong part of the expression instead of to the whole product or sum it belonged with.',
-    ),
-    entry(
-      'misidentified-the-extreme',
-      'geometry-and-measurement',
-      'Picked the wrong data point as the maximum or minimum when finding a range.',
     ),
     entry(
       'misplaced-digits-in-the-quotient',
@@ -873,11 +863,6 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'stopped-after-the-first-line-of-symmetry',
       'geometry-and-measurement',
       'Stopped after finding one line of symmetry instead of testing every direction the figure can fold.',
-    ),
-    entry(
-      'stopped-at-an-intermediate-unit',
-      'unit-conversion',
-      'Converted partway through a chain of units and reported that intermediate unit instead of continuing to the requested unit.',
     ),
     entry(
       'stopped-the-divisor-check-early',

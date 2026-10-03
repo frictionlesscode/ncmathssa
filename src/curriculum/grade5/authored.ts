@@ -1059,56 +1059,61 @@ export const GRADE_5_AUTHORED: Question[] = [
     id: 'md1-02',
     standardCode: 'NC.5.MD.1',
     domainId: 'MD',
-    prompt: 'A school cafeteria prepares 5 gallons of vegetable soup. They serve the soup in 1-cup bowls. How many full 1-cup bowls can they serve?',
+    prompt: 'A school cafeteria prepares 7 quarts of vegetable soup and serves it in 1-cup bowls. How many full 1-cup bowls can it serve?',
+    promptDetails: 'Conversion chart: 1 quart = 4 cups',
     options: labelOptions([
-      // Used 4 cups per gallon (confused quarts with cups): 5 × 4.
-      { text: '20 bowls', isCorrect: false, misconception: 'used-wrong-conversion-factor' },
-      // Stopped at pints: 5 gallons = 40 pints, then reported pints as cups.
-      { text: '40 bowls', isCorrect: false, misconception: 'stopped-at-an-intermediate-unit' },
-      { text: '80 bowls', isCorrect: true },
-      // Doubled once too often (gal -> qt -> pt -> cup -> half cup): 5 × 64.
-      { text: '320 bowls', isCorrect: false, misconception: 'applied-an-extra-conversion-step' },
+      // 7 ÷ 4 = 1 3/4: converted the wrong way (divided going to the smaller unit).
+      { text: '1 3/4 bowls', isCorrect: false, misconception: 'unit-conversion-inverted' },
+      // Used 2 cups per quart (the pint factor): 7 × 2.
+      { text: '14 bowls', isCorrect: false, misconception: 'used-wrong-conversion-factor' },
+      // Key: 7 × 4 = 28 cups, one cup per bowl.
+      { text: '28 bowls', isCorrect: true },
+      // Chained a second doubling the chart never asked for: 7 × 4 × 2.
+      { text: '56 bowls', isCorrect: false, misconception: 'applied-an-extra-conversion-step' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: Convert gallons to cups using customary conversion factors: 1 gallon = 4 quarts.',
-        'Step 2: 1 quart = 2 pints, so 1 gallon = 4 × 2 = 8 pints.',
-        'Step 3: 1 pint = 2 cups, so 1 gallon = 8 × 2 = 16 cups.',
-        'Step 4: For 5 gallons: 5 × 16 = 80 cups.'
+        'Step 1: The chart says 1 quart = 4 cups.',
+        'Step 2: Quarts are larger than cups, so there are more cups than quarts: multiply.',
+        'Step 3: 7 × 4 = 28 cups.',
+        'Step 4: Each bowl holds 1 cup, so the cafeteria can serve 28 bowls.'
       ],
-      conceptSummary: 'Multi-step customary capacity conversion (gallons -> quarts -> pints -> cups).',
-      commonMisconception: 'Thinking there are 4 cups in a gallon (confusing quarts with cups).'
+      conceptSummary: 'One-step customary capacity conversion from a given chart: larger unit to smaller unit means multiply.',
+      commonMisconception: 'Dividing 7 by 4 (converting the wrong way) gives 1 3/4, which is fewer cups than quarts.'
     }
   },
   {
     id: 'md1-03',
     standardCode: 'NC.5.MD.1',
     domainId: 'MD',
-    prompt: 'A carpenter has a board that is 4 yards 2 feet long. She cuts off a piece that is 5 feet 8 inches long. What is the length of the remaining board in inches?',
+    prompt: 'A carpenter has a board that is 4 feet long. She cuts off a piece that is 15 inches long. How many inches of the board are left?',
+    promptDetails: 'Conversion chart: 1 foot = 12 inches',
     options: labelOptions([
-      // 168 + 68: added the cut piece instead of removing it.
-      { text: '236 inches', isCorrect: false, misconception: 'added-instead-of-subtracted' },
-      // Read "5 feet 8 inches" as 58 inches: 168 - 58.
-      { text: '110 inches', isCorrect: false, misconception: 'concatenated-the-mixed-units' },
-      // Converted only the 4 yards (144 inches) and left out the 2 feet: 144 - 68.
-      { text: '76 inches', isCorrect: false, misconception: 'omitted-part-of-the-measurement' },
-      { text: '100 inches', isCorrect: true },
+      // Key: 4 feet = 48 inches; 48 - 15 = 33.
+      { text: '33 inches', isCorrect: true },
+      // 48 + 15: added the cut piece instead of removing it.
+      { text: '63 inches', isCorrect: false, misconception: 'added-instead-of-subtracted' },
+      // 15 - 4: subtracted the numbers without converting feet to inches.
+      { text: '11 inches', isCorrect: false, misconception: 'left-the-measurement-unconverted' },
+      // Used 10 inches per foot: 40 - 15.
+      { text: '25 inches', isCorrect: false, misconception: 'used-wrong-conversion-factor' },
     ]),
     calculatorAllowed: true,
-    isStretch: true,
-    difficulty: 'stretch',
+    isStretch: false,
+    difficulty: 'advanced',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: Convert initial board length to inches. 1 yard = 36 inches; 1 foot = 12 inches.',
-        'Step 2: 4 yards = 4 × 36 = 144 inches. 2 feet = 2 × 12 = 24 inches. Total initial = 144 + 24 = 168 inches.',
-        'Step 3: Convert cut piece to inches: 5 feet = 5 × 12 = 60 inches. Plus 8 inches = 68 inches.',
-        'Step 4: Subtract: 168 - 68 = 100 inches.'
+        'Step 1: The chart says 1 foot = 12 inches.',
+        'Step 2: Convert the board to inches: 4 × 12 = 48 inches.',
+        'Step 3: Subtract the piece that was cut off: 48 - 15 = 33 inches.'
       ],
-      conceptSummary: 'Multi-step customary length conversions with mixed units.',
-      commonMisconception: 'Mixing up inches and feet conversion factors.'
+      conceptSummary: 'A one-step conversion inside a two-step problem: convert to the smaller unit first, then subtract.',
+      commonMisconception: 'Subtracting 15 - 4 = 11 without first converting the feet to inches.'
     }
   },
 
@@ -1117,55 +1122,60 @@ export const GRADE_5_AUTHORED: Question[] = [
     id: 'md2-01',
     standardCode: 'NC.5.MD.2',
     domainId: 'MD',
-    prompt: 'Students in a science club measured the lengths of pencil stubs to the nearest 1/8 inch:\n\n1/8, 1/4, 3/8, 1/4, 1/2, 3/8, 1/8, 1/4\n\nWhat is the total length in inches of all the pencil stubs that measured EXACTLY 1/4 inch?',
+    prompt: 'A line graph shows the height of a bean plant at the end of each week. The points on the graph are listed below. How many centimeters did the plant grow from the end of Week 2 to the end of Week 5?',
+    promptDetails: 'Week 1:  4 cm\nWeek 2:  7 cm\nWeek 3: 11 cm\nWeek 4: 12 cm\nWeek 5: 18 cm',
     options: labelOptions([
-      { text: '3/4 inch', isCorrect: true },
-      // Reported the measurement itself rather than the total of the three stubs.
-      { text: '1/4 inch', isCorrect: false, misconception: 'reported-the-measurement-not-the-total' },
-      // Counted only 2 of the three 1/4-inch stubs: 2 × 1/4.
-      { text: '1/2 inch', isCorrect: false, misconception: 'miscounted-the-frequency' },
-      // Added all eight stubs: 18/8 = 2 1/4 inches.
-      { text: '2 1/4 inches', isCorrect: false, misconception: 'summed-all-data-points' },
+      // Read the Week 5 point (18) instead of the change between two points.
+      { text: '18 cm', isCorrect: false, misconception: 'reported-the-measurement-not-the-total' },
+      // Key: 18 - 7 = 11.
+      { text: '11 cm', isCorrect: true },
+      // 18 + 7: added the two heights instead of finding the change.
+      { text: '25 cm', isCorrect: false, misconception: 'added-instead-of-subtracted' },
+      // 5 - 2: subtracted the weeks (the times) instead of the heights.
+      { text: '3 cm', isCorrect: false, misconception: 'used-the-wrong-given-quantity' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: Count how many pencil stubs measure exactly 1/4 inch in the data list: there are 3 stubs.',
-        'Step 2: Calculate total length: 3 × 1/4 = 3/4 inch.'
+        'Step 1: Read the height at the end of Week 5: 18 cm.',
+        'Step 2: Read the height at the end of Week 2: 7 cm.',
+        'Step 3: The growth is the change between the two points: 18 - 7 = 11 cm.',
+        'Step 4: Check by adding the weekly growth from Week 2 to Week 5: 4 + 1 + 6 = 11 cm.'
       ],
-      conceptSummary: 'Interpreting line plot frequency and computing subtotal for a given measurement.',
-      commonMisconception: 'Summing all stubs rather than only those measuring 1/4 inch.'
+      conceptSummary: 'On a line graph, the change between two times is the later value minus the earlier value.',
+      commonMisconception: 'Reading one point (18 cm) or subtracting the weeks (5 - 2 = 3) instead of subtracting the two heights.'
     }
   },
   {
     id: 'md2-02',
     standardCode: 'NC.5.MD.2',
     domainId: 'MD',
-    prompt: 'A line plot records the weights of 6 seed packages in ounces:\n3/8, 1/2, 3/4, 3/8, 7/8, 1/2\n\nWhat is the difference between the heaviest seed package and the lightest seed package? Express as a fraction in simplest form.',
+    prompt: 'Ms. Ortiz wants to make a line graph that shows how something changes over time. Which question would give her data that changes over time?',
     options: labelOptions([
-      // Totalled all six packages (27/8) instead of finding the range.
-      { text: '3 3/8 ounces', isCorrect: false, misconception: 'summed-all-data-points' },
-      // 7/8 + 3/8 = 10/8: added the extremes instead of subtracting.
-      { text: '1 1/4 ounces', isCorrect: false, misconception: 'added-instead-of-subtracted' },
-      { text: '1/2 ounce', isCorrect: true },
-      // Took 3/4 as the heaviest package: 3/4 - 3/8 = 3/8.
-      { text: '3/8 ounce', isCorrect: false, misconception: 'misidentified-the-extreme' },
+      // Answers are names of kinds of books: categorical data.
+      { text: 'What is your favorite kind of book?', isCorrect: false, misconception: 'confused-the-kind-of-data' },
+      // One number collected once: numerical data at one time.
+      { text: 'How many books are on your shelf right now?', isCorrect: false, misconception: 'confused-the-kind-of-data' },
+      // Key: the same measurement collected again each night, so it changes over time.
+      { text: 'How many minutes did you read each night this week?', isCorrect: true },
+      // Answers are months: categorical data.
+      { text: 'In which month is your birthday?', isCorrect: false, misconception: 'confused-the-kind-of-data' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: Convert all fractions to eighths to compare: 3/8, 4/8, 6/8, 3/8, 7/8, 4/8.',
-        'Step 2: Heaviest package = 7/8 ounce.',
-        'Step 3: Lightest package = 3/8 ounce.',
-        'Step 4: Difference = 7/8 - 3/8 = 4/8.',
-        'Step 5: Simplify 4/8 = 1/2 ounce.'
+        'Step 1: Categorical data has answers that are names, such as a favorite kind of book or a birthday month.',
+        'Step 2: Numerical data has answers that are numbers. Books on a shelf right now is one number collected once.',
+        'Step 3: Data that changes over time is the same thing measured again and again. Minutes read each night can be different every night, so it fits a line graph.'
       ],
-      conceptSummary: 'Finding range on fractional line plot data and simplifying fractions.',
-      commonMisconception: 'Leaving answer as 4/8 without simplifying.'
+      conceptSummary: 'A line graph needs data that is measured repeatedly over time, such as each day, week or month.',
+      commonMisconception: 'Choosing a question whose answer is a name or a single count, which is measured once and does not change over time.'
     }
   },
 
@@ -1257,27 +1267,29 @@ export const GRADE_5_AUTHORED: Question[] = [
     id: 'md5-03',
     standardCode: 'NC.5.MD.5',
     domainId: 'MD',
-    prompt: 'A solid wooden step structure is made of two joined rectangular prisms. Prism 1 measures 10 inches long, 6 inches wide, and 4 inches high. Prism 2 sits next to it and measures 8 inches long, 6 inches wide, and 7 inches high. What is the total combined volume of the wooden structure in cubic inches?',
+    prompt: 'A solid wooden step structure is made of two joined rectangular prisms. Prism 1 measures 9 inches long, 6 inches wide, and 4 inches high. Prism 2 sits next to it and measures 8 inches long, 6 inches wide, and 7 inches high. What is the total combined volume of the wooden structure in cubic inches?',
     options: labelOptions([
-      // 10 × 6 × 4 = 240: found Prism 1 only and never added Prism 2.
-      { text: '240 cubic inches', isCorrect: false, misconception: 'omitted-one-part-of-composite' },
-      // 10 + 6 + 4 + 8 + 6 + 7 = 41: added every dimension.
-      { text: '41 cubic inches', isCorrect: false, misconception: 'used-perimeter-formula' },
-      { text: '576 cubic inches', isCorrect: true },
-      // 10 × 6 × 4 × 8 × 7 = 13,440: multiplied the numbers together instead of decomposing.
-      { text: '13,440 cubic inches', isCorrect: false, misconception: 'multiplied-all-dimensions-together' },
+      // 9 × 6 × 4 = 216: found Prism 1 only and never added Prism 2.
+      { text: '216 cubic inches', isCorrect: false, misconception: 'omitted-one-part-of-composite' },
+      // 9 + 6 + 4 + 8 + 6 + 7 = 40: added every dimension.
+      { text: '40 cubic inches', isCorrect: false, misconception: 'used-perimeter-formula' },
+      // Key: 216 + 8 × 6 × 7 = 216 + 336 = 552.
+      { text: '552 cubic inches', isCorrect: true },
+      // 9 × 6 × 4 × 8 × 6 × 7 = 72,576: multiplied the numbers together instead of decomposing.
+      { text: '72,576 cubic inches', isCorrect: false, misconception: 'multiplied-all-dimensions-together' },
     ]),
     calculatorAllowed: true,
-    isStretch: true,
-    difficulty: 'stretch',
+    isStretch: false,
+    difficulty: 'advanced',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: Calculate volume of Prism 1: 10 × 6 × 4 = 240 cubic inches.',
+        'Step 1: Calculate volume of Prism 1: 9 × 6 × 4 = 216 cubic inches.',
         'Step 2: Calculate volume of Prism 2: 8 × 6 × 7 = 336 cubic inches.',
-        'Step 3: Add the two non-overlapping volumes: 240 + 336 = 576 cubic inches.'
+        'Step 3: Add the two non-overlapping volumes: 216 + 336 = 552 cubic inches.'
       ],
       conceptSummary: 'Additive volume of composite rectangular prisms.',
-      commonMisconception: 'Multiplying all numbers together (10 × 6 × 4 × 8 × 7) instead of decomposing into two distinct prisms.'
+      commonMisconception: 'Multiplying all numbers together (9 × 6 × 4 × 8 × 6 × 7) instead of decomposing into two distinct prisms.'
     }
   },
 

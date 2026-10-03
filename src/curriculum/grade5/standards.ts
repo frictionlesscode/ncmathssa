@@ -154,15 +154,16 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
     weightGroupLabel: 'Measurement & Data and Geometry combined',
     color: 'amber',
     badgeBg: 'bg-amber-100 text-amber-800 border-amber-300',
-    description: 'Covers unit conversions (metric and customary), line plots with fractional measurements, and 3D volume concepts including additive volume of composed rectangular prisms.',
+    description: 'Covers unit conversions (metric and customary) from a given chart, line graphs of data over time, and 3D volume concepts including additive volume of composed rectangular prisms.',
     standards: [
       {
         code: 'NC.5.MD.1',
         domainId: 'MD',
         title: 'Convert Measurement Units (Multiplicative Reasoning)',
-        description: 'Convert measurement units within a given measurement system (metric and customary) using multiplicative reasoning.',
+        description: 'Given a conversion chart, use multiplicative reasoning to solve one-step conversion problems within a given measurement system (metric or customary).',
         weightCategory: 'Core (MD & G share 19–23%)',
         keyConcepts: [
+          'Use the conversion chart you are given and convert in one step within one system (customary, metric, or time)',
           'Customary length: 12 in = 1 ft, 3 ft = 1 yd, 5,280 ft = 1 mi',
           'Customary capacity: 8 fl oz = 1 cup, 2 c = 1 pt, 2 pt = 1 qt, 4 qt = 1 gal',
           'Metric prefixes: kilo (1000), hecto (100), deka (10), base, deci (0.1), centi (0.01), milli (0.001)',
@@ -172,13 +173,13 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
       {
         code: 'NC.5.MD.2',
         domainId: 'MD',
-        title: 'Represent & Interpret Data with Line Graphs & Plots',
-        description: 'Represent and interpret data; line graphs; distinguish categorical vs numerical vs over-time data; solve problems with line plots displaying fractional units.',
+        title: 'Represent & Interpret Data with Line Graphs',
+        description: 'Collect, represent and interpret data that changes over time with line graphs; decide whether a survey question gives categorical data, numerical data, or data that changes over time.',
         weightCategory: 'Core (MD & G share 19–23%)',
         keyConcepts: [
-          'Line plots displaying measurements in fractions of a unit (1/8, 1/4, 1/2)',
-          'Finding total sum or difference between highest and lowest data points',
-          'Interpreting change over time on line graphs'
+          'A line graph shows how a measurement changes over time: time on the horizontal axis, the measurement on the vertical axis',
+          'Finding the change between two points by subtracting the earlier value from the later value',
+          'Sorting survey questions into categorical data (names), numerical data (numbers) and data that changes over time'
         ]
       },
       {

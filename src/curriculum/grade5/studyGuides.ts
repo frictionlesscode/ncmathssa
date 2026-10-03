@@ -354,7 +354,7 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
   'NC.5.MD.1': {
     standardCode: 'NC.5.MD.1',
     title: 'Measurement Unit Conversions (Multiplicative Reasoning)',
-    coreConcept: 'Converting between units within the same system. When converting from a larger unit to a smaller unit, multiply. When converting from a smaller unit to a larger unit, divide.',
+    coreConcept: 'Using a given conversion chart to convert between units within the same system, one step at a time. When converting from a larger unit to a smaller unit, multiply. When converting from a smaller unit to a larger unit, divide.',
     rulesAndFormulas: [
       { label: 'Customary Length', detail: '1 ft = 12 in; 1 yd = 3 ft = 36 in; 1 mi = 5,280 ft = 1,760 yd.' },
       { label: 'Customary Weight & Capacity', detail: '1 lb = 16 oz; 1 ton = 2,000 lb. 1 gal = 4 qt = 8 pt = 16 cups; 1 cup = 8 fl oz.' },
@@ -371,47 +371,45 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       'Mixing up metric prefixes (centimeters = 1/100, millimeters = 1/1,000).'
     ],
     workedExample: {
-      problem: 'A punch recipe calls for 3 quarts of lemon-lime soda, 2 pints of orange juice, and 4 cups of pineapple juice. How many total cups of punch will this make?',
+      problem: 'A jug holds 6 quarts of juice. Use the conversion chart: 1 quart = 4 cups. How many cups of juice does the jug hold?',
       steps: [
-        '1. Target unit is cups.',
-        '2. Convert 3 quarts to cups: 1 quart = 4 cups, so 3 qt = 3 × 4 = 12 cups.',
-        '3. Convert 2 pints to cups: 1 pint = 2 cups, so 2 pt = 2 × 2 = 4 cups.',
-        '4. Pineapple juice is already in cups: 4 cups.',
-        '5. Total = 12 + 4 + 4 = 20 cups.'
+        '1. The chart gives 1 quart = 4 cups.',
+        '2. Quarts are larger than cups, so the answer will be a larger number: multiply.',
+        '3. 6 × 4 = 24.'
       ],
-      answer: '20 cups',
-      whyItMattersForSSA: 'Real assessment items are almost always multi-step problems with mixed units.'
+      answer: '24 cups',
+      whyItMattersForSSA: 'A conversion chart is given, so the work is choosing whether to multiply or divide and carrying it out carefully.'
     }
   },
 
   'NC.5.MD.2': {
     standardCode: 'NC.5.MD.2',
-    title: 'Represent & Interpret Data with Line Plots (Fractions)',
-    coreConcept: 'Line plots display data along a horizontal number line marked with fractional intervals (halves, fourths, eighths). Questions ask to find totals, differences between extreme values, or redistributions.',
+    title: 'Represent & Interpret Data with Line Graphs',
+    coreConcept: 'A line graph shows how a measurement changes over time: time runs along the bottom and the measurement goes up the side. Every survey question gives one of three kinds of data: categorical (names), numerical (numbers), or data that changes over time.',
     rulesAndFormulas: [
-      { label: 'Reading an X', detail: 'Each "X" above a tick mark represents one individual measurement data point.' },
-      { label: 'Finding the Total', detail: 'Multiply each fraction value by the count of Xs above it, then sum the products.' },
-      { label: 'Range', detail: 'Difference between the largest data point and smallest data point.' }
+      { label: 'Reading a Point', detail: 'Find the time on the horizontal axis, then go up to the point and across to read the value on the vertical axis.' },
+      { label: 'Change Between Two Points', detail: 'Subtract the earlier value from the later value. Subtract the values, not the times.' },
+      { label: 'Kinds of Data', detail: 'Categorical: answers are names (favorite kind of book). Numerical: answers are numbers (books on a shelf today). Over time: the same thing is measured again and again (minutes read each night).' }
     ],
     stepByStepMethod: [
-      'Step 1: Check the scale of the number line (e.g. increments of 1/8 or 1/4).',
-      'Step 2: Count the Xs above each fractional tick mark.',
-      'Step 3: Calculate requested quantity (total weight, average, or difference).',
-      'Step 4: Use common denominators to perform fraction addition/subtraction.'
+      'Step 1: Read the title and both axis labels to see what is measured and when.',
+      'Step 2: Find the two points the question names and read each value.',
+      'Step 3: Subtract the earlier value from the later one to find the change.',
+      'Step 4: For a survey question, ask: are the answers names, numbers, or the same thing measured at different times?'
     ],
     commonTraps: [
-      'Counting the tick marks instead of the number of "X"s.',
-      'Forgetting that tick marks without an X are still part of the number line scale.'
+      'Reading one point when the question asks for the change between two points.',
+      'Subtracting the times (Week 5 - Week 2 = 3) instead of the values.'
     ],
     workedExample: {
-      problem: 'A scientist records sample insect lengths in inches: 1/4, 1/2, 3/8, 1/4, 5/8, 1/2, 3/8, 1/4. What is the difference between the longest and shortest insect?',
+      problem: 'A line graph shows the noon temperature each day: Monday 60°F, Tuesday 64°F, Wednesday 71°F, Thursday 68°F. How many degrees warmer was Wednesday than Monday?',
       steps: [
-        '1. Longest insect: 5/8 inch.',
-        '2. Shortest insect: 1/4 inch.',
-        '3. Difference: 5/8 - 1/4 = 5/8 - 2/8 = 3/8 inch.'
+        '1. Wednesday\'s point is at 71°F.',
+        '2. Monday\'s point is at 60°F.',
+        '3. The change is 71 - 60 = 11 degrees.'
       ],
-      answer: '3/8 inch',
-      whyItMattersForSSA: 'Combines data interpretation with fraction operations.'
+      answer: '11 degrees warmer',
+      whyItMattersForSSA: 'Reading a change between two points on a line graph means subtracting the two values, not reading either one.'
     }
   },
 

@@ -90,7 +90,7 @@ export const md1UnitConversion: QuestionTemplate = {
         stepByStep: [
           `Step 1: 1 ${bigSingular} = ${factor} ${small}.`,
           toSmall
-            ? `Step 2: ${small.charAt(0).toUpperCase()}${small.slice(1)} are smaller than ${big}, so the same length needs more of them — multiply by ${factor}.`
+            ? `Step 2: ${small.charAt(0).toUpperCase()}${small.slice(1)} are smaller than ${big}, so the same amount needs more of them — multiply by ${factor}.`
             : `Step 2: ${big.charAt(0).toUpperCase()}${big.slice(1)} are larger than ${small}, so the same amount needs fewer of them — divide by ${factor}.`,
           toSmall
             ? `Step 3: ${quantityText} × ${factor} = ${answerText}.`
