@@ -10,7 +10,7 @@ npx vitest run src/curriculum/grade4/authored.oa.test.ts
 FAIL  src/curriculum/grade4/authored.oa.test.ts [ src/curriculum/grade4/authored.oa.test.ts ]
 Error: Failed to resolve import "./authored.oa" from "src/curriculum/grade4/authored.oa.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: C:/Users/mswanson/Projects/ncmathssa/src/curriculum/grade4/authored.oa.test.ts:4:36
+  File: src/curriculum/grade4/authored.oa.test.ts:4:36
 
 Test Files  1 failed (1)
      Tests  no tests

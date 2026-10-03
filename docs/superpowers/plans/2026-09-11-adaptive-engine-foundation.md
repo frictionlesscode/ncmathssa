@@ -3102,7 +3102,7 @@ git tag v0.1.0 && git push origin v0.1.0
 
 - [ ] **Step 5: Add the landing page to the site repo**
 
-In `C:\Users\mswanson\Projects\frictionlesscode.com`, create `src/pages/math.astro` following the existing page layout conventions in that repo. Content: what NC Single Subject Acceleration is, who the tool is for, that it is built against published NCSCOS standards rather than secure CASE items, that all data stays in the browser, and a prominent link to `/math/app/`.
+In the frictionlesscode.com site repo, create `src/pages/math.astro` following the existing page layout conventions in that repo. Content: what NC Single Subject Acceleration is, who the tool is for, that it is built against published NCSCOS standards rather than secure CASE items, that all data stays in the browser, and a prominent link to `/math/app/`.
 
 - [ ] **Step 6: Wire the app build into the site deploy**
 

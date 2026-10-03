@@ -106,8 +106,8 @@ test, which is harmless and follows the closest pattern file.)
 
 ## Files changed
 
-- `C:\Users\mswanson\Projects\ncmathssa\src\curriculum\grade2\studyGuides.ts` (new, 878 lines)
-- `C:\Users\mswanson\Projects\ncmathssa\src\curriculum\grade2\studyGuides.test.ts` (new, 71 lines)
+- `src\curriculum\grade2\studyGuides.ts` (new, 878 lines)
+- `src\curriculum\grade2\studyGuides.test.ts` (new, 71 lines)
 
 Grade 3's `studyGuides.ts` (20 standards) is 860 lines; Grade 2's (23 standards) is 878 lines — in
 line with the established pattern, no growth concern.
@@ -348,11 +348,11 @@ round, +1 for the new M1 test), 0 failed.
 
 ## Files changed (this round)
 
-- `C:\Users\mswanson\Projects\ncmathssa\src\curriculum\grade2\studyGuides.ts`
-- `C:\Users\mswanson\Projects\ncmathssa\src\curriculum\grade2\studyGuides.test.ts`
-- `C:\Users\mswanson\Projects\ncmathssa\src\curriculum\grade2\templates\nbt2-skip-count.ts`
+- `src\curriculum\grade2\studyGuides.ts`
+- `src\curriculum\grade2\studyGuides.test.ts`
+- `src\curriculum\grade2\templates\nbt2-skip-count.ts`
   (X1, out-of-diff per the controller's ruling)
-- `C:\Users\mswanson\Projects\ncmathssa\src\curriculum\grade2\templates\nbt8-ten-or-hundred.ts`
+- `src\curriculum\grade2\templates\nbt8-ten-or-hundred.ts`
   (X1's secondary check, fix applied)
 
 ## Commit
@@ -492,8 +492,8 @@ as after round 1 (no tests added or removed this round).
 
 ## Files changed (this round)
 
-- `C:\Users\mswanson\Projects\ncmathssa\src\curriculum\grade2\studyGuides.ts`
-- `C:\Users\mswanson\Projects\ncmathssa\src\curriculum\grade2\templates\nbt8-ten-or-hundred.ts`
+- `src\curriculum\grade2\studyGuides.ts`
+- `src\curriculum\grade2\templates\nbt8-ten-or-hundred.ts`
 
 ## Commit
 

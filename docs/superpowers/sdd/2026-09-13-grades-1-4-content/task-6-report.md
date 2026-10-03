@@ -9,7 +9,7 @@ implementation file existed. `npx vitest run src/curriculum/grade4/authored.nbt.
  FAIL  src/curriculum/grade4/authored.nbt.test.ts [ src/curriculum/grade4/authored.nbt.test.ts ]
 Error: Failed to resolve import "./authored.nbt" from "src/curriculum/grade4/authored.nbt.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: C:/Users/mswanson/Projects/ncmathssa/src/curriculum/grade4/authored.nbt.test.ts:7:37
+  File: src/curriculum/grade4/authored.nbt.test.ts:7:37
 
  Test Files  1 failed (1)
       Tests  no tests

@@ -22,7 +22,7 @@ Baseline before any change: **281 tests passing, 27 files**.
  FAIL  src/curriculum/sourcedStandards.test.ts [ src/curriculum/sourcedStandards.test.ts ]
 Error: Failed to resolve import "./grade1/standards" from "src/curriculum/sourcedStandards.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: C:/Users/mswanson/Projects/ncmathssa/src/curriculum/sourcedStandards.test.ts:5:32
+  File: src/curriculum/sourcedStandards.test.ts:5:32
 
  Test Files  1 failed (1)
       Tests  no tests

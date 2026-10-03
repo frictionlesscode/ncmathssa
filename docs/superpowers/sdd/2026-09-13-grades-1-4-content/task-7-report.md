@@ -11,7 +11,7 @@ $ npx vitest run src/curriculum/grade4/authored.nf.test.ts
  FAIL  src/curriculum/grade4/authored.nf.test.ts [ src/curriculum/grade4/authored.nf.test.ts ]
 Error: Failed to resolve import "./authored.nf" from "src/curriculum/grade4/authored.nf.test.ts". Does the file exist?
   Plugin: vite:import-analysis
-  File: C:/Users/mswanson/Projects/ncmathssa/src/curriculum/grade4/authored.nf.test.ts:4:36
+  File: src/curriculum/grade4/authored.nf.test.ts:4:36
 
  Test Files  1 failed (1)
       Tests  no tests
