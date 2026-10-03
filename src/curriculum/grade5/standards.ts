@@ -80,13 +80,13 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
         code: 'NC.5.NBT.1',
         domainId: 'NBT',
         title: 'Place Value Patterns & Powers of 10',
-        description: 'Recognize place value patterns from one million to thousandths; 10x and 1/10 relationships; patterns when multiplying or dividing by powers of 10.',
+        description: 'Recognize place value patterns from one million to thousandths; 10x and 1/10 relationships; patterns when multiplying by 1,000, 100, 10, 0.1 and 0.01 and dividing by 10 and 100.',
         weightCategory: 'Core (NBT band 25–29%)',
         keyConcepts: [
           'A digit in one place represents 10 times what it represents in the place to its right',
           'A digit represents 1/10 (0.1) of what it represents in the place to its left',
-          'Multiplying by 10^n moves the decimal point n places to the right',
-          'Dividing by 10^n moves the decimal point n places to the left'
+          'Multiplying by 10, 100 or 1,000 moves the decimal point 1, 2 or 3 places to the right; multiplying by 0.1 or 0.01 moves it 1 or 2 places to the left',
+          'Dividing by 10 or 100 moves the decimal point 1 or 2 places to the left'
         ]
       },
       {
@@ -131,12 +131,12 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
         code: 'NC.5.NBT.7',
         domainId: 'NBT',
         title: 'Operations with Decimals to Hundredths',
-        description: 'Add, subtract, multiply, and divide multi-digit whole numbers and decimals to hundredths; use estimation to check reasonableness.',
+        description: 'Add, subtract, multiply, and divide multi-digit whole numbers and decimals (divide a whole number by a decimal, or a decimal by a whole number, to hundredths); use estimation to check reasonableness.',
         weightCategory: 'Core (NBT band 25–29%)',
         keyConcepts: [
           'Lining up decimal points for addition and subtraction',
           'Multiplying decimals: count total decimal places in both factors',
-          'Dividing decimals: shift decimal in divisor to make it whole, shift dividend by same amount',
+          'Dividing a whole number by a decimal, or a decimal by a whole number, with decimals to hundredths, using repeated subtraction or area models',
           'Rounding and estimation to verify reasonableness'
         ]
       }

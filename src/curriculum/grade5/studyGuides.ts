@@ -70,8 +70,9 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     rulesAndFormulas: [
       { label: 'Left Shift (10×)', detail: 'The digit in the tens place is 10 times greater than the same digit in the ones place.' },
       { label: 'Right Shift (1/10)', detail: 'The digit in the hundredths place is 1/10 of the value of the same digit in the tenths place.' },
-      { label: 'Multiplying by 10^n', detail: 'Shifts all digits n places to the left (decimal moves n places right).' },
-      { label: 'Dividing by 10^n', detail: 'Shifts all digits n places to the right (decimal moves n places left).' }
+      { label: 'Multiplying by 10, 100 or 1,000', detail: 'Shifts all digits 1, 2 or 3 places to the left (the decimal point moves 1, 2 or 3 places right).' },
+      { label: 'Multiplying by 0.1 or 0.01', detail: 'Shifts all digits 1 or 2 places to the right (the decimal point moves 1 or 2 places left), so the number gets smaller.' },
+      { label: 'Dividing by 10 or 100', detail: 'Shifts all digits 1 or 2 places to the right (the decimal point moves 1 or 2 places left).' }
     ],
     stepByStepMethod: [
       'Step 1: Identify the two place values being compared.',
@@ -92,7 +93,7 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
         '4. The 4 in the ten-thousands place is 10 times greater than the 4 in the thousands place.'
       ],
       answer: '10 times greater (or the thousands 4 is 1/10 of the ten-thousands 4)',
-      whyItMattersForSSA: 'Foundational place value reasoning appears throughout calculator-inactive sections.'
+      whyItMattersForSSA: 'Every decimal and whole-number operation this year depends on knowing what a digit is worth in each place.'
     }
   },
 
@@ -201,12 +202,12 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     rulesAndFormulas: [
       { label: 'Adding & Subtracting Decimals', detail: 'Line up decimal points vertically! Fill empty place values with zeros before subtracting.' },
       { label: 'Multiplying Decimals', detail: 'Multiply as whole numbers. Then count total decimal places in BOTH factors and move decimal left by that sum.' },
-      { label: 'Dividing by a Decimal', detail: 'Multiply both divisor and dividend by 10, 100, etc. so the divisor becomes a whole number before dividing.' }
+      { label: 'Dividing with Decimals', detail: 'Grade 5 divides a whole number by a decimal (6 ÷ 0.25 asks how many 0.25s fit in 6) or a decimal by a whole number (4.5 ÷ 3), with decimals to hundredths. Use repeated subtraction or an area model.' }
     ],
     stepByStepMethod: [
       'Addition/Subtraction: Line up decimals -> pad with zeros -> compute -> bring decimal straight down.',
       'Multiplication: Ignore decimals -> multiply whole numbers -> count digits behind decimals in factors -> place decimal in product.',
-      'Division: Divisor must be whole. Shift decimal right in divisor, shift dividend same number of places -> divide -> place decimal straight up into quotient.'
+      'Division: Whole number ÷ decimal or decimal ÷ whole number (hundredths only) -> ask how many of the divisor fit in the dividend -> use repeated subtraction, an area model, or a place-value strategy -> check by multiplying back.'
     ],
     commonTraps: [
       'Not lining up decimal points when adding/subtracting (e.g. adding 14.5 and 2.38 as 14.5 + 23.8).',

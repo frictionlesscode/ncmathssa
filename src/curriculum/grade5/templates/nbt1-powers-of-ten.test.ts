@@ -13,14 +13,29 @@ function shift(digits: string, exponent: number): string {
   return `${padded.slice(0, cut)}.${padded.slice(cut)}`;
 }
 
+/** NC.5.NBT.1 (NC-R4) names exactly these moves: multiply by 1,000, 100, 10,
+ *  0.1 and 0.01, divide by 10 and 100. The value is how many places the
+ *  digits' value moves (positive = larger). Restated here, not imported. */
+const ALLOWED_MOVES = new Map<string, number>([
+  ['× 1,000', 3],
+  ['× 100', 2],
+  ['× 10', 1],
+  ['× 0.1', -1],
+  ['× 0.01', -2],
+  ['÷ 10', -1],
+  ['÷ 100', -2],
+]);
+
 function parse(details: string) {
-  const m = details.match(/^([\d.]+) ([×÷]) 10\^(\d)$/);
+  const m = details.match(/^([\d.]+) ([×÷]) ([\d.,]+)$/);
   if (!m) throw new Error(`unparsable promptDetails: ${details}`);
-  const [, base, op, expText] = m;
+  const [, base, op, label] = m;
   const digits = base.replace('.', '');
   const places = base.length - base.indexOf('.') - 1;
-  const exp = Number(expText);
-  return { digits, places, k: op === '×' ? exp : -exp };
+  const move = `${op} ${label}`;
+  const k = ALLOWED_MOVES.get(move);
+  if (k === undefined) throw new Error(`out-of-scope move "${move}" in ${details}`);
+  return { digits, places, move, k };
 }
 
 const optionText = (g: ReturnType<typeof nbt1PowersOfTen.generate>, tag: string): string => {
@@ -30,14 +45,28 @@ const optionText = (g: ReturnType<typeof nbt1PowersOfTen.generate>, tag: string)
 };
 
 describe('nbt1PowersOfTen', () => {
-  it('satisfies every template invariant across 300 seeds', () => {
-    assertTemplateSound(nbt1PowersOfTen);
+  it('satisfies every template invariant across 500 seeds', () => {
+    assertTemplateSound(nbt1PowersOfTen, { runs: 500 });
   });
 
   it('is deterministic in its seed', () => {
     const a = nbt1PowersOfTen.generate(makeRng(777));
     const b = nbt1PowersOfTen.generate(makeRng(777));
     expect(a).toEqual(b);
+  });
+
+  it('nbt1 template: NC-R4 only the seven NC moves, never 10^n, and every move is reached', () => {
+    const seen = new Set<string>();
+    for (let seed = 0; seed < 500; seed++) {
+      const g = nbt1PowersOfTen.generate(makeRng(seed));
+      expect(JSON.stringify(g), `seed ${seed}: exponent notation`).not.toContain('^');
+      const m = (g.promptDetails ?? '').match(/^[\d.]+ ([×÷] [\d.,]+)$/);
+      expect(m, `seed ${seed}: ${g.promptDetails}`).toBeTruthy();
+      const move = m![1];
+      expect(ALLOWED_MOVES.has(move), `seed ${seed}: "${move}" is outside NC.5.NBT.1`).toBe(true);
+      seen.add(move);
+    }
+    expect([...seen].sort()).toEqual([...ALLOWED_MOVES.keys()].sort());
   });
 
   it('changes only place value: every option keeps the same significant digits', () => {
@@ -56,6 +85,16 @@ describe('nbt1PowersOfTen', () => {
     }
   });
 
+  it('the last step states the answer and the direction matches the size change', () => {
+    for (let seed = 0; seed < 200; seed++) {
+      const g = nbt1PowersOfTen.generate(makeRng(seed));
+      const { k } = parse(g.promptDetails ?? '');
+      const steps = g.explanation.stepByStep.join(' ');
+      expect(steps, `seed ${seed}`).toContain(k > 0 ? 'makes the number larger' : 'makes the number smaller');
+      expect(steps, `seed ${seed}`).toContain(k > 0 ? 'to the left' : 'to the right');
+    }
+  });
+
   describe('every distractor value matches the error its tag names', () => {
     for (const seed of [1, 17, 205, 4912, 99991]) {
       it(`seed ${seed}`, () => {
@@ -63,7 +102,7 @@ describe('nbt1PowersOfTen', () => {
         const { digits, places, k } = parse(g.promptDetails ?? '');
         const s = Math.sign(k);
 
-        // Answer: the digits shift k places (left when multiplying).
+        // Answer: the digits shift k places (left when the number grows).
         expect(g.answerText).toBe(shift(digits, -places + k));
         // Shifted the same distance the other way.
         expect(optionText(g, 'place-value-shift-wrong-direction')).toBe(shift(digits, -places - k));

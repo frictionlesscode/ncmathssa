@@ -257,27 +257,29 @@ export const GRADE_5_AUTHORED: Question[] = [
     standardCode: 'NC.5.NBT.1',
     domainId: 'NBT',
     prompt: 'What is the value of the expression below?',
-    promptDetails: '47.62 ÷ 10^3',
+    promptDetails: '47.62 ÷ 100',
     options: labelOptions([
-      // Multiplied by 1,000 instead of dividing: moved the decimal 3 places right.
-      { text: '47,620', isCorrect: false, misconception: 'place-value-shift-wrong-direction' },
+      // Multiplied by 100 instead of dividing: moved the decimal 2 places right.
+      { text: '4,762', isCorrect: false, misconception: 'place-value-shift-wrong-direction' },
       // Moved the decimal left only 1 place.
       { text: '4.762', isCorrect: false, misconception: 'wrong-power-of-ten' },
-      // Moved the decimal left only 2 places.
-      { text: '0.4762', isCorrect: false, misconception: 'wrong-power-of-ten' },
-      { text: '0.04762', isCorrect: true },
+      // Moved the decimal left 3 places.
+      { text: '0.04762', isCorrect: false, misconception: 'wrong-power-of-ten' },
+      // Key: 47.62 -> 4.762 (1 place) -> 0.4762 (2 places).
+      { text: '0.4762', isCorrect: true },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: 10^3 equals 1,000.',
-        'Step 2: Dividing by 10^3 shifts the digits 3 places to the right (moves the decimal 3 places to the left).',
-        'Step 3: 47.62 -> 4.762 (1 place) -> 0.4762 (2 places) -> 0.04762 (3 places).'
+        'Step 1: 100 has two zeros, so dividing by 100 moves every digit 2 places to the right (the decimal point moves 2 places to the left).',
+        'Step 2: 47.62 -> 4.762 (1 place) -> 0.4762 (2 places).',
+        'Step 3: 47.62 ÷ 100 = 0.4762.'
       ],
-      conceptSummary: 'Dividing by 10^n moves the decimal point n places to the left, inserting leading zeros as needed.',
-      commonMisconception: 'Moving the decimal 2 places instead of 3, or moving to the right instead of left.'
+      conceptSummary: 'Dividing by 10 or 100 moves the decimal point 1 or 2 places to the left, inserting a leading zero when needed.',
+      commonMisconception: 'Moving the decimal 1 place or 3 places instead of 2, or moving it to the right instead of the left.'
     }
   },
   {
@@ -347,7 +349,7 @@ export const GRADE_5_AUTHORED: Question[] = [
       // Wrote 45 in the tenths and hundredths places, omitting the placeholder zero.
       { text: '6.45', isCorrect: false, misconception: 'word-form-place-value-shifted' },
       { text: '6.045', isCorrect: true },
-      // Counted three placeholder zeros for "thousandths" before writing the 45.
+      // Wrote two placeholder zeros before the 45 (one too many), as if it were ten-thousandths.
       { text: '6.0045', isCorrect: false, misconception: 'wrong-power-of-ten' },
       // Read the phrase as "six hundred forty-five thousandths".
       { text: '0.645', isCorrect: false, misconception: 'read-the-whole-number-as-part-of-the-fraction' },
@@ -572,7 +574,7 @@ export const GRADE_5_AUTHORED: Question[] = [
         'Step 5: Combine: 52.75.'
       ],
       conceptSummary: 'Always align decimal points vertically and pad with trailing zeros before subtracting.',
-      commonMisconception: 'Subtracting 0 - 5 = 5 without regrouping, giving .85 or .25.'
+      commonMisconception: 'Taking the smaller digit from the larger in every column (0 and 5 give 5) instead of regrouping, which gives 67.25.'
     }
   },
   {
@@ -635,29 +637,30 @@ export const GRADE_5_AUTHORED: Question[] = [
     id: 'nbt7-04',
     standardCode: 'NC.5.NBT.7',
     domainId: 'NBT',
-    prompt: 'Solve: 14.76 ÷ 0.12',
+    prompt: 'A roll holds 6 meters of ribbon. Each bow uses 0.25 meter of ribbon. How many bows can be made from the roll?',
     options: labelOptions([
-      { text: '123', isCorrect: true },
-      // Shifted the divisor to 12 but left the dividend at 14.76: 14.76 ÷ 12 = 1.23.
-      { text: '1.23', isCorrect: false, misconception: 'decimal-point-misplaced' },
-      // Shifted both by 10 instead of 100: 147.6 ÷ 12 = 12.3.
-      { text: '12.3', isCorrect: false, misconception: 'wrong-power-of-ten' },
-      // 14.76 × 0.12: multiplied instead of dividing.
-      { text: '1.7712', isCorrect: false, misconception: 'multiplied-instead-of-divided' },
+      // 6 × 0.25 = 1.5: multiplied instead of dividing.
+      { text: '1.5 bows', isCorrect: false, misconception: 'multiplied-instead-of-divided' },
+      // Shifted the divisor to 25 but left the dividend at 6: 6 ÷ 25 = 0.24.
+      { text: '0.24 bows', isCorrect: false, misconception: 'decimal-point-misplaced' },
+      // Key: 6 ÷ 0.25 = 600 ÷ 25 = 24.
+      { text: '24 bows', isCorrect: true },
+      // Shifted the divisor one place (2.5) instead of two: 6 ÷ 2.5 = 2.4.
+      { text: '2.4 bows', isCorrect: false, misconception: 'wrong-power-of-ten' },
     ]),
     calculatorAllowed: false,
-    isStretch: true,
-    difficulty: 'stretch',
+    isStretch: false,
+    difficulty: 'advanced',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: Make the divisor a whole number by multiplying both dividend and divisor by 100.',
-        'Step 2: 14.76 × 100 = 1,476; 0.12 × 100 = 12.',
-        'Step 3: Divide: 1,476 ÷ 12.',
-        'Step 4: 12 goes into 14 one time (remainder 2). Bring down 7 to make 27. 12 goes into 27 two times (remainder 3). Bring down 6 to make 36. 12 goes into 36 three times.',
-        'Step 5: The quotient is 123.'
+        'Step 1: The question asks how many 0.25-meter pieces fit into 6 meters: 6 ÷ 0.25.',
+        'Step 2: 0.25 is one fourth, so 1 meter holds 4 bows (0.25 + 0.25 + 0.25 + 0.25 = 1).',
+        'Step 3: 6 meters hold 6 × 4 = 24 bows. Repeated subtraction agrees: taking 0.25 away from 6 twenty-four times leaves 0.',
+        'Step 4: 6 ÷ 0.25 = 24 bows.'
       ],
-      conceptSummary: 'Dividing decimals by shifting decimal points in divisor and dividend by equal powers of 10.',
-      commonMisconception: 'Dividing 14.76 by 12 without shifting the dividend by 100.'
+      conceptSummary: 'Dividing a whole number by a decimal asks how many of the decimal fit into the whole. Repeated subtraction or an area model shows it.',
+      commonMisconception: 'Dividing 6 by 25 without also moving the decimal point in the dividend, which gives 0.24 instead of 24.'
     }
   },
 
