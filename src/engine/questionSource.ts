@@ -1,5 +1,5 @@
 import type { StandardCode } from '../curriculum/types';
-import type { Question, QuestionRef } from './questionModel';
+import { contentVersionOf, type Question, type QuestionRef } from './questionModel';
 import type { QuestionTemplate } from './template';
 import { realize } from './template';
 import { makeRng } from './rng';
@@ -7,6 +7,10 @@ import { makeRng } from './rng';
 export interface QuestionSource {
   itemsFor(standardCode: StandardCode, opts: { count: number; seedBase: number }): QuestionRef[];
   resolve(ref: QuestionRef): Question;
+  /** The current content version behind a ref, without realizing it: an
+   *  authored item's own version, or the template's for a generated one.
+   *  undefined when the ref no longer names anything. */
+  versionOf(ref: QuestionRef): number | undefined;
   allStandardsWithContent(): StandardCode[];
   /** Every authored item for a standard, deterministically and in full -
    *  unlike itemsFor, which samples a mix of authored and generated items.
@@ -84,6 +88,15 @@ export function makeQuestionSource(
       const t = templateById.get(ref.templateId);
       if (!t) throw new Error(`Unknown template id: ${ref.templateId}`);
       return realize(t, ref.seed, makeRng(ref.seed));
+    },
+
+    versionOf(ref) {
+      if (ref.kind === 'authored') {
+        const q = authoredById.get(ref.id);
+        return q ? contentVersionOf(q) : undefined;
+      }
+      const t = templateById.get(ref.templateId);
+      return t ? contentVersionOf(t) : undefined;
     },
 
     allStandardsWithContent() {

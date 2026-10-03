@@ -2,7 +2,9 @@ import type { DomainId, GradeCurriculum, StandardCode } from '../curriculum/type
 import type { AnswerOrigin, QuizAttempt, QuizAttemptAnswer, QuizDefinition } from '../types';
 import { isPassing } from './mastery';
 import { checkAnswer } from '../utils/answerChecker';
-import { parseQuestionRef, type Question, type QuestionRef } from './questionModel';
+import {
+  contentVersionOf, parseQuestionRef, questionRefId, type Question, type QuestionRef,
+} from './questionModel';
 
 export type SessionKind = 'checkup' | 'practice' | 'round3' | 'practice-test' | 'drill';
 
@@ -29,6 +31,10 @@ export interface ActiveSession {
   currentIndex: number;
   startedAt: string;
   secondsElapsed: number;
+  /** contentVersion of each question (keyed by Question.id) when the session
+   *  started. Absent on sessions saved before versions existed: every
+   *  question then counts as version 1. */
+  versions?: Record<string, number>;
 }
 
 export const DEFAULT_SESSION_SIZE = 15;
@@ -84,13 +90,30 @@ export function recordAnswer(s: ActiveSession, q: Question, selected: string): A
   return { ...s, answers: { ...s.answers, [q.id]: { selected, isCorrect: checkAnswer(q, selected) } } };
 }
 
+/** Records the current content version of every question in the session, so
+ *  a later deploy that rewrites one of them is noticed on resume. Call once,
+ *  where a session starts. A ref that does not resolve is left out. */
+export function stampContentVersions(s: ActiveSession, c: GradeCurriculum): ActiveSession {
+  const versions: Record<string, number> = {};
+  for (const ref of s.refs) {
+    const v = c.source.versionOf(ref);
+    if (v !== undefined) versions[questionRefId(ref)] = v;
+  }
+  return { ...s, versions };
+}
+
 /** The session's questions, skipping any ref the current content can no
- *  longer resolve (content changed, or the student's grade changed). */
+ *  longer resolve (content changed, or the student's grade changed). A
+ *  session in which ANY question was rewritten since it started (its content
+ *  version differs from the recorded one, absent meaning 1) yields nothing,
+ *  so callers show their "can't continue" screen for the whole session. */
 export function resolveSession(s: ActiveSession, c: GradeCurriculum): Question[] {
   const out: Question[] = [];
   for (const ref of s.refs) {
     try {
-      out.push(c.source.resolve(ref));
+      const q = c.source.resolve(ref);
+      if (contentVersionOf(q) !== (s.versions?.[q.id] ?? 1)) return [];
+      out.push(q);
     } catch {
       // Unresolvable: skip. Callers show a "can't continue" state when nothing is left.
     }
@@ -129,6 +152,7 @@ export function sessionToAttempt(
       standardCode: q.standardCode,
       misconception: chosen?.misconception,
       flaggedForReview: s.flagged[q.id],
+      contentVersion: contentVersionOf(q),
       ...(s.origins?.[q.id] === 'review' ? { origin: 'review' as const } : {}),
     };
   }

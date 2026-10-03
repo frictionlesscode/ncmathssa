@@ -53,6 +53,9 @@ export interface QuizAttemptAnswer {
   misconception?: string;        // tag of the distractor chosen, when wrong
   timeSpentSeconds?: number;
   flaggedForReview?: boolean;
+  /** contentVersion of the question when it was answered. Absent (attempts
+   *  saved before versions existed) means 1. */
+  contentVersion?: number;
   origin?: AnswerOrigin;         // absent means 'new'; only 'review' is written
 }
 

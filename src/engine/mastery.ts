@@ -2,6 +2,7 @@ import type { StandardCode, GradeCurriculum, DomainInfo } from '../curriculum/ty
 import { domainWeight, standardsOf } from '../curriculum/registry';
 import type { QuizAttempt } from '../types';
 import { familyOf, type MisconceptionFamily } from '../curriculum/misconceptions';
+import { contentVersionOf, parseQuestionRef } from './questionModel';
 
 export type MasteryStatus = 'acceleration-ready' | 'approaching' | 'needs-focus' | 'untested';
 
@@ -27,6 +28,21 @@ const READINESS_EPSILON = 1e-9;
  *  rounding or floating-point error can move a boundary. */
 export function isPassing(correct: number, total: number, passing: number): boolean {
   return total > 0 && correct * 100 >= passing * total;
+}
+
+/** False when the answer was recorded against a different content version
+ *  of its question than the one shipping now (the question was rewritten), so
+ *  it says nothing about today's question. An id the source no longer knows
+ *  has nothing to compare against and is kept. History screens still list
+ *  every answer; only the mastery arithmetic skips these. */
+export function isCurrentAnswer(
+  ans: { questionId?: string; contentVersion?: number },
+  c: GradeCurriculum,
+): boolean {
+  if (!ans.questionId) return true;
+  const current = c.source.versionOf(parseQuestionRef(ans.questionId));
+  if (current === undefined) return true;
+  return contentVersionOf(ans) === current;
 }
 
 export function masteryStatus(correct: number, total: number, passing: number): MasteryStatus {
@@ -71,6 +87,7 @@ export function masteryByStandard(
 
   for (const attempt of attempts) {
     for (const ans of Object.values(attempt.answers)) {
+      if (!isCurrentAnswer(ans, c)) continue; // rewritten since it was answered
       const code = (ans as { standardCode?: StandardCode }).standardCode;
       if (!code) continue;
       const m = out.get(code);
