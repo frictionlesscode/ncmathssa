@@ -5,6 +5,8 @@ import { App } from './App';
 import { DISCLAIMER_STORAGE_KEY, DISCLAIMER_VERSION } from './components/DisclaimerGate';
 import { newProfile, saveState, loadState } from './state/storage';
 import { questionRefId } from './engine/questionModel';
+import { c5 } from './engine/path.testkit';
+import { newSession, stampContentVersions } from './engine/activeSession';
 
 // Spec 3.3: every session records the content version of each of its
 // questions the moment it starts, so a later deploy that rewrites one is
@@ -24,6 +26,12 @@ describe('starting a session', () => {
     await userEvent.click(screen.getByRole('button', { name: /start today's practice \(round 1\)/i }));
     const s = loadState(localStorage).profiles[0].activeSession!;
     expect(Object.keys(s.versions ?? {}).sort()).toEqual(s.refs.map((r) => questionRefId(r)).sort());
-    expect(Object.values(s.versions!).every((v) => Number.isInteger(v) && v >= 1)).toBe(true);
+    for (const r of s.refs) expect(s.versions![questionRefId(r)], questionRefId(r)).toBe(c5.source.versionOf(r));
+  });
+
+  it('stamps 2 for a rewritten item and 1 for an untouched one', () => {
+    const refs = [{ kind: 'authored' as const, id: 'nf1-01' }, { kind: 'authored' as const, id: 'nf1-03' }];
+    const s = stampContentVersions(newSession({ kind: 'practice', quizId: 'x', title: 'x', refs, now: new Date(2026, 8, 1) }), c5);
+    expect(s.versions).toEqual({ 'nf1-01': 2, 'nf1-03': 1 });
   });
 });

@@ -78,7 +78,9 @@ describe('NF.1 (NC-R6 related fractions)', () => {
     (id) => {
       const q = byId(id);
       // The benchmark list "(0, 1/2, 1)" in nf1-04 names the benchmarks, not an addend.
-      const dens = denominatorsIn(`${q.prompt.replace('(0, 1/2, 1)', '')} ${q.promptDetails ?? ''}`);
+      const benchmarks = /\(0, 1\/2, 1\)/;
+      if (id === 'nf1-04') expect(q.prompt).toMatch(benchmarks);
+      const dens = denominatorsIn(`${q.prompt.replace(benchmarks, '')} ${q.promptDetails ?? ''}`);
       expect(dens.length).toBeGreaterThan(0);
       expect(inOneFamily(dens), `${id}: ${dens.join(', ')}`).toBe(true);
     },
