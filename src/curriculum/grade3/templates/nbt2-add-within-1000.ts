@@ -1,6 +1,7 @@
 import type { Rng } from '../../../engine/rng';
 import type { QuestionTemplate, GeneratedQuestion } from '../../../engine/template';
 import { labelOptions } from '../../../engine/questionModel';
+import { count } from './count';
 
 /**
  * NC.3.NBT.2 — "Add and subtract whole numbers up to and including 1,000."
@@ -132,7 +133,7 @@ export const nbt2AddWithin1000: QuestionTemplate = {
         stepByStep: [
           `Step 1: Line the numbers up by place value and start at the ones: ${o.hi} + ${o.lo} = ${onesSum}.`,
           `Step 2: ${onesSum} is more than 9, so write ${onesSum - 10} in the ones place and carry the ten into the TENS column, right next door.`,
-          `Step 3: Add the tens with that carried ten: ${t.hi} + ${t.lo} + 1 = ${t.hi + t.lo + 1} tens. Then add the hundreds: ${h.hi} + ${h.lo} = ${h.hi + h.lo} hundreds.`,
+          `Step 3: Add the tens with that carried ten: ${t.hi} + ${t.lo} + 1 = ${count(t.hi + t.lo + 1, 'ten')}. Then add the hundreds: ${h.hi} + ${h.lo} = ${count(h.hi + h.lo, 'hundred')}.`,
           `Step 4: ${a} + ${b} = ${answerText}.`,
         ],
         conceptSummary:

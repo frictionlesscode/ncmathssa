@@ -77,6 +77,7 @@ export const nf1UnitFractionModel: QuestionTemplate = {
   difficulty: 'mastery',
   calculatorAllowed: false,
   isStretch: false,
+  contentVersion: 2, // one option was reworded so it cannot be read as 1/d of a set
 
   generate(rng: Rng): GeneratedQuestion {
     const d = rng.pick(DENOMINATORS);
@@ -93,8 +94,10 @@ export const nf1UnitFractionModel: QuestionTemplate = {
         misconception: 'counted-parts-without-checking-they-are-equal',
       },
       // The d read as a number of whole things instead of parts of one whole.
+      // (The old wording, "d whole shapes, with 1 of them shaded", is 1/d of a
+      // SET, which a careful child could defend against "1/d of a whole shape".)
       {
-        text: `${d} whole ${s.many}, with 1 of them shaded.`,
+        text: `${d} whole ${s.many}, all shaded.`,
         isCorrect: false,
         misconception: 'treated-the-denominator-as-a-count-of-wholes',
       },

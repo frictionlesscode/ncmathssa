@@ -64,15 +64,44 @@ describe('g3.md2.customary-capacity-word-problem', () => {
   it('emits exactly this question at seed 123', () => {
     const g = md2CustomaryCapacityWordProblem.generate(makeRng(123));
     expect(g.prompt).toBe(
-      'A juice jug holds 71 pints of juice. Omar pours out 48 pints. How many pints of juice are left in the juice jug?',
+      'A soup kettle holds 71 quarts of soup. Omar pours out 48 quarts. How many quarts of soup are left in the soup kettle?',
     );
-    expect(g.answerText).toBe('23 pints');
+    expect(g.answerText).toBe('23 quarts');
     expect(shape(g)).toEqual([
-      ['A', '33 pints', false, 'borrowed-without-reducing-the-next-column'],
-      ['B', '37 pints', false, 'subtracted-without-regrouping'],
-      ['C', '119 pints', false, 'added-instead-of-subtracted'],
-      ['D', '23 pints', true, null],
+      ['A', '33 quarts', false, 'borrowed-without-reducing-the-next-column'],
+      ['B', '37 quarts', false, 'subtracted-without-regrouping'],
+      ['C', '119 quarts', false, 'added-instead-of-subtracted'],
+      ['D', '23 quarts', true, null],
     ]);
+  });
+
+  // content-g3 audit (Medium): "soup pot holds 87 quarts", "juice jug 93 pints".
+  it('F: every vessel is one that can hold 30 to 99 of its unit', () => {
+    const CAN_HOLD: Record<string, string> = {
+      'water tank': 'gallons',
+      'rain barrel': 'gallons',
+      'fish tank': 'gallons',
+      cooler: 'quarts',
+      'soup kettle': 'quarts',
+      'juice dispenser': 'pints',
+    };
+    for (let seed = 0; seed < 600; seed++) {
+      const { prompt } = md2CustomaryCapacityWordProblem.generate(makeRng(seed));
+      const m = /^An? (.+) holds \d+ (\w+) of /.exec(prompt);
+      expect(m, `seed ${seed}: ${prompt}`).not.toBeNull();
+      expect(CAN_HOLD[m![1]], `seed ${seed}: ${m![1]}`).toBe(m![2]);
+    }
+  });
+
+  // content-g3 audit (Medium): "1 ones" in 797 of 2000 seeds, "1 tens" in 383.
+  it('F: never writes "1 tens", "1 ones", "0 tens" as singular or "1 is" as "1 are"', () => {
+    for (let seed = 0; seed < 2000; seed++) {
+      const g = md2CustomaryCapacityWordProblem.generate(makeRng(seed));
+      const text = [...g.explanation.stepByStep, g.explanation.commonMisconception ?? ''].join(' ');
+      expect(text, `seed ${seed}`).not.toMatch(/\b1 (?:tens|ones)\b/);
+      expect(text, `seed ${seed}`).not.toMatch(/\b1 are\b/);
+      expect(text, `seed ${seed}`).not.toMatch(/\bare only 1 one\b/);
+    }
   });
 
   // RULING 14-1, the most serious finding in the Grade 3 pre-flight. A metric

@@ -24,6 +24,16 @@ function textOf(g: ReturnType<typeof nf1UnitFractionModel.generate>): string {
 }
 
 describe('g3.nf1.unit-fraction-model', () => {
+  // content-g3 audit (Medium): "2 whole rectangles, with 1 of them shaded" is 1/2
+  // of a set of rectangles, which a careful child can defend against "1/2 of a
+  // whole rectangle".
+  it('F: no wrong option describes one of several shapes shaded', () => {
+    for (let seed = 0; seed < 400; seed++) {
+      const g = nf1UnitFractionModel.generate(makeRng(seed));
+      for (const o of g.options) expect(o.text, `seed ${seed}`).not.toMatch(/with 1 of them shaded/);
+      expect(nf1UnitFractionModel.contentVersion).toBe(2);
+    }
+  });
   it('is sound at every seed', () => {
     assertTemplateSound(nf1UnitFractionModel);
   });
@@ -51,7 +61,7 @@ describe('g3.nf1.unit-fraction-model', () => {
         false,
         'counted-parts-without-checking-they-are-equal',
       ],
-      ['C', '2 whole rectangles, with 1 of them shaded.', false, 'treated-the-denominator-as-a-count-of-wholes'],
+      ['C', '2 whole rectangles, all shaded.', false, 'treated-the-denominator-as-a-count-of-wholes'],
       [
         'D',
         '1 whole rectangle shaded, and 2 more rectangles beside it.',
@@ -75,7 +85,7 @@ describe('g3.nf1.unit-fraction-model', () => {
         false,
         'read-the-fraction-as-two-whole-numbers',
       ],
-      ['B', '6 whole rectangles, with 1 of them shaded.', false, 'treated-the-denominator-as-a-count-of-wholes'],
+      ['B', '6 whole rectangles, all shaded.', false, 'treated-the-denominator-as-a-count-of-wholes'],
       ['C', 'One rectangle cut into 6 equal parts, with 1 part shaded.', true, null],
       [
         'D',
@@ -130,7 +140,7 @@ describe('g3.nf1.unit-fraction-model', () => {
         const texts = [
           `One ${s.one} cut into ${d} equal parts, with 1 part shaded.`,
           `One ${s.one} cut into ${d} parts of different sizes, with 1 part shaded.`,
-          `${d} whole ${s.many}, with 1 of them shaded.`,
+          `${d} whole ${s.many}, all shaded.`,
           `1 whole ${s.one} shaded, and ${d} more ${s.many} beside it.`,
         ];
         expect(new Set(texts).size, `(1/${d}, ${s.one}) collides`).toBe(4);

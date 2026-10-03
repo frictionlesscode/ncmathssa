@@ -1,6 +1,7 @@
 import type { Rng } from '../../../engine/rng';
 import type { QuestionTemplate, GeneratedQuestion } from '../../../engine/template';
 import { labelOptions } from '../../../engine/questionModel';
+import { count } from './count';
 
 /**
  * NC.3.MD.2 — "Solve problems involving CUSTOMARY measurement", whose third
@@ -91,13 +92,16 @@ interface Vessel {
   liquid: string;
 }
 
+/** Every amount drawn is 30 to 99 units, so each vessel has to be able to hold
+ *  that much: a "soup pot" of 87 quarts or a "juice jug" of 93 pints is not
+ *  a thing a child has seen. */
 const VESSELS: Vessel[] = [
   { container: 'water tank', unit: 'gallons', liquid: 'water' },
   { container: 'rain barrel', unit: 'gallons', liquid: 'rain water' },
-  { container: 'soup pot', unit: 'quarts', liquid: 'soup' },
+  { container: 'fish tank', unit: 'gallons', liquid: 'water' },
   { container: 'cooler', unit: 'quarts', liquid: 'lemonade' },
-  { container: 'juice jug', unit: 'pints', liquid: 'juice' },
-  { container: 'milk can', unit: 'pints', liquid: 'milk' },
+  { container: 'soup kettle', unit: 'quarts', liquid: 'soup' },
+  { container: 'juice dispenser', unit: 'pints', liquid: 'juice' },
 ];
 
 const NAMES = ['Maya', 'Omar', 'Priya', 'Diego', 'Lena', 'Jonah'];
@@ -163,13 +167,13 @@ export const md2CustomaryCapacityWordProblem: QuestionTemplate = {
       explanation: {
         stepByStep: [
           `Step 1: Something is being taken away, so subtract: ${A} - ${B}.`,
-          `Step 2: There are only ${a0} ones in ${A} and ${b0} ones are needed, so trade one ten from the ${a1} tens. That leaves ${a1 - 1} tens and makes ${a0 + 10} ones.`,
-          `Step 3: ${a0 + 10} - ${b0} = ${a0 + 10 - b0} ones, and ${a1 - 1} - ${b1} = ${a1 - 1 - b1} tens.`,
+          `Step 2: There ${a0 === 1 ? 'is' : 'are'} only ${count(a0, 'one')} in ${A} and ${b0} ${b0 === 1 ? 'is' : 'are'} needed, so trade one ten from the ${count(a1, 'ten')}. That leaves ${count(a1 - 1, 'ten')} and makes ${count(a0 + 10, 'one')}.`,
+          `Step 3: ${a0 + 10} - ${b0} = ${count(a0 + 10 - b0, 'one')}, and ${a1 - 1} - ${b1} = ${count(a1 - 1 - b1, 'ten')}.`,
           `Step 4: Both amounts are already in ${unit}, so the answer keeps that unit: ${answerText} left.`,
         ],
         conceptSummary:
           'A measurement word problem is solved the same way as any other word problem - the measuring units just come along for the ride. When both amounts are already in the same customary unit, subtract the numbers and keep the unit.',
-        commonMisconception: `Answering ${amount(10 * (a1 - b1) + (b0 - a0), unit)} comes from taking the smaller digit away from the larger one in the ones column. ${a0} ones is not enough to take ${b0} away from, so a ten has to be traded first.`,
+        commonMisconception: `Answering ${amount(10 * (a1 - b1) + (b0 - a0), unit)} comes from taking the smaller digit away from the larger one in the ones column. ${count(a0, 'one')} ${a0 === 1 ? 'is' : 'are'} not enough to take ${b0} away from, so a ten has to be traded first.`,
       },
     };
   },

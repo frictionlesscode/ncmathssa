@@ -88,6 +88,25 @@ describe('g3.md7.area-by-multiplying-side-lengths', () => {
     }
   });
 
+  // content-g3 audit (Medium): "bulletin board 8 yards long", "patio 3 inches wide".
+  it('F: the unit suits the thing, at every seed', () => {
+    const SMALL = ['postcard', 'picture frame'];
+    const BIG = ['vegetable garden', 'patio', 'flower bed', 'chicken run'];
+    let seen = new Set<string>();
+    for (let seed = 0; seed < 1000; seed++) {
+      const { prompt } = md7AreaByMultiplyingSideLengths.generate(makeRng(seed));
+      const m = /^\w+'s (.+) is a rectangle \d+ (\w+) long/.exec(prompt)!;
+      const [thing, unit] = [m[1], m[2]];
+      expect(unit === 'inches', `seed ${seed}: ${thing} in ${unit}`).toBe(SMALL.includes(thing));
+      if (unit === 'yards') expect(BIG, `seed ${seed}: ${thing} in yards`).toContain(thing);
+      seen = seen.add(`${thing}/${unit}`);
+    }
+    // all three units still appear
+    expect([...seen].some((s) => s.endsWith('/inches'))).toBe(true);
+    expect([...seen].some((s) => s.endsWith('/feet'))).toBe(true);
+    expect([...seen].some((s) => s.endsWith('/yards'))).toBe(true);
+  });
+
   // Ruling 14-5's other half. This generator must carry its two side lengths
   // as NUMBERS and no tiles, so that multiplying them is the skill; the tiling
   // generator carries tiles and no numbers. See

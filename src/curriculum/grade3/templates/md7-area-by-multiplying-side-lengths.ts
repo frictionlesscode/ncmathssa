@@ -81,28 +81,34 @@ for (let L = 2; L <= 9; L++) {
   }
 }
 
+type UnitKey = 'inches' | 'feet' | 'yards';
+
 /** Rectangular things in a child's world, each one something whose area is a
- *  reason to measure it. */
-const THINGS = [
-  'vegetable garden',
-  'sandbox',
-  'bedroom rug',
-  'patio',
-  'bulletin board',
-  'flower bed',
-  'chicken run',
-  'reading corner',
+ *  reason to measure it, with the customary units a side of 2 to 9 of them
+ *  makes sense in. "A bulletin board 8 yards long" and "a patio 3 inches
+ *  wide" are not things a child has seen. */
+const THINGS: { thing: string; units: UnitKey[] }[] = [
+  { thing: 'vegetable garden', units: ['feet', 'yards'] },
+  { thing: 'sandbox', units: ['feet'] },
+  { thing: 'bedroom rug', units: ['feet'] },
+  { thing: 'patio', units: ['feet', 'yards'] },
+  { thing: 'bulletin board', units: ['feet'] },
+  { thing: 'flower bed', units: ['feet', 'yards'] },
+  { thing: 'chicken run', units: ['feet', 'yards'] },
+  { thing: 'reading corner', units: ['feet'] },
+  { thing: 'postcard', units: ['inches'] },
+  { thing: 'picture frame', units: ['inches'] },
 ];
 
 const NAMES = ['Ana', 'Theo', 'Rosa', 'Malik', 'Nina', 'Caleb', 'Sofia', 'Isaac'];
 
 /** Customary length units only (ruling 14-1), each with the singular a
  *  "1 ___ on each side" sentence needs — "1 feet" is not English. */
-const UNITS: { plural: string; singular: string }[] = [
-  { plural: 'inches', singular: 'inch' },
-  { plural: 'feet', singular: 'foot' },
-  { plural: 'yards', singular: 'yard' },
-];
+const UNITS: Record<UnitKey, { plural: string; singular: string }> = {
+  inches: { plural: 'inches', singular: 'inch' },
+  feet: { plural: 'feet', singular: 'foot' },
+  yards: { plural: 'yards', singular: 'yard' },
+};
 
 export const md7AreaByMultiplyingSideLengths: QuestionTemplate = {
   id: 'g3.md7.area-by-multiplying-side-lengths',
@@ -114,8 +120,8 @@ export const md7AreaByMultiplyingSideLengths: QuestionTemplate = {
 
   generate(rng: Rng): GeneratedQuestion {
     const name = rng.pick(NAMES);
-    const thing = rng.pick(THINGS);
-    const { plural: unit, singular } = rng.pick(UNITS);
+    const { thing, units } = rng.pick(THINGS);
+    const { plural: unit, singular } = UNITS[rng.pick(units)];
     const { L, W } = rng.pick(RECTANGLES);
 
     const squareUnit = `square ${unit}`;
