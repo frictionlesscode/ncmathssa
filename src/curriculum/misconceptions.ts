@@ -1491,9 +1491,9 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Split a group into two parts that use every object but are not the same size, and called them the two EQUAL groups or equal addends the question asked for.',
     ),
     entry(
-      'wrote-a-sum-that-does-not-match-the-addends',
+      'wrote-equal-addends-with-the-wrong-total',
       'incomplete-procedure',
-      'Wrote two addends and a total that do not add up, so the equation is false even though the addends look right.',
+      'Wrote two equal addends that are each right as a sum, but the total is not the number the question asked about.',
     ),
     entry(
       'judged-the-total-by-the-count-of-pairs',

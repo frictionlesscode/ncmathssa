@@ -595,7 +595,7 @@ export const GRADE_2_NBT_AUTHORED: Question[] = [
     options: labelOptions([
       // Counted how many digits are written on each side instead of comparing
       // what the two sides are worth.
-      { text: '500 + 30 + 7 > 537, because it is written with more digits', isCorrect: false, misconception: 'compared-by-digit-count-not-place-value' },
+      { text: '500 + 30 + 7 > 537, because 500 + 30 + 7 has more digits', isCorrect: false, misconception: 'compared-by-digit-count-not-place-value' },
       { text: '500 + 30 + 7 = 537, because both are worth 537', isCorrect: true },
       // Added the first two parts, compared, and never came back for the 7.
       { text: '500 + 30 + 7 < 537, because 500 + 30 is only 530', isCorrect: false, misconception: 'forgot-the-final-step' },

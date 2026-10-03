@@ -478,7 +478,7 @@ export const GRADE_2_OA_AUTHORED: Question[] = [
       // Addends that sum correctly but are not equal to each other.
       { text: '6 + 8 = 14', isCorrect: false, misconception: 'split-into-unequal-groups-and-called-them-equal' },
       // Two equal addends, but they add to 12, not 14: each is one less than half.
-      { text: '6 + 6 = 12', isCorrect: false, misconception: 'wrote-a-sum-that-does-not-match-the-addends' },
+      { text: '6 + 6 = 12', isCorrect: false, misconception: 'wrote-equal-addends-with-the-wrong-total' },
       // Equal addends, but the sum is wrong.
       { text: '7 + 7 = 15', isCorrect: false, misconception: 'counted-on-by-ones-one-too-many' },
       { text: '7 + 7 = 14', isCorrect: true },

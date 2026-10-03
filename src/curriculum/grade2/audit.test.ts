@@ -10,10 +10,10 @@ const tagOf = (id: string, text: string) => item(id).options.find((o) => o.text 
 describe('content-g2 audit: authored odd/even and equal-groups items', () => {
   it('High g2-oa3-04: option A (6 + 8) is tagged for unequal addends, B (6 + 6 = 12) for a false sum', () => {
     expect(tagOf('g2-oa3-04', '6 + 8 = 14')).toBe('split-into-unequal-groups-and-called-them-equal');
-    expect(tagOf('g2-oa3-04', '6 + 6 = 12')).toBe('wrote-a-sum-that-does-not-match-the-addends');
+    expect(tagOf('g2-oa3-04', '6 + 6 = 12')).toBe('wrote-equal-addends-with-the-wrong-total');
     // The registry text of the old tag on A was about PAIRS; the new ones must say what they mean.
     expect(MISCONCEPTIONS['split-into-unequal-groups-and-called-them-equal'].description).toMatch(/not the same size/i);
-    expect(MISCONCEPTIONS['wrote-a-sum-that-does-not-match-the-addends'].description).toMatch(/do not add up/i);
+    expect(MISCONCEPTIONS['wrote-equal-addends-with-the-wrong-total'].description).toMatch(/not the number the question asked/i);
   });
 
   it('High g2-oa3-03: "Yes, 10 and 8" is tagged for unequal groups, not for miscounting pairs', () => {
