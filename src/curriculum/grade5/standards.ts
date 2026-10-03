@@ -277,7 +277,7 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
         description: 'Understand that attributes belonging to a category of 2D figures also belong to all subcategories; classify quadrilaterals by properties in a hierarchy.',
         weightCategory: 'Core (MD & G share 19–23%)',
         keyConcepts: [
-          'Quadrilateral hierarchy: Polygons -> Quadrilaterals -> Trapezoids (NC definition: at least one pair of parallel sides) / Parallelograms -> Rectangles & Rhombuses -> Squares',
+          'Quadrilateral hierarchy: Polygons -> Quadrilaterals -> Parallelograms -> Rectangles & Rhombuses -> Squares; Trapezoids are a separate branch (NC definition: exactly one pair of parallel sides)',
           'All squares are rectangles and rhombuses, but not all rectangles are squares',
           'Parallelogram properties: 2 pairs of parallel sides, opposite sides congruent, opposite angles congruent',
           'Rhombus properties: 4 equal sides; Rectangle properties: 4 right angles'

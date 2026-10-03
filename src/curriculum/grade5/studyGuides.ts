@@ -514,7 +514,7 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     rulesAndFormulas: [
       { label: 'Polygon', detail: 'Closed 2D figure made of straight line segments.' },
       { label: 'Quadrilateral', detail: '4-sided polygon.' },
-      { label: 'Trapezoid (NC Definition)', detail: 'A quadrilateral with AT LEAST ONE pair of parallel sides (inclusive definition: parallelograms are also trapezoids).' },
+      { label: 'Trapezoid (NC Definition)', detail: 'A quadrilateral with EXACTLY ONE pair of parallel sides (exclusive definition: parallelograms, rectangles, rhombuses and squares are not trapezoids).' },
       { label: 'Parallelogram', detail: 'A quadrilateral with 2 pairs of parallel sides and opposite sides equal.' },
       { label: 'Rectangle', detail: 'A parallelogram with 4 right angles.' },
       { label: 'Rhombus', detail: 'A parallelogram with 4 equal sides.' },
@@ -528,7 +528,8 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       'Step 5: If both 4 equal sides AND 4 right angles = square.'
     ],
     commonTraps: [
-      'Thinking a shape can only have ONE name (a square is simultaneously a square, a rectangle, a rhombus, a parallelogram, a trapezoid, and a quadrilateral!).',
+      'Thinking a shape can only have ONE name (a square is simultaneously a square, a rectangle, a rhombus, a parallelogram, and a quadrilateral!).',
+      'Calling a parallelogram a trapezoid. North Carolina uses the exclusive definition, exactly one pair of parallel sides, so a shape with two pairs is a parallelogram, not a trapezoid.',
       'Thinking all rectangles are squares (False: rectangles do not necessarily have 4 equal sides).'
     ],
     workedExample: {

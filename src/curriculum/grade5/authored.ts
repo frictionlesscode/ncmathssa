@@ -1382,27 +1382,31 @@ export const GRADE_5_AUTHORED: Question[] = [
     id: 'g3-02',
     standardCode: 'NC.5.G.3',
     domainId: 'G',
-    prompt: 'A student claims: "All parallelograms are trapezoids, but not all trapezoids are parallelograms." Under North Carolina\'s standard course of study definition (where a trapezoid is a quadrilateral with at least one pair of parallel sides), is the student\'s claim true or false?',
+    prompt: 'A student claims: "All parallelograms are trapezoids, but not all trapezoids are parallelograms." Under North Carolina\'s standard course of study definition (where a trapezoid is a quadrilateral with exactly one pair of parallel sides), is the student\'s claim true or false?',
+    // Solved: a parallelogram has two pairs of parallel sides, which is not
+    // exactly one pair, so no parallelogram is a trapezoid (NC-R2). The first
+    // half of the claim is false, so the whole claim is false.
     options: labelOptions([
-      // Applied the exclusive definition ("exactly one pair of parallel sides").
-      { text: 'False, because a trapezoid can never have more than 1 pair of parallel sides', isCorrect: false, misconception: 'exclusive-trapezoid-definition' },
-      // Denied that parallelograms sit inside the quadrilateral category at all.
+      // Applied the inclusive definition ("at least one pair of parallel sides"), which NC does not use.
+      { text: 'True, because parallelograms have 2 pairs of parallel sides, which satisfies the requirement of having at least 1 pair', isCorrect: false, misconception: 'inclusive-trapezoid-definition' },
+      { text: 'False, because a parallelogram has 2 pairs of parallel sides, and a trapezoid has exactly 1 pair', isCorrect: true },
+      // Right verdict, wrong reason: denied that parallelograms sit inside the quadrilateral category at all.
       { text: 'False, because parallelograms are not quadrilaterals', isCorrect: false, misconception: 'hierarchy-too-narrow' },
-      // Right verdict, wrong reason: a quadrilateral with no parallel sides is not a trapezoid.
+      // A quadrilateral with no parallel sides is not a trapezoid either.
       { text: 'True, because all four-sided shapes are trapezoids', isCorrect: false, misconception: 'hierarchy-too-broad' },
-      { text: 'True, because parallelograms have 2 pairs of parallel sides, which satisfies the requirement of having at least 1 pair', isCorrect: true },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
+    contentVersion: 2, // NC-R2: the key flipped from the inclusive to the exclusive definition
     explanation: {
       stepByStep: [
-        'Step 1: In North Carolina (inclusive definition), a trapezoid is defined as having at least one pair of parallel sides.',
-        'Step 2: A parallelogram has two pairs of parallel sides, which fulfills the condition "at least one".',
-        'Step 3: Thus, all parallelograms are subcategories of trapezoids.'
+        'Step 1: In North Carolina (exclusive definition), a trapezoid is defined as having exactly one pair of parallel sides.',
+        'Step 2: A parallelogram has two pairs of parallel sides, which is not exactly one pair.',
+        'Step 3: So a parallelogram is not a trapezoid, and the claim is false. Trapezoids and parallelograms are separate branches of the quadrilateral family.'
       ],
-      conceptSummary: 'NC inclusive quadrilateral hierarchy definition for trapezoids.',
-      commonMisconception: 'Using the exclusive trapezoid definition ("exactly one pair of parallel sides").'
+      conceptSummary: 'NC exclusive trapezoid definition: exactly one pair of parallel sides, so trapezoids and parallelograms are separate groups of quadrilaterals.',
+      commonMisconception: 'Using the inclusive trapezoid definition ("at least one pair of parallel sides"), which North Carolina does not use.'
     }
   },
   {
