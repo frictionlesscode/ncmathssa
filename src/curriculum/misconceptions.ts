@@ -390,11 +390,6 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Stopped comparing two numbers before reaching the first place where their digits actually differ, and called them equal.',
     ),
     entry(
-      'computed-exactly-instead-of-estimating',
-      'incomplete-procedure',
-      'Calculated the exact answer instead of using benchmark fractions to estimate as the problem asked.',
-    ),
-    entry(
       'computed-surface-area',
       'geometry-and-measurement',
       'Calculated the surface area of the solid instead of its volume.',
@@ -423,11 +418,6 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'converted-mixed-number-by-adding',
       'fraction-operations',
       'Converted a mixed number to an improper fraction by adding the whole number and numerator instead of multiplying first.',
-    ),
-    entry(
-      'converted-only-second-fraction',
-      'fraction-operations',
-      'Rescaled only one of the two fractions to the common denominator and left the other unchanged.',
     ),
     entry(
       'coordinates-reversed',

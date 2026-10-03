@@ -24,6 +24,6 @@ describe('starting a session', () => {
     await userEvent.click(screen.getByRole('button', { name: /start today's practice \(round 1\)/i }));
     const s = loadState(localStorage).profiles[0].activeSession!;
     expect(Object.keys(s.versions ?? {}).sort()).toEqual(s.refs.map((r) => questionRefId(r)).sort());
-    expect(Object.values(s.versions!).every((v) => v === 1)).toBe(true);
+    expect(Object.values(s.versions!).every((v) => Number.isInteger(v) && v >= 1)).toBe(true);
   });
 });

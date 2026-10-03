@@ -20,7 +20,7 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
         description: 'Add and subtract fractions and mixed numbers with unlike (related) denominators; use benchmark estimation; solve one- and two-step real-world problems.',
         weightCategory: 'Highest Priority (NF band 39–43%)',
         keyConcepts: [
-          'Finding Common Denominators using multiples',
+          'Related denominators: halves, fourths and eighths; thirds, sixths and twelfths; fifths, tenths and hundredths (the larger denominator is the common denominator)',
           'Regrouping mixed numbers during subtraction (borrowing a whole)',
           'Benchmark fractions (0, 1/2, 1) for estimating reasonableness',
           'Multi-step word problems involving leftover portions'
@@ -42,10 +42,11 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
         code: 'NC.5.NF.4',
         domainId: 'NF',
         title: 'Multiply Fractions & Mixed Numbers; Area Models',
-        description: 'Multiply a fraction or whole number by a fraction, including mixed numbers; use area and length models; reason about how factors affect the product.',
+        description: 'Multiply a fraction or whole number by a fraction, including mixed numbers (fraction × fraction uses denominators 2, 3 and 4); use area and length models; reason about how factors affect the product.',
         weightCategory: 'Highest Priority (NF band 39–43%)',
         keyConcepts: [
           'Multiplying numerators and denominators: (a/b) × (c/d) = (a×c)/(b×d)',
+          'Fraction × fraction uses denominators 2, 3 and 4 with area and length models; a fraction times a whole number may use denominators 2, 3, 4, 5, 6, 8, 10 and 12',
           'Area of rectangles with fractional side lengths (Area = base × height)',
           'Scaling concept: multiplying by a fraction < 1 results in a smaller product; multiplying by > 1 results in a larger product',
           'Converting mixed numbers to improper fractions before multiplying'

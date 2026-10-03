@@ -673,30 +673,32 @@ export const GRADE_5_AUTHORED: Question[] = [
     standardCode: 'NC.5.NF.1',
     domainId: 'NF',
     prompt: 'Evaluate the sum. Express your answer as a simplified mixed number or fraction:',
-    promptDetails: '2 3/4 + 1 5/6',
+    promptDetails: '2 3/4 + 1 5/8',
     options: labelOptions([
-      // (3+5)/(4+6) = 8/10 added straight across, wholes 2 + 1 = 3.
-      { text: '3 8/10', isCorrect: false, misconception: 'added-numerators-and-denominators' },
-      // Denominators changed to 12 but numerators left alone: 3/12 + 5/12 = 8/12.
-      { text: '3 2/3', isCorrect: false, misconception: 'common-denominator-numerator-not-scaled' },
-      { text: '4 7/12', isCorrect: true },
-      // Only 5/6 was rescaled to 10/12; 3/4 kept its numerator: 3/12 + 10/12 = 1 1/12.
-      { text: '4 1/12', isCorrect: false, misconception: 'converted-only-second-fraction' },
+      // (3 + 5)/(4 + 8) = 8/12 = 2/3 added straight across, wholes 2 + 1 = 3.
+      { text: '3 2/3', isCorrect: false, misconception: 'added-numerators-and-denominators' },
+      // Denominators changed to 8 but 3/4 kept its numerator: 3/8 + 5/8 = 8/8 = 1; 3 + 1 = 4.
+      { text: '4', isCorrect: false, misconception: 'common-denominator-numerator-not-scaled' },
+      // Key: 3/4 = 6/8; 6/8 + 5/8 = 11/8 = 1 3/8; 2 + 1 + 1 3/8 = 4 3/8.
+      { text: '4 3/8', isCorrect: true },
+      // Doubled the numerator of the fraction already in eighths: (3 + 10)/8 = 13/8 = 1 5/8; 3 + 1 5/8.
+      { text: '4 5/8', isCorrect: false, misconception: 'scaled-the-wrong-addend' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: Find LCM of denominators 4 and 6: LCM is 12.',
-        'Step 2: Convert fractions to denominator of 12: 3/4 = 9/12, and 5/6 = 10/12.',
+        'Step 1: 8 is a multiple of 4, so use eighths as the common denominator.',
+        'Step 2: Convert 3/4 to eighths: 3/4 = 6/8 (multiply the top and bottom by 2). 5/8 stays the same.',
         'Step 3: Add the whole numbers: 2 + 1 = 3.',
-        'Step 4: Add the fractions: 9/12 + 10/12 = 19/12.',
-        'Step 5: Convert 19/12 to a mixed number: 1 7/12.',
-        'Step 6: Combine: 3 + 1 7/12 = 4 7/12.'
+        'Step 4: Add the fractions: 6/8 + 5/8 = 11/8.',
+        'Step 5: Convert 11/8 to a mixed number: 1 3/8.',
+        'Step 6: Combine: 3 + 1 3/8 = 4 3/8.'
       ],
-      conceptSummary: 'Adding mixed numbers with unlike denominators by finding LCM and regrouping improper fraction sums.',
-      commonMisconception: 'Adding across numerators and denominators (3+5)/(4+6) = 8/10, which is incorrect.'
+      conceptSummary: 'Adding mixed numbers with related denominators by renaming to the larger denominator and regrouping an improper fraction sum.',
+      commonMisconception: 'Adding across numerators and denominators, (3+5)/(4+8) = 8/12, which is incorrect.'
     }
   },
   {
@@ -704,30 +706,32 @@ export const GRADE_5_AUTHORED: Question[] = [
     standardCode: 'NC.5.NF.1',
     domainId: 'NF',
     prompt: 'Solve the subtraction problem. Express your answer as a fraction or mixed number in simplest form:',
-    promptDetails: '6 1/5 - 2 3/4',
+    promptDetails: '6 1/4 - 2 5/8',
     options: labelOptions([
-      // No borrowing: took 15/20 - 4/20 = 11/20 and 6 - 2 = 4.
-      { text: '4 11/20', isCorrect: false, misconception: 'forgot-to-regroup' },
-      { text: '3 9/20', isCorrect: true },
-      // Denominators changed to 20 but numerators left alone: 6 1/20 - 2 3/20 = 3 18/20.
-      { text: '3 9/10', isCorrect: false, misconception: 'common-denominator-numerator-not-scaled' },
-      // Borrowed 20/20 to make 24/20 but forgot to drop the 6 to 5: 6 - 2 = 4.
-      { text: '4 9/20', isCorrect: false, misconception: 'borrowed-without-reducing-the-whole' },
+      // No borrowing: 6 - 2 = 4 and the smaller fraction taken from the larger, 5/8 - 2/8 = 3/8.
+      { text: '4 3/8', isCorrect: false, misconception: 'forgot-to-regroup' },
+      // Key: 6 2/8 = 5 10/8; 5 10/8 - 2 5/8 = 3 5/8.
+      { text: '3 5/8', isCorrect: true },
+      // Denominators changed to 8 but 1/4 kept its numerator: 6 1/8 - 2 5/8 = 5 9/8 - 2 5/8 = 3 4/8 = 3 1/2.
+      { text: '3 1/2', isCorrect: false, misconception: 'common-denominator-numerator-not-scaled' },
+      // Borrowed 8/8 to make 10/8 but forgot to drop the 6 to 5: 6 10/8 - 2 5/8 = 4 5/8.
+      { text: '4 5/8', isCorrect: false, misconception: 'borrowed-without-reducing-the-whole' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: Find common denominator for 5 and 4: LCM is 20.',
-        'Step 2: Convert fractions: 1/5 = 4/20 and 3/4 = 15/20. The expression is: 6 4/20 - 2 15/20.',
-        'Step 3: Since 4/20 < 15/20, borrow 1 whole (20/20) from 6: 6 4/20 = 5 + 20/20 + 4/20 = 5 24/20.',
-        'Step 4: Subtract whole numbers: 5 - 2 = 3.',
-        'Step 5: Subtract fractions: 24/20 - 15/20 = 9/20.',
-        'Step 6: Combine: 3 9/20.'
+        'Step 1: 8 is a multiple of 4, so use eighths as the common denominator.',
+        'Step 2: Convert 1/4 to eighths: 1/4 = 2/8. The expression is: 6 2/8 - 2 5/8.',
+        'Step 3: Since 2/8 < 5/8, regroup 1 whole (8/8) from the 6: 6 2/8 = 5 + 8/8 + 2/8 = 5 10/8.',
+        'Step 4: Subtract the whole numbers: 5 - 2 = 3.',
+        'Step 5: Subtract the fractions: 10/8 - 5/8 = 5/8.',
+        'Step 6: Combine: 3 5/8.'
       ],
       conceptSummary: 'Regrouping mixed numbers requires converting 1 borrowed whole into equivalent units of the common denominator.',
-      commonMisconception: 'Subtracting smaller fraction from larger fraction (15/20 - 4/20) to get 11/20, ignoring the order.'
+      commonMisconception: 'Subtracting the smaller fraction from the larger one (5/8 - 2/8 = 3/8) instead of regrouping, which gives 4 3/8.'
     }
   },
   {
@@ -763,27 +767,30 @@ export const GRADE_5_AUTHORED: Question[] = [
     id: 'nf1-04',
     standardCode: 'NC.5.NF.1',
     domainId: 'NF',
-    prompt: 'Using benchmark fractions (0, 1/2, 1), estimate whether the sum of 7/12 and 9/10 is closer to 1, 1 1/2, or 2.',
+    prompt: 'Using benchmark fractions (0, 1/2, 1), which is the best estimate of the sum 7/12 + 5/6?',
     options: labelOptions([
-      // Rounded both addends down to 1/2: 1/2 + 1/2 = 1.
+      // Rounded 5/6 down to 1/2 (it is closer to 1): 1/2 + 1/2 = 1.
       { text: '1', isCorrect: false, misconception: 'estimated-to-the-wrong-benchmark' },
+      // Key: 7/12 is close to 1/2 and 5/6 is close to 1, so 1/2 + 1 = 1 1/2.
       { text: '1 1/2', isCorrect: true },
-      // Rounded both addends up to 1: 1 + 1 = 2.
+      // Rounded 7/12 up to 1 (it is closer to 1/2): 1 + 1 = 2.
       { text: '2', isCorrect: false, misconception: 'estimated-to-the-wrong-benchmark' },
-      // Computed the exact sum 35/60 + 54/60 = 89/60 when an estimate was requested.
-      { text: '1 29/60', isCorrect: false, misconception: 'computed-exactly-instead-of-estimating' },
+      // (7 + 5)/(12 + 6) = 12/18 = 2/3: added straight across.
+      { text: '2/3', isCorrect: false, misconception: 'added-numerators-and-denominators' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'advanced',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
         'Step 1: 7/12 is slightly greater than 6/12, so it is approximately 1/2.',
-        'Step 2: 9/10 is very close to 10/10, so it is approximately 1.',
-        'Step 3: Sum of benchmarks: 1/2 + 1 = 1 1/2.'
+        'Step 2: 5/6 is very close to 6/6, so it is approximately 1.',
+        'Step 3: Sum of benchmarks: 1/2 + 1 = 1 1/2.',
+        'Step 4: Reasonableness check: each addend is more than 1/2, so the sum must be more than 1. That rules out 1 and 2/3.'
       ],
       conceptSummary: 'Benchmark estimation tests number sense to check if computed answers are mathematically reasonable.',
-      commonMisconception: 'Computing exact value (1 29/60) when the problem explicitly asked for benchmark reasoning.'
+      commonMisconception: 'Adding across, (7+5)/(12+6) = 2/3, gives a sum smaller than either addend, which cannot be right.'
     }
   },
 
@@ -876,22 +883,23 @@ export const GRADE_5_AUTHORED: Question[] = [
     id: 'nf4-02',
     standardCode: 'NC.5.NF.4',
     domainId: 'NF',
-    prompt: 'Without multiplying, choose the statement that correctly compares the product to the factor 16:\n\n16 × 7/9',
+    prompt: 'Without multiplying, choose the statement that correctly compares the product to the factor 16:\n\n16 × 7/8',
     options: labelOptions([
-      { text: 'The product is less than 16 because 7/9 is less than 1', isCorrect: true },
+      { text: 'The product is less than 16 because 7/8 is less than 1', isCorrect: true },
       { text: 'The product is greater than 16 because multiplying always increases value', isCorrect: false, misconception: 'multiplication-always-increases' },
-      { text: 'The product is equal to 16 because 7/9 is close to 1', isCorrect: false, misconception: 'rounded-the-factor-to-one' },
+      { text: 'The product is equal to 16 because 7/8 is close to 1', isCorrect: false, misconception: 'rounded-the-factor-to-one' },
       // Read the numerator 7 as an amount to take away from 16.
       { text: 'The product is 7 less than 16', isCorrect: false, misconception: 'used-the-numerator-as-a-whole-number' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: Examine the multiplier: 7/9 is less than 1 whole (7/9 < 1).',
+        'Step 1: Examine the multiplier: 7/8 is less than 1 whole (7/8 < 1).',
         'Step 2: Multiplying a non-zero quantity by a fraction less than 1 scales the quantity down.',
-        'Step 3: Therefore, 16 × 7/9 will be strictly less than 16.'
+        'Step 3: Therefore, 16 × 7/8 will be strictly less than 16.'
       ],
       conceptSummary: 'Scaling reasoning: multiplying by a factor < 1 reduces the original value.',
       commonMisconception: 'Believing the 4th-grade rule of thumb that "multiplication always makes numbers bigger".'
@@ -901,28 +909,30 @@ export const GRADE_5_AUTHORED: Question[] = [
     id: 'nf4-03',
     standardCode: 'NC.5.NF.4',
     domainId: 'NF',
-    prompt: 'Solve and simplify: 5/8 × 4/15',
+    prompt: 'Solve and simplify: 3/4 × 2/3',
     options: labelOptions([
-      // (5 + 4)/(8 + 15) = 9/23: added straight across instead of multiplying.
-      { text: '9/23', isCorrect: false, misconception: 'added-numerators-and-denominators' },
-      { text: '1/6', isCorrect: true },
-      // (5 × 15)/(8 × 4) = 75/32: multiplied crosswise instead of straight across.
-      { text: '75/32', isCorrect: false, misconception: 'multiplied-crosswise' },
-      // Found the common denominator 120 and added: 75/120 + 32/120.
-      { text: '107/120', isCorrect: false, misconception: 'added-instead-of-multiplied' },
+      // (3 + 2)/(4 + 3) = 5/7: added straight across instead of multiplying.
+      { text: '5/7', isCorrect: false, misconception: 'added-numerators-and-denominators' },
+      // Key: (3 × 2)/(4 × 3) = 6/12 = 1/2.
+      { text: '1/2', isCorrect: true },
+      // (3 × 3)/(4 × 2) = 9/8: multiplied crosswise instead of straight across.
+      { text: '9/8', isCorrect: false, misconception: 'multiplied-crosswise' },
+      // Found the common denominator 12 and added: 9/12 + 8/12 = 17/12.
+      { text: '17/12', isCorrect: false, misconception: 'added-instead-of-multiplied' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: Multiply numerators: 5 × 4 = 20.',
-        'Step 2: Multiply denominators: 8 × 15 = 120.',
-        'Step 3: Simplify 20/120 by dividing numerator and denominator by 20: 20/120 = 1/6.',
-        'Step 4: Alternatively, simplify by cross-canceling beforehand: 5 and 15 cancel to 1 and 3; 4 and 8 cancel to 1 and 2. (1 × 1) / (2 × 3) = 1/6.'
+        'Step 1: Multiply numerators: 3 × 2 = 6.',
+        'Step 2: Multiply denominators: 4 × 3 = 12.',
+        'Step 3: Simplify 6/12 by dividing numerator and denominator by 6: 6/12 = 1/2.',
+        'Step 4: Alternatively, cross-cancel first: the 3 on top and the 3 on the bottom cancel, and the 2 on top and the 4 on the bottom become 1 and 2. That leaves (1 × 1) / (2 × 1) = 1/2.'
       ],
       conceptSummary: 'Multiplying proper fractions and simplifying by finding common factors.',
-      commonMisconception: 'Attempting to find common denominators before multiplying.'
+      commonMisconception: 'Finding a common denominator and adding (9/12 + 8/12 = 17/12) instead of multiplying.'
     }
   },
 
@@ -987,28 +997,30 @@ export const GRADE_5_AUTHORED: Question[] = [
     id: 'nf7-03',
     standardCode: 'NC.5.NF.7',
     domainId: 'NF',
-    prompt: '[Above-Grade Stretch] Solve: 3/4 ÷ 2/5. Express your answer as a simplified mixed number or fraction.',
+    prompt: 'A ribbon is 5 yards long. It is cut into pieces that are each 1/6 yard long. How many pieces are there?',
     options: labelOptions([
-      { text: '1 7/8', isCorrect: true },
-      // Inverted the dividend instead of the divisor: 4/3 × 2/5 = 8/15.
-      { text: '8/15', isCorrect: false, misconception: 'inverted-wrong-factor' },
-      // 3/4 × 2/5 = 6/20 = 3/10: multiplied without reciprocating at all.
-      { text: '3/10', isCorrect: false, misconception: 'multiplied-instead-of-divided' },
-      // Flipped both fractions: 4/3 × 5/2 = 20/6 = 3 1/3.
-      { text: '3 1/3', isCorrect: false, misconception: 'inverted-both-fractions' },
+      // 1 yard holds 6 pieces; never scaled up to 5 yards.
+      { text: '6 pieces', isCorrect: false, misconception: 'forgot-to-scale-by-the-whole-number' },
+      // 5 × 1/6 = 5/6: multiplied instead of dividing.
+      { text: '5/6 of a piece', isCorrect: false, misconception: 'multiplied-instead-of-divided' },
+      // Key: 5 ÷ 1/6 = 5 × 6 = 30.
+      { text: '30 pieces', isCorrect: true },
+      // (1/6) ÷ 5 = 1/30: divided the piece size by the length.
+      { text: '1/30 of a piece', isCorrect: false, misconception: 'inverted-wrong-factor' },
     ]),
     calculatorAllowed: false,
-    isStretch: true,
-    difficulty: 'stretch',
+    isStretch: false,
+    difficulty: 'advanced',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: In 6th grade math, dividing by any fraction means multiplying by its reciprocal (invert the second fraction).',
-        'Step 2: 3/4 ÷ 2/5 = 3/4 × 5/2.',
-        'Step 3: Multiply numerators and denominators: (3 × 5) / (4 × 2) = 15/8.',
-        'Step 4: Convert 15/8 to a mixed number: 1 7/8.'
+        'Step 1: 5 ÷ 1/6 asks how many sixths fit into 5 yards.',
+        'Step 2: Each yard holds 6 pieces that are 1/6 yard long.',
+        'Step 3: 5 yards hold 5 × 6 = 30 pieces.',
+        'Step 4: 5 ÷ 1/6 = 30 pieces.'
       ],
-      conceptSummary: 'Fraction division rule (multiply by reciprocal) bridging 5th grade unit fraction division into 6th grade general fraction division.',
-      commonMisconception: 'Inverting the first fraction instead of the second fraction.'
+      conceptSummary: 'Dividing a whole number by a unit fraction counts how many of those pieces fit, so the answer is larger than the whole number.',
+      commonMisconception: 'Stopping at 6 pieces (the number in 1 yard) and never scaling up to 5 yards.'
     }
   },
 

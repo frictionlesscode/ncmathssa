@@ -227,34 +227,34 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
   'NC.5.NF.1': {
     standardCode: 'NC.5.NF.1',
     title: 'Add & Subtract Fractions with Unlike Denominators',
-    coreConcept: 'Fractions cannot be added or subtracted until they describe equal-sized parts (common denominator). Convert to equivalent fractions with common denominators before operating.',
+    coreConcept: 'Fractions cannot be added or subtracted until they describe equal-sized parts (common denominator). In Grade 5 the denominators are related: one is a multiple of the other, so the larger one is the common denominator.',
     rulesAndFormulas: [
-      { label: 'Common Denominators', detail: 'Find Least Common Multiple (LCM) of denominators (e.g. for 4 and 6, LCM = 12).' },
-      { label: 'Equivalent Fractions', detail: 'Multiply numerator and denominator by same factor: 3/4 = (3×3)/(4×3) = 9/12.' },
+      { label: 'Related Denominators', detail: 'Grade 5 uses halves, fourths and eighths; thirds, sixths and twelfths; fifths, tenths and hundredths. The larger denominator is a multiple of the smaller one, so it is the common denominator (for 3 and 6, use 6).' },
+      { label: 'Equivalent Fractions', detail: 'Multiply numerator and denominator by same factor: 3/4 = (3×2)/(4×2) = 6/8.' },
       { label: 'Borrowing for Subtraction', detail: 'If subtracting 1 3/4 from 4 1/4, borrow 1 from 4: 4 1/4 = 3 + 4/4 + 1/4 = 3 5/4.' }
     ],
     stepByStepMethod: [
-      'Step 1: Find LCM of the two denominators.',
-      'Step 2: Rename each fraction as an equivalent fraction with the common denominator.',
+      'Step 1: Find the common denominator: the larger denominator, when it is a multiple of the smaller one.',
+      'Step 2: Rename the other fraction as an equivalent fraction with that denominator.',
       'Step 3: Add or subtract only the numerators; keep the denominator the same.',
       'Step 4: If mixed numbers, combine whole numbers and fractional parts. Simplify or convert improper fractions.'
     ],
     commonTraps: [
-      'Adding across numerators AND denominators (e.g. 1/2 + 1/3 = 2/5 — this is FALSE!).',
+      'Adding across numerators AND denominators (e.g. 1/2 + 1/4 = 2/6 — this is FALSE!).',
       'Forgetting to borrow a whole correctly when the top fraction is smaller in subtraction.'
     ],
     workedExample: {
-      problem: 'Solve: 5 1/6 - 2 3/4',
+      problem: 'Solve: 5 1/3 - 2 5/6',
       steps: [
-        '1. Find common denominator for 6 and 4: LCM is 12.',
-        '2. Convert fractions: 1/6 = 2/12; 3/4 = 9/12. Expression is: 5 2/12 - 2 9/12.',
-        '3. Since 2/12 < 9/12, borrow 1 whole from 5: 5 2/12 = 4 + 12/12 + 2/12 = 4 14/12.',
+        '1. 6 is a multiple of 3, so the common denominator is 6.',
+        '2. Convert: 1/3 = 2/6. The expression is: 5 2/6 - 2 5/6.',
+        '3. Since 2/6 < 5/6, borrow 1 whole from 5: 5 2/6 = 4 + 6/6 + 2/6 = 4 8/6.',
         '4. Subtract whole numbers: 4 - 2 = 2.',
-        '5. Subtract fractions: 14/12 - 9/12 = 5/12.',
-        '6. Combine: 2 5/12.'
+        '5. Subtract fractions: 8/6 - 5/6 = 3/6 = 1/2.',
+        '6. Combine: 2 1/2.'
       ],
-      answer: '2 5/12',
-      whyItMattersForSSA: 'Fractions make up ~41% of the NC Grade 5 assessment. Subtraction with regrouping is the #1 tested concept.'
+      answer: '2 1/2',
+      whyItMattersForSSA: 'Fractions are the largest domain on the NC Grade 5 blueprint (39–43% of the test), and regrouping in mixed-number subtraction is a step worth practising on its own.'
     }
   },
 
