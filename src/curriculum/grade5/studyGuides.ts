@@ -126,7 +126,7 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
         '4. Hundredths digit: 0 vs 9. Since 9 > 0, 0.590 is greater than 0.509.'
       ],
       answer: '0.509 < 0.59',
-      whyItMattersForSSA: 'Decimals to thousandths are heavily assessed; precision in decimal place names is critical.'
+      whyItMattersForSSA: 'Decimal place names decide which digit is worth more, so one slip in a name changes every comparison that follows.'
     }
   },
 
@@ -159,7 +159,7 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
         '4. Add partial products: 3,416 + 12,810 = 16,226.'
       ],
       answer: '16,226',
-      whyItMattersForSSA: 'Calculator-inactive section requires speed and 100% computational accuracy without a calculator.'
+      whyItMattersForSSA: 'Grade 5 asks for fluent multi-digit multiplication by hand, so each partial product has to be right.'
     }
   },
 
@@ -191,7 +191,7 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
         '4. 42 - 42 = 0. Quotient = 203.'
       ],
       answer: '203',
-      whyItMattersForSSA: 'Forgetting the zero in the quotient (writing 23 instead of 203) is one of the single most common student mistakes on CASE assessments.'
+      whyItMattersForSSA: 'A missing zero in the quotient (writing 23 instead of 203) changes the answer, so check by multiplying the quotient by the divisor.'
     }
   },
 
@@ -284,7 +284,7 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
         '4. As a fraction: 4/7 bag of beads.'
       ],
       answer: '4/7 bag of beads',
-      whyItMattersForSSA: 'CASE tests will try to trick students into picking 7/4 = 1 3/4 by reversing the scenario.'
+      whyItMattersForSSA: 'Reversing the numbers (7/4 instead of 4/7) would give each student more than one whole bag, which cannot happen when 4 bags are shared by 7 students.'
     }
   },
 
@@ -347,7 +347,7 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
         '4. Each helper gets 1/4 of the 1/3: (1/3) × (1/4) = 1/12 of the pan.'
       ],
       answer: '1/12 of the pan',
-      whyItMattersForSSA: 'High-frequency question on NC assessments; word problems test conceptual reasoning.'
+      whyItMattersForSSA: 'Deciding whether the answer should be larger or smaller than the starting amount before dividing catches a reversed answer.'
     }
   },
 
@@ -438,7 +438,7 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
         '3. Total volume = 24 × 5 = 120 cubic units.'
       ],
       answer: '120 cubic units',
-      whyItMattersForSSA: 'Builds the conceptual foundation for the volume formula tested on CASE.'
+      whyItMattersForSSA: 'Counting layers of cubes is the idea behind the volume formula V = B × h.'
     }
   },
 
@@ -469,7 +469,7 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
         '3. Add the non-overlapping volumes: 96 + 120 = 216 cubic feet.'
       ],
       answer: '216 cubic feet',
-      whyItMattersForSSA: 'Composite figures are among the highest-discriminating items on the SSA math test.'
+      whyItMattersForSSA: 'The standard asks students to find the volume of a solid built from two non-overlapping rectangular prisms by adding the two volumes.'
     }
   },
 
@@ -539,7 +539,7 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
         '4. Therefore, not every rhombus is a square (False).'
       ],
       answer: 'False. A rhombus only needs 4 equal sides; it does not require right angles.',
-      whyItMattersForSSA: 'CASE questions love logic tests: "All squares are rectangles, but not all rectangles are squares."'
+      whyItMattersForSSA: 'Deciding whether a statement about shapes is always true, sometimes true, or never true is the core skill of the hierarchy: all squares are rectangles, but not all rectangles are squares.'
     }
   }
 };

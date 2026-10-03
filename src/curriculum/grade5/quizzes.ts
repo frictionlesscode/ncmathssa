@@ -85,7 +85,7 @@ export const GRADE_5_QUIZZES: QuizDefinition[] = [
   {
     id: 'mod-md-01',
     title: 'Module 4: Measurement & Data Drill',
-    subtitle: 'Multiplicative unit conversions, fractional line plots, cubic volume, and composite 3D figures.',
+    subtitle: 'Multiplicative unit conversions, line graphs, cubic volume, and composite 3D figures.',
     domainId: 'MD',
     timeLimitMinutes: 30,
     questionIds: [

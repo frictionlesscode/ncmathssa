@@ -1443,28 +1443,30 @@ export const GRADE_5_AUTHORED: Question[] = [
     id: 'g3-03',
     standardCode: 'NC.5.G.3',
     domainId: 'G',
-    prompt: 'A four-sided polygon has diagonals that are perpendicular and bisect each other, and all 4 of its sides are equal in length (12 cm), but none of its interior angles are 90°. What is the most specific geometric name for this polygon?',
+    prompt: 'A quadrilateral has 4 sides that are all equal in length (12 cm) and 2 pairs of parallel sides, but none of its angles are right angles. What is the most specific name for this quadrilateral?',
     options: labelOptions([
-      // Used the 4 equal sides and ignored the stated "no 90° angles" condition.
+      // Used the 4 equal sides and ignored the stated "no right angles" condition.
       { text: 'Square', isCorrect: false, misconception: 'ignored-a-constraint' },
+      // Key: a parallelogram with 4 equal sides is a rhombus, and there are no right angles.
       { text: 'Rhombus', isCorrect: true },
       // A true category for this figure, but not the most specific one.
       { text: 'Parallelogram', isCorrect: false, misconception: 'named-a-broader-category' },
-      // Classified from the perpendicular diagonals alone.
-      { text: 'Kite', isCorrect: false, misconception: 'classified-by-one-property-only' },
+      // Classified from the two pairs of parallel sides alone.
+      { text: 'Rectangle', isCorrect: false, misconception: 'classified-by-one-property-only' },
     ]),
     calculatorAllowed: false,
-    isStretch: true,
-    difficulty: 'stretch',
+    isStretch: false,
+    difficulty: 'advanced',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: 4 sides = quadrilateral.',
-        'Step 2: 4 equal sides = rhombus (or square).',
-        'Step 3: Since none of the angles are 90 degrees, it cannot be a square or rectangle.',
-        'Step 4: The most specific classification is a rhombus.'
+        'Step 1: 4 sides means the figure is a quadrilateral.',
+        'Step 2: 2 pairs of parallel sides means it is a parallelogram.',
+        'Step 3: 4 equal sides makes the parallelogram a rhombus.',
+        'Step 4: A square or a rectangle needs 4 right angles, and none of the angles here are right angles, so the most specific name is rhombus.'
       ],
-      conceptSummary: 'Classifying quadrilaterals by specific property constraints (equal sides without right angles).',
-      commonMisconception: 'Calling it a parallelogram or quadrilateral (correct categories, but not the MOST SPECIFIC name).'
+      conceptSummary: 'Classify a quadrilateral by its sides and angles: every rhombus is a parallelogram, and a rhombus with 4 right angles is a square.',
+      commonMisconception: 'Naming a broader category (parallelogram) or a shape whose required right angles the figure does not have (square, rectangle).'
     }
   }
 ];
