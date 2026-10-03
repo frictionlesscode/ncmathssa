@@ -90,12 +90,13 @@ describe('GRADE_5_AUTHORED', () => {
     }
   });
 
-  // Ruling F9: the baseline diagnostic must assess all 17 standards.
-  it('the baseline diagnostic covers every standard exactly once', () => {
+  // Ruling F9: the baseline diagnostic must assess all 17 standards. Plan B2 adds
+  // extra fraction items so the form reaches the blueprint, so each standard is
+  // covered at least once rather than exactly once.
+  it('the baseline diagnostic covers every standard at least once', () => {
     const diagnostic = GRADE_5_QUIZZES.find((q) => q.id === 'diagnostic-01')!;
     const byId = new Map(GRADE_5_AUTHORED.map((q) => [q.id, q]));
-    const covered = diagnostic.questionIds.map((id) => byId.get(id)!.standardCode);
-    expect(new Set(covered).size).toBe(codes.size);
-    expect(covered).toHaveLength(codes.size);
+    const covered = new Set(diagnostic.questionIds.map((id) => byId.get(id)!.standardCode));
+    expect(covered.size).toBe(codes.size);
   });
 });
