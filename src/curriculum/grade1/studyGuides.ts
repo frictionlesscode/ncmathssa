@@ -38,7 +38,7 @@ import type { StudyGuideSection } from '../../types';
  *     it is written down - crossing a ten, crossing a hundred, equal
  *     numbers, zero - so nothing here is a rule that is only true most of
  *     the time (e.g. "10 more only changes the tens digit" is stated with
- *     its own exception, the crossing into a new hundred, spelled out
+ *     its own edge case, 10 less from a number in the teens, spelled out
  *     rather than silently true "usually").
  */
 export const GRADE_1_STUDY_GUIDES: Record<string, StudyGuideSection> = {
@@ -483,7 +483,7 @@ export const GRADE_1_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       ],
       answer: '20',
       whyItMattersForSSA:
-        'Number & Operations in Base Ten is 7 of the 23 Grade 1 standards, and trading 10 ones for a new ten here is the same trade the mental "10 more" standard in this domain uses when a number is already at 9 tens.',
+        'Number & Operations in Base Ten is 7 of the 23 Grade 1 standards, and trading 10 ones for a new ten here builds on the same tens-and-ones thinking the mental "10 more" standard in this domain uses.',
     },
   },
 

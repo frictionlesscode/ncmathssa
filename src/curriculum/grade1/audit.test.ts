@@ -80,6 +80,10 @@ describe('content-g1 audit: study guides', () => {
     expect(guide('NC.1.NBT.5')).not.toMatch(/104|new hundred|new, brand-new hundred/i);
   });
 
+  it('Medium NBT.4: the guide no longer points at a 9-tens-to-hundred trade', () => {
+    expect(guide('NC.1.NBT.4')).not.toMatch(/9 tens|new hundred|hundred trade/i);
+  });
+
   it('Low MD.3: a digital clock has no hour hand', () => {
     expect(guide('NC.1.MD.3')).not.toMatch(/or a digital one/);
   });
