@@ -100,8 +100,8 @@ export const md2TwoUnits: QuestionTemplate = {
     // Lowercase, period-free clause, for folding the hint into one question
     // sentence below (Fix 1, whole-branch review, Important).
     const hintClause = hintFromShorter
-      ? `${S.singular} is shorter than ${L.article.toLowerCase()} ${L.singular}`
-      : `${L.singular} is longer than ${S.article.toLowerCase()} ${S.singular}`;
+      ? `${S.article.toLowerCase()} ${S.singular} is shorter than ${L.article.toLowerCase()} ${L.singular}`
+      : `${L.article.toLowerCase()} ${L.singular} is longer than ${S.article.toLowerCase()} ${S.singular}`;
 
     const answerText = `${name} counts more ${S.plural} than ${L.plural}.`;
 
@@ -141,7 +141,7 @@ export const md2TwoUnits: QuestionTemplate = {
     // sentence the `templates/index.test.ts` sentinel pins
     // ("Name measures the same object two times.") untouched.
     return {
-      prompt: `${name} measures the same ${object} two times. First ${pronoun} measures it in ${first.plural}, then in ${second.plural}. Since ${hintClause}, which sentence is true?`,
+      prompt: `${name} measures the same ${object} two times. First ${pronoun} uses ${first.plural}, then ${second.plural}. Since ${hintClause}, which sentence is true?`,
       options: labelOptions(rng.shuffle(candidates)),
       answerText,
       explanation: {

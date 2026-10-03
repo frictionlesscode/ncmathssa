@@ -117,7 +117,7 @@ export const nbt2SkipCount: QuestionTemplate = {
           ? crossesHundred
             ? 'The tens digit counts up until it passes 9, and then it rolls over into a new hundred — the hundreds digit goes up by one while the ones digit rides along unchanged.'
             : 'Only the tens digit changes across these three counts; the ones digit rides along unchanged.'
-          : 'Every number counted by 5s from here ends in the same two digits, over and over.';
+          : 'Every number counted by 5s ends in a 0 or a 5.';
 
     return {
       prompt: 'Skip-count. What are the next three numbers?',

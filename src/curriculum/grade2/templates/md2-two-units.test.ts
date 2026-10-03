@@ -9,9 +9,9 @@ const shape = (g: {
 }) => g.options.map((o) => [o.label, o.text, o.isCorrect, o.misconception ?? null]);
 
 /** The pair of units an emitted prompt measures in, found from the two
- *  "measures it in X" sentences. */
+ *  "First she uses X, then Y." sentences. */
 function unitsOf(prompt: string): { first: string; second: string } {
-  const m = /First \w+ measures it in (\w+), then in (\w+)\./.exec(prompt);
+  const m = /First \w+ uses (\w+), then (\w+)\./.exec(prompt);
   if (!m) throw new Error(`unparsable prompt: ${prompt}`);
   return { first: m[1], second: m[2] };
 }
@@ -39,7 +39,7 @@ describe('g2.md2.two-units', () => {
   it('emits exactly this question at seed 7', () => {
     const g = md2TwoUnits.generate(makeRng(7));
     expect(g.prompt).toBe(
-      'Rosa measures the same rug two times. First she measures it in centimeters, then in inches. Since centimeter is shorter than an inch, which sentence is true?',
+      'Rosa measures the same rug two times. First she uses centimeters, then inches. Since a centimeter is shorter than an inch, which sentence is true?',
     );
     expect(g.promptDetails).toBe(undefined);
     expect(g.answerText).toBe('Rosa counts more centimeters than inches.');
@@ -72,7 +72,7 @@ describe('g2.md2.two-units', () => {
   it('emits exactly this question at seed 123', () => {
     const g = md2TwoUnits.generate(makeRng(123));
     expect(g.prompt).toBe(
-      'Nia measures the same rug two times. First she measures it in yards, then in feet. Since yard is longer than a foot, which sentence is true?',
+      'Nia measures the same rug two times. First she uses yards, then feet. Since a yard is longer than a foot, which sentence is true?',
     );
     expect(g.answerText).toBe('Nia counts more feet than yards.');
     expect(shape(g)).toEqual([
@@ -94,6 +94,18 @@ describe('g2.md2.two-units', () => {
     expect(g.explanation.stepByStep[3]).toBe(
       'Step 4: So the true sentence is: Nia counts more feet than yards.',
     );
+  });
+
+  // content-g2 audit (Medium): the hint read "Since foot is longer than an
+  // inch" in every question, with no article on the first noun.
+  it('F: the hint clause has an article on both nouns, at every seed', () => {
+    for (let seed = 0; seed < 600; seed++) {
+      const { prompt } = md2TwoUnits.generate(makeRng(seed));
+      expect(prompt, `seed ${seed}`).toMatch(
+        /Since (?:a|an) [a-z]+ is (?:shorter|longer) than (?:a|an) [a-z]+, which sentence is true\?$/,
+      );
+      expect(prompt.length, `seed ${seed}: ${prompt.length} characters`).toBeLessThanOrEqual(160);
+    }
   });
 
   // Ruling 19-2: NC.2.MD.2 is measuring one object with TWO different units

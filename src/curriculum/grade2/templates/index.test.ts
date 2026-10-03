@@ -86,7 +86,7 @@ describe('GRADE_2_TEMPLATES', () => {
     const sentinels: Record<string, RegExp> = {
       'g2.oa1.change-unknown': /^[A-Z][a-z]+ had \d+ [\w ]+\. [A-Z][a-z]+ (?:gave away|lost|traded away) some of them\./,
       'g2.oa2.fluency-fact': /^What is \d+ [+−] \d+\?$/,
-      'g2.oa3.odd-or-even': /^Which of these numbers is (?:EVEN|ODD)\?$/,
+      'g2.oa3.odd-or-even': /^[A-Z][a-z]+ has \d+ [a-z]+\. [A-Z][a-z]+ puts them into pairs\. Which sentence is true\?$/,
       'g2.oa4.array-repeated-addition': /^The \w+ below are arranged in equal rows\./,
       'g2.nbt1.various-groupings': /^Trade one hundred for ten tens\. Which grouping shows the same number\?$/,
       'g2.nbt2.skip-count': /^Skip-count\. What are the next three numbers\?$/,

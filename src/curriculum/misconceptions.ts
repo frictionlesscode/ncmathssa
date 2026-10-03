@@ -1496,6 +1496,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Wrote two equal addends that are each right as a sum, but the total is not the number the question asked about.',
     ),
     entry(
+      'swapped-the-words-odd-and-even',
+      'incomplete-procedure',
+      'Paired the objects correctly but then named the result with the wrong word: called a group with none left over odd, or a group with one left over even.',
+    ),
+    entry(
       'judged-the-total-by-the-count-of-pairs',
       'incomplete-procedure',
       "Decided odd or even from whether the number of PAIRS is odd or even, instead of from whether any object is left without a partner.",

@@ -18,6 +18,22 @@ function parse(details: string | undefined): { start: number; step: number } {
 const numbersIn = (text: string) => text.split(', ').map(Number);
 
 describe('g2.nbt2.skip-count', () => {
+  // content-g2 audit (High): "Every number counted by 5s ... ends in the same two
+  // digits" was false in 33,307 of 100,000 instances.
+  it('High: counting by 5s alternates 0 and 5, and the explanation says so at every seed', () => {
+    let fives = 0;
+    for (let seed = 0; seed < 600; seed++) {
+      const g = nbt2SkipCount.generate(makeRng(seed));
+      const text = g.explanation.stepByStep.join(' ');
+      expect(text, `seed ${seed}`).not.toMatch(/same two digits/i);
+      if (/count by 5s/.test(g.promptDetails ?? '')) {
+        fives += 1;
+        expect(text, `seed ${seed}`).toContain('ends in a 0 or a 5');
+      }
+    }
+    expect(fives).toBeGreaterThan(50);
+  });
+
   it('is sound at every seed', () => {
     assertTemplateSound(nbt2SkipCount);
   });
