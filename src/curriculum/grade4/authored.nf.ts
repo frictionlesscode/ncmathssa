@@ -783,30 +783,32 @@ export const GRADE_4_NF_AUTHORED: Question[] = [
     id: 'g4-nf4-02',
     standardCode: 'NC.4.NF.4',
     domainId: 'NF',
-    prompt: 'Priya works out 3 × 2/7 and writes 6/21. What went wrong, and what is the product?',
+    // NC-R12a: Grade 4 denominators are 2, 3, 4, 5, 6, 8, 10, 12 and 100, so
+    // sevenths are out. 2 × 3/4 = 6/4; Priya's 6/8 is 3/4, the same amount.
+    prompt: 'Priya works out 2 × 3/4 and writes 6/8. What went wrong, and what is the product?',
     options: labelOptions([
       {
-        text: 'She multiplied the denominator by 3 as well; the product is 6/7.',
+        text: 'She multiplied the denominator by 2 as well; the product is 6/4.',
         isCorrect: true,
       },
-      // Accepts 6/21, which is 3 × 2 over 3 × 7 - and 6/21 is the same amount
-      // as 2/7, so three copies came out no bigger than one.
+      // Accepts 6/8, which is 2 × 3 over 2 × 4 - and 6/8 is the same amount
+      // as 3/4, so two copies came out no bigger than one.
       {
-        text: 'Nothing went wrong: multiplying by 3 multiplies the top and the bottom, so 6/21 is right.',
+        text: 'Nothing went wrong: multiplying by 2 multiplies the top and the bottom, so 6/8 is right.',
         isCorrect: false,
         misconception: 'multiplied-the-denominator-too',
       },
-      // 3 + 2 = 5 over 7: the whole number was added to the numerator rather
+      // 2 + 3 = 5 over 4: the whole number was added to the numerator rather
       // than multiplied through it.
       {
-        text: 'She should have added the 3 to the numerator; the product is 5/7.',
+        text: 'She should have added the 2 to the numerator; the product is 5/4.',
         isCorrect: false,
         misconception: 'added-instead-of-multiplied',
       },
-      // The 3 and the 2/7 written side by side, which is 3 + 2/7, not 3 copies
-      // of 2/7.
+      // The 2 and the 3/4 written side by side, which is 2 + 3/4, not 2 copies
+      // of 3/4.
       {
-        text: 'She should have written the 3 beside the fraction; the product is 3 2/7.',
+        text: 'She should have written the 2 beside the fraction; the product is 2 3/4.',
         isCorrect: false,
         misconception: 'wrote-the-product-as-a-mixed-number',
       },
@@ -814,15 +816,16 @@ export const GRADE_4_NF_AUTHORED: Question[] = [
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'advanced',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: 3 × 2/7 means 2/7 + 2/7 + 2/7 — three copies of two sevenths.',
-        'Step 2: Every copy is measured in sevenths, so the answer is measured in sevenths too. The denominator stays 7.',
-        'Step 3: Count the sevenths: 3 × 2 = 6, so the product is 6/7. Priya multiplied the 7 by 3 as well, which is why she got 6/21.',
-        'Step 4: She multiplied the denominator by 3 as well; the product is 6/7.',
+        'Step 1: 2 × 3/4 means 3/4 + 3/4 — two copies of three fourths.',
+        'Step 2: Every copy is measured in fourths, so the answer is measured in fourths too. The denominator stays 4.',
+        'Step 3: Count the fourths: 2 × 3 = 6, so the product is 6/4. Priya multiplied the 4 by 2 as well, which is why she got 6/8.',
+        'Step 4: She multiplied the denominator by 2 as well; the product is 6/4.',
       ],
       conceptSummary:
-        'Scaling both the numerator and the denominator is how you RENAME a fraction, not how you multiply it. 6/21 and 2/7 are the same number, which is the clearest sign the operation never happened.',
+        'Scaling both the numerator and the denominator is how you RENAME a fraction, not how you multiply it. 6/8 and 3/4 are the same number, which is the clearest sign the operation never happened.',
       commonMisconception:
         'The rule "do the same thing to the top and the bottom" belongs to equivalent fractions. Applied to multiplication it undoes itself, and the answer comes back unchanged.',
     },
