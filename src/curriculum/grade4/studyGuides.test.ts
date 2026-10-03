@@ -121,3 +121,28 @@ describe('grade 4 study guides', () => {
     }
   });
 });
+
+describe('grade 4 NC.4.G.2 worked example (content-g4 audit, High)', () => {
+  const guide = GRADE_4_STUDY_GUIDES['NC.4.G.2'];
+
+  // The old example gave angles 40/55/85 with sides 5/5/7: an isosceles
+  // triangle has two equal angles, so that triangle cannot exist.
+  it('High G4 G.2: the triangle it describes can exist (law of sines)', () => {
+    const p = guide.workedExample.problem;
+    const angles = /angles of (\d+), (\d+) and (\d+) degrees/.exec(p)!.slice(1).map(Number).sort((a, b) => a - b);
+    const sides = /sides of (\d+) cm, (\d+) cm and (?:about )?(\d+) cm/.exec(p)!.slice(1).map(Number).sort((a, b) => a - b);
+    expect(angles.reduce((a, b) => a + b, 0)).toBe(180);
+    // Each side over the sine of its opposite angle is one constant; the
+    // smallest side faces the smallest angle. 5% allows for "about".
+    const ratio = angles.map((deg, i) => sides[i] / Math.sin((deg * Math.PI) / 180));
+    for (const r of ratio) expect(Math.abs(r / ratio[0] - 1), `ratios ${ratio.join(', ')}`).toBeLessThan(0.05);
+  });
+
+  it('G4 G.2: NC-R2 teaches the exclusive trapezoid definition everywhere', () => {
+    const text = JSON.stringify(guide);
+    expect(text).not.toMatch(/at least one pair of parallel sides - which/i);
+    expect(text).not.toMatch(/inclusive definition, which makes/i);
+    expect(text).not.toMatch(/NC inclusive/i);
+    expect(guide.rulesAndFormulas.find((r) => /trapezoid/i.test(r.label))!.detail).toMatch(/exactly one pair/i);
+  });
+});

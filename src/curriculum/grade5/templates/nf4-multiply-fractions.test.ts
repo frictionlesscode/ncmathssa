@@ -35,16 +35,19 @@ describe('nf4MultiplyFractions', () => {
     expect(a).toEqual(b);
   });
 
-  it('multiplies two proper fractions with grade 5 denominators', () => {
-    // NC.5.NF.4 keeps grade 5 to friendly denominators, and both factors
-    // must be proper so the product is smaller than either one — the idea
-    // the standard is really about.
-    const allowed = new Set([2, 3, 4, 5, 6, 8]);
-    for (let seed = 0; seed < 300; seed++) {
+  it('nf4 template: NC-R7 multiplies two proper fractions with denominators 2, 3 and 4 only', () => {
+    // NC.5.NF.4: "Use area and length models to multiply two fractions, with
+    // the denominators 2, 3, 4." Both factors stay proper so the product is
+    // smaller than either one, the idea the standard is really about.
+    const allowed = new Set([2, 3, 4]);
+    const seen = new Set<number>();
+    for (let seed = 0; seed < 500; seed++) {
       const g = nf4MultiplyFractions.generate(makeRng(seed));
       const { n1, d1, n2, d2 } = parse(g.promptDetails ?? '');
       expect(allowed.has(d1), `seed ${seed}: d1 = ${d1}`).toBe(true);
       expect(allowed.has(d2), `seed ${seed}: d2 = ${d2}`).toBe(true);
+      seen.add(d1);
+      seen.add(d2);
       expect(n1).toBeGreaterThanOrEqual(1);
       expect(n1).toBeLessThan(d1);
       expect(n2).toBeGreaterThanOrEqual(1);
@@ -53,6 +56,7 @@ describe('nf4MultiplyFractions', () => {
       // coincide; those draws must never be reachable.
       expect((n1 + n2) * d1 * n2, `seed ${seed}`).not.toBe((d1 + d2) * n1 * d2);
     }
+    expect([...seen].sort()).toEqual([2, 3, 4]);
   });
 
   describe('every distractor value matches the error its tag names', () => {

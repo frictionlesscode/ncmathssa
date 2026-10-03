@@ -343,7 +343,7 @@ export const GRADE_2_G_AUTHORED: Question[] = [
       'Two identical square pizzas: Pizza 1 is cut into 2 matching rectangles, Pizza 2 corner to corner into 2 matching triangles. Are both cut into equal halves?',
     options: labelOptions([
       {
-        text: 'Yes, because each half is the same size, even though the two pizzas were cut into different shapes.',
+        text: 'Yes, because each half is the same size, even if the shapes differ.',
         isCorrect: true,
       },
       // Assumed equal shares from identical wholes must look alike.
@@ -368,12 +368,13 @@ export const GRADE_2_G_AUTHORED: Question[] = [
     calculatorAllowed: false,
     isStretch: true,
     difficulty: 'stretch',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
         'Step 1: Both pizzas start out identical, and each is cut into exactly 2 pieces.',
         'Step 2: Pizza 1\'s straight cut makes 2 same-size rectangles; Pizza 2\'s corner-to-corner cut makes 2 same-size triangles.',
         'Step 3: In both pizzas, the two pieces from one pizza match each other in size, even though a rectangle and a triangle do not look alike.',
-        'Step 4: Yes, because each half is the same size, even though the two pizzas were cut into different shapes.',
+        'Step 4: Yes, because each half is the same size, even if the shapes differ.',
       ],
       conceptSummary:
         'Equal shares of the same whole do not have to look like each other, and equal shares of two identical wholes do not have to be cut the same way. What makes a share a half is being one of two equal-size pieces — not matching a particular shape.',

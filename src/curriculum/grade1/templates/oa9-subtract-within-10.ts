@@ -98,7 +98,10 @@ export const oa9SubtractWithin10: QuestionTemplate = {
         ],
         conceptSummary:
           'Every take-away fact within 10 has an adding fact that undoes it, so knowing 3 + 4 = 7 means knowing 7 − 4 = 3. Facts within 10 are worth knowing by heart.',
-        commonMisconception: `Counting back from ${a} and saying ${a} as the first count lands on ${diff + 1}. The first number to say is ${a - 1}.`,
+        commonMisconception:
+          slip === 'hop'
+            ? `Counting back from ${a} and saying ${a} as the first count lands on ${diff + 1}. The first number to say is ${a - 1}.`
+            : `Counting back one time too many from ${a} lands on ${diff - 1}. Stop after ${b} ${b === 1 ? 'count' : 'counts'} back, at ${diff}.`,
       },
     };
   },

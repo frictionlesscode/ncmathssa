@@ -159,7 +159,7 @@ export const nf1EquivalentFraction: QuestionTemplate = {
       explanation: {
         stepByStep: [
           `Step 1: Find how the parts change size: ${D} / ${b} = ${k}, so each of the ${b} parts splits into ${k} smaller parts.`,
-          `Step 2: Splitting every part into ${k} also splits each of the ${a} shaded parts into ${k}: ${a} x ${k} = ${a * k}.`,
+          `Step 2: Splitting every part into ${k} also splits each of the ${a} parts being counted into ${k}: ${a} x ${k} = ${a * k}.`,
           `Step 3: Both the numerator and the denominator were multiplied by ${k}, which is the factor ${k}/${k} — one whole — so the amount did not change.`,
           `Step 4: ${a}/${b} = ${answer}.`,
         ],

@@ -17,7 +17,7 @@ import type { QuizAttempt, QuizDefinition } from './types';
 import { parseQuestionRef } from './engine/questionModel';
 import { buildPath, type NextStep, type Round } from './engine/path';
 import { sessionForStep } from './engine/pathSession';
-import { sessionFromQuiz, sessionSizeOf, type ActiveSession } from './engine/activeSession';
+import { sessionFromQuiz, sessionSizeOf, stampContentVersions, type ActiveSession } from './engine/activeSession';
 import { createStandardDrill } from './engine/drills';
 import { standardsOf } from './curriculum/registry';
 
@@ -54,7 +54,7 @@ const MainApp: React.FC = () => {
     }
     setNotice(null);
     if (profile.activeSession && !window.confirm('A session is already in progress. Throw it away and start this one?')) return;
-    updateActiveProfile({ activeSession: s });
+    updateActiveProfile({ activeSession: stampContentVersions(s, curriculum) });
     setScreen({ kind: 'session' });
   };
 

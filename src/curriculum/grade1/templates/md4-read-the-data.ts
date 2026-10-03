@@ -41,6 +41,9 @@ import { labelOptions } from '../../../engine/questionModel';
  */
 export type DataTriple = readonly [number, number, number];
 
+/** "apples" -> "Apples": a sentence never starts in lowercase. */
+const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
 export const ALL_DATA_DRAWS: DataTriple[] = [];
 for (let a = 1; a <= 9; a++) {
   for (let b = a + 1; b <= 9; b++) {
@@ -137,12 +140,12 @@ export const md4ReadTheData: QuestionTemplate = {
           stepByStep: [
             `Step 1: Find ${target.name} on the graph.`,
             `Step 2: ${target.count} students picked ${target.name}.`,
-            `Step 3: ${others[0].name} and ${others[1].name} are different categories, not this one.`,
+            `Step 3: ${capitalize(others[0].name)} and ${others[1].name} are different categories, not this one.`,
             `Step 4: ${target.count} students picked ${target.name}.`,
           ],
           conceptSummary:
             'Each category on a graph has its own count. Answering a question about one category means reading that category\'s own row, not another one.',
-          commonMisconception: `Reading ${others[0].name}'s count instead answers about the wrong category.`,
+          commonMisconception: `Reading the count for ${others[0].name} instead answers about the wrong category.`,
         },
       };
     }

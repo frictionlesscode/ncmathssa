@@ -106,9 +106,16 @@ describe('g1.oa9.subtract-within-10', () => {
         `Step 2: Count on from ${b} to ${a}: ${counts.join(', ')}. That is ${diff} ${diff === 1 ? 'count' : 'counts'}.`,
         `Step 3: ${a} − ${b} = ${diff}.`,
       ]);
-      expect(g.explanation.commonMisconception).toBe(
-        `Counting back from ${a} and saying ${a} as the first count lands on ${diff + 1}. The first number to say is ${a - 1}.`,
+      // Audit (Medium): oa9.subtract seed 1, "3 - 2", said "lands on 2" while
+      // 2 was not an option. The named number must be on offer at every seed.
+      const hop = byTag(g, 'counted-the-start-number-as-a-hop');
+      expect(g.explanation.commonMisconception, `seed ${seed}`).toBe(
+        hop
+          ? `Counting back from ${a} and saying ${a} as the first count lands on ${diff + 1}. The first number to say is ${a - 1}.`
+          : `Counting back one time too many from ${a} lands on ${diff - 1}. Stop after ${b} ${b === 1 ? 'count' : 'counts'} back, at ${diff}.`,
       );
+      const named = Number(/lands on (\d+)/.exec(g.explanation.commonMisconception!)![1]);
+      expect(g.options.map((o) => Number(o.text)), `seed ${seed}: names ${named}`).toContain(named);
     }
   });
 

@@ -21,6 +21,36 @@ const renderResults = (a: QuizAttempt) => render(
   </ProgressProvider>,
 );
 
+describe('QuizResults after a question was rewritten', () => {
+  beforeEach(() => localStorage.clear());
+  const answered = (contentVersion?: number): QuizAttempt => ({
+    ...attemptFor('drill-g', 1, 1),
+    answers: {
+      'g3-02': {
+        questionId: 'g3-02', studentAnswer: 'A', isCorrect: contentVersion === undefined, standardCode: 'NC.5.G.3',
+        ...(contentVersion === undefined ? {} : { contentVersion }),
+      },
+    },
+  });
+  const marked = (c: HTMLElement) => ({
+    correct: c.querySelectorAll('.border-emerald-300').length,
+    wrong: c.querySelectorAll('.border-rose-300').length,
+  });
+
+  it('a legacy answer to g3-02 shows the note and marks no current option', () => {
+    const { container } = renderResults(answered());
+    expect(screen.getByText(/this question was updated after it was answered/i)).toBeInTheDocument();
+    expect(container.textContent).toMatch(/You chose A and it was marked correct at the time/);
+    expect(marked(container)).toEqual({ correct: 0, wrong: 0 });
+  });
+
+  it('a current-version answer renders as before', () => {
+    const { container } = renderResults(answered(2));
+    expect(screen.queryByText(/updated after it was answered/i)).toBeNull();
+    expect(marked(container)).toEqual({ correct: 1, wrong: 1 });
+  });
+});
+
 describe('QuizResults SSA claims (F10)', () => {
   beforeEach(() => { localStorage.clear(); vi.mocked(confetti).mockClear(); });
 

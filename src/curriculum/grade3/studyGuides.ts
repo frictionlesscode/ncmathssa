@@ -73,7 +73,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     standardCode: 'NC.3.OA.2',
     title: 'Division Means Sharing into Equal Groups',
     coreConcept:
-      'Division splits a total into equal groups. The total always goes first. The other number tells you one of two things - either how many groups to make, or how many to put in each group - and the answer tells you the one you were not told. In Grade 3 the divisor and the answer are both single digits, 10 or less.',
+      'Division splits a total into equal groups. The total always goes first. The other number tells you one of two things - either how many groups to make, or how many to put in each group - and the answer tells you the one you were not told. In Grade 3 the divisor and the answer are both 10 or less.',
     rulesAndFormulas: [
       { label: 'Total ÷ number of groups = size of each group', detail: '42 stickers shared fairly between 6 friends is 42 ÷ 6 = 7 stickers each. As a multiplication that is 6 × 7 = 42: 6 groups of 7.' },
       { label: 'Total ÷ size of each group = number of groups', detail: '42 stickers packed 6 to a bag is 42 ÷ 6 = 7 bags. As a multiplication that is 7 × 6 = 42: 7 groups of 6.' },
@@ -105,7 +105,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       ],
       answer: '7 stickers each',
       whyItMattersForSSA:
-        'Division questions are all through the 32–36% Operations and Algebraic Thinking band on the Grade 3 EOG, and knowing which number counts the groups is what separates a right answer from one of the two numbers the question already gave you.',
+        'Division is part of the 32–36% Operations and Algebraic Thinking band on the Grade 3 EOG, and knowing which number counts the groups is what separates a right answer from one of the two numbers the question already gave you.',
     },
   },
 
@@ -147,7 +147,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       ],
       answer: '63 fish',
       whyItMattersForSSA:
-        'Most of the 32–36% Operations and Algebraic Thinking band on the Grade 3 EOG is word problems rather than bare facts, so reading a story and choosing the operation is worth more marks than any single times table.',
+        'Word problems are part of the 32–36% Operations and Algebraic Thinking band on the Grade 3 EOG, so reading a story and choosing the operation matters as much as knowing any single times table.',
     },
   },
 
@@ -187,7 +187,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       ],
       answer: '7',
       whyItMattersForSSA:
-        'Unknown-factor equations show up right across the 32–36% Operations and Algebraic Thinking band on the Grade 3 EOG, and the same move - swapping a multiplication for a division - is how every division fact you will ever meet gets checked.',
+        'Unknown-factor equations belong to the 32–36% Operations and Algebraic Thinking band on the Grade 3 EOG, and the same move - swapping a multiplication for a division - is how every division fact you will ever meet gets checked.',
     },
   },
 
@@ -227,7 +227,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       ],
       answer: '36',
       whyItMattersForSSA:
-        'Fluency sits inside the 32–36% Operations and Algebraic Thinking band on the Grade 3 EOG, and it quietly decides the rest of the paper too - area, perimeter and fraction questions all stall if a times table has to be rebuilt from scratch each time.',
+        'Fluency sits inside the 32–36% Operations and Algebraic Thinking band on the Grade 3 EOG, and area, perimeter and fraction work all go more smoothly when a times table does not have to be rebuilt from scratch each time.',
     },
   },
 
@@ -269,7 +269,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       ],
       answer: '37 markers',
       whyItMattersForSSA:
-        'Two-step problems are the hardest questions in the 32–36% Operations and Algebraic Thinking band on the Grade 3 EOG, because a child can do both calculations perfectly and still lose the mark by answering the middle question instead of the real one.',
+        'Two-step problems belong to the 32–36% Operations and Algebraic Thinking band on the Grade 3 EOG, and a child can do both calculations perfectly and still lose the mark by answering the middle question instead of the real one.',
     },
   },
 
@@ -295,7 +295,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     commonTraps: [
       'Turning the statement round. "Every number in the row for 4 is even" is true, but "every even number is in the row for 4" is false - 6 is even and never appears in that row.',
       'Writing 44 as the last number in the row. The table stops at 10 × 4 = 40; counting 44 means counting eleven fours, which happens when the first number in the row is counted as a jump instead of as the first stop.',
-      'Spotting without interpreting. "They all end in 4, 8, 2, 6, 0" is a real pattern, but the standard asks why - because each step adds 4 more, and after ten steps the ones digits start over.',
+      'Spotting without interpreting. "They all end in 4, 8, 2, 6, 0" is a real pattern, but the standard asks why - because each step adds 4 more, and after five steps the ones digits start over.',
       'Trusting a pattern after one example. Two numbers in a row can agree by accident; check at least three, and check one that should fail.',
     ],
     workedExample: {
@@ -309,7 +309,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       ],
       answer: 'Every number in the row is even, because each step adds another even group of 4 - but the reverse is false, since 6 is even and is not in the row.',
       whyItMattersForSSA:
-        'Pattern questions inside the 32–36% Operations and Algebraic Thinking band on the Grade 3 EOG almost always ask for the reason, not the pattern, so a child who can only point at it will lose a mark they very nearly had.',
+        'Pattern questions belong to the 32–36% Operations and Algebraic Thinking band on the Grade 3 EOG, and the standard asks for the reason behind a pattern, so a child who can only point at it has not finished the job.',
     },
   },
 
@@ -392,7 +392,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       ],
       answer: '4/6',
       whyItMattersForSSA:
-        'Number-line fraction questions are some of the most-missed items in the 28–32% fractions band on the Grade 3 EOG, and nearly all of the misses come from counting marks instead of spaces.',
+        'Number-line fraction questions belong to the 28–32% fractions band on the Grade 3 EOG, and a common slip is counting the marks instead of the spaces.',
     },
   },
 
@@ -473,7 +473,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       ],
       answer: '3/4 > 3/8',
       whyItMattersForSSA:
-        'Comparison items appear all through the 28–32% fractions band on the Grade 3 EOG, and the "bigger bottom number means smaller pieces" idea is the single most common place a child loses a fraction mark.',
+        'Comparison is part of the 28–32% fractions band on the Grade 3 EOG, and understanding that a bigger bottom number means smaller pieces is what makes those comparisons come out right.',
     },
   },
 
@@ -518,7 +518,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       ],
       answer: '35 minutes',
       whyItMattersForSSA:
-        'Measurement and Data is weighted together with Geometry as one band worth 23–27% of the Grade 3 EOG, and time questions are on practically every form — usually asking how long something lasted rather than just what the clock says.',
+        'Measurement and Data is weighted together with Geometry as one band worth 23–27% of the Grade 3 EOG, and time questions include how long something lasted, not only what the clock says.',
     },
   },
 
@@ -546,7 +546,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       'Answering 7 inches by adding the 4 whole inches to the 3 small marks. A small mark is only a quarter of an inch, so three of them are nowhere near three inches.',
       'Answering 4 and 3/8 inches. That counts the marks as eighths when this inch is cut into only 4 parts - count the SPACES inside one inch before naming what a mark is worth.',
       'Starting the measurement at the end of the ruler instead of at the 0 mark, which makes everything come out too short.',
-      'Picking a unit that does not fit the object. A crayon is about 5 inches long; a door is taller than a person, so a door is measured in feet.',
+      'Picking a unit that does not fit the object. A pencil is about 7 inches long; a door is taller than a person, so a door is measured in feet.',
     ],
     workedExample: {
       problem: 'A crayon is lined up with 0 on a ruler. Its tip is 3 small marks past the 4-inch line, and each inch on this ruler is split into 4 equal parts. How long is the crayon?',
@@ -559,7 +559,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       ],
       answer: '4 and 3/4 inches',
       whyItMattersForSSA:
-        'Measurement and Data shares a single 23–27% band with Geometry on the Grade 3 EOG, and ruler questions are the ones children practise least, because most home practice is arithmetic on paper rather than measuring real objects.',
+        'Measurement and Data shares a single 23–27% band with Geometry on the Grade 3 EOG, and reading a ruler to the nearest half or quarter inch is part of that band.',
     },
   },
 
@@ -573,7 +573,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       { label: 'Bar graphs have a scale too', detail: 'The numbers up the side may go up in 2s, 5s or 10s. One gridline is not always one.' },
       { label: 'How many more', detail: 'Change both rows into real amounts first, then subtract. Never subtract the pictures.' },
       { label: 'Half a picture', detail: 'Half a star is half of what a whole star is worth - with a key of 6, half a star is 3 books.' },
-      { label: 'A good data question', detail: 'Collecting data means asking a question with several different answers that sort into up to four groups, such as "which of these four fruits is your favourite?"' },
+      { label: 'A good data question', detail: 'Collecting data means asking a question with several different answers that sort into up to four groups, such as "which of these four fruits is your favorite?"' },
     ],
     stepByStepMethod: [
       'Step 1: Read the title so you know what is being counted.',
@@ -599,7 +599,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       ],
       answer: 'Lin read 42 books, which is 18 more than Ravi',
       whyItMattersForSSA:
-        'Measurement and Data and Geometry share one 23–27% band on the Grade 3 EOG, and graph questions turn up in it every year — nearly every lost mark comes from counting the pictures instead of using the key.',
+        'Measurement and Data and Geometry share one 23–27% band on the Grade 3 EOG, and reading a scaled graph means using the key, not counting the pictures.',
     },
   },
 
@@ -681,7 +681,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       ],
       answer: '52 square feet',
       whyItMattersForSSA:
-        'Splitting a shape into two rectangles is the hardest thing in the 23–27% band that Measurement and Data shares with Geometry on the Grade 3 EOG, and it is the idea Grade 4 and Grade 5 build every area formula on top of.',
+        'Splitting a shape into two rectangles and adding their areas is part of the 23–27% band that Measurement and Data shares with Geometry on the Grade 3 EOG, and the area formulas of later grades build on it.',
     },
   },
 
@@ -721,7 +721,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       ],
       answer: '8 inches',
       whyItMattersForSSA:
-        'Finding a missing side is the version of perimeter the Grade 3 EOG asks about most often inside the 23–27% band that Measurement and Data shares with Geometry, because it needs both the adding and the subtracting rather than one lap round a shape.',
+        'Finding a missing side needs both adding and subtracting rather than one lap round a shape, and it sits inside the 23–27% band that Measurement and Data shares with Geometry on the Grade 3 EOG.',
     },
   },
 
@@ -732,29 +732,29 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     standardCode: 'NC.3.G.1',
     title: 'Quadrilaterals: Shapes That Have More Than One Name',
     coreConcept:
-      'A quadrilateral is any closed shape with four straight sides. The different kinds - rectangle, square, rhombus, parallelogram, trapezoid - are named by what their sides and corners do, not by how they are turned on the page. A shape can belong to more than one group at once, and having something EXTRA never throws it out of a group.',
+      'A quadrilateral is any closed shape with four straight sides. The different kinds - rectangle, square, rhombus, parallelogram, trapezoid - are named by what their sides and corners do, not by how they are turned on the page. A shape can belong to more than one group at once - a square is also a rectangle and a rhombus - but a trapezoid is a group on its own: it has exactly one pair of parallel sides.',
     rulesAndFormulas: [
       { label: 'Quadrilateral', detail: 'Four straight sides, closed up, no gaps.' },
       { label: 'Rectangle', detail: 'A quadrilateral with four square corners.' },
       { label: 'Square', detail: 'Four square corners AND four equal sides. So every square is also a rectangle.' },
       { label: 'Rhombus', detail: 'Four equal sides. A tilted rhombus is still a rhombus - turning a shape never changes its name.' },
       { label: 'Parallelogram', detail: 'Two pairs of parallel sides - sides that stay the same distance apart forever.' },
-      { label: 'Trapezoid', detail: 'In North Carolina, a quadrilateral with AT LEAST one pair of parallel sides.' },
+      { label: 'Trapezoid', detail: 'In North Carolina, a quadrilateral with EXACTLY one pair of parallel sides. A parallelogram, rectangle, rhombus or square has two pairs, so it is not a trapezoid.' },
       { label: 'Composing and decomposing', detail: 'Two triangles can be joined into a quadrilateral, and a quadrilateral can be cut into smaller shapes.' },
     ],
     stepByStepMethod: [
       'Step 1: Count the sides. Four straight sides makes it a quadrilateral.',
       'Step 2: Check the corners: are they square corners, like the corner of a book?',
       'Step 3: Check the sides: which ones are the same length, and which pairs stay the same distance apart the whole way (parallel)?',
-      'Step 4: Match what you found against the names - rectangle for four square corners, square for four square corners and four equal sides, rhombus for four equal sides, parallelogram for two pairs of parallel sides, trapezoid for at least one pair.',
-      'Step 5: Remember that more than one name can be right at once, and that the special name never cancels the general one.',
+      'Step 4: Match what you found against the names - rectangle for four square corners, square for four square corners and four equal sides, rhombus for four equal sides, parallelogram for two pairs of parallel sides, trapezoid for exactly one pair.',
+      'Step 5: Remember that more than one name can be right at once - a square is a rectangle and a rhombus - and that a special name never cancels a general one.',
     ],
     commonTraps: [
       'Calling a square "not a rectangle" because its sides are all equal. A square has everything a rectangle needs and one thing more, so every square is a rectangle.',
       'Turning it round and saying every rectangle is a square. Containment runs one way only: the more special shape belongs to the more general group, never the reverse.',
       'Expecting two squares joined along a full side to make a bigger square. Joining them doubles the length but not the height, so the new shape is a rectangle.',
       'Assuming every cut across a quadrilateral makes two triangles. A cut from corner to corner does, but a cut from the middle of one side to the middle of the opposite side leaves two four-sided shapes.',
-      'Using the "exactly one pair of parallel sides" definition of a trapezoid from another book. North Carolina uses "at least one pair", so shapes with two pairs count too.',
+      'Calling a parallelogram, rectangle, rhombus or square a trapezoid. Some books say "at least one pair of parallel sides", but North Carolina says "exactly one pair", so a shape with two pairs is not a trapezoid.',
     ],
     workedExample: {
       problem: 'Jo says a square is not a rectangle, because a square has four equal sides. Is Jo right? Then say what shape you get when two identical squares are joined along a whole side.',
@@ -767,7 +767,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       ],
       answer: 'Jo is wrong: every square is a rectangle. Two squares joined along a full side make a rectangle.',
       whyItMattersForSSA:
-        'Geometry is a single standard at Grade 3 and it is weighted together with Measurement and Data in one 23–27% band on the EOG, so quadrilateral naming carries real marks even though it takes up the least class time.',
+        'Geometry is a single standard at Grade 3 and it is weighted together with Measurement and Data in one 23–27% band on the EOG, so quadrilateral naming counts toward that band.',
     },
   },
 
@@ -827,7 +827,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       { label: 'Say the multiple of 10 as tens', detail: '50 is 5 tens, 30 is 3 tens, 90 is 9 tens.' },
       { label: 'Use the fact you know', detail: '7 × 50 becomes 7 × 5 tens, and 7 × 5 = 35.' },
       { label: 'Then write what those tens are worth', detail: '35 tens is 350, because 35 groups of ten is 3 hundreds and 5 tens.' },
-      { label: 'One zero, because one ten', detail: '50 holds a single ten, so the answer picks up a single zero at the end - never two.' },
+      { label: 'One place over, so one zero', detail: 'Multiplying by 10 moves every digit one place to the left, so the answer picks up a single zero at the end - never two.' },
       { label: 'The range at Grade 3', detail: 'Multiples of 10 from 10 to 90, with a one-digit number. The biggest one you will meet is 9 × 90 = 810.' },
     ],
     stepByStepMethod: [
@@ -840,7 +840,7 @@ export const GRADE_3_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     commonTraps: [
       'Answering 35. That is the right count of the wrong unit: 35 is how many TENS there are, not how many pencils.',
       'Answering 57 by adding 7 and 50. Seven equal groups of 50 are joined by multiplying, not by adding once.',
-      'Answering 3,500 by putting on two zeros. 50 contains only one ten, so only one zero joins the answer.',
+      'Answering 3,500 by putting on two zeros. The 5 in 50 is already used in the fact 7 × 5 = 35, and only the ten adds a place, so only one zero joins the answer.',
       'Using the fact but forgetting what changed. 7 × 5 = 35 is right, and the 5 became 5 TENS, so the answer has to grow ten times as well.',
     ],
     workedExample: {

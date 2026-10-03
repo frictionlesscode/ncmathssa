@@ -80,28 +80,33 @@ describe('grade 4 G authored bank', () => {
     }
   });
 
-  // NC uses the INCLUSIVE definition: a trapezoid has AT LEAST one pair of
-  // parallel sides, so every parallelogram is a trapezoid. The exclusive
+  // NC-R2: NC uses the EXCLUSIVE definition: a trapezoid has EXACTLY one pair
+  // of parallel sides, so no parallelogram is a trapezoid. The inclusive
   // definition may appear only inside a distractor - never in a key and never
   // in an explanation, which is where a child goes to find out what is true.
-  it('teaches only the inclusive trapezoid definition', () => {
-    const exclusive = /exactly one pair of parallel/i;
+  it('g4-g2-02: NC-R2 teaches only the exclusive trapezoid definition', () => {
+    const inclusive = /at least one pair of parallel/i;
     for (const q of GRADE_4_G_AUTHORED) {
       const taught = [
         q.prompt,
         q.promptDetails ?? '',
         ...q.options.filter((o) => o.isCorrect).map((o) => o.text),
+        ...q.explanation.stepByStep,
+        q.explanation.conceptSummary,
       ].join(' ');
-      expect(exclusive.test(taught), `${q.id} teaches the exclusive trapezoid definition`).toBe(
-        false,
-      );
-      for (const step of q.explanation.stepByStep) {
-        expect(
-          /a trapezoid (must )?ha(s|ve) exactly one pair/i.test(step),
-          `${q.id} explanation asserts the exclusive definition: "${step}"`,
-        ).toBe(false);
-      }
+      expect(inclusive.test(taught), `${q.id} teaches the inclusive trapezoid definition`).toBe(false);
     }
+  });
+
+  it('g4-g2-02: NC-R2 Riley is right, because PQRS has two pairs of parallel sides', () => {
+    const q = GRADE_4_G_AUTHORED.find((i) => i.id === 'g4-g2-02')!;
+    const key = q.options.find((o) => o.isCorrect)!;
+    expect(key.text).toMatch(/^Yes\./);
+    expect(key.text).toMatch(/exactly one pair of parallel sides/i);
+    expect(q.options.find((o) => o.misconception === 'inclusive-trapezoid-definition')!.text).toMatch(
+      /at least one pair/i,
+    );
+    expect(q.contentVersion, 'a flipped key bumps contentVersion').toBe(2);
   });
 
   // Ruling 9.2: NC.4.G.1 is "Draw and identify points, lines, line segments,

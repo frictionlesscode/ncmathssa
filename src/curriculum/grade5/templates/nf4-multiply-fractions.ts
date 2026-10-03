@@ -11,7 +11,7 @@ function simplify(n: number, d: number): string {
   return sd === 1 ? `${sn}` : `${sn}/${sd}`;
 }
 
-const DENOMINATORS = [2, 3, 4, 5, 6, 8];
+const DENOMINATORS = [2, 3, 4];
 
 interface FactorPair {
   n1: number;
@@ -21,8 +21,9 @@ interface FactorPair {
 }
 
 /**
- * Every pair of proper fractions over the grade 5 denominators whose four
- * option values are pairwise distinct.
+ * Every pair of proper fractions over the denominators NC-R7 allows for
+ * fraction × fraction (2, 3 and 4) whose four option values are pairwise
+ * distinct.
  *
  * Writing p = n1*n2/(d1*d2) for the answer, the distractors are the mediant
  * (n1+n2)/(d1+d2), the cross product (n1*d2)/(d1*n2) and the double
@@ -34,11 +35,10 @@ interface FactorPair {
  *                           while its reciprocal is above 1
  *
  * The mediant is the only value that can tie anything, and an exhaustive
- * sweep of all 484 pairs shows it ties only the cross product, for exactly
- * seven draws (1/2 x 3/4, 1/3 x 2/3, 2/4 x 6/8, 1/6 x 3/6, 2/6 x 4/6,
- * 1/8 x 2/4, 3/8 x 3/4). Those satisfy (n1+n2)*d1*n2 === (d1+d2)*n1*d2 and
- * are left out of this table, so a colliding draw is unreachable rather than
- * merely unlikely.
+ * sweep of all 36 pairs shows it ties only the cross product, for exactly
+ * two draws (1/2 x 3/4 and 1/3 x 2/3). Those satisfy
+ * (n1+n2)*d1*n2 === (d1+d2)*n1*d2 and are left out of this table, so a
+ * colliding draw is unreachable rather than merely unlikely. That leaves 34.
  */
 const FACTOR_PAIRS: FactorPair[] = DENOMINATORS.flatMap((d1) =>
   Array.from({ length: d1 - 1 }, (_, i) => i + 1).flatMap((n1) =>
@@ -57,6 +57,7 @@ export const nf4MultiplyFractions: QuestionTemplate = {
   difficulty: 'mastery',
   calculatorAllowed: false,
   isStretch: false,
+  contentVersion: 2, // the math changed at the same seed
 
   generate(rng: Rng): GeneratedQuestion {
     const { n1, d1, n2, d2 } = rng.pick(FACTOR_PAIRS);

@@ -17,6 +17,10 @@ function parse(prompt: string) {
 }
 
 describe('g1.nbt5.ten-more-or-less', () => {
+  it('bumps its content version: its draw space changed', () => {
+    expect(nbt5TenMoreOrLess.contentVersion).toBe(2);
+  });
+
   it('is sound at every seed', () => {
     assertTemplateSound(nbt5TenMoreOrLess);
   });
@@ -75,9 +79,17 @@ describe('g1.nbt5.ten-more-or-less', () => {
     }
   });
 
-  it('reaches into a new hundred for numbers in the nineties going up', () => {
-    const reachedTripleDigit = TEN_DRAWS.some((d) => d.direction === 'more' && d.n + 10 >= 100);
-    expect(reachedTripleDigit).toBe(true);
+  // content-g1 audit (Medium): "10 more than 94 = 104" needs the Grade 2 idea
+  // of trading ten tens for a hundred, and the old step "only the tens digit
+  // changes" was false there.
+  it('F: 10 more never reaches 100, so only the tens digit changes', () => {
+    expect(TEN_DRAWS.some((d) => d.direction === 'more' && d.n + 10 >= 100)).toBe(false);
+    for (let seed = 0; seed < 2000; seed++) {
+      const g = gen(seed);
+      const { direction, n } = parse(g.prompt);
+      if (direction === 'more') expect(Number(g.answerText), `seed ${seed}`).toBeLessThanOrEqual(99);
+      else expect(n, `seed ${seed}`).toBeGreaterThanOrEqual(10);
+    }
   });
 
   it('does not always put the correct answer at the same rank', () => {
@@ -91,10 +103,12 @@ describe('g1.nbt5.ten-more-or-less', () => {
   });
 
   it('has no colliding option anywhere in its draw space', () => {
-    // LITERAL: 90 numbers (10-99) x 2 directions, and none of them collide or
-    // go negative (10 less than 10 is 0, and its ones-shift distractor is 9).
+    // LITERAL: 90 numbers (10-99) x 2 directions = 180, minus the ten "10 more"
+    // draws of 90-99 that would reach 100 or more = 170. None of the 170
+    // collide or go negative (10 less than 10 is 0, and its ones-shift
+    // distractor is 9).
     expect(ALL_TEN_DRAWS.length).toBe(180);
-    expect(TEN_DRAWS.length).toBe(ALL_TEN_DRAWS.length);
+    expect(TEN_DRAWS.length).toBe(170);
     for (let seed = 0; seed < 3000; seed++) {
       const g = gen(seed);
       expect(new Set(g.options.map((o) => o.text)).size, `seed ${seed}`).toBe(4);
@@ -105,15 +119,15 @@ describe('g1.nbt5.ten-more-or-less', () => {
   // the generator, never hand-derived.
   it('pins seed 3', () => {
     const g = gen(3);
-    expect(g.prompt).toBe('What is 10 less than 74?');
-    expect(g.answerText).toBe('64');
-    expect(g.options.map((o) => o.text)).toEqual(['73', '74', '84', '64']);
+    expect(g.prompt).toBe('What is 10 more than 71?');
+    expect(g.answerText).toBe('81');
+    expect(g.options.map((o) => o.text)).toEqual(['72', '71', '61', '81']);
   });
 
   it('pins seed 50', () => {
     const g = gen(50);
-    expect(g.prompt).toBe('What is 10 less than 58?');
-    expect(g.answerText).toBe('48');
-    expect(g.options.map((o) => o.text)).toEqual(['57', '58', '68', '48']);
+    expect(g.prompt).toBe('What is 10 more than 56?');
+    expect(g.answerText).toBe('66');
+    expect(g.options.map((o) => o.text)).toEqual(['57', '56', '46', '66']);
   });
 });

@@ -11,6 +11,32 @@ function simplify(n: number, d: number): string {
   return sd === 1 ? `${sn}` : `${sn}/${sd}`;
 }
 
+/**
+ * NC-R6: "using related fractions: halves, fourths and eighths; thirds,
+ * sixths, and twelfths; fifths, tenths, and hundredths". Every pair below is
+ * two denominators from one family where the larger is a multiple of the
+ * smaller, so the larger one is the common denominator.
+ *
+ * The four options stay distinct by construction. With small denominator s,
+ * large denominator L = f * s, numerators a (over s) and b (over L), and
+ * a != b: the answer is (f*a + b)/L, the added-across value is
+ * (a + b)/(s + L), the not-scaled value is (a + b)/L and the wrong-addend
+ * value is (a + f*b)/L. Setting any two equal and clearing denominators leaves
+ * a positive term equal to zero, except answer = wrong-addend, which needs
+ * (f - 1)(b - a) = 0, and a != b is enforced below.
+ */
+const RELATED_PAIRS: ReadonlyArray<readonly [number, number]> = [
+  [2, 4],
+  [2, 8],
+  [4, 8],
+  [3, 6],
+  [3, 12],
+  [6, 12],
+  [5, 10],
+  [5, 100],
+  [10, 100],
+];
+
 export const nf1AddUnlike: QuestionTemplate = {
   id: 'g5.nf1.add-unlike',
   standardCode: 'NC.5.NF.1',
@@ -18,13 +44,12 @@ export const nf1AddUnlike: QuestionTemplate = {
   difficulty: 'mastery',
   calculatorAllowed: false,
   isStretch: false,
+  contentVersion: 2, // the math changed at the same seed
 
   generate(rng: Rng): GeneratedQuestion {
-    // NC.5.NF.1 restricts grade 5 to related denominators, so build the
-    // larger denominator as a multiple of the smaller one.
-    const dSmall = rng.pick([2, 3, 4, 5, 6]);
-    const factor = rng.int(2, 4);
-    const dLarge = dSmall * factor;
+    // NC.5.NF.1 restricts grade 5 to related denominators (RELATED_PAIRS).
+    const [dSmall, dLarge] = rng.pick(RELATED_PAIRS);
+    const factor = dLarge / dSmall;
 
     const nSmall = rng.int(1, dSmall - 1);
     let nLarge = rng.int(1, dLarge - 1);

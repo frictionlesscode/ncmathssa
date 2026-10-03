@@ -4,7 +4,7 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
   'NC.5.OA.2': {
     standardCode: 'NC.5.OA.2',
     title: 'Order of Operations & Evaluating Numerical Expressions',
-    coreConcept: 'Expressions must be evaluated in strict mathematical order (PEMDAS/GEMS). In word problems, operations grouped inside parentheses must happen first.',
+    coreConcept: 'Expressions must be evaluated in a set order: parentheses first, then × and ÷ left to right, then + and − left to right. In word problems, operations grouped inside parentheses must happen first.',
     rulesAndFormulas: [
       { label: 'Parentheses ( )', detail: 'Always compute the expressions inside parentheses first.' },
       { label: 'Multiplication & Division (Left to Right)', detail: 'Neither takes priority over the other; compute them in order from left to right as you read.' },
@@ -21,14 +21,13 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       'Forgetting parentheses when translating word problems (e.g. "add 6 and 4, then multiply by 5" is (6 + 4) × 5 = 50, NOT 6 + 4 × 5 = 26).'
     ],
     workedExample: {
-      problem: 'Evaluate the expression: 40 - 3 × (2 + 6) + 18 ÷ 3',
+      problem: 'Evaluate the expression: 48 ÷ (10 - 4)',
       steps: [
-        '1. Parentheses: (2 + 6) = 8. Expression is now: 40 - 3 × 8 + 18 ÷ 3',
-        '2. Multiplication and division, left to right: 3 × 8 = 24 and 18 ÷ 3 = 6. Expression is now: 40 - 24 + 6',
-        '3. Left-to-right addition/subtraction: 40 - 24 = 16, then 16 + 6 = 22.'
+        '1. Parentheses first: (10 - 4) = 6. The expression is now: 48 ÷ 6',
+        '2. Divide: 48 ÷ 6 = 8.'
       ],
-      answer: '22',
-      whyItMattersForSSA: 'Test questions often mix parentheses with several operations to check that the student does not simply work left to right.'
+      answer: '8',
+      whyItMattersForSSA: 'Parentheses change which step comes first. Working left to right without them would give 48 ÷ 10 - 4 = 0.8, which is not the same expression.'
     }
   },
 
@@ -60,7 +59,7 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
         '4. 6th term of Rule Y = 15 × 4 = 60.'
       ],
       answer: '60 (Rule Y terms are 4 times Rule X terms)',
-      whyItMattersForSSA: 'SSA tests student readiness for 6th grade algebraic proportional relationships (y = kx).'
+      whyItMattersForSSA: 'Seeing that every y is the same number of times its x is what makes the points line up when they are graphed.'
     }
   },
 
@@ -71,8 +70,9 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     rulesAndFormulas: [
       { label: 'Left Shift (10×)', detail: 'The digit in the tens place is 10 times greater than the same digit in the ones place.' },
       { label: 'Right Shift (1/10)', detail: 'The digit in the hundredths place is 1/10 of the value of the same digit in the tenths place.' },
-      { label: 'Multiplying by 10^n', detail: 'Shifts all digits n places to the left (decimal moves n places right).' },
-      { label: 'Dividing by 10^n', detail: 'Shifts all digits n places to the right (decimal moves n places left).' }
+      { label: 'Multiplying by 10, 100 or 1,000', detail: 'Shifts all digits 1, 2 or 3 places to the left (the decimal point moves 1, 2 or 3 places right).' },
+      { label: 'Multiplying by 0.1 or 0.01', detail: 'Shifts all digits 1 or 2 places to the right (the decimal point moves 1 or 2 places left), so the number gets smaller.' },
+      { label: 'Dividing by 10 or 100', detail: 'Shifts all digits 1 or 2 places to the right (the decimal point moves 1 or 2 places left).' }
     ],
     stepByStepMethod: [
       'Step 1: Identify the two place values being compared.',
@@ -93,7 +93,7 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
         '4. The 4 in the ten-thousands place is 10 times greater than the 4 in the thousands place.'
       ],
       answer: '10 times greater (or the thousands 4 is 1/10 of the ten-thousands 4)',
-      whyItMattersForSSA: 'Foundational place value reasoning appears throughout calculator-inactive sections.'
+      whyItMattersForSSA: 'Every decimal and whole-number operation this year depends on knowing what a digit is worth in each place.'
     }
   },
 
@@ -126,7 +126,7 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
         '4. Hundredths digit: 0 vs 9. Since 9 > 0, 0.590 is greater than 0.509.'
       ],
       answer: '0.509 < 0.59',
-      whyItMattersForSSA: 'Decimals to thousandths are heavily assessed; precision in decimal place names is critical.'
+      whyItMattersForSSA: 'Decimal place names decide which digit is worth more, so one slip in a name changes every comparison that follows.'
     }
   },
 
@@ -159,7 +159,7 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
         '4. Add partial products: 3,416 + 12,810 = 16,226.'
       ],
       answer: '16,226',
-      whyItMattersForSSA: 'Calculator-inactive section requires speed and 100% computational accuracy without a calculator.'
+      whyItMattersForSSA: 'Grade 5 asks for fluent multi-digit multiplication by hand, so each partial product has to be right.'
     }
   },
 
@@ -191,7 +191,7 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
         '4. 42 - 42 = 0. Quotient = 203.'
       ],
       answer: '203',
-      whyItMattersForSSA: 'Forgetting the zero in the quotient (writing 23 instead of 203) is one of the single most common student mistakes on CASE assessments.'
+      whyItMattersForSSA: 'A missing zero in the quotient (writing 23 instead of 203) changes the answer, so check by multiplying the quotient by the divisor.'
     }
   },
 
@@ -202,12 +202,12 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     rulesAndFormulas: [
       { label: 'Adding & Subtracting Decimals', detail: 'Line up decimal points vertically! Fill empty place values with zeros before subtracting.' },
       { label: 'Multiplying Decimals', detail: 'Multiply as whole numbers. Then count total decimal places in BOTH factors and move decimal left by that sum.' },
-      { label: 'Dividing by a Decimal', detail: 'Multiply both divisor and dividend by 10, 100, etc. so the divisor becomes a whole number before dividing.' }
+      { label: 'Dividing with Decimals', detail: 'Grade 5 divides a whole number by a decimal (6 ÷ 0.25 asks how many 0.25s fit in 6) or a decimal by a whole number (4.5 ÷ 3), with decimals to hundredths. Use repeated subtraction or an area model.' }
     ],
     stepByStepMethod: [
       'Addition/Subtraction: Line up decimals -> pad with zeros -> compute -> bring decimal straight down.',
       'Multiplication: Ignore decimals -> multiply whole numbers -> count digits behind decimals in factors -> place decimal in product.',
-      'Division: Divisor must be whole. Shift decimal right in divisor, shift dividend same number of places -> divide -> place decimal straight up into quotient.'
+      'Division: Whole number ÷ decimal or decimal ÷ whole number (hundredths only) -> ask how many of the divisor fit in the dividend -> use repeated subtraction, an area model, or a place-value strategy -> check by multiplying back.'
     ],
     commonTraps: [
       'Not lining up decimal points when adding/subtracting (e.g. adding 14.5 and 2.38 as 14.5 + 23.8).',
@@ -227,34 +227,34 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
   'NC.5.NF.1': {
     standardCode: 'NC.5.NF.1',
     title: 'Add & Subtract Fractions with Unlike Denominators',
-    coreConcept: 'Fractions cannot be added or subtracted until they describe equal-sized parts (common denominator). Convert to equivalent fractions with common denominators before operating.',
+    coreConcept: 'Fractions cannot be added or subtracted until they describe equal-sized parts (common denominator). In Grade 5 the denominators are related: one is a multiple of the other, so the larger one is the common denominator.',
     rulesAndFormulas: [
-      { label: 'Common Denominators', detail: 'Find Least Common Multiple (LCM) of denominators (e.g. for 4 and 6, LCM = 12).' },
-      { label: 'Equivalent Fractions', detail: 'Multiply numerator and denominator by same factor: 3/4 = (3×3)/(4×3) = 9/12.' },
+      { label: 'Related Denominators', detail: 'Grade 5 uses halves, fourths and eighths; thirds, sixths and twelfths; fifths, tenths and hundredths. The larger denominator is a multiple of the smaller one, so it is the common denominator (for 3 and 6, use 6).' },
+      { label: 'Equivalent Fractions', detail: 'Multiply numerator and denominator by same factor: 3/4 = (3×2)/(4×2) = 6/8.' },
       { label: 'Borrowing for Subtraction', detail: 'If subtracting 1 3/4 from 4 1/4, borrow 1 from 4: 4 1/4 = 3 + 4/4 + 1/4 = 3 5/4.' }
     ],
     stepByStepMethod: [
-      'Step 1: Find LCM of the two denominators.',
-      'Step 2: Rename each fraction as an equivalent fraction with the common denominator.',
+      'Step 1: Find the common denominator: the larger denominator, when it is a multiple of the smaller one.',
+      'Step 2: Rename the other fraction as an equivalent fraction with that denominator.',
       'Step 3: Add or subtract only the numerators; keep the denominator the same.',
       'Step 4: If mixed numbers, combine whole numbers and fractional parts. Simplify or convert improper fractions.'
     ],
     commonTraps: [
-      'Adding across numerators AND denominators (e.g. 1/2 + 1/3 = 2/5 — this is FALSE!).',
+      'Adding across numerators AND denominators (e.g. 1/2 + 1/4 = 2/6 — this is FALSE!).',
       'Forgetting to borrow a whole correctly when the top fraction is smaller in subtraction.'
     ],
     workedExample: {
-      problem: 'Solve: 5 1/6 - 2 3/4',
+      problem: 'Solve: 5 1/3 - 2 5/6',
       steps: [
-        '1. Find common denominator for 6 and 4: LCM is 12.',
-        '2. Convert fractions: 1/6 = 2/12; 3/4 = 9/12. Expression is: 5 2/12 - 2 9/12.',
-        '3. Since 2/12 < 9/12, borrow 1 whole from 5: 5 2/12 = 4 + 12/12 + 2/12 = 4 14/12.',
+        '1. 6 is a multiple of 3, so the common denominator is 6.',
+        '2. Convert: 1/3 = 2/6. The expression is: 5 2/6 - 2 5/6.',
+        '3. Since 2/6 < 5/6, borrow 1 whole from 5: 5 2/6 = 4 + 6/6 + 2/6 = 4 8/6.',
         '4. Subtract whole numbers: 4 - 2 = 2.',
-        '5. Subtract fractions: 14/12 - 9/12 = 5/12.',
-        '6. Combine: 2 5/12.'
+        '5. Subtract fractions: 8/6 - 5/6 = 3/6 = 1/2.',
+        '6. Combine: 2 1/2.'
       ],
-      answer: '2 5/12',
-      whyItMattersForSSA: 'Fractions make up ~41% of the NC Grade 5 assessment. Subtraction with regrouping is the #1 tested concept.'
+      answer: '2 1/2',
+      whyItMattersForSSA: 'Fractions are the largest domain on the NC Grade 5 blueprint (39–43% of the test), and regrouping in mixed-number subtraction is a step worth practising on its own.'
     }
   },
 
@@ -284,7 +284,7 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
         '4. As a fraction: 4/7 bag of beads.'
       ],
       answer: '4/7 bag of beads',
-      whyItMattersForSSA: 'CASE tests will try to trick students into picking 7/4 = 1 3/4 by reversing the scenario.'
+      whyItMattersForSSA: 'Reversing the numbers (7/4 instead of 4/7) would give each student more than one whole bag, which cannot happen when 4 bags are shared by 7 students.'
     }
   },
 
@@ -347,14 +347,14 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
         '4. Each helper gets 1/4 of the 1/3: (1/3) × (1/4) = 1/12 of the pan.'
       ],
       answer: '1/12 of the pan',
-      whyItMattersForSSA: 'High-frequency question on NC assessments; word problems test conceptual reasoning.'
+      whyItMattersForSSA: 'Deciding whether the answer should be larger or smaller than the starting amount before dividing catches a reversed answer.'
     }
   },
 
   'NC.5.MD.1': {
     standardCode: 'NC.5.MD.1',
     title: 'Measurement Unit Conversions (Multiplicative Reasoning)',
-    coreConcept: 'Converting between units within the same system. When converting from a larger unit to a smaller unit, multiply. When converting from a smaller unit to a larger unit, divide.',
+    coreConcept: 'Using a given conversion chart to convert between units within the same system, one step at a time. When converting from a larger unit to a smaller unit, multiply. When converting from a smaller unit to a larger unit, divide.',
     rulesAndFormulas: [
       { label: 'Customary Length', detail: '1 ft = 12 in; 1 yd = 3 ft = 36 in; 1 mi = 5,280 ft = 1,760 yd.' },
       { label: 'Customary Weight & Capacity', detail: '1 lb = 16 oz; 1 ton = 2,000 lb. 1 gal = 4 qt = 8 pt = 16 cups; 1 cup = 8 fl oz.' },
@@ -371,47 +371,45 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       'Mixing up metric prefixes (centimeters = 1/100, millimeters = 1/1,000).'
     ],
     workedExample: {
-      problem: 'A punch recipe calls for 3 quarts of lemon-lime soda, 2 pints of orange juice, and 4 cups of pineapple juice. How many total cups of punch will this make?',
+      problem: 'A jug holds 6 quarts of juice. Use the conversion chart: 1 quart = 4 cups. How many cups of juice does the jug hold?',
       steps: [
-        '1. Target unit is cups.',
-        '2. Convert 3 quarts to cups: 1 quart = 4 cups, so 3 qt = 3 × 4 = 12 cups.',
-        '3. Convert 2 pints to cups: 1 pint = 2 cups, so 2 pt = 2 × 2 = 4 cups.',
-        '4. Pineapple juice is already in cups: 4 cups.',
-        '5. Total = 12 + 4 + 4 = 20 cups.'
+        '1. The chart gives 1 quart = 4 cups.',
+        '2. Quarts are larger than cups, so the answer will be a larger number: multiply.',
+        '3. 6 × 4 = 24.'
       ],
-      answer: '20 cups',
-      whyItMattersForSSA: 'Real assessment items are almost always multi-step problems with mixed units.'
+      answer: '24 cups',
+      whyItMattersForSSA: 'A conversion chart is given, so the work is choosing whether to multiply or divide and carrying it out carefully.'
     }
   },
 
   'NC.5.MD.2': {
     standardCode: 'NC.5.MD.2',
-    title: 'Represent & Interpret Data with Line Plots (Fractions)',
-    coreConcept: 'Line plots display data along a horizontal number line marked with fractional intervals (halves, fourths, eighths). Questions ask to find totals, differences between extreme values, or redistributions.',
+    title: 'Represent & Interpret Data with Line Graphs',
+    coreConcept: 'A line graph shows how a measurement changes over time: time runs along the bottom and the measurement goes up the side. Every survey question gives one of three kinds of data: categorical (names), numerical (numbers), or data that changes over time.',
     rulesAndFormulas: [
-      { label: 'Reading an X', detail: 'Each "X" above a tick mark represents one individual measurement data point.' },
-      { label: 'Finding the Total', detail: 'Multiply each fraction value by the count of Xs above it, then sum the products.' },
-      { label: 'Range', detail: 'Difference between the largest data point and smallest data point.' }
+      { label: 'Reading a Point', detail: 'Find the time on the horizontal axis, then go up to the point and across to read the value on the vertical axis.' },
+      { label: 'Change Between Two Points', detail: 'Subtract the earlier value from the later value. Subtract the values, not the times.' },
+      { label: 'Kinds of Data', detail: 'Categorical: answers are names (favorite kind of book). Numerical: answers are numbers (books on a shelf today). Over time: the same thing is measured again and again (minutes read each night).' }
     ],
     stepByStepMethod: [
-      'Step 1: Check the scale of the number line (e.g. increments of 1/8 or 1/4).',
-      'Step 2: Count the Xs above each fractional tick mark.',
-      'Step 3: Calculate requested quantity (total weight, average, or difference).',
-      'Step 4: Use common denominators to perform fraction addition/subtraction.'
+      'Step 1: Read the title and both axis labels to see what is measured and when.',
+      'Step 2: Find the two points the question names and read each value.',
+      'Step 3: Subtract the earlier value from the later one to find the change.',
+      'Step 4: For a survey question, ask: are the answers names, numbers, or the same thing measured at different times?'
     ],
     commonTraps: [
-      'Counting the tick marks instead of the number of "X"s.',
-      'Forgetting that tick marks without an X are still part of the number line scale.'
+      'Reading one point when the question asks for the change between two points.',
+      'Subtracting the times (Week 5 - Week 2 = 3) instead of the values.'
     ],
     workedExample: {
-      problem: 'A scientist records sample insect lengths in inches: 1/4, 1/2, 3/8, 1/4, 5/8, 1/2, 3/8, 1/4. What is the difference between the longest and shortest insect?',
+      problem: 'A line graph shows the noon temperature each day: Monday 60°F, Tuesday 64°F, Wednesday 71°F, Thursday 68°F. How many degrees warmer was Wednesday than Monday?',
       steps: [
-        '1. Longest insect: 5/8 inch.',
-        '2. Shortest insect: 1/4 inch.',
-        '3. Difference: 5/8 - 1/4 = 5/8 - 2/8 = 3/8 inch.'
+        '1. Wednesday\'s point is at 71°F.',
+        '2. Monday\'s point is at 60°F.',
+        '3. The change is 71 - 60 = 11 degrees.'
       ],
-      answer: '3/8 inch',
-      whyItMattersForSSA: 'Combines data interpretation with fraction operations.'
+      answer: '11 degrees warmer',
+      whyItMattersForSSA: 'Reading a change between two points on a line graph means subtracting the two values, not reading either one.'
     }
   },
 
@@ -440,7 +438,7 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
         '3. Total volume = 24 × 5 = 120 cubic units.'
       ],
       answer: '120 cubic units',
-      whyItMattersForSSA: 'Builds the conceptual foundation for the volume formula tested on CASE.'
+      whyItMattersForSSA: 'Counting layers of cubes is the idea behind the volume formula V = B × h.'
     }
   },
 
@@ -471,7 +469,7 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
         '3. Add the non-overlapping volumes: 96 + 120 = 216 cubic feet.'
       ],
       answer: '216 cubic feet',
-      whyItMattersForSSA: 'Composite figures are among the highest-discriminating items on the SSA math test.'
+      whyItMattersForSSA: 'The standard asks students to find the volume of a solid built from two non-overlapping rectangular prisms by adding the two volumes.'
     }
   },
 
@@ -514,7 +512,7 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     rulesAndFormulas: [
       { label: 'Polygon', detail: 'Closed 2D figure made of straight line segments.' },
       { label: 'Quadrilateral', detail: '4-sided polygon.' },
-      { label: 'Trapezoid (NC Definition)', detail: 'A quadrilateral with AT LEAST ONE pair of parallel sides (inclusive definition: parallelograms are also trapezoids).' },
+      { label: 'Trapezoid (NC Definition)', detail: 'A quadrilateral with EXACTLY ONE pair of parallel sides (exclusive definition: parallelograms, rectangles, rhombuses and squares are not trapezoids).' },
       { label: 'Parallelogram', detail: 'A quadrilateral with 2 pairs of parallel sides and opposite sides equal.' },
       { label: 'Rectangle', detail: 'A parallelogram with 4 right angles.' },
       { label: 'Rhombus', detail: 'A parallelogram with 4 equal sides.' },
@@ -528,7 +526,8 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       'Step 5: If both 4 equal sides AND 4 right angles = square.'
     ],
     commonTraps: [
-      'Thinking a shape can only have ONE name (a square is simultaneously a square, a rectangle, a rhombus, a parallelogram, a trapezoid, and a quadrilateral!).',
+      'Thinking a shape can only have ONE name (a square is simultaneously a square, a rectangle, a rhombus, a parallelogram, and a quadrilateral!).',
+      'Calling a parallelogram a trapezoid. North Carolina uses the exclusive definition, exactly one pair of parallel sides, so a shape with two pairs is a parallelogram, not a trapezoid.',
       'Thinking all rectangles are squares (False: rectangles do not necessarily have 4 equal sides).'
     ],
     workedExample: {
@@ -540,7 +539,7 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
         '4. Therefore, not every rhombus is a square (False).'
       ],
       answer: 'False. A rhombus only needs 4 equal sides; it does not require right angles.',
-      whyItMattersForSSA: 'CASE questions love logic tests: "All squares are rectangles, but not all rectangles are squares."'
+      whyItMattersForSSA: 'Deciding whether a statement about shapes is always true, sometimes true, or never true is the core skill of the hierarchy: all squares are rectangles, but not all rectangles are squares.'
     }
   }
 };

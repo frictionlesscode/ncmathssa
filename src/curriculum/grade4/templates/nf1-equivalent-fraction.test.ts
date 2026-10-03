@@ -30,6 +30,14 @@ const valueOf = (text: string): number => {
 };
 
 describe('g4.nf1.equivalent-fraction', () => {
+  // content-g4 audit (Low): "each of the a shaded parts", but the prompt shows no picture.
+  it('Low: the worked step does not refer to shading the prompt never showed', () => {
+    for (let seed = 0; seed < 200; seed++) {
+      const g = nf1EquivalentFraction.generate(makeRng(seed));
+      expect(g.explanation.stepByStep.join(' '), `seed ${seed}`).not.toMatch(/shaded/i);
+    }
+  });
+
   it('is sound at every seed', () => {
     assertTemplateSound(nf1EquivalentFraction);
   });

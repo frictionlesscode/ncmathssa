@@ -4,12 +4,13 @@ import userEvent from '@testing-library/user-event';
 import { ProgressProvider } from '../context/ProgressContext';
 import { QuizRunner } from './QuizRunner';
 import { getCurriculum } from '../curriculum/registry';
-import { sessionFromQuiz, newSession, recordAnswer, type ActiveSession } from '../engine/activeSession';
+import { sessionFromQuiz, newSession, recordAnswer, stampContentVersions, type ActiveSession } from '../engine/activeSession';
 import { newProfile, saveState } from '../state/storage';
 
 const c = getCurriculum(5);
 const base = (kind: 'checkup' | 'drill' = 'checkup') =>
-  sessionFromQuiz(c.quizzes.find((q) => q.isDiagnostic)!, kind, new Date('2026-09-30T12:00:00Z'));
+  // Stamped like a real session start, so rewritten (version 2) items still run.
+  stampContentVersions(sessionFromQuiz(c.quizzes.find((q) => q.isDiagnostic)!, kind, new Date('2026-09-30T12:00:00Z')), c);
 const renderRunner = (session: ActiveSession, handlers: Partial<Record<'onChange' | 'onFinish' | 'onPause' | 'onDiscard', ReturnType<typeof vi.fn>>> = {}) => {
   const h = { onChange: vi.fn(), onFinish: vi.fn(), onPause: vi.fn(), onDiscard: vi.fn(), ...handlers };
   render(<ProgressProvider><QuizRunner session={session} {...h} /></ProgressProvider>);

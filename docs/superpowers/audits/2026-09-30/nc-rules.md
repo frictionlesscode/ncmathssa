@@ -40,7 +40,12 @@ Sources (all NC DPI text, adopted 2017, unpacking docs Rev. June 2019 as hosted 
 | NC-X9 | 1 | OA, NBT.1, MD.4 | Add/subtract word problems within 20; three addends with sum <= 20; count to 150; data with up to three categories. | STD |
 
 ## Unverified
-- The June 2025 revision of the unpacking documents could not be fetched (dpi.nc.gov /open URLs returned 404 to scripted requests). All quotes are from the Rev. June 2019 text hosted on tools4ncteachers.com plus the SCOS text in docs/sources. The 2025 wording may differ; check R1, R3, R6, R7 in a browser.
+- Verified 2026-10-03 against the current NCDPI 5th grade unpacking document ("5th Grade Updated August 2025", now hosted as a Google Doc linked from https://ncdpi.instructure.com/courses/12806/pages/k-12-unpacking-documents; the old dpi.nc.gov /open URLs 404). R1, R3, R6 and R7 are unchanged, word for word:
+  - R1: "there will only be two steps when solving a problem [ex. 5 + (3 x 2) and not (5 x 6) + (3 x 4)]"; the only grouping symbol listed is "Parentheses, using the order of operations".
+  - R3: "Divide a whole number by a decimal and divide a decimal by a whole number, using repeated subtraction or area models. Decimals should be limited to hundredths."
+  - R6: "Add and subtract fractions, including mixed numbers, with unlike denominators using related fractions: halves, fourths and eighths; thirds, sixths, and twelfths; fifths, tenths, and hundredths."
+  - R7: "Multiplication of a fraction by a fraction is limited to ONLY the denominators 2, 3, and 4."
+  Grades 1-4 unpacking documents were not re-checked against their 2025 revisions.
 - R4 "no exponent notation" and R11 "no kites/diagonals" rest on absence in NC text, not an explicit prohibition.
 - R1: "step" is defined only by example; treating one step as one operation is our reading (5 + (3 x 2) has two operations).
 - R10: no digit limit is stated for a single (non-composed) prism.

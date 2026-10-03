@@ -1,6 +1,7 @@
 import type { Rng } from '../../../engine/rng';
 import type { QuestionTemplate, GeneratedQuestion } from '../../../engine/template';
 import { labelOptions } from '../../../engine/questionModel';
+import { count } from './count';
 
 /**
  * NC.3.NBT.2 — "Add and subtract whole numbers up to and including 1,000."
@@ -73,12 +74,6 @@ for (let hi = 3; hi <= 7; hi++) {
   for (let lo = 1; lo < hi - 1; lo++) {
     if (hi + lo <= 8) HUNDREDS_PAIRS.push({ hi, lo });
   }
-}
-
-/** "1 ten" but "9 tens". Every count in the worked solution runs through this,
- *  because a solution that reads "1 hundreds" is read by an eight-year-old. */
-function count(n: number, unit: string): string {
-  return `${n} ${unit}${n === 1 ? '' : 's'}`;
 }
 
 /** b0 > a0, so the ones column always has to regroup. */

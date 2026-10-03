@@ -123,9 +123,16 @@ describe('g1.oa9.add-within-10', () => {
         `Step 2: Count on ${small} more: ${counts.join(', ')}.`,
         `Step 3: ${a} + ${b} = ${sum}.`,
       ]);
-      expect(g.explanation.commonMisconception).toBe(
-        `Saying ${big} as the first count lands on ${sum - 1}, one short. The first number to say is ${big + 1}.`,
+      // Audit (Medium): the explanation must describe the distractor that is
+      // actually on offer, and the number it names must be one of the options.
+      const hop = byTag(g, 'counted-the-start-number-as-a-hop');
+      expect(g.explanation.commonMisconception, `seed ${seed}`).toBe(
+        hop
+          ? `Saying ${big} as the first count lands on ${sum - 1}, one short. The first number to say is ${big + 1}.`
+          : `Counting one more time than ${small} lands on ${sum + 1}, one too far. Stop after ${small} ${small === 1 ? 'count' : 'counts'}, at ${sum}.`,
       );
+      const named = Number(/lands on (\d+)/.exec(g.explanation.commonMisconception!)![1]);
+      expect(g.options.map((o) => Number(o.text)), `seed ${seed}: names ${named}`).toContain(named);
     }
   });
 

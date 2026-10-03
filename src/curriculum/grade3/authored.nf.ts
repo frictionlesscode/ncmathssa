@@ -577,16 +577,20 @@ export const GRADE_3_NF_AUTHORED: Question[] = [
     // SAME NUMERATOR again, but a LENGTH model rather than an area one — the
     // standard names both, and a child who can reason about pieces of a bar
     // does not automatically reason about steps along a line.
+    // NC-R13b: Grade 3 comparison uses related families only (halves, fourths
+    // and eighths; thirds and sixths). Fourths against eighths, not sixths.
+    // 3/4 = 6/8 > 3/8, so 3/4 is farther.
     prompt:
-      'Two number lines are the same length and both run from 0 to 1. One is cut into 4 equal parts and the other into 6 equal parts. Which point is farther from 0: 3/4 or 3/6?',
+      'Two number lines are the same length and both run from 0 to 1. One is cut into 4 equal parts and the other into 8 equal parts. Which point is farther from 0: 3/4 or 3/8?',
+    contentVersion: 2,
     options: labelOptions([
       {
-        text: '3/4, because fourths are longer steps than sixths, so 3 of them reach farther.',
+        text: '3/4, because fourths are longer steps than eighths, so 3 of them reach farther.',
         isCorrect: true,
       },
       // The larger bottom number read as the larger amount.
       {
-        text: '3/6, because 6 parts fit in the line and only 4 do.',
+        text: '3/8, because 8 parts fit in the line and only 4 do.',
         isCorrect: false,
         misconception: 'larger-denominator-means-larger-fraction',
       },
@@ -609,9 +613,9 @@ export const GRADE_3_NF_AUTHORED: Question[] = [
     explanation: {
       stepByStep: [
         'Step 1: Both lines are the same length and both run from 0 to 1, so the two distances can be compared fairly.',
-        'Step 2: The line cut into 4 parts has longer steps than the line cut into 6 parts.',
+        'Step 2: The line cut into 4 parts has longer steps than the line cut into 8 parts.',
         'Step 3: Each point is 3 steps from 0, so the one with the longer steps has travelled farther.',
-        'Step 4: 3/4, because fourths are longer steps than sixths, so 3 of them reach farther.',
+        'Step 4: 3/4, because fourths are longer steps than eighths, so 3 of them reach farther.',
       ],
       conceptSummary:
         'On a number line a fraction is a distance, and the bottom number sets the length of one step. Three long steps go farther than three short ones.',

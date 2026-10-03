@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { assertTemplateSound } from '../../../engine/templateTesting';
 import { makeRng } from '../../../engine/rng';
-import { oa1TimesAsMany } from './oa1-times-as-many';
+import { oa1TimesAsMany, MULTIPLIERS } from './oa1-times-as-many';
 
 /** Pulls the two numbers out of the prompt, independently of the generator,
  *  so this test cannot inherit a bug from the code it is checking. */
@@ -36,6 +36,30 @@ describe('g4.oa1.times-as-many', () => {
     const g = oa1TimesAsMany.generate(makeRng(7));
     expect(g.options.find((o) => o.isCorrect)!.text).toBe(g.answerText);
     expect(g.prompt.length).toBeGreaterThan(0);
+  });
+
+  // content-g4 audit (Medium): b was 10 to 99 and k 2 to 9 for every context,
+  // so a bookshelf came out 891 centimeters tall.
+  it('F: no context is asked for a length beyond what that thing can be', () => {
+    const CAP: Record<string, number> = {
+      'climbing rope': 300,
+      ribbon: 300,
+      'garden path': 200,
+      bookshelf: 250,
+    };
+    for (let seed = 0; seed < 1000; seed++) {
+      const g = oa1TimesAsMany.generate(makeRng(seed));
+      const thing = Object.keys(CAP).find((t) => g.prompt.includes(` ${t} is `))!;
+      expect(thing, `seed ${seed}: ${g.prompt}`).toBeTruthy();
+      expect(Number(g.answerText.split(' ')[0]), `seed ${seed}: ${g.prompt}`).toBeLessThanOrEqual(CAP[thing]);
+    }
+  });
+
+  it('F: every context still has a multiplier for every factor, and the version is bumped', () => {
+    for (const perFactor of Object.values(MULTIPLIERS)) {
+      for (const list of Object.values(perFactor)) expect(list.length).toBeGreaterThan(0);
+    }
+    expect(oa1TimesAsMany.contentVersion).toBe(2);
   });
 
   it('always picks a length whose ones digit really does carry', () => {

@@ -35,18 +35,20 @@ import { labelOptions } from '../../engine/questionModel';
  *     (g3-g1-01, g3-g1-04)
  *   - a shape built from two shapes expected to keep their name (g3-g1-02,
  *     g3-g1-03)
- *   - the EXCLUSIVE definition of a trapezoid (g3-g1-05)
+ *   - the INCLUSIVE definition of a trapezoid, which NC does not use (g3-g1-05)
  *
- * ON THE TRAPEZOID. NC uses the INCLUSIVE definition — at least one pair of
- * parallel sides — which the shipped misconception tag
- * `exclusive-trapezoid-definition` already records. Under it every
- * parallelogram, and so every rectangle, rhombus and square, IS a trapezoid.
- * That makes a prose classification bank one careless option away from two
- * correct answers, because these categories overlap: every square is a
- * rectangle AND a rhombus. Every item below was re-solved option by option
- * against that hierarchy, and ./authored.g.test.ts pins each item in a
- * second-true-answer review so that adding one means restating why its three
- * wrong options are false.
+ * ON THE TRAPEZOID (NC-R2). NC uses the EXCLUSIVE definition: "North Carolina
+ * has adopted the exclusive definition for a trapezoid. A trapezoid is a
+ * quadrilateral with exactly one pair of parallel sides." (NC DPI Grade 3
+ * Unpacking, NC.3.G.1; see docs/superpowers/audits/2026-09-30/nc-rules.md.)
+ * Under it no parallelogram, rectangle, rhombus or square is a trapezoid, and
+ * the shipped misconception tag `inclusive-trapezoid-definition` records the
+ * slip of using the other book's definition. A prose classification bank is
+ * still one careless option away from two correct answers, because these
+ * categories overlap: every square is a rectangle AND a rhombus. Every item
+ * below was re-solved option by option against that hierarchy, and
+ * ./authored.g.test.ts pins each item in a second-true-answer review so that
+ * adding one means restating why its three wrong options are false.
  *
  * Age note: an eight-year-old reads these. Shapes are described in words, not
  * drawn, and every description carries the properties needed to answer.
@@ -262,19 +264,21 @@ export const GRADE_3_G_AUTHORED: Question[] = [
     standardCode: 'NC.3.G.1',
     domainId: 'G',
     // The trapezoid, which the standard names explicitly and which NC defines
-    // INCLUSIVELY: at least one pair of parallel sides. Under that definition
-    // a square is a trapezoid, which is the single most surprising fact in
-    // this standard and the one a bank written from memory gets backwards.
-    // Re-solved against the hierarchy: a square IS a rhombus (four equal
-    // sides, both pairs of opposite sides parallel), so option 3 is false, and
-    // a rhombus 2 units on a side with no square corners is no square, so
-    // option 4 is false.
+    // EXCLUSIVELY (NC-R2): exactly one pair of parallel sides. Under that
+    // definition a square is NOT a trapezoid, the fact a bank written from
+    // memory of the other definition gets backwards.
+    // Re-solved against the hierarchy: a square has two pairs of parallel
+    // sides, so it is not a trapezoid (the key). A square IS a rhombus (four
+    // equal sides, both pairs of opposite sides parallel), so option 2 is
+    // false, and a rhombus 2 units on a side with no square corners is no
+    // square, so option 4 is false. Option 1 uses the inclusive definition,
+    // which NC does not use, so it is false.
     prompt: 'Which statement about a square is true?',
     options: labelOptions([
       {
-        text: 'A square is not a trapezoid, because a trapezoid must have exactly one pair of parallel sides.',
+        text: 'A square is a trapezoid, because it has at least one pair of parallel sides.',
         isCorrect: false,
-        misconception: 'exclusive-trapezoid-definition',
+        misconception: 'inclusive-trapezoid-definition',
       },
       {
         text: 'A square is not a rhombus, because its corners are square corners.',
@@ -282,7 +286,7 @@ export const GRADE_3_G_AUTHORED: Question[] = [
         misconception: 'hierarchy-too-narrow',
       },
       {
-        text: 'A square is a trapezoid, because it has at least one pair of parallel sides.',
+        text: 'A square is not a trapezoid, because a trapezoid has exactly one pair of parallel sides and a square has two pairs.',
         isCorrect: true,
       },
       {
@@ -294,17 +298,18 @@ export const GRADE_3_G_AUTHORED: Question[] = [
     calculatorAllowed: false,
     isStretch: true,
     difficulty: 'stretch',
+    contentVersion: 2, // NC-R2: the key flipped from the inclusive to the exclusive definition
     explanation: {
       stepByStep: [
-        'Step 1: In North Carolina a trapezoid is a quadrilateral with AT LEAST one pair of parallel sides.',
-        'Step 2: A square has two pairs of parallel sides, and two pairs is certainly at least one.',
+        'Step 1: In North Carolina a trapezoid is a quadrilateral with EXACTLY one pair of parallel sides.',
+        'Step 2: A square has two pairs of parallel sides, and two pairs is not exactly one pair, so a square is not a trapezoid.',
         'Step 3: A square also has four equal sides, which is what a rhombus needs, so a square is a rhombus as well - square corners do not stop it.',
-        'Step 4: So the true statement is that A square is a trapezoid, because it has at least one pair of parallel sides.',
+        'Step 4: So the true statement is that A square is not a trapezoid, because a trapezoid has exactly one pair of parallel sides and a square has two pairs.',
       ],
       conceptSummary:
-        'A shape belongs to every group whose rules it follows, and it can belong to several at once. A square follows the rules for rectangles, rhombuses, parallelograms and trapezoids all at the same time.',
+        'A shape belongs to every group whose rules it follows, and it can belong to several at once. A square follows the rules for rectangles, rhombuses and parallelograms all at the same time. It does not follow the trapezoid rule, which asks for exactly one pair of parallel sides.',
       commonMisconception:
-        'Many books define a trapezoid as having EXACTLY one pair of parallel sides, which would leave squares out. North Carolina uses "at least one pair", so shapes with two pairs count too.',
+        'Some books define a trapezoid as having AT LEAST one pair of parallel sides, which would let squares in. North Carolina uses "exactly one pair", so a shape with two pairs is not a trapezoid.',
     },
   },
 ];

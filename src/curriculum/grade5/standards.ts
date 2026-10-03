@@ -20,7 +20,7 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
         description: 'Add and subtract fractions and mixed numbers with unlike (related) denominators; use benchmark estimation; solve one- and two-step real-world problems.',
         weightCategory: 'Highest Priority (NF band 39–43%)',
         keyConcepts: [
-          'Finding Common Denominators using multiples',
+          'Related denominators: halves, fourths and eighths; thirds, sixths and twelfths; fifths, tenths and hundredths (the larger denominator is the common denominator)',
           'Regrouping mixed numbers during subtraction (borrowing a whole)',
           'Benchmark fractions (0, 1/2, 1) for estimating reasonableness',
           'Multi-step word problems involving leftover portions'
@@ -42,10 +42,11 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
         code: 'NC.5.NF.4',
         domainId: 'NF',
         title: 'Multiply Fractions & Mixed Numbers; Area Models',
-        description: 'Multiply a fraction or whole number by a fraction, including mixed numbers; use area and length models; reason about how factors affect the product.',
+        description: 'Multiply a fraction or whole number by a fraction, including mixed numbers (fraction × fraction uses denominators 2, 3 and 4); use area and length models; reason about how factors affect the product.',
         weightCategory: 'Highest Priority (NF band 39–43%)',
         keyConcepts: [
           'Multiplying numerators and denominators: (a/b) × (c/d) = (a×c)/(b×d)',
+          'Fraction × fraction uses denominators 2, 3 and 4 with area and length models; a fraction times a whole number may use denominators 2, 3, 4, 5, 6, 8, 10 and 12',
           'Area of rectangles with fractional side lengths (Area = base × height)',
           'Scaling concept: multiplying by a fraction < 1 results in a smaller product; multiplying by > 1 results in a larger product',
           'Converting mixed numbers to improper fractions before multiplying'
@@ -80,13 +81,13 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
         code: 'NC.5.NBT.1',
         domainId: 'NBT',
         title: 'Place Value Patterns & Powers of 10',
-        description: 'Recognize place value patterns from one million to thousandths; 10x and 1/10 relationships; patterns when multiplying or dividing by powers of 10.',
+        description: 'Recognize place value patterns from one million to thousandths; 10x and 1/10 relationships; patterns when multiplying by 1,000, 100, 10, 0.1 and 0.01 and dividing by 10 and 100.',
         weightCategory: 'Core (NBT band 25–29%)',
         keyConcepts: [
           'A digit in one place represents 10 times what it represents in the place to its right',
           'A digit represents 1/10 (0.1) of what it represents in the place to its left',
-          'Multiplying by 10^n moves the decimal point n places to the right',
-          'Dividing by 10^n moves the decimal point n places to the left'
+          'Multiplying by 10, 100 or 1,000 moves the decimal point 1, 2 or 3 places to the right; multiplying by 0.1 or 0.01 moves it 1 or 2 places to the left',
+          'Dividing by 10 or 100 moves the decimal point 1 or 2 places to the left'
         ]
       },
       {
@@ -131,12 +132,12 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
         code: 'NC.5.NBT.7',
         domainId: 'NBT',
         title: 'Operations with Decimals to Hundredths',
-        description: 'Add, subtract, multiply, and divide multi-digit whole numbers and decimals to hundredths; use estimation to check reasonableness.',
+        description: 'Add, subtract, multiply, and divide multi-digit whole numbers and decimals (divide a whole number by a decimal, or a decimal by a whole number, to hundredths); use estimation to check reasonableness.',
         weightCategory: 'Core (NBT band 25–29%)',
         keyConcepts: [
           'Lining up decimal points for addition and subtraction',
           'Multiplying decimals: count total decimal places in both factors',
-          'Dividing decimals: shift decimal in divisor to make it whole, shift dividend by same amount',
+          'Dividing a whole number by a decimal, or a decimal by a whole number, with decimals to hundredths, using repeated subtraction or area models',
           'Rounding and estimation to verify reasonableness'
         ]
       }
@@ -153,15 +154,16 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
     weightGroupLabel: 'Measurement & Data and Geometry combined',
     color: 'amber',
     badgeBg: 'bg-amber-100 text-amber-800 border-amber-300',
-    description: 'Covers unit conversions (metric and customary), line plots with fractional measurements, and 3D volume concepts including additive volume of composed rectangular prisms.',
+    description: 'Covers unit conversions (metric and customary) from a given chart, line graphs of data over time, and 3D volume concepts including additive volume of composed rectangular prisms.',
     standards: [
       {
         code: 'NC.5.MD.1',
         domainId: 'MD',
         title: 'Convert Measurement Units (Multiplicative Reasoning)',
-        description: 'Convert measurement units within a given measurement system (metric and customary) using multiplicative reasoning.',
+        description: 'Given a conversion chart, use multiplicative reasoning to solve one-step conversion problems within a given measurement system (metric or customary).',
         weightCategory: 'Core (MD & G share 19–23%)',
         keyConcepts: [
+          'Use the conversion chart you are given and convert in one step within one system (customary, metric, or time)',
           'Customary length: 12 in = 1 ft, 3 ft = 1 yd, 5,280 ft = 1 mi',
           'Customary capacity: 8 fl oz = 1 cup, 2 c = 1 pt, 2 pt = 1 qt, 4 qt = 1 gal',
           'Metric prefixes: kilo (1000), hecto (100), deka (10), base, deci (0.1), centi (0.01), milli (0.001)',
@@ -171,13 +173,13 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
       {
         code: 'NC.5.MD.2',
         domainId: 'MD',
-        title: 'Represent & Interpret Data with Line Graphs & Plots',
-        description: 'Represent and interpret data; line graphs; distinguish categorical vs numerical vs over-time data; solve problems with line plots displaying fractional units.',
+        title: 'Represent & Interpret Data with Line Graphs',
+        description: 'Collect, represent and interpret data that changes over time with line graphs; decide whether a survey question gives categorical data, numerical data, or data that changes over time.',
         weightCategory: 'Core (MD & G share 19–23%)',
         keyConcepts: [
-          'Line plots displaying measurements in fractions of a unit (1/8, 1/4, 1/2)',
-          'Finding total sum or difference between highest and lowest data points',
-          'Interpreting change over time on line graphs'
+          'A line graph shows how a measurement changes over time: time on the horizontal axis, the measurement on the vertical axis',
+          'Finding the change between two points by subtracting the earlier value from the later value',
+          'Sorting survey questions into categorical data (names), numerical data (numbers) and data that changes over time'
         ]
       },
       {
@@ -224,7 +226,7 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
         description: 'Write, explain, and evaluate numerical expressions with the four operations (up to two steps), including parentheses; commutative, associative, distributive properties.',
         weightCategory: 'Core (OA band 9–13%)',
         keyConcepts: [
-          'Order of Operations: Parentheses first, then multiplication & division (left to right), then addition & subtraction (left to right)',
+          'Order of Operations with parentheses and at most two operations: parentheses first, then multiplication & division (left to right), then addition & subtraction (left to right)',
           'Translating word phrases into expressions: "Add 9 and 7, then multiply by 3" -> 3 × (9 + 7)',
           'Interpreting expressions without evaluating: 3 × (14,285 + 710) is three times as large as (14,285 + 710)',
           'Distributive property: a × (b + c) = (a × b) + (a × c)'
@@ -277,7 +279,7 @@ export const GRADE_5_DOMAINS: DomainInfo[] = [
         description: 'Understand that attributes belonging to a category of 2D figures also belong to all subcategories; classify quadrilaterals by properties in a hierarchy.',
         weightCategory: 'Core (MD & G share 19–23%)',
         keyConcepts: [
-          'Quadrilateral hierarchy: Polygons -> Quadrilaterals -> Trapezoids (NC definition: at least one pair of parallel sides) / Parallelograms -> Rectangles & Rhombuses -> Squares',
+          'Quadrilateral hierarchy: Polygons -> Quadrilaterals -> Parallelograms -> Rectangles & Rhombuses -> Squares; Trapezoids are a separate branch (NC definition: exactly one pair of parallel sides)',
           'All squares are rectangles and rhombuses, but not all rectangles are squares',
           'Parallelogram properties: 2 pairs of parallel sides, opposite sides congruent, opposite angles congruent',
           'Rhombus properties: 4 equal sides; Rectangle properties: 4 right angles'

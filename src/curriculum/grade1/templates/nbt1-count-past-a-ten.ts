@@ -25,9 +25,10 @@ import { labelOptions } from '../../../engine/questionModel';
  *   or skipped-a-ten-while-counting                     ...counted on from ten+10
  *   listed-the-starting-number-as-the-first-count       start, start+1, start+2
  *   or skipped-a-number-while-counting                  ...counted on from ten+1
- *   wrote-the-digits-side-by-side-instead-of-adding-the-values
- *     the crossed ten's own tens digit (11 for 120) written beside "10", "11",
- *     "12" instead of trading up: 119, 1110, 1111 for a count crossing 120.
+ *   said-the-same-number-twice-while-counting
+ *     the second number of the count said again: 20, 21, 21 for a count of
+ *     20, 21, 22. It never equals a list that counts on, because those all
+ *     increase, so it cannot collide with another option.
  *
  * NO SIZE TELL. A draw whose printed numbers would exceed 150 is left out of
  * the pool entirely (never resampled), which the sibling test proves reaches
@@ -63,8 +64,8 @@ function lists(d: CountDraw) {
   const from = (first: number) => key.map((n, i) => (i < at0 ? n : first + (i - at0)));
   const tenList = d.tenSlip === 'back' ? from(d.ten - 10) : from(d.ten + 10);
   const countList = d.countSlip === 'early' ? [start, start + 1, start + 2] : from(d.ten + 1);
-  const sideBySide = key.map((n, i) => (i < at0 ? `${n}` : `${d.ten / 10 - 1}${10 + (i - at0)}`)).join(', ');
-  return { start, at0, key, tenList, countList, sideBySide };
+  const repeated = [key[0], key[1], key[1]];
+  return { start, at0, key, tenList, countList, repeated };
 }
 
 export const COUNT_DRAWS: CountDraw[] = ALL_COUNT_DRAWS.filter((d) => {
@@ -79,10 +80,11 @@ export const nbt1CountPastATen: QuestionTemplate = {
   difficulty: 'mastery',
   calculatorAllowed: false,
   isStretch: false,
+  contentVersion: 2, // the side-by-side distractor was replaced
 
   generate(rng: Rng): GeneratedQuestion {
     const d = rng.pick(COUNT_DRAWS);
-    const { start, key, tenList, countList, sideBySide } = lists(d);
+    const { start, key, tenList, countList, repeated } = lists(d);
 
     const answerText = key.join(', ');
     const candidates = [
@@ -93,7 +95,7 @@ export const nbt1CountPastATen: QuestionTemplate = {
       d.countSlip === 'early'
         ? { text: countList.join(', '), isCorrect: false, misconception: 'listed-the-starting-number-as-the-first-count' }
         : { text: countList.join(', '), isCorrect: false, misconception: 'skipped-a-number-while-counting' },
-      { text: sideBySide, isCorrect: false, misconception: 'wrote-the-digits-side-by-side-instead-of-adding-the-values' },
+      { text: repeated.join(', '), isCorrect: false, misconception: 'said-the-same-number-twice-while-counting' },
     ];
 
     const texts = candidates.map((c) => c.text);

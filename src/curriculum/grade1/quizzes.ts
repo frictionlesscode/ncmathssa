@@ -76,28 +76,26 @@ const MOD_G_QUESTION_IDS = [
   'g1-g3-01', 'g1-g3-02', 'g1-g3-03', 'g1-g3-04',
 ];
 
-/** The full simulation, allocated to each domain's share of the 23
- *  standards - there is no blueprint to allocate against. Every id uses the
+/** The full simulation: one item for every one of the 23 standards, so each
+ *  domain carries exactly its share and a child cannot reach the passing bar
+ *  without meeting a standard (it used to leave out NC.1.OA.7, NC.1.NBT.3 and
+ *  NC.1.MD.1). There is no blueprint to allocate against. Every id uses the
  *  "-02" authored item so nothing here duplicates the diagnostic's "-01"
- *  items.
+ *  items, except NC.1.MD.2, whose "-02" item is an abstract stretch question
+ *  about the effect of gaps and is replaced by its plain "-03" item.
  *
- *    OA  8/23 = 34.8%  -> 6.96 of 20 items -> rounds to 7
- *    NBT 7/23 = 30.4%  -> 6.09 of 20 items -> rounds to 6
- *    MD  5/23 = 21.7%  -> 4.35 of 20 items -> rounds to 4
- *    G   3/23 = 13.0%  -> 2.61 of 20 items -> rounds to 3
- *
- *  7 + 6 + 4 + 3 = 20 exactly. Each domain contributes one item per standard
- *  except for one standard skipped in OA (8 standards, 7 items: NC.1.OA.7
- *  skipped), one in NBT (7 standards, 6 items: NC.1.NBT.3 skipped) and one
- *  in MD (5 standards, 4 items: NC.1.MD.1 skipped) - Geometry's 3 items
- *  cover all 3 of its standards. */
+ *    OA  8/23 = 34.8%  -> 8 of 23 items
+ *    NBT 7/23 = 30.4%  -> 7 of 23 items
+ *    MD  5/23 = 21.7%  -> 5 of 23 items
+ *    G   3/23 = 13.0%  -> 3 of 23 items
+ */
 const MOCK_SSA_01_QUESTION_IDS = [
-  // Operations & Algebraic Thinking - 7 of 8 standards
-  'g1-oa1-02', 'g1-oa2-02', 'g1-oa3-02', 'g1-oa4-02', 'g1-oa9-02', 'g1-oa6-02', 'g1-oa8-02',
-  // Base Ten - 6 of 7 standards
-  'g1-nbt1-02', 'g1-nbt7-02', 'g1-nbt2-02', 'g1-nbt4-02', 'g1-nbt5-02', 'g1-nbt6-02',
-  // Measurement & Data - 4 of 5 standards
-  'g1-md2-02', 'g1-md3-02', 'g1-md5-02', 'g1-md4-02',
+  // Operations & Algebraic Thinking - 8 of 8 standards
+  'g1-oa1-02', 'g1-oa2-02', 'g1-oa3-02', 'g1-oa4-02', 'g1-oa9-02', 'g1-oa6-02', 'g1-oa7-02', 'g1-oa8-02',
+  // Base Ten - 7 of 7 standards
+  'g1-nbt1-02', 'g1-nbt7-02', 'g1-nbt2-02', 'g1-nbt3-02', 'g1-nbt4-02', 'g1-nbt5-02', 'g1-nbt6-02',
+  // Measurement & Data - 5 of 5 standards
+  'g1-md1-02', 'g1-md2-03', 'g1-md3-02', 'g1-md5-02', 'g1-md4-02',
   // Geometry - 3 of 3 standards
   'g1-g1-02', 'g1-g2-02', 'g1-g3-02',
 ];
@@ -154,7 +152,7 @@ export const GRADE_1_QUIZZES: QuizDefinition[] = [
     subtitle: (c: GradeCurriculum) =>
       `Comprehensive ${MOCK_SSA_01_QUESTION_IDS.length}-item practice test with items allocated across domains in proportion to each domain's share of the ${c.domains.reduce((n, d) => n + d.standards.length, 0)} Grade ${c.grade} standards - there is no official state blueprint to allocate against at this grade. Benchmarked against the ${c.ssa.passingPercent}% passing bar.`,
     isMockAssessment: true,
-    timeLimitMinutes: 20,
+    timeLimitMinutes: 25,
     questionIds: MOCK_SSA_01_QUESTION_IDS,
   },
 ];

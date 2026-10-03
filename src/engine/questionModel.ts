@@ -29,6 +29,16 @@ export interface Question {
   isStretch: boolean;
   difficulty: Difficulty;
   explanation: Explanation;
+  /** Bump when a rewrite changes the key, the options or the math. Answers
+   *  recorded against an older version stop counting toward mastery, and a
+   *  saved session built on an older version cannot be resumed. Absent means 1. */
+  contentVersion?: number;
+}
+
+/** The content version of a question, an answer or a template: absent is 1. */
+export function contentVersionOf(x: { contentVersion?: number }): number {
+  const v = x.contentVersion;
+  return typeof v === 'number' && Number.isInteger(v) && v >= 1 ? v : 1;
 }
 
 export type QuestionRef =

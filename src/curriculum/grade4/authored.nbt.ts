@@ -186,7 +186,7 @@ export const GRADE_4_NBT_AUTHORED: Question[] = [
     id: 'g4-nbt2-01',
     standardCode: 'NC.4.NBT.2',
     domainId: 'NBT',
-    prompt: 'Which numeral is the number name forty thousand, ninety-three?',
+    prompt: 'Which numeral is "forty thousand, ninety-three"?',
     options: labelOptions([
       // Wrote 9 and 3 straight after the comma, so the zero that has to hold
       // the empty hundreds place was pushed down into the ones place instead:

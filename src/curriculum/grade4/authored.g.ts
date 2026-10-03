@@ -37,11 +37,13 @@ import { labelOptions } from '../../engine/questionModel';
  *   plane at this grade - those are NC.5.MD and NC.5.G - and the test guards
  *   the vocabulary rather than trusting this paragraph.
  *
- * THE TRAPEZOID IS INCLUSIVE. North Carolina defines a trapezoid as a
- * quadrilateral with AT LEAST one pair of parallel sides, so every
- * parallelogram is a trapezoid. g4-g2-02 is built on that, and the exclusive
- * definition ("exactly one pair") appears only as a distractor, never in a key
- * and never in a worked solution.
+ * THE TRAPEZOID IS EXCLUSIVE (NC-R2). North Carolina defines a trapezoid as a
+ * quadrilateral with EXACTLY one pair of parallel sides ("North Carolina has
+ * adopted the exclusive definition for a trapezoid", NC DPI Grade 4 Unpacking,
+ * NC.4.G.2; docs/superpowers/audits/2026-09-30/nc-rules.md), so no
+ * parallelogram is a trapezoid. g4-g2-02 is built on that, and the inclusive
+ * definition ("at least one pair") appears only as a distractor, never in a
+ * key and never in a worked solution.
  *
  * FIGURES ARE TEXT. This app has no image assets and will not get any. Every
  * item that describes a figure puts the whole of it in `promptDetails`,
@@ -54,10 +56,8 @@ import { labelOptions } from '../../engine/questionModel';
  * checks instead that no two options state one fact in two wordings. The
  * hierarchy items are where this bites: "parallelogram" IS true of a
  * rectangle, so every such item asks for the MOST SPECIFIC name and the
- * broader-but-true option is tagged `named-a-broader-category`. Two places
+ * broader-but-true option is tagged `named-a-broader-category`. One place
  * where an option was deliberately rejected while writing this file:
- *   - g4-g2-02 could not offer "trapezoid" as a false option about a
- *     parallelogram, because under NC's inclusive definition it is true.
  *   - g4-g3-01 offers only ONE of the rectangle's two real fold lines as an
  *     option; offering both the vertical and the horizontal midline would put
  *     two correct answers in one item.
@@ -65,7 +65,7 @@ import { labelOptions } from '../../engine/questionModel';
  * EVERY DISTRACTOR'S `//` COMMENT NAMES THE ERROR THAT REACHES THAT OPTION.
  * Eighteen tags used here are new, declared in ../misconceptions.ts. The
  * registry had good names for the polygon hierarchy - `named-a-broader-
- * category`, `hierarchy-too-narrow`, `exclusive-trapezoid-definition` - and
+ * category`, `hierarchy-too-narrow`, `inclusive-trapezoid-definition` - and
  * none at all for this grade's other two standards: nothing for symmetry,
  * nothing for naming a ray, nothing for confusing parallel with perpendicular.
  * Stretching a hierarchy tag over a symmetry error would tell a parent their
@@ -279,7 +279,7 @@ export const GRADE_4_G_AUTHORED: Question[] = [
   // Standard: NC.4.G.2 — Classify Triangles & Quadrilaterals
   // Sourced: classify quadrilaterals AND TRIANGLES based on angle measure,
   // side lengths, and the presence or absence of parallel or perpendicular
-  // lines. NC's trapezoid definition is INCLUSIVE: at least one pair of
+  // lines. NC's trapezoid definition is EXCLUSIVE: exactly one pair of
   // parallel sides.
   // ==========================================
   {
@@ -329,25 +329,21 @@ export const GRADE_4_G_AUTHORED: Question[] = [
     standardCode: 'NC.4.G.2',
     domainId: 'G',
     prompt:
-      'Quadrilateral PQRS has two pairs of parallel sides. Riley says PQRS cannot be called a trapezoid. Is Riley right?',
+      'Quadrilateral PQRS has two pairs of parallel sides. Riley says PQRS is not a trapezoid. Is Riley right?',
+    // Solved: NC's trapezoid has exactly one pair of parallel sides (NC-R2).
+    // PQRS has two pairs, so it is a parallelogram and NOT a trapezoid, and
+    // Riley is right (option 2).
     options: labelOptions([
+      // Used the inclusive definition taught outside North Carolina, under
+      // which two pairs of parallel sides is "at least one" and so counts.
       {
         text: 'No. A trapezoid has at least one pair of parallel sides, and PQRS has two pairs.',
+        isCorrect: false,
+        misconception: 'inclusive-trapezoid-definition',
+      },
+      {
+        text: 'Yes. A trapezoid has exactly one pair of parallel sides, and PQRS has two pairs.',
         isCorrect: true,
-      },
-      // Used the exclusive definition taught outside North Carolina, under
-      // which a shape with two pairs of parallel sides is ruled out.
-      {
-        text: 'Yes. To be a trapezoid, a shape must have exactly one pair of parallel sides.',
-        isCorrect: false,
-        misconception: 'exclusive-trapezoid-definition',
-      },
-      // Treated the quadrilateral groups as separate boxes, so a shape that is
-      // already a parallelogram cannot also be a trapezoid.
-      {
-        text: 'Yes. PQRS is a parallelogram, and a shape cannot be in two quadrilateral groups at once.',
-        isCorrect: false,
-        misconception: 'hierarchy-too-narrow',
       },
       // Stretched the trapezoid group over every quadrilateral, which is wider
       // than its definition allows: a quadrilateral with no parallel sides at
@@ -357,22 +353,30 @@ export const GRADE_4_G_AUTHORED: Question[] = [
         isCorrect: false,
         misconception: 'hierarchy-too-broad',
       },
+      // Took the parallelogram's two pairs of parallel sides as what a
+      // trapezoid needs, so PQRS was accepted for having two pairs.
+      {
+        text: 'No. A trapezoid has two pairs of parallel sides, and PQRS has two pairs.',
+        isCorrect: false,
+        misconception: 'mixed-up-trapezoid-and-parallelogram',
+      },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'advanced',
+    contentVersion: 2, // NC-R2: the key flipped from the inclusive to the exclusive definition
     explanation: {
       stepByStep: [
-        'Step 1: North Carolina defines a trapezoid as a quadrilateral with AT LEAST one pair of parallel sides.',
-        'Step 2: PQRS has two pairs of parallel sides, and two pairs is certainly at least one pair, so PQRS fits that definition.',
-        'Step 3: Having a second name does not cancel the first. PQRS is a parallelogram and a trapezoid and a quadrilateral all at once, the way a robin is a bird and an animal at once.',
-        'Step 4: That does not make every quadrilateral a trapezoid. A quadrilateral with no parallel sides at all still fails the definition.',
-        'Step 5: Riley is wrong: No. A trapezoid has at least one pair of parallel sides, and PQRS has two pairs.',
+        'Step 1: North Carolina defines a trapezoid as a quadrilateral with EXACTLY one pair of parallel sides.',
+        'Step 2: PQRS has two pairs of parallel sides, and two pairs is not exactly one pair, so PQRS does not fit that definition.',
+        'Step 3: Trapezoids and parallelograms are two separate groups of quadrilaterals: exactly one pair of parallel sides is a trapezoid, and two pairs is a parallelogram.',
+        'Step 4: A quadrilateral with no parallel sides at all is not a trapezoid either.',
+        'Step 5: Riley is right: Yes. A trapezoid has exactly one pair of parallel sides, and PQRS has two pairs.',
       ],
       conceptSummary:
-        'Quadrilateral names are groups inside groups, not separate boxes. A shape belongs to every group whose definition it meets, and the definition of a trapezoid asks for at least one pair of parallel sides.',
+        'A trapezoid is defined by having exactly one pair of parallel sides. A quadrilateral with two pairs is a parallelogram instead, and one with no parallel sides is neither.',
       commonMisconception:
-        'Books outside North Carolina often define a trapezoid as having only one pair of parallel sides. The NC standards use the inclusive definition — at least one pair — which makes every parallelogram a trapezoid as well.',
+        'Books outside North Carolina often define a trapezoid as having at least one pair of parallel sides, which would make every parallelogram a trapezoid. The NC standards use the exclusive definition, exactly one pair, so a parallelogram is not a trapezoid.',
     },
   },
   {
@@ -530,12 +534,13 @@ export const GRADE_4_G_AUTHORED: Question[] = [
     id: 'g4-g3-01',
     standardCode: 'NC.4.G.3',
     domainId: 'G',
+    contentVersion: 2,
     prompt: 'Which statement about the rectangle described below is true?',
     promptDetails:
       'The rectangle is 12 centimeters long and 5 centimeters wide, so it is much longer than it is wide.',
     options: labelOptions([
       {
-        text: 'It has exactly 2 lines of symmetry: one straight down the middle and one straight across the middle.',
+        text: 'It has exactly 2 lines of symmetry, one down and one across the middle.',
         isCorrect: true,
       },
       // Counted the two diagonals as fold lines as well, 2 + 2 = 4. A diagonal
@@ -568,7 +573,7 @@ export const GRADE_4_G_AUTHORED: Question[] = [
         'Step 1: A line of symmetry is a fold line: fold the figure along it and the two halves have to land exactly on top of each other.',
         'Step 2: Fold this rectangle straight down the middle and the left half lands on the right half. Fold it straight across the middle and the top half lands on the bottom half. Both folds work.',
         'Step 3: Now try a diagonal, corner to opposite corner. It does cut the rectangle into two triangles of the same size, but folding along it lays a 12-centimeter side onto a 5-centimeter side, and those do not match.',
-        'Step 4: So there are two fold lines and no more: It has exactly 2 lines of symmetry: one straight down the middle and one straight across the middle.',
+        'Step 4: So there are two fold lines and no more: It has exactly 2 lines of symmetry, one down and one across the middle.',
       ],
       conceptSummary:
         'Symmetry is tested by folding, not by looking. A fold line counts only when every point of one half lands on a matching point of the other half.',

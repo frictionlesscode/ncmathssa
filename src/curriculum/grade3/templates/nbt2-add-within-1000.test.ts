@@ -38,6 +38,15 @@ describe('g3.nbt2.add-within-1000', () => {
     );
   });
 
+  // content-g3 audit (Medium): "= 1 tens" in 47 of 2000 seeds.
+  it('F: never writes "1 tens" or "1 hundreds" in the worked solution', () => {
+    for (let seed = 0; seed < 4000; seed++) {
+      const g = nbt2AddWithin1000.generate(makeRng(seed));
+      const text = [...g.explanation.stepByStep, g.explanation.commonMisconception ?? ''].join(' ');
+      expect(text, `seed ${seed}`).not.toMatch(/\b1 (?:tens|hundreds|ones)\b/);
+    }
+  });
+
   // LITERAL pins. Every other test here reads the addends back out of the
   // generator's own figure, so it would stay green through a change to the
   // seed -> digits mapping, to rng.pick ordering, or to the whole wording.

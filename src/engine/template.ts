@@ -17,6 +17,8 @@ export interface QuestionTemplate {
   difficulty: Difficulty;
   calculatorAllowed: boolean;
   isStretch: boolean;
+  /** Bump when the template's key, options or math change (default 1). */
+  contentVersion?: number;
   generate(rng: Rng): GeneratedQuestion;
 }
 
@@ -47,5 +49,6 @@ export function realize(t: QuestionTemplate, seed: number, rng: Rng): Question {
     isStretch: t.isStretch,
     difficulty: t.difficulty,
     explanation: g.explanation,
+    ...(t.contentVersion && t.contentVersion > 1 ? { contentVersion: t.contentVersion } : {}),
   };
 }

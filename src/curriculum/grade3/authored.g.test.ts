@@ -79,21 +79,31 @@ describe('grade 3 G authored bank', () => {
     expect(blob.some((t) => /\bparallelogram\b/i.test(t)), 'no parallelogram item').toBe(true);
   });
 
-  // NC uses the INCLUSIVE definition of a trapezoid — at least one pair of
-  // parallel sides — so under it every parallelogram is a trapezoid. An item
-  // written from the exclusive definition would have a second correct answer.
-  it('never asserts the exclusive trapezoid definition as correct', () => {
+  // NC-R2: NC uses the EXCLUSIVE definition of a trapezoid — exactly one pair
+  // of parallel sides — so no parallelogram, rectangle, rhombus or square is
+  // a trapezoid. The inclusive definition may appear only inside a distractor,
+  // never in a key and never in an explanation.
+  it('g3-g1-05: NC-R2 the key uses the exclusive trapezoid definition', () => {
+    const q = GRADE_3_G_AUTHORED.find((i) => i.id === 'g3-g1-05')!;
+    const correct = q.options.find((o) => o.isCorrect)!;
+    expect(correct.text).toMatch(/not a trapezoid/i);
+    expect(correct.text).toMatch(/exactly one pair of parallel sides/i);
+    const inclusive = q.options.find((o) => /at least one pair/i.test(o.text))!;
+    expect(inclusive.isCorrect).toBe(false);
+    expect(inclusive.misconception).toBe('inclusive-trapezoid-definition');
+    expect(q.contentVersion, 'a flipped key bumps contentVersion').toBe(2);
+  });
+
+  it('g3-g1-05: NC-R2 no key or explanation teaches the inclusive definition', () => {
     for (const q of GRADE_3_G_AUTHORED) {
       const correct = q.options.find((o) => o.isCorrect)!;
-      expect(
-        /exactly one pair of parallel sides/i.test(correct.text),
-        `${q.id}'s key uses the exclusive trapezoid definition, which NC does not`,
-      ).toBe(false);
+      const taught = [correct.text, ...q.explanation.stepByStep, q.explanation.conceptSummary].join(' ');
+      expect(/at least one pair of parallel/i.test(taught), `${q.id} teaches the inclusive definition`).toBe(false);
     }
   });
 
-  // Shape hierarchies overlap — every square is a rectangle AND a rhombus, and
-  // under NC's inclusive definition a parallelogram is a trapezoid. A prose
+  // Shape hierarchies overlap — every square is a rectangle AND a rhombus,
+  // while under NC's exclusive definition no parallelogram is a trapezoid. A prose
   // classification bank is therefore one careless option away from two right
   // answers, and the shared kit cannot see it because prose has no value to
   // compare.
@@ -114,7 +124,7 @@ describe('grade 3 G authored bank', () => {
       'g3-g1-02': 'two squares joined on a full side make a 1-by-2 rectangle, nothing else',
       'g3-g1-03': 'a straight cut between the midpoints of two opposite sides makes two rectangles',
       'g3-g1-04': 'only "every square is also a rectangle" holds',
-      'g3-g1-05': 'a square is a rhombus and, inclusively, a trapezoid',
+      'g3-g1-05': 'a square is a rhombus, and it has two pairs of parallel sides, so it is not a trapezoid',
     };
     for (const q of GRADE_3_G_AUTHORED) {
       expect(falseBecause[q.id], `${q.id} is not pinned in the second-true-answer review`).toBeTruthy();

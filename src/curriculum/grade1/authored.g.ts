@@ -185,7 +185,9 @@ export const GRADE_1_G_AUTHORED: Question[] = [
     // "Naming the components of the new shape" — ruling 24-7.
     prompt: 'A new shape is made from a triangle and a square joined. Which shapes make it up?',
     options: labelOptions([
-      { text: 'A triangle and a rectangle', isCorrect: false, misconception: 'misidentified-a-component-shape' },
+      // A circle is no part of a triangle joined to a square. (The old option,
+      // "A triangle and a rectangle", was also true: a square is a rectangle.)
+      { text: 'A triangle and a circle', isCorrect: false, misconception: 'misidentified-a-component-shape' },
       { text: 'A pentagon', isCorrect: false, misconception: 'named-the-composite-shape-instead-of-its-parts' },
       { text: 'A square and a circle', isCorrect: false, misconception: 'misidentified-a-component-shape' },
       { text: 'A triangle and a square', isCorrect: true },
@@ -193,6 +195,7 @@ export const GRADE_1_G_AUTHORED: Question[] = [
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'advanced',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
         'Step 1: The question asks which two shapes were joined, not what the new shape is called overall.',
@@ -302,11 +305,15 @@ export const GRADE_1_G_AUTHORED: Question[] = [
       { text: 'A half', isCorrect: false, misconception: 'miscounted-the-number-of-equal-shares' },
       { text: 'A fourth', isCorrect: true },
       { text: 'A whole', isCorrect: false, misconception: 'miscounted-the-number-of-equal-shares' },
-      { text: 'A fourth, even though one piece is bigger', isCorrect: false, misconception: 'called-unequal-parts-equal-shares' },
+      // Read "4 pieces" as the name of the share: four fourths is the whole
+      // rectangle, not one piece of it. (The old option contradicted the
+      // stem, which says the 4 pieces are EQUAL.)
+      { text: 'Four fourths', isCorrect: false, misconception: 'miscounted-the-number-of-equal-shares' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
         'Step 1: The rectangle is split into 4 equal pieces.',
@@ -356,7 +363,9 @@ export const GRADE_1_G_AUTHORED: Question[] = [
     domainId: 'G',
     prompt: 'A rectangle is cut into 2 equal pieces. What is the whole rectangle made of?',
     options: labelOptions([
-      { text: 'Four fourths', isCorrect: false, misconception: 'miscounted-the-number-of-equal-shares' },
+      // Counted one half too many. (The old option, "Four fourths", is true of
+      // any whole, so only the context ruled it out.)
+      { text: 'Three halves', isCorrect: false, misconception: 'miscounted-the-number-of-equal-shares' },
       { text: 'One half', isCorrect: false, misconception: 'miscounted-the-number-of-equal-shares' },
       { text: 'Two halves', isCorrect: true },
       { text: 'Two fourths', isCorrect: false, misconception: 'miscounted-the-number-of-equal-shares' },
@@ -364,6 +373,7 @@ export const GRADE_1_G_AUTHORED: Question[] = [
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'advanced',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
         'Step 1: The rectangle is split into 2 equal pieces.',
@@ -374,7 +384,7 @@ export const GRADE_1_G_AUTHORED: Question[] = [
       conceptSummary:
         'Just as 4 equal pieces make "four fourths," 2 equal pieces make "two halves" — the count of equal pieces and the whole\'s description always match.',
       commonMisconception:
-        'Naming the whole "four fourths" describes a rectangle split into 4 pieces, not the 2 pieces this one was actually split into.',
+        'Naming the whole "three halves" counts more pieces than the rectangle was cut into. It was cut into 2 pieces, so it is two halves.',
     },
   },
 ];

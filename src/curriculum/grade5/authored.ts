@@ -25,54 +25,57 @@ export const GRADE_5_AUTHORED: Question[] = [
     standardCode: 'NC.5.OA.2',
     domainId: 'OA',
     prompt: 'Evaluate the expression below following the standard order of operations:',
-    promptDetails: '36 ÷ (6 - 3) + 5 × 3',
+    promptDetails: '6 × (12 - 4)',
     options: labelOptions([
-      // Parentheses ignored: 36 ÷ 6 = 6, then 6 - 3 + 15 = 18.
-      { text: '18', isCorrect: false, misconception: 'ignored-grouping-symbols' },
-      // 36 ÷ 3 = 12, then 12 + 5 = 17, then 17 × 3 = 51.
-      { text: '51', isCorrect: false, misconception: 'order-of-operations-left-to-right' },
-      { text: '27', isCorrect: true },
-      // Stopped at 36 ÷ 3 = 12 and never added 5 × 3.
-      { text: '12', isCorrect: false, misconception: 'forgot-the-final-step' },
+      // Parentheses ignored: 6 × 12 = 72, then 72 - 4 = 68.
+      { text: '68', isCorrect: false, misconception: 'ignored-grouping-symbols' },
+      // Stopped after the parentheses: 12 - 4 = 8.
+      { text: '8', isCorrect: false, misconception: 'forgot-the-final-step' },
+      // Key: (12 - 4) = 8, then 6 × 8 = 48.
+      { text: '48', isCorrect: true },
+      // Added instead of multiplying: 6 + 12 - 4 = 14.
+      { text: '14', isCorrect: false, misconception: 'added-instead-of-multiplied' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: Evaluate inside the parentheses: (6 - 3) = 3. The expression is now: 36 ÷ 3 + 5 × 3.',
-        'Step 2: Perform multiplication and division from left to right: 36 ÷ 3 = 12, and 5 × 3 = 15.',
-        'Step 3: Perform addition: 12 + 15 = 27.'
+        'Step 1: Evaluate inside the parentheses first: (12 - 4) = 8. The expression is now: 6 × 8.',
+        'Step 2: Multiply: 6 × 8 = 48.'
       ],
-      conceptSummary: 'Operations inside parentheses take highest priority, followed by multiplication/division from left to right, then addition/subtraction.',
-      commonMisconception: 'Adding 12 + 5 before multiplying 5 × 3 gives 17 × 3 = 51, which is incorrect.'
+      conceptSummary: 'Operations inside parentheses take highest priority. Do them first, then finish the expression.',
+      commonMisconception: 'Multiplying 6 × 12 = 72 first and then subtracting 4 gives 68, which ignores the parentheses.'
     }
   },
   {
     id: 'oa2-02',
     standardCode: 'NC.5.OA.2',
     domainId: 'OA',
-    prompt: 'Which numerical expression represents the statement: "Subtract 7 from the product of 9 and 6, then divide by 5"?',
+    prompt: 'Which numerical expression represents the statement: "Subtract 8 from 32, then divide the difference by 6"?',
     options: labelOptions([
-      { text: '(9 × 6 - 7) ÷ 5', isCorrect: true },
-      // Subtracted 7 from the factor 6 rather than from the product.
-      { text: '9 × (6 - 7) ÷ 5', isCorrect: false, misconception: 'misgrouped-the-subtraction' },
-      // Read "subtract 7 from X" as 7 - X.
-      { text: '(7 - 9 × 6) ÷ 5', isCorrect: false, misconception: 'reversed-the-subtraction' },
-      // Divided only the 7 by 5 because the whole quantity was never grouped.
-      { text: '9 × 6 - (7 ÷ 5)', isCorrect: false, misconception: 'ignored-grouping-symbols' },
+      // Key: the difference (32 - 8) is grouped, then divided by 6. Value 4.
+      { text: '(32 - 8) ÷ 6', isCorrect: true },
+      // Left the difference ungrouped, so only the 8 is divided by 6.
+      { text: '32 - 8 ÷ 6', isCorrect: false, misconception: 'ignored-grouping-symbols' },
+      // Read "subtract 8 from 32" as 8 - 32.
+      { text: '(8 - 32) ÷ 6', isCorrect: false, misconception: 'reversed-the-subtraction' },
+      // Grouped the 8 with the 6 instead of with the 32.
+      { text: '32 ÷ (8 - 6)', isCorrect: false, misconception: 'misgrouped-the-subtraction' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: "The product of 9 and 6" is written as (9 × 6).',
-        'Step 2: "Subtract 7 from the product" means subtracting 7 from (9 × 6): (9 × 6 - 7).',
-        'Step 3: "Then divide by 5" means the entire quantity must be divided by 5, requiring grouping: (9 × 6 - 7) ÷ 5.'
+        'Step 1: "Subtract 8 from 32" is written 32 - 8.',
+        'Step 2: "The difference" is the whole result of that subtraction, so it needs grouping symbols: (32 - 8).',
+        'Step 3: "Divide by 6" applies to the whole difference: (32 - 8) ÷ 6.'
       ],
-      conceptSummary: 'Grouping symbols dictate the order in which multi-step verbal statements are carried out.',
-      commonMisconception: 'Choice C reverses subtraction ("subtract from" means start with the product and remove 7).'
+      conceptSummary: 'Grouping symbols show which part of a statement is done first and treated as one quantity.',
+      commonMisconception: 'Choice C reverses the subtraction ("subtract 8 from 32" starts with 32 and takes away 8).'
     }
   },
   {
@@ -80,28 +83,28 @@ export const GRADE_5_AUTHORED: Question[] = [
     standardCode: 'NC.5.OA.2',
     domainId: 'OA',
     prompt: 'Evaluate the expression without using a calculator:',
-    promptDetails: '(18 - 6) ÷ 3 × (4 + 8) - 15',
+    promptDetails: '5 × (1.5 + 0.75)',
     options: labelOptions([
-      // Dropped the second parentheses: 4 × 4 + 8 - 15 = 9.
-      { text: '9', isCorrect: false, misconception: 'incomplete-grouping-evaluation' },
-      // Stopped at 4 × 12 = 48 and never subtracted 15.
-      { text: '48', isCorrect: false, misconception: 'forgot-the-final-step' },
-      // Parentheses ignored: 18 - 6 ÷ 3 × 4 + 8 - 15 = 18 - 8 + 8 - 15 = 3.
-      { text: '3', isCorrect: false, misconception: 'ignored-grouping-symbols' },
-      { text: '33', isCorrect: true },
+      // Parentheses ignored: 5 × 1.5 = 7.5, then 7.5 + 0.75 = 8.25.
+      { text: '8.25', isCorrect: false, misconception: 'ignored-grouping-symbols' },
+      // Stopped after the parentheses: 1.5 + 0.75 = 2.25.
+      { text: '2.25', isCorrect: false, misconception: 'forgot-the-final-step' },
+      // Added instead of multiplying: 5 + 1.5 + 0.75 = 7.25.
+      { text: '7.25', isCorrect: false, misconception: 'added-instead-of-multiplied' },
+      // Key: (1.5 + 0.75) = 2.25, then 5 × 2.25 = 11.25.
+      { text: '11.25', isCorrect: true },
     ]),
     calculatorAllowed: false,
-    isStretch: true,
-    difficulty: 'stretch',
+    isStretch: false,
+    difficulty: 'advanced',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: First parentheses: 18 - 6 = 12.',
-        'Step 2: Second parentheses: 4 + 8 = 12. Expression is now: 12 ÷ 3 × 12 - 15.',
-        'Step 3: Division and multiplication, left to right: 12 ÷ 3 = 4, then 4 × 12 = 48.',
-        'Step 4: Subtraction: 48 - 15 = 33.'
+        'Step 1: Parentheses first. Line up the decimal points: 1.50 + 0.75 = 2.25. The expression is now: 5 × 2.25.',
+        'Step 2: Multiply: 5 × 2 = 10 and 5 × 0.25 = 1.25, so 5 × 2.25 = 11.25.'
       ],
-      conceptSummary: 'Evaluate every set of parentheses first, then multiply and divide from left to right, then add and subtract.',
-      commonMisconception: 'Forgetting the second set of parentheses and multiplying 4 × 4 before adding 8.'
+      conceptSummary: 'Evaluate the parentheses first, then finish the expression. The numbers inside can be decimals.',
+      commonMisconception: 'Multiplying 5 × 1.5 = 7.5 first and then adding 0.75 gives 8.25, which ignores the parentheses.'
     }
   },
   {
@@ -186,7 +189,7 @@ export const GRADE_5_AUTHORED: Question[] = [
         'Step 3: For x = 35: y = 3 × 35 = 105.'
       ],
       conceptSummary: 'Corresponding terms of proportional patterns maintain a constant ratio (y/x = constant).',
-      commonMisconception: 'Listing terms one by one up to 35, which takes unnecessary time and risks counting errors.'
+      commonMisconception: 'Adding the difference between the rules (35 + 10 = 45) instead of scaling: y is always 3 times x.'
     }
   },
   {
@@ -203,7 +206,7 @@ export const GRADE_5_AUTHORED: Question[] = [
       // 48 × 6/9 = 32: used the reciprocal of the correct ratio.
       { text: '32', isCorrect: false, misconception: 'inverted-the-ratio' },
     ]),
-    calculatorAllowed: true,
+    calculatorAllowed: false,
     isStretch: true,
     difficulty: 'stretch',
     explanation: {
@@ -212,7 +215,7 @@ export const GRADE_5_AUTHORED: Question[] = [
         'Step 2: Apply the same 8 steps to Pattern 2: 8 × 9 = 72.',
         'Step 3: Alternatively, notice the ratio y/x = 9/6 = 3/2 = 1.5. 48 × 1.5 = 72.'
       ],
-      conceptSummary: 'Ordered pairs created by two arithmetic patterns form a straight line with slope equal to (rate 2) / (rate 1).',
+      conceptSummary: 'When two patterns both start at 0, each y is the same number of times its x. Here y is always 1.5 times x, so the points line up in a straight line.',
       commonMisconception: 'Adding 3 (the difference between 9 and 6) to 48 instead of using multiplicative scaling.'
     }
   },
@@ -254,27 +257,29 @@ export const GRADE_5_AUTHORED: Question[] = [
     standardCode: 'NC.5.NBT.1',
     domainId: 'NBT',
     prompt: 'What is the value of the expression below?',
-    promptDetails: '47.62 ÷ 10^3',
+    promptDetails: '47.62 ÷ 100',
     options: labelOptions([
-      // Multiplied by 1,000 instead of dividing: moved the decimal 3 places right.
-      { text: '47,620', isCorrect: false, misconception: 'place-value-shift-wrong-direction' },
+      // Multiplied by 100 instead of dividing: moved the decimal 2 places right.
+      { text: '4,762', isCorrect: false, misconception: 'place-value-shift-wrong-direction' },
       // Moved the decimal left only 1 place.
       { text: '4.762', isCorrect: false, misconception: 'wrong-power-of-ten' },
-      // Moved the decimal left only 2 places.
-      { text: '0.4762', isCorrect: false, misconception: 'wrong-power-of-ten' },
-      { text: '0.04762', isCorrect: true },
+      // Moved the decimal left 3 places.
+      { text: '0.04762', isCorrect: false, misconception: 'wrong-power-of-ten' },
+      // Key: 47.62 -> 4.762 (1 place) -> 0.4762 (2 places).
+      { text: '0.4762', isCorrect: true },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: 10^3 equals 1,000.',
-        'Step 2: Dividing by 10^3 shifts the digits 3 places to the right (moves the decimal 3 places to the left).',
-        'Step 3: 47.62 -> 4.762 (1 place) -> 0.4762 (2 places) -> 0.04762 (3 places).'
+        'Step 1: 100 has two zeros, so dividing by 100 moves every digit 2 places to the right (the decimal point moves 2 places to the left).',
+        'Step 2: 47.62 -> 4.762 (1 place) -> 0.4762 (2 places).',
+        'Step 3: 47.62 ÷ 100 = 0.4762.'
       ],
-      conceptSummary: 'Dividing by 10^n moves the decimal point n places to the left, inserting leading zeros as needed.',
-      commonMisconception: 'Moving the decimal 2 places instead of 3, or moving to the right instead of left.'
+      conceptSummary: 'Dividing by 10 or 100 moves the decimal point 1 or 2 places to the left, inserting a leading zero when needed.',
+      commonMisconception: 'Moving the decimal 1 place or 3 places instead of 2, or moving it to the right instead of the left.'
     }
   },
   {
@@ -344,7 +349,7 @@ export const GRADE_5_AUTHORED: Question[] = [
       // Wrote 45 in the tenths and hundredths places, omitting the placeholder zero.
       { text: '6.45', isCorrect: false, misconception: 'word-form-place-value-shifted' },
       { text: '6.045', isCorrect: true },
-      // Counted three placeholder zeros for "thousandths" before writing the 45.
+      // Wrote two placeholder zeros before the 45 (one too many), as if it were ten-thousandths.
       { text: '6.0045', isCorrect: false, misconception: 'wrong-power-of-ten' },
       // Read the phrase as "six hundred forty-five thousandths".
       { text: '0.645', isCorrect: false, misconception: 'read-the-whole-number-as-part-of-the-fraction' },
@@ -569,7 +574,7 @@ export const GRADE_5_AUTHORED: Question[] = [
         'Step 5: Combine: 52.75.'
       ],
       conceptSummary: 'Always align decimal points vertically and pad with trailing zeros before subtracting.',
-      commonMisconception: 'Subtracting 0 - 5 = 5 without regrouping, giving .85 or .25.'
+      commonMisconception: 'Taking the smaller digit from the larger in every column (0 and 5 give 5) instead of regrouping, which gives 67.25.'
     }
   },
   {
@@ -632,29 +637,30 @@ export const GRADE_5_AUTHORED: Question[] = [
     id: 'nbt7-04',
     standardCode: 'NC.5.NBT.7',
     domainId: 'NBT',
-    prompt: 'Solve: 14.76 ÷ 0.12',
+    prompt: 'A roll holds 6 meters of ribbon. Each bow uses 0.25 meter of ribbon. How many bows can be made from the roll?',
     options: labelOptions([
-      { text: '123', isCorrect: true },
-      // Shifted the divisor to 12 but left the dividend at 14.76: 14.76 ÷ 12 = 1.23.
-      { text: '1.23', isCorrect: false, misconception: 'decimal-point-misplaced' },
-      // Shifted both by 10 instead of 100: 147.6 ÷ 12 = 12.3.
-      { text: '12.3', isCorrect: false, misconception: 'wrong-power-of-ten' },
-      // 14.76 × 0.12: multiplied instead of dividing.
-      { text: '1.7712', isCorrect: false, misconception: 'multiplied-instead-of-divided' },
+      // 6 × 0.25 = 1.5: multiplied instead of dividing.
+      { text: '1.5 bows', isCorrect: false, misconception: 'multiplied-instead-of-divided' },
+      // Shifted the divisor to 25 but left the dividend at 6: 6 ÷ 25 = 0.24.
+      { text: '0.24 bows', isCorrect: false, misconception: 'decimal-point-misplaced' },
+      // Key: 6 ÷ 0.25 = 600 ÷ 25 = 24.
+      { text: '24 bows', isCorrect: true },
+      // Shifted the divisor one place (2.5) instead of two: 6 ÷ 2.5 = 2.4.
+      { text: '2.4 bows', isCorrect: false, misconception: 'wrong-power-of-ten' },
     ]),
     calculatorAllowed: false,
-    isStretch: true,
-    difficulty: 'stretch',
+    isStretch: false,
+    difficulty: 'advanced',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: Make the divisor a whole number by multiplying both dividend and divisor by 100.',
-        'Step 2: 14.76 × 100 = 1,476; 0.12 × 100 = 12.',
-        'Step 3: Divide: 1,476 ÷ 12.',
-        'Step 4: 12 goes into 14 one time (remainder 2). Bring down 7 to make 27. 12 goes into 27 two times (remainder 3). Bring down 6 to make 36. 12 goes into 36 three times.',
-        'Step 5: The quotient is 123.'
+        'Step 1: The question asks how many 0.25-meter pieces fit into 6 meters: 6 ÷ 0.25.',
+        'Step 2: 0.25 is one fourth, so 1 meter holds 4 bows (0.25 + 0.25 + 0.25 + 0.25 = 1).',
+        'Step 3: 6 meters hold 6 × 4 = 24 bows. Repeated subtraction agrees: taking 0.25 away from 6 twenty-four times leaves 0.',
+        'Step 4: 6 ÷ 0.25 = 24 bows.'
       ],
-      conceptSummary: 'Dividing decimals by shifting decimal points in divisor and dividend by equal powers of 10.',
-      commonMisconception: 'Dividing 14.76 by 12 without shifting the dividend by 100.'
+      conceptSummary: 'Dividing a whole number by a decimal asks how many of the decimal fit into the whole. Repeated subtraction or an area model shows it.',
+      commonMisconception: 'Dividing 6 by 25 without also moving the decimal point in the dividend, which gives 0.24 instead of 24.'
     }
   },
 
@@ -667,30 +673,32 @@ export const GRADE_5_AUTHORED: Question[] = [
     standardCode: 'NC.5.NF.1',
     domainId: 'NF',
     prompt: 'Evaluate the sum. Express your answer as a simplified mixed number or fraction:',
-    promptDetails: '2 3/4 + 1 5/6',
+    promptDetails: '2 3/4 + 1 5/8',
     options: labelOptions([
-      // (3+5)/(4+6) = 8/10 added straight across, wholes 2 + 1 = 3.
-      { text: '3 8/10', isCorrect: false, misconception: 'added-numerators-and-denominators' },
-      // Denominators changed to 12 but numerators left alone: 3/12 + 5/12 = 8/12.
-      { text: '3 2/3', isCorrect: false, misconception: 'common-denominator-numerator-not-scaled' },
-      { text: '4 7/12', isCorrect: true },
-      // Only 5/6 was rescaled to 10/12; 3/4 kept its numerator: 3/12 + 10/12 = 1 1/12.
-      { text: '4 1/12', isCorrect: false, misconception: 'converted-only-second-fraction' },
+      // (3 + 5)/(4 + 8) = 8/12 = 2/3 added straight across, wholes 2 + 1 = 3.
+      { text: '3 2/3', isCorrect: false, misconception: 'added-numerators-and-denominators' },
+      // Denominators changed to 8 but 3/4 kept its numerator: 3/8 + 5/8 = 8/8 = 1; 3 + 1 = 4.
+      { text: '4', isCorrect: false, misconception: 'common-denominator-numerator-not-scaled' },
+      // Key: 3/4 = 6/8; 6/8 + 5/8 = 11/8 = 1 3/8; 2 + 1 + 1 3/8 = 4 3/8.
+      { text: '4 3/8', isCorrect: true },
+      // Doubled the numerator of the fraction already in eighths: (3 + 10)/8 = 13/8 = 1 5/8; 3 + 1 5/8.
+      { text: '4 5/8', isCorrect: false, misconception: 'scaled-the-wrong-addend' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: Find LCM of denominators 4 and 6: LCM is 12.',
-        'Step 2: Convert fractions to denominator of 12: 3/4 = 9/12, and 5/6 = 10/12.',
+        'Step 1: 8 is a multiple of 4, so use eighths as the common denominator.',
+        'Step 2: Convert 3/4 to eighths: 3/4 = 6/8 (multiply the top and bottom by 2). 5/8 stays the same.',
         'Step 3: Add the whole numbers: 2 + 1 = 3.',
-        'Step 4: Add the fractions: 9/12 + 10/12 = 19/12.',
-        'Step 5: Convert 19/12 to a mixed number: 1 7/12.',
-        'Step 6: Combine: 3 + 1 7/12 = 4 7/12.'
+        'Step 4: Add the fractions: 6/8 + 5/8 = 11/8.',
+        'Step 5: Convert 11/8 to a mixed number: 1 3/8.',
+        'Step 6: Combine: 3 + 1 3/8 = 4 3/8.'
       ],
-      conceptSummary: 'Adding mixed numbers with unlike denominators by finding LCM and regrouping improper fraction sums.',
-      commonMisconception: 'Adding across numerators and denominators (3+5)/(4+6) = 8/10, which is incorrect.'
+      conceptSummary: 'Adding mixed numbers with related denominators by renaming to the larger denominator and regrouping an improper fraction sum.',
+      commonMisconception: 'Adding across numerators and denominators, (3+5)/(4+8) = 8/12, which is incorrect.'
     }
   },
   {
@@ -698,30 +706,32 @@ export const GRADE_5_AUTHORED: Question[] = [
     standardCode: 'NC.5.NF.1',
     domainId: 'NF',
     prompt: 'Solve the subtraction problem. Express your answer as a fraction or mixed number in simplest form:',
-    promptDetails: '6 1/5 - 2 3/4',
+    promptDetails: '6 1/4 - 2 5/8',
     options: labelOptions([
-      // No borrowing: took 15/20 - 4/20 = 11/20 and 6 - 2 = 4.
-      { text: '4 11/20', isCorrect: false, misconception: 'forgot-to-regroup' },
-      { text: '3 9/20', isCorrect: true },
-      // Denominators changed to 20 but numerators left alone: 6 1/20 - 2 3/20 = 3 18/20.
-      { text: '3 9/10', isCorrect: false, misconception: 'common-denominator-numerator-not-scaled' },
-      // Borrowed 20/20 to make 24/20 but forgot to drop the 6 to 5: 6 - 2 = 4.
-      { text: '4 9/20', isCorrect: false, misconception: 'borrowed-without-reducing-the-whole' },
+      // No borrowing: 6 - 2 = 4 and the smaller fraction taken from the larger, 5/8 - 2/8 = 3/8.
+      { text: '4 3/8', isCorrect: false, misconception: 'forgot-to-regroup' },
+      // Key: 6 2/8 = 5 10/8; 5 10/8 - 2 5/8 = 3 5/8.
+      { text: '3 5/8', isCorrect: true },
+      // Denominators changed to 8 but 1/4 kept its numerator: 6 1/8 - 2 5/8 = 5 9/8 - 2 5/8 = 3 4/8 = 3 1/2.
+      { text: '3 1/2', isCorrect: false, misconception: 'common-denominator-numerator-not-scaled' },
+      // Borrowed 8/8 to make 10/8 but forgot to drop the 6 to 5: 6 10/8 - 2 5/8 = 4 5/8.
+      { text: '4 5/8', isCorrect: false, misconception: 'borrowed-without-reducing-the-whole' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: Find common denominator for 5 and 4: LCM is 20.',
-        'Step 2: Convert fractions: 1/5 = 4/20 and 3/4 = 15/20. The expression is: 6 4/20 - 2 15/20.',
-        'Step 3: Since 4/20 < 15/20, borrow 1 whole (20/20) from 6: 6 4/20 = 5 + 20/20 + 4/20 = 5 24/20.',
-        'Step 4: Subtract whole numbers: 5 - 2 = 3.',
-        'Step 5: Subtract fractions: 24/20 - 15/20 = 9/20.',
-        'Step 6: Combine: 3 9/20.'
+        'Step 1: 8 is a multiple of 4, so use eighths as the common denominator.',
+        'Step 2: Convert 1/4 to eighths: 1/4 = 2/8. The expression is: 6 2/8 - 2 5/8.',
+        'Step 3: Since 2/8 < 5/8, regroup 1 whole (8/8) from the 6: 6 2/8 = 5 + 8/8 + 2/8 = 5 10/8.',
+        'Step 4: Subtract the whole numbers: 5 - 2 = 3.',
+        'Step 5: Subtract the fractions: 10/8 - 5/8 = 5/8.',
+        'Step 6: Combine: 3 5/8.'
       ],
       conceptSummary: 'Regrouping mixed numbers requires converting 1 borrowed whole into equivalent units of the common denominator.',
-      commonMisconception: 'Subtracting smaller fraction from larger fraction (15/20 - 4/20) to get 11/20, ignoring the order.'
+      commonMisconception: 'Subtracting the smaller fraction from the larger one (5/8 - 2/8 = 3/8) instead of regrouping, which gives 4 3/8.'
     }
   },
   {
@@ -757,27 +767,30 @@ export const GRADE_5_AUTHORED: Question[] = [
     id: 'nf1-04',
     standardCode: 'NC.5.NF.1',
     domainId: 'NF',
-    prompt: 'Using benchmark fractions (0, 1/2, 1), estimate whether the sum of 7/12 and 9/10 is closer to 1, 1 1/2, or 2.',
+    prompt: 'Using benchmark fractions (0, 1/2, 1), which is the best estimate of the sum 7/12 + 5/6?',
     options: labelOptions([
-      // Rounded both addends down to 1/2: 1/2 + 1/2 = 1.
+      // Rounded 5/6 down to 1/2 (it is closer to 1): 1/2 + 1/2 = 1.
       { text: '1', isCorrect: false, misconception: 'estimated-to-the-wrong-benchmark' },
+      // Key: 7/12 is close to 1/2 and 5/6 is close to 1, so 1/2 + 1 = 1 1/2.
       { text: '1 1/2', isCorrect: true },
-      // Rounded both addends up to 1: 1 + 1 = 2.
+      // Rounded 7/12 up to 1 (it is closer to 1/2): 1 + 1 = 2.
       { text: '2', isCorrect: false, misconception: 'estimated-to-the-wrong-benchmark' },
-      // Computed the exact sum 35/60 + 54/60 = 89/60 when an estimate was requested.
-      { text: '1 29/60', isCorrect: false, misconception: 'computed-exactly-instead-of-estimating' },
+      // (7 + 5)/(12 + 6) = 12/18 = 2/3: added straight across.
+      { text: '2/3', isCorrect: false, misconception: 'added-numerators-and-denominators' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'advanced',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
         'Step 1: 7/12 is slightly greater than 6/12, so it is approximately 1/2.',
-        'Step 2: 9/10 is very close to 10/10, so it is approximately 1.',
-        'Step 3: Sum of benchmarks: 1/2 + 1 = 1 1/2.'
+        'Step 2: 5/6 is very close to 6/6, so it is approximately 1.',
+        'Step 3: Sum of benchmarks: 1/2 + 1 = 1 1/2.',
+        'Step 4: Reasonableness check: each addend is more than 1/2, so the sum must be more than 1. That rules out 1 and 2/3.'
       ],
       conceptSummary: 'Benchmark estimation tests number sense to check if computed answers are mathematically reasonable.',
-      commonMisconception: 'Computing exact value (1 29/60) when the problem explicitly asked for benchmark reasoning.'
+      commonMisconception: 'Adding across, (7+5)/(12+6) = 2/3, gives a sum smaller than either addend, which cannot be right.'
     }
   },
 
@@ -870,22 +883,23 @@ export const GRADE_5_AUTHORED: Question[] = [
     id: 'nf4-02',
     standardCode: 'NC.5.NF.4',
     domainId: 'NF',
-    prompt: 'Without multiplying, choose the statement that correctly compares the product to the factor 16:\n\n16 × 7/9',
+    prompt: 'Without multiplying, choose the statement that correctly compares the product to the factor 16:\n\n16 × 7/8',
     options: labelOptions([
-      { text: 'The product is less than 16 because 7/9 is less than 1', isCorrect: true },
+      { text: 'The product is less than 16 because 7/8 is less than 1', isCorrect: true },
       { text: 'The product is greater than 16 because multiplying always increases value', isCorrect: false, misconception: 'multiplication-always-increases' },
-      { text: 'The product is equal to 16 because 7/9 is close to 1', isCorrect: false, misconception: 'rounded-the-factor-to-one' },
+      { text: 'The product is equal to 16 because 7/8 is close to 1', isCorrect: false, misconception: 'rounded-the-factor-to-one' },
       // Read the numerator 7 as an amount to take away from 16.
       { text: 'The product is 7 less than 16', isCorrect: false, misconception: 'used-the-numerator-as-a-whole-number' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: Examine the multiplier: 7/9 is less than 1 whole (7/9 < 1).',
+        'Step 1: Examine the multiplier: 7/8 is less than 1 whole (7/8 < 1).',
         'Step 2: Multiplying a non-zero quantity by a fraction less than 1 scales the quantity down.',
-        'Step 3: Therefore, 16 × 7/9 will be strictly less than 16.'
+        'Step 3: Therefore, 16 × 7/8 will be strictly less than 16.'
       ],
       conceptSummary: 'Scaling reasoning: multiplying by a factor < 1 reduces the original value.',
       commonMisconception: 'Believing the 4th-grade rule of thumb that "multiplication always makes numbers bigger".'
@@ -895,28 +909,30 @@ export const GRADE_5_AUTHORED: Question[] = [
     id: 'nf4-03',
     standardCode: 'NC.5.NF.4',
     domainId: 'NF',
-    prompt: 'Solve and simplify: 5/8 × 4/15',
+    prompt: 'Solve and simplify: 3/4 × 2/3',
     options: labelOptions([
-      // (5 + 4)/(8 + 15) = 9/23: added straight across instead of multiplying.
-      { text: '9/23', isCorrect: false, misconception: 'added-numerators-and-denominators' },
-      { text: '1/6', isCorrect: true },
-      // (5 × 15)/(8 × 4) = 75/32: multiplied crosswise instead of straight across.
-      { text: '75/32', isCorrect: false, misconception: 'multiplied-crosswise' },
-      // Found the common denominator 120 and added: 75/120 + 32/120.
-      { text: '107/120', isCorrect: false, misconception: 'added-instead-of-multiplied' },
+      // (3 + 2)/(4 + 3) = 5/7: added straight across instead of multiplying.
+      { text: '5/7', isCorrect: false, misconception: 'added-numerators-and-denominators' },
+      // Key: (3 × 2)/(4 × 3) = 6/12 = 1/2.
+      { text: '1/2', isCorrect: true },
+      // (3 × 3)/(4 × 2) = 9/8: multiplied crosswise instead of straight across.
+      { text: '9/8', isCorrect: false, misconception: 'multiplied-crosswise' },
+      // Found the common denominator 12 and added: 9/12 + 8/12 = 17/12.
+      { text: '17/12', isCorrect: false, misconception: 'added-instead-of-multiplied' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: Multiply numerators: 5 × 4 = 20.',
-        'Step 2: Multiply denominators: 8 × 15 = 120.',
-        'Step 3: Simplify 20/120 by dividing numerator and denominator by 20: 20/120 = 1/6.',
-        'Step 4: Alternatively, simplify by cross-canceling beforehand: 5 and 15 cancel to 1 and 3; 4 and 8 cancel to 1 and 2. (1 × 1) / (2 × 3) = 1/6.'
+        'Step 1: Multiply numerators: 3 × 2 = 6.',
+        'Step 2: Multiply denominators: 4 × 3 = 12.',
+        'Step 3: Simplify 6/12 by dividing numerator and denominator by 6: 6/12 = 1/2.',
+        'Step 4: Alternatively, cross-cancel first: the 3 on top and the 3 on the bottom cancel, and the 2 on top and the 4 on the bottom become 1 and 2. That leaves (1 × 1) / (2 × 1) = 1/2.'
       ],
       conceptSummary: 'Multiplying proper fractions and simplifying by finding common factors.',
-      commonMisconception: 'Attempting to find common denominators before multiplying.'
+      commonMisconception: 'Finding a common denominator and adding (9/12 + 8/12 = 17/12) instead of multiplying.'
     }
   },
 
@@ -981,28 +997,30 @@ export const GRADE_5_AUTHORED: Question[] = [
     id: 'nf7-03',
     standardCode: 'NC.5.NF.7',
     domainId: 'NF',
-    prompt: '[Above-Grade Stretch] Solve: 3/4 ÷ 2/5. Express your answer as a simplified mixed number or fraction.',
+    prompt: 'A ribbon is 5 yards long. It is cut into pieces that are each 1/6 yard long. How many pieces are there?',
     options: labelOptions([
-      { text: '1 7/8', isCorrect: true },
-      // Inverted the dividend instead of the divisor: 4/3 × 2/5 = 8/15.
-      { text: '8/15', isCorrect: false, misconception: 'inverted-wrong-factor' },
-      // 3/4 × 2/5 = 6/20 = 3/10: multiplied without reciprocating at all.
-      { text: '3/10', isCorrect: false, misconception: 'multiplied-instead-of-divided' },
-      // Flipped both fractions: 4/3 × 5/2 = 20/6 = 3 1/3.
-      { text: '3 1/3', isCorrect: false, misconception: 'inverted-both-fractions' },
+      // 1 yard holds 6 pieces; never scaled up to 5 yards.
+      { text: '6 pieces', isCorrect: false, misconception: 'forgot-to-scale-by-the-whole-number' },
+      // 5 × 1/6 = 5/6: multiplied instead of dividing.
+      { text: '5/6 of a piece', isCorrect: false, misconception: 'multiplied-instead-of-divided' },
+      // Key: 5 ÷ 1/6 = 5 × 6 = 30.
+      { text: '30 pieces', isCorrect: true },
+      // (1/6) ÷ 5 = 1/30: divided the piece size by the length.
+      { text: '1/30 of a piece', isCorrect: false, misconception: 'inverted-wrong-factor' },
     ]),
     calculatorAllowed: false,
-    isStretch: true,
-    difficulty: 'stretch',
+    isStretch: false,
+    difficulty: 'advanced',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: In 6th grade math, dividing by any fraction means multiplying by its reciprocal (invert the second fraction).',
-        'Step 2: 3/4 ÷ 2/5 = 3/4 × 5/2.',
-        'Step 3: Multiply numerators and denominators: (3 × 5) / (4 × 2) = 15/8.',
-        'Step 4: Convert 15/8 to a mixed number: 1 7/8.'
+        'Step 1: 5 ÷ 1/6 asks how many sixths fit into 5 yards.',
+        'Step 2: Each yard holds 6 pieces that are 1/6 yard long.',
+        'Step 3: 5 yards hold 5 × 6 = 30 pieces.',
+        'Step 4: 5 ÷ 1/6 = 30 pieces.'
       ],
-      conceptSummary: 'Fraction division rule (multiply by reciprocal) bridging 5th grade unit fraction division into 6th grade general fraction division.',
-      commonMisconception: 'Inverting the first fraction instead of the second fraction.'
+      conceptSummary: 'Dividing a whole number by a unit fraction counts how many of those pieces fit, so the answer is larger than the whole number.',
+      commonMisconception: 'Stopping at 6 pieces (the number in 1 yard) and never scaling up to 5 yards.'
     }
   },
 
@@ -1041,56 +1059,61 @@ export const GRADE_5_AUTHORED: Question[] = [
     id: 'md1-02',
     standardCode: 'NC.5.MD.1',
     domainId: 'MD',
-    prompt: 'A school cafeteria prepares 5 gallons of vegetable soup. They serve the soup in 1-cup bowls. How many full 1-cup bowls can they serve?',
+    prompt: 'A school cafeteria prepares 7 quarts of vegetable soup and serves it in 1-cup bowls. How many full 1-cup bowls can it serve?',
+    promptDetails: 'Conversion chart: 1 quart = 4 cups',
     options: labelOptions([
-      // Used 4 cups per gallon (confused quarts with cups): 5 × 4.
-      { text: '20 bowls', isCorrect: false, misconception: 'used-wrong-conversion-factor' },
-      // Stopped at pints: 5 gallons = 40 pints, then reported pints as cups.
-      { text: '40 bowls', isCorrect: false, misconception: 'stopped-at-an-intermediate-unit' },
-      { text: '80 bowls', isCorrect: true },
-      // Doubled once too often (gal -> qt -> pt -> cup -> half cup): 5 × 64.
-      { text: '320 bowls', isCorrect: false, misconception: 'applied-an-extra-conversion-step' },
+      // 7 ÷ 4 = 1 3/4: converted the wrong way (divided going to the smaller unit).
+      { text: '1 3/4 bowls', isCorrect: false, misconception: 'unit-conversion-inverted' },
+      // Used 2 cups per quart (the pint factor): 7 × 2.
+      { text: '14 bowls', isCorrect: false, misconception: 'used-wrong-conversion-factor' },
+      // Key: 7 × 4 = 28 cups, one cup per bowl.
+      { text: '28 bowls', isCorrect: true },
+      // Chained a second doubling the chart never asked for: 7 × 4 × 2.
+      { text: '56 bowls', isCorrect: false, misconception: 'applied-an-extra-conversion-step' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: Convert gallons to cups using customary conversion factors: 1 gallon = 4 quarts.',
-        'Step 2: 1 quart = 2 pints, so 1 gallon = 4 × 2 = 8 pints.',
-        'Step 3: 1 pint = 2 cups, so 1 gallon = 8 × 2 = 16 cups.',
-        'Step 4: For 5 gallons: 5 × 16 = 80 cups.'
+        'Step 1: The chart says 1 quart = 4 cups.',
+        'Step 2: Quarts are larger than cups, so there are more cups than quarts: multiply.',
+        'Step 3: 7 × 4 = 28 cups.',
+        'Step 4: Each bowl holds 1 cup, so the cafeteria can serve 28 bowls.'
       ],
-      conceptSummary: 'Multi-step customary capacity conversion (gallons -> quarts -> pints -> cups).',
-      commonMisconception: 'Thinking there are 4 cups in a gallon (confusing quarts with cups).'
+      conceptSummary: 'One-step customary capacity conversion from a given chart: larger unit to smaller unit means multiply.',
+      commonMisconception: 'Dividing 7 by 4 (converting the wrong way) gives 1 3/4, which is fewer cups than quarts.'
     }
   },
   {
     id: 'md1-03',
     standardCode: 'NC.5.MD.1',
     domainId: 'MD',
-    prompt: 'A carpenter has a board that is 4 yards 2 feet long. She cuts off a piece that is 5 feet 8 inches long. What is the length of the remaining board in inches?',
+    prompt: 'A carpenter has a board that is 4 feet long. She cuts off a piece that is 15 inches long. How many inches of the board are left?',
+    promptDetails: 'Conversion chart: 1 foot = 12 inches',
     options: labelOptions([
-      // 168 + 68: added the cut piece instead of removing it.
-      { text: '236 inches', isCorrect: false, misconception: 'added-instead-of-subtracted' },
-      // Read "5 feet 8 inches" as 58 inches: 168 - 58.
-      { text: '110 inches', isCorrect: false, misconception: 'concatenated-the-mixed-units' },
-      // Converted only the 4 yards (144 inches) and left out the 2 feet: 144 - 68.
-      { text: '76 inches', isCorrect: false, misconception: 'omitted-part-of-the-measurement' },
-      { text: '100 inches', isCorrect: true },
+      // Key: 4 feet = 48 inches; 48 - 15 = 33.
+      { text: '33 inches', isCorrect: true },
+      // 48 + 15: added the cut piece instead of removing it.
+      { text: '63 inches', isCorrect: false, misconception: 'added-instead-of-subtracted' },
+      // 15 - 4: subtracted the numbers without converting feet to inches.
+      { text: '11 inches', isCorrect: false, misconception: 'left-the-measurement-unconverted' },
+      // Used 10 inches per foot: 40 - 15.
+      { text: '25 inches', isCorrect: false, misconception: 'used-wrong-conversion-factor' },
     ]),
     calculatorAllowed: true,
-    isStretch: true,
-    difficulty: 'stretch',
+    isStretch: false,
+    difficulty: 'advanced',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: Convert initial board length to inches. 1 yard = 36 inches; 1 foot = 12 inches.',
-        'Step 2: 4 yards = 4 × 36 = 144 inches. 2 feet = 2 × 12 = 24 inches. Total initial = 144 + 24 = 168 inches.',
-        'Step 3: Convert cut piece to inches: 5 feet = 5 × 12 = 60 inches. Plus 8 inches = 68 inches.',
-        'Step 4: Subtract: 168 - 68 = 100 inches.'
+        'Step 1: The chart says 1 foot = 12 inches.',
+        'Step 2: Convert the board to inches: 4 × 12 = 48 inches.',
+        'Step 3: Subtract the piece that was cut off: 48 - 15 = 33 inches.'
       ],
-      conceptSummary: 'Multi-step customary length conversions with mixed units.',
-      commonMisconception: 'Mixing up inches and feet conversion factors.'
+      conceptSummary: 'A one-step conversion inside a two-step problem: convert to the smaller unit first, then subtract.',
+      commonMisconception: 'Subtracting 15 - 4 = 11 without first converting the feet to inches.'
     }
   },
 
@@ -1099,55 +1122,60 @@ export const GRADE_5_AUTHORED: Question[] = [
     id: 'md2-01',
     standardCode: 'NC.5.MD.2',
     domainId: 'MD',
-    prompt: 'Students in a science club measured the lengths of pencil stubs to the nearest 1/8 inch:\n\n1/8, 1/4, 3/8, 1/4, 1/2, 3/8, 1/8, 1/4\n\nWhat is the total length in inches of all the pencil stubs that measured EXACTLY 1/4 inch?',
+    prompt: 'A line graph shows the height of a bean plant at the end of each week. The points on the graph are listed below. How many centimeters did the plant grow from the end of Week 2 to the end of Week 5?',
+    promptDetails: 'Week 1:  4 cm\nWeek 2:  7 cm\nWeek 3: 11 cm\nWeek 4: 12 cm\nWeek 5: 18 cm',
     options: labelOptions([
-      { text: '3/4 inch', isCorrect: true },
-      // Reported the measurement itself rather than the total of the three stubs.
-      { text: '1/4 inch', isCorrect: false, misconception: 'reported-the-measurement-not-the-total' },
-      // Counted only 2 of the three 1/4-inch stubs: 2 × 1/4.
-      { text: '1/2 inch', isCorrect: false, misconception: 'miscounted-the-frequency' },
-      // Added all eight stubs: 18/8 = 2 1/4 inches.
-      { text: '2 1/4 inches', isCorrect: false, misconception: 'summed-all-data-points' },
+      // Read the Week 5 point (18) instead of the change between two points.
+      { text: '18 cm', isCorrect: false, misconception: 'reported-the-measurement-not-the-total' },
+      // Key: 18 - 7 = 11.
+      { text: '11 cm', isCorrect: true },
+      // 18 + 7: added the two heights instead of finding the change.
+      { text: '25 cm', isCorrect: false, misconception: 'added-instead-of-subtracted' },
+      // 5 - 2: subtracted the weeks (the times) instead of the heights.
+      { text: '3 cm', isCorrect: false, misconception: 'used-the-wrong-given-quantity' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: Count how many pencil stubs measure exactly 1/4 inch in the data list: there are 3 stubs.',
-        'Step 2: Calculate total length: 3 × 1/4 = 3/4 inch.'
+        'Step 1: Read the height at the end of Week 5: 18 cm.',
+        'Step 2: Read the height at the end of Week 2: 7 cm.',
+        'Step 3: The growth is the change between the two points: 18 - 7 = 11 cm.',
+        'Step 4: Check by adding the weekly growth from Week 2 to Week 5: 4 + 1 + 6 = 11 cm.'
       ],
-      conceptSummary: 'Interpreting line plot frequency and computing subtotal for a given measurement.',
-      commonMisconception: 'Summing all stubs rather than only those measuring 1/4 inch.'
+      conceptSummary: 'On a line graph, the change between two times is the later value minus the earlier value.',
+      commonMisconception: 'Reading one point (18 cm) or subtracting the weeks (5 - 2 = 3) instead of subtracting the two heights.'
     }
   },
   {
     id: 'md2-02',
     standardCode: 'NC.5.MD.2',
     domainId: 'MD',
-    prompt: 'A line plot records the weights of 6 seed packages in ounces:\n3/8, 1/2, 3/4, 3/8, 7/8, 1/2\n\nWhat is the difference between the heaviest seed package and the lightest seed package? Express as a fraction in simplest form.',
+    prompt: 'Ms. Ortiz wants to make a line graph that shows how something changes over time. Which question would give her data that changes over time?',
     options: labelOptions([
-      // Totalled all six packages (27/8) instead of finding the range.
-      { text: '3 3/8 ounces', isCorrect: false, misconception: 'summed-all-data-points' },
-      // 7/8 + 3/8 = 10/8: added the extremes instead of subtracting.
-      { text: '1 1/4 ounces', isCorrect: false, misconception: 'added-instead-of-subtracted' },
-      { text: '1/2 ounce', isCorrect: true },
-      // Took 3/4 as the heaviest package: 3/4 - 3/8 = 3/8.
-      { text: '3/8 ounce', isCorrect: false, misconception: 'misidentified-the-extreme' },
+      // Answers are names of kinds of books: categorical data.
+      { text: 'What is your favorite kind of book?', isCorrect: false, misconception: 'confused-the-kind-of-data' },
+      // One number collected once: numerical data at one time.
+      { text: 'How many books are on your shelf right now?', isCorrect: false, misconception: 'confused-the-kind-of-data' },
+      // Key: the same measurement collected again each night, so it changes over time.
+      { text: 'How many minutes did you read each night this week?', isCorrect: true },
+      // Answers are months: categorical data.
+      { text: 'In which month is your birthday?', isCorrect: false, misconception: 'confused-the-kind-of-data' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: Convert all fractions to eighths to compare: 3/8, 4/8, 6/8, 3/8, 7/8, 4/8.',
-        'Step 2: Heaviest package = 7/8 ounce.',
-        'Step 3: Lightest package = 3/8 ounce.',
-        'Step 4: Difference = 7/8 - 3/8 = 4/8.',
-        'Step 5: Simplify 4/8 = 1/2 ounce.'
+        'Step 1: Categorical data has answers that are names, such as a favorite kind of book or a birthday month.',
+        'Step 2: Numerical data has answers that are numbers. Books on a shelf right now is one number collected once.',
+        'Step 3: Data that changes over time is the same thing measured again and again. Minutes read each night can be different every night, so it fits a line graph.'
       ],
-      conceptSummary: 'Finding range on fractional line plot data and simplifying fractions.',
-      commonMisconception: 'Leaving answer as 4/8 without simplifying.'
+      conceptSummary: 'A line graph needs data that is measured repeatedly over time, such as each day, week or month.',
+      commonMisconception: 'Choosing a question whose answer is a name or a single count, which is measured once and does not change over time.'
     }
   },
 
@@ -1239,27 +1267,29 @@ export const GRADE_5_AUTHORED: Question[] = [
     id: 'md5-03',
     standardCode: 'NC.5.MD.5',
     domainId: 'MD',
-    prompt: 'A solid wooden step structure is made of two joined rectangular prisms. Prism 1 measures 10 inches long, 6 inches wide, and 4 inches high. Prism 2 sits next to it and measures 8 inches long, 6 inches wide, and 7 inches high. What is the total combined volume of the wooden structure in cubic inches?',
+    prompt: 'A solid wooden step structure is made of two joined rectangular prisms. Prism 1 measures 9 inches long, 6 inches wide, and 4 inches high. Prism 2 sits next to it and measures 8 inches long, 6 inches wide, and 7 inches high. What is the total combined volume of the wooden structure in cubic inches?',
     options: labelOptions([
-      // 10 × 6 × 4 = 240: found Prism 1 only and never added Prism 2.
-      { text: '240 cubic inches', isCorrect: false, misconception: 'omitted-one-part-of-composite' },
-      // 10 + 6 + 4 + 8 + 6 + 7 = 41: added every dimension.
-      { text: '41 cubic inches', isCorrect: false, misconception: 'used-perimeter-formula' },
-      { text: '576 cubic inches', isCorrect: true },
-      // 10 × 6 × 4 × 8 × 7 = 13,440: multiplied the numbers together instead of decomposing.
-      { text: '13,440 cubic inches', isCorrect: false, misconception: 'multiplied-all-dimensions-together' },
+      // 9 × 6 × 4 = 216: found Prism 1 only and never added Prism 2.
+      { text: '216 cubic inches', isCorrect: false, misconception: 'omitted-one-part-of-composite' },
+      // 9 + 6 + 4 + 8 + 6 + 7 = 40: added every dimension.
+      { text: '40 cubic inches', isCorrect: false, misconception: 'used-perimeter-formula' },
+      // Key: 216 + 8 × 6 × 7 = 216 + 336 = 552.
+      { text: '552 cubic inches', isCorrect: true },
+      // 9 × 6 × 4 × 8 × 6 × 7 = 72,576: multiplied the numbers together instead of decomposing.
+      { text: '72,576 cubic inches', isCorrect: false, misconception: 'multiplied-all-dimensions-together' },
     ]),
     calculatorAllowed: true,
-    isStretch: true,
-    difficulty: 'stretch',
+    isStretch: false,
+    difficulty: 'advanced',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: Calculate volume of Prism 1: 10 × 6 × 4 = 240 cubic inches.',
+        'Step 1: Calculate volume of Prism 1: 9 × 6 × 4 = 216 cubic inches.',
         'Step 2: Calculate volume of Prism 2: 8 × 6 × 7 = 336 cubic inches.',
-        'Step 3: Add the two non-overlapping volumes: 240 + 336 = 576 cubic inches.'
+        'Step 3: Add the two non-overlapping volumes: 216 + 336 = 552 cubic inches.'
       ],
       conceptSummary: 'Additive volume of composite rectangular prisms.',
-      commonMisconception: 'Multiplying all numbers together (10 × 6 × 4 × 8 × 7) instead of decomposing into two distinct prisms.'
+      commonMisconception: 'Multiplying all numbers together (9 × 6 × 4 × 8 × 6 × 7) instead of decomposing into two distinct prisms.'
     }
   },
 
@@ -1382,55 +1412,61 @@ export const GRADE_5_AUTHORED: Question[] = [
     id: 'g3-02',
     standardCode: 'NC.5.G.3',
     domainId: 'G',
-    prompt: 'A student claims: "All parallelograms are trapezoids, but not all trapezoids are parallelograms." Under North Carolina\'s standard course of study definition (where a trapezoid is a quadrilateral with at least one pair of parallel sides), is the student\'s claim true or false?',
+    prompt: 'A student claims: "All parallelograms are trapezoids, but not all trapezoids are parallelograms." Under North Carolina\'s standard course of study definition (where a trapezoid is a quadrilateral with exactly one pair of parallel sides), is the student\'s claim true or false?',
+    // Solved: a parallelogram has two pairs of parallel sides, which is not
+    // exactly one pair, so no parallelogram is a trapezoid (NC-R2). The first
+    // half of the claim is false, so the whole claim is false.
     options: labelOptions([
-      // Applied the exclusive definition ("exactly one pair of parallel sides").
-      { text: 'False, because a trapezoid can never have more than 1 pair of parallel sides', isCorrect: false, misconception: 'exclusive-trapezoid-definition' },
-      // Denied that parallelograms sit inside the quadrilateral category at all.
+      // Applied the inclusive definition ("at least one pair of parallel sides"), which NC does not use.
+      { text: 'True, because parallelograms have 2 pairs of parallel sides, which satisfies the requirement of having at least 1 pair', isCorrect: false, misconception: 'inclusive-trapezoid-definition' },
+      { text: 'False, because a parallelogram has 2 pairs of parallel sides, and a trapezoid has exactly 1 pair', isCorrect: true },
+      // Right verdict, wrong reason: denied that parallelograms sit inside the quadrilateral category at all.
       { text: 'False, because parallelograms are not quadrilaterals', isCorrect: false, misconception: 'hierarchy-too-narrow' },
-      // Right verdict, wrong reason: a quadrilateral with no parallel sides is not a trapezoid.
+      // A quadrilateral with no parallel sides is not a trapezoid either.
       { text: 'True, because all four-sided shapes are trapezoids', isCorrect: false, misconception: 'hierarchy-too-broad' },
-      { text: 'True, because parallelograms have 2 pairs of parallel sides, which satisfies the requirement of having at least 1 pair', isCorrect: true },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
+    contentVersion: 2, // NC-R2: the key flipped from the inclusive to the exclusive definition
     explanation: {
       stepByStep: [
-        'Step 1: In North Carolina (inclusive definition), a trapezoid is defined as having at least one pair of parallel sides.',
-        'Step 2: A parallelogram has two pairs of parallel sides, which fulfills the condition "at least one".',
-        'Step 3: Thus, all parallelograms are subcategories of trapezoids.'
+        'Step 1: In North Carolina (exclusive definition), a trapezoid is defined as having exactly one pair of parallel sides.',
+        'Step 2: A parallelogram has two pairs of parallel sides, which is not exactly one pair.',
+        'Step 3: So a parallelogram is not a trapezoid, and the claim is false. Trapezoids and parallelograms are separate branches of the quadrilateral family.'
       ],
-      conceptSummary: 'NC inclusive quadrilateral hierarchy definition for trapezoids.',
-      commonMisconception: 'Using the exclusive trapezoid definition ("exactly one pair of parallel sides").'
+      conceptSummary: 'NC exclusive trapezoid definition: exactly one pair of parallel sides, so trapezoids and parallelograms are separate groups of quadrilaterals.',
+      commonMisconception: 'Using the inclusive trapezoid definition ("at least one pair of parallel sides"), which North Carolina does not use.'
     }
   },
   {
     id: 'g3-03',
     standardCode: 'NC.5.G.3',
     domainId: 'G',
-    prompt: 'A four-sided polygon has diagonals that are perpendicular and bisect each other, and all 4 of its sides are equal in length (12 cm), but none of its interior angles are 90°. What is the most specific geometric name for this polygon?',
+    prompt: 'A quadrilateral has 4 sides that are all equal in length (12 cm) and 2 pairs of parallel sides, but none of its angles are right angles. What is the most specific name for this quadrilateral?',
     options: labelOptions([
-      // Used the 4 equal sides and ignored the stated "no 90° angles" condition.
+      // Used the 4 equal sides and ignored the stated "no right angles" condition.
       { text: 'Square', isCorrect: false, misconception: 'ignored-a-constraint' },
+      // Key: a parallelogram with 4 equal sides is a rhombus, and there are no right angles.
       { text: 'Rhombus', isCorrect: true },
       // A true category for this figure, but not the most specific one.
       { text: 'Parallelogram', isCorrect: false, misconception: 'named-a-broader-category' },
-      // Classified from the perpendicular diagonals alone.
-      { text: 'Kite', isCorrect: false, misconception: 'classified-by-one-property-only' },
+      // Classified from the two pairs of parallel sides alone.
+      { text: 'Rectangle', isCorrect: false, misconception: 'classified-by-one-property-only' },
     ]),
     calculatorAllowed: false,
-    isStretch: true,
-    difficulty: 'stretch',
+    isStretch: false,
+    difficulty: 'advanced',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: 4 sides = quadrilateral.',
-        'Step 2: 4 equal sides = rhombus (or square).',
-        'Step 3: Since none of the angles are 90 degrees, it cannot be a square or rectangle.',
-        'Step 4: The most specific classification is a rhombus.'
+        'Step 1: 4 sides means the figure is a quadrilateral.',
+        'Step 2: 2 pairs of parallel sides means it is a parallelogram.',
+        'Step 3: 4 equal sides makes the parallelogram a rhombus.',
+        'Step 4: A square or a rectangle needs 4 right angles, and none of the angles here are right angles, so the most specific name is rhombus.'
       ],
-      conceptSummary: 'Classifying quadrilaterals by specific property constraints (equal sides without right angles).',
-      commonMisconception: 'Calling it a parallelogram or quadrilateral (correct categories, but not the MOST SPECIFIC name).'
+      conceptSummary: 'Classify a quadrilateral by its sides and angles: every rhombus is a parallelogram, and a rhombus with 4 right angles is a square.',
+      commonMisconception: 'Naming a broader category (parallelogram) or a shape whose required right angles the figure does not have (square, rectangle).'
     }
   }
 ];

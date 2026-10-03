@@ -27,6 +27,34 @@ describe('nf1AddUnlike', () => {
     }
   });
 
+  it('nf1 template: NC-R6 draws denominators only from the three NC families and reaches every pair', () => {
+    // Audit: 55% of sampled instances were unrelated (2 and 6, 3 and 9, 4 and 12,
+    // 4 and 16, 5 and 15, 5 and 20, 6 and 18, 6 and 24).
+    const families = [
+      [2, 4, 8],
+      [3, 6, 12],
+      [5, 10, 100],
+    ];
+    const seen = new Set<string>();
+    for (let seed = 0; seed < 500; seed++) {
+      const g = nf1AddUnlike.generate(makeRng(seed));
+      const dens = [...(g.promptDetails ?? '').matchAll(/\d+\/(\d+)/g)].map((m) => Number(m[1]));
+      expect(dens).toHaveLength(2);
+      expect(
+        families.some((f) => dens.every((d) => f.includes(d))),
+        `seed ${seed}: ${dens.join(' and ')} are not in one NC family`,
+      ).toBe(true);
+      seen.add([...dens].sort((a, b) => a - b).join('/'));
+    }
+    expect([...seen].sort()).toEqual(
+      ['10/100', '2/4', '2/8', '3/12', '3/6', '4/8', '5/10', '5/100', '6/12'].sort(),
+    );
+  });
+
+  it('nf1 template: options stay distinct and the key is right over 500 seeds', () => {
+    assertTemplateSound(nf1AddUnlike, { runs: 500 });
+  });
+
   it('produces the added-across distractor', () => {
     const g = nf1AddUnlike.generate(makeRng(3));
     const tags = g.options.filter((o) => !o.isCorrect).map((o) => o.misconception);

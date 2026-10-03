@@ -595,24 +595,25 @@ export const GRADE_2_NBT_AUTHORED: Question[] = [
     options: labelOptions([
       // Counted how many digits are written on each side instead of comparing
       // what the two sides are worth.
-      { text: '500 + 30 + 7 > 537, because 500 + 30 + 7 is written with more digits than 537', isCorrect: false, misconception: 'compared-by-digit-count-not-place-value' },
-      { text: '500 + 30 + 7 = 537, because 5 hundreds, 3 tens, and 7 ones is 537', isCorrect: true },
+      { text: '500 + 30 + 7 > 537, because 500 + 30 + 7 has more digits', isCorrect: false, misconception: 'compared-by-digit-count-not-place-value' },
+      { text: '500 + 30 + 7 = 537, because both are worth 537', isCorrect: true },
       // Added the first two parts, compared, and never came back for the 7.
-      { text: '500 + 30 + 7 < 537, because 500 + 30 is 530, and 530 is less than 537', isCorrect: false, misconception: 'forgot-the-final-step' },
+      { text: '500 + 30 + 7 < 537, because 500 + 30 is only 530', isCorrect: false, misconception: 'forgot-the-final-step' },
       // Wrote the counts of hundreds, tens, and ones down next to each other
       // instead of adding what each one is worth: 5, 30, and 7 concatenated
       // read as 5,307.
-      { text: '500 + 30 + 7 > 537, because 5, 30, and 7 written side by side make 5,307', isCorrect: false, misconception: 'wrote-the-digits-side-by-side-instead-of-adding-the-values' },
+      { text: '500 + 30 + 7 > 537, because 5, 30, and 7 make 5,307', isCorrect: false, misconception: 'wrote-the-digits-side-by-side-instead-of-adding-the-values' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
         'Step 1: 500 + 30 + 7 is 537 written out one place at a time: 5 hundreds, 3 tens, and 7 ones.',
         'Step 2: Add the parts back together. 500 + 30 = 530.',
         'Step 3: 530 + 7 = 537, which is exactly the number on the other side.',
-        'Step 4: 500 + 30 + 7 = 537, because 5 hundreds, 3 tens, and 7 ones is 537.',
+        'Step 4: 500 + 30 + 7 = 537, because both are worth 537.',
       ],
       conceptSummary:
         'The = symbol says the two sides are worth the same, not that they look the same. 500 + 30 + 7 and 537 are two ways of writing one number, so neither > nor < can be true of them.',
@@ -1136,7 +1137,7 @@ export const GRADE_2_NBT_AUTHORED: Question[] = [
       conceptSummary:
         'A hundred and a ten live in different places. Adding 100 moves the hundreds digit; taking 10 away moves the tens digit. Doing one after the other leaves the ones digit exactly where it started.',
       commonMisconception:
-        'Mixing the two amounts up gives 174 instead of 354 — a difference of 180 — because the 100 was applied to the tens and the 10 to the hundreds.',
+        'Adding 10 and then taking away 100 gives 174 instead of 354. The 100 and the 10 were swapped between the two steps.',
     },
   },
 ];

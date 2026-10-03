@@ -330,6 +330,11 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Chose a survey question whose answers are names or categories when numerical data was asked for, or the reverse.',
     ),
     entry(
+      'confused-the-kind-of-data',
+      'geometry-and-measurement',
+      'Named the wrong kind of data for a survey question, mixing up categorical data (answers are names), numerical data (answers are numbers at one time) and data that changes over time (the same thing measured again and again).',
+    ),
+    entry(
       'counted-past-sixty-minutes',
       'time-intervals',
       'Let a count of minutes run past 60 instead of trading 60 minutes for one hour, producing a time no clock shows.',
@@ -390,19 +395,9 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Stopped comparing two numbers before reaching the first place where their digits actually differ, and called them equal.',
     ),
     entry(
-      'computed-exactly-instead-of-estimating',
-      'incomplete-procedure',
-      'Calculated the exact answer instead of using benchmark fractions to estimate as the problem asked.',
-    ),
-    entry(
       'computed-surface-area',
       'geometry-and-measurement',
       'Calculated the surface area of the solid instead of its volume.',
-    ),
-    entry(
-      'concatenated-the-mixed-units',
-      'unit-conversion',
-      'Ran two units together as if they were digits of one number, instead of converting each unit separately.',
     ),
     entry(
       'confused-factor-with-multiple',
@@ -423,11 +418,6 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'converted-mixed-number-by-adding',
       'fraction-operations',
       'Converted a mixed number to an improper fraction by adding the whole number and numerator instead of multiplying first.',
-    ),
-    entry(
-      'converted-only-second-fraction',
-      'fraction-operations',
-      'Rescaled only one of the two fractions to the common denominator and left the other unchanged.',
     ),
     entry(
       'coordinates-reversed',
@@ -520,9 +510,19 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Rounded a fraction to the wrong benchmark value, such as rounding down when it was closer to the next whole number.',
     ),
     entry(
-      'exclusive-trapezoid-definition',
+      'inclusive-trapezoid-definition',
       'shape-classification',
-      "Used the exclusive definition of a trapezoid (exactly one pair of parallel sides) instead of NC's inclusive definition (at least one pair).",
+      "Used the inclusive definition of a trapezoid (at least one pair of parallel sides) instead of NC's exclusive definition (exactly one pair), so a parallelogram, rectangle, rhombus or square was called a trapezoid.",
+    ),
+    entry(
+      'mixed-up-trapezoid-and-parallelogram',
+      'shape-classification',
+      "Took a parallelogram's two pairs of parallel sides as the requirement for a trapezoid, instead of exactly one pair.",
+    ),
+    entry(
+      'said-the-same-number-twice-while-counting',
+      'patterns-and-sequences',
+      'While counting on by ones, said the same number twice in a row instead of moving on to the next number.',
     ),
     entry(
       'forgot-the-final-step',
@@ -600,11 +600,6 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Applied the rule the right number of times but started from zero, leaving out the number the pattern actually began with.',
     ),
     entry(
-      'incomplete-grouping-evaluation',
-      'order-of-operations',
-      'Evaluated only part of what was inside a grouping symbol, dropping one of the operations that belonged inside it.',
-    ),
-    entry(
       'inverted-both-fractions',
       'fraction-operations',
       'Took the reciprocal of both fractions instead of leaving them as written — division flips only the divisor, and multiplication flips nothing.',
@@ -630,19 +625,9 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Treated the larger denominator as the larger fraction — judging 1/8 greater than 1/3 because 8 is greater than 3 — reading the denominator as a count of parts owned rather than as the size of each part.',
     ),
     entry(
-      'miscounted-the-frequency',
-      'geometry-and-measurement',
-      'Miscounted how many data points shared a given measurement, undercounting the total.',
-    ),
-    entry(
       'misgrouped-the-subtraction',
       'order-of-operations',
       'Applied a subtraction to the wrong part of the expression instead of to the whole product or sum it belonged with.',
-    ),
-    entry(
-      'misidentified-the-extreme',
-      'geometry-and-measurement',
-      'Picked the wrong data point as the maximum or minimum when finding a range.',
     ),
     entry(
       'misplaced-digits-in-the-quotient',
@@ -878,11 +863,6 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'stopped-after-the-first-line-of-symmetry',
       'geometry-and-measurement',
       'Stopped after finding one line of symmetry instead of testing every direction the figure can fold.',
-    ),
-    entry(
-      'stopped-at-an-intermediate-unit',
-      'unit-conversion',
-      'Converted partway through a chain of units and reported that intermediate unit instead of continuing to the requested unit.',
     ),
     entry(
       'stopped-the-divisor-check-early',
@@ -1469,6 +1449,26 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'miscounted-while-pairing-the-objects',
       'incomplete-procedure',
       'Lost track while pairing up a group of objects to check for odd or even, and reported the opposite of what the group actually pairs into.',
+    ),
+    entry(
+      'guessed-odd-or-even-from-the-size-of-the-number',
+      'incomplete-procedure',
+      'Decided whether a number is odd or even from how big it looks, instead of pairing the objects up or splitting them into two equal groups.',
+    ),
+    entry(
+      'split-into-unequal-groups-and-called-them-equal',
+      'incomplete-procedure',
+      'Split a group into two parts that use every object but are not the same size, and called them the two EQUAL groups or equal addends the question asked for.',
+    ),
+    entry(
+      'wrote-equal-addends-with-the-wrong-total',
+      'incomplete-procedure',
+      'Wrote a true doubles fact, but its total is not the number the question asked about.',
+    ),
+    entry(
+      'swapped-the-words-odd-and-even',
+      'incomplete-procedure',
+      'Paired the objects correctly but then named the result with the wrong word: called a group with none left over odd, or a group with one left over even.',
     ),
     entry(
       'judged-the-total-by-the-count-of-pairs',

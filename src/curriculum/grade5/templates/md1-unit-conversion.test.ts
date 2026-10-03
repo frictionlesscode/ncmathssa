@@ -91,4 +91,11 @@ describe('md1UnitConversion', () => {
       });
     }
   });
+
+  it('md1 template: the explanation never says "same length" (the units include weight and capacity)', () => {
+    for (let seed = 0; seed < 300; seed++) {
+      const g = md1UnitConversion.generate(makeRng(seed));
+      expect(g.explanation.stepByStep.join(' '), `seed ${seed}`).not.toMatch(/same length/);
+    }
+  });
 });

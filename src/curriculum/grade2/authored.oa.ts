@@ -184,12 +184,12 @@ export const GRADE_2_OA_AUTHORED: Question[] = [
     explanation: {
       stepByStep: [
         'Step 1: Ana started with 9 crayons and lost some — that loss is the ☐.',
-        'Step 2: After losing some, her friend gave her 4 more, and she ended with 8.',
+        'Step 2: After losing some, she got 4 more, and she ended with 8.',
         'Step 3: Work backward: 8 − 4 = 4 tells how many Ana had right after she lost the crayons.',
         'Step 4: 9 − 4 = 5, so the number that goes in the ☐ is 5.',
       ],
       conceptSummary:
-        'A two-step problem is solved one step at a time, in the order the story happens. Undoing the last event first — here, taking away the 4 crayons her friend gave — uncovers the middle amount before the first event can be undone too.',
+        'A two-step problem is solved one step at a time, in the order the story happens. Undoing the last event first — here, taking away the 4 crayons she got — uncovers the middle amount before the first event can be undone too.',
       commonMisconception:
         'Subtracting 9 − 8 = 1 only compares the start and the end; it skips over the 4 crayons Ana was given in between.',
     },
@@ -348,12 +348,19 @@ export const GRADE_2_OA_AUTHORED: Question[] = [
         isCorrect: false,
         misconception: 'judged-the-total-by-the-count-of-pairs',
       },
-      // Restates the number of crayons instead of answering odd or even.
-      { text: '16 crayons', isCorrect: false, misconception: 'restated-a-known-number-instead-of-solving' },
+      // Decided from the size of the number, not from any pairing. (The old
+      // option, "16 crayons", was not an answer to an odd-or-even question and
+      // could be ruled out on form alone.)
+      {
+        text: 'Odd, because 16 is a big number.',
+        isCorrect: false,
+        misconception: 'guessed-odd-or-even-from-the-size-of-the-number',
+      },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
         'Step 1: Pairing objects up is a way to check odd or even: put them into groups of 2.',
@@ -389,12 +396,17 @@ export const GRADE_2_OA_AUTHORED: Question[] = [
         isCorrect: false,
         misconception: 'miscounted-while-pairing-the-objects',
       },
-      // Restates the number of pairs instead of answering odd or even.
-      { text: '6 pairs', isCorrect: false, misconception: 'restated-a-known-number-instead-of-solving' },
+      // Decided from the size of the number, not from the leftover block.
+      {
+        text: 'Even, because 13 is a big number.',
+        isCorrect: false,
+        misconception: 'guessed-odd-or-even-from-the-size-of-the-number',
+      },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
         'Step 1: Pairing objects up checks odd or even: put them into groups of 2.',
@@ -416,15 +428,21 @@ export const GRADE_2_OA_AUTHORED: Question[] = [
     // distinct from pairing (groups of 2) per the standard's second bullet.
     prompt:
       'Dana has 18 buttons. Can she split them into two equal groups with none left over?',
+    contentVersion: 2,
     options: labelOptions([
       // Split into two groups that are not equal in size.
       {
         text: 'Yes — 10 buttons in one group and 8 in the other.',
         isCorrect: false,
-        misconception: 'miscounted-while-pairing-the-objects',
+        misconception: 'split-into-unequal-groups-and-called-them-equal',
       },
-      // Restates the total instead of describing the two equal groups.
-      { text: '18 buttons', isCorrect: false, misconception: 'restated-a-known-number-instead-of-solving' },
+      // Decided from the size of the number. (The old option, "18 buttons",
+      // was not an answer to a yes-or-no question.)
+      {
+        text: 'No — 18 is too big a number to split evenly.',
+        isCorrect: false,
+        misconception: 'guessed-odd-or-even-from-the-size-of-the-number',
+      },
       { text: 'Yes — 9 buttons in each of the two groups.', isCorrect: true },
       // Claims it cannot be done at all, contradicting that 18 is even.
       {
@@ -458,9 +476,9 @@ export const GRADE_2_OA_AUTHORED: Question[] = [
     prompt: 'Which equation shows 14 as the sum of two equal addends?',
     options: labelOptions([
       // Addends that sum correctly but are not equal to each other.
-      { text: '6 + 8 = 14', isCorrect: false, misconception: 'judged-the-total-by-the-count-of-pairs' },
-      // Halved 14 incorrectly, off by one in each addend.
-      { text: '6 + 6 = 12', isCorrect: false, misconception: 'miscounted-while-pairing-the-objects' },
+      { text: '6 + 8 = 14', isCorrect: false, misconception: 'split-into-unequal-groups-and-called-them-equal' },
+      // Two equal addends, but they add to 12, not 14: each is one less than half.
+      { text: '6 + 6 = 12', isCorrect: false, misconception: 'wrote-equal-addends-with-the-wrong-total' },
       // Equal addends, but the sum is wrong.
       { text: '7 + 7 = 15', isCorrect: false, misconception: 'counted-on-by-ones-one-too-many' },
       { text: '7 + 7 = 14', isCorrect: true },
