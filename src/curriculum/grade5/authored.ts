@@ -25,54 +25,57 @@ export const GRADE_5_AUTHORED: Question[] = [
     standardCode: 'NC.5.OA.2',
     domainId: 'OA',
     prompt: 'Evaluate the expression below following the standard order of operations:',
-    promptDetails: '36 ÷ (6 - 3) + 5 × 3',
+    promptDetails: '6 × (12 - 4)',
     options: labelOptions([
-      // Parentheses ignored: 36 ÷ 6 = 6, then 6 - 3 + 15 = 18.
-      { text: '18', isCorrect: false, misconception: 'ignored-grouping-symbols' },
-      // 36 ÷ 3 = 12, then 12 + 5 = 17, then 17 × 3 = 51.
-      { text: '51', isCorrect: false, misconception: 'order-of-operations-left-to-right' },
-      { text: '27', isCorrect: true },
-      // Stopped at 36 ÷ 3 = 12 and never added 5 × 3.
-      { text: '12', isCorrect: false, misconception: 'forgot-the-final-step' },
+      // Parentheses ignored: 6 × 12 = 72, then 72 - 4 = 68.
+      { text: '68', isCorrect: false, misconception: 'ignored-grouping-symbols' },
+      // Stopped after the parentheses: 12 - 4 = 8.
+      { text: '8', isCorrect: false, misconception: 'forgot-the-final-step' },
+      // Key: (12 - 4) = 8, then 6 × 8 = 48.
+      { text: '48', isCorrect: true },
+      // Added instead of multiplying: 6 + 12 - 4 = 14.
+      { text: '14', isCorrect: false, misconception: 'added-instead-of-multiplied' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: Evaluate inside the parentheses: (6 - 3) = 3. The expression is now: 36 ÷ 3 + 5 × 3.',
-        'Step 2: Perform multiplication and division from left to right: 36 ÷ 3 = 12, and 5 × 3 = 15.',
-        'Step 3: Perform addition: 12 + 15 = 27.'
+        'Step 1: Evaluate inside the parentheses first: (12 - 4) = 8. The expression is now: 6 × 8.',
+        'Step 2: Multiply: 6 × 8 = 48.'
       ],
-      conceptSummary: 'Operations inside parentheses take highest priority, followed by multiplication/division from left to right, then addition/subtraction.',
-      commonMisconception: 'Adding 12 + 5 before multiplying 5 × 3 gives 17 × 3 = 51, which is incorrect.'
+      conceptSummary: 'Operations inside parentheses take highest priority. Do them first, then finish the expression.',
+      commonMisconception: 'Multiplying 6 × 12 = 72 first and then subtracting 4 gives 68, which ignores the parentheses.'
     }
   },
   {
     id: 'oa2-02',
     standardCode: 'NC.5.OA.2',
     domainId: 'OA',
-    prompt: 'Which numerical expression represents the statement: "Subtract 7 from the product of 9 and 6, then divide by 5"?',
+    prompt: 'Which numerical expression represents the statement: "Subtract 8 from 32, then divide the difference by 6"?',
     options: labelOptions([
-      { text: '(9 × 6 - 7) ÷ 5', isCorrect: true },
-      // Subtracted 7 from the factor 6 rather than from the product.
-      { text: '9 × (6 - 7) ÷ 5', isCorrect: false, misconception: 'misgrouped-the-subtraction' },
-      // Read "subtract 7 from X" as 7 - X.
-      { text: '(7 - 9 × 6) ÷ 5', isCorrect: false, misconception: 'reversed-the-subtraction' },
-      // Divided only the 7 by 5 because the whole quantity was never grouped.
-      { text: '9 × 6 - (7 ÷ 5)', isCorrect: false, misconception: 'ignored-grouping-symbols' },
+      // Key: the difference (32 - 8) is grouped, then divided by 6. Value 4.
+      { text: '(32 - 8) ÷ 6', isCorrect: true },
+      // Left the difference ungrouped, so only the 8 is divided by 6.
+      { text: '32 - 8 ÷ 6', isCorrect: false, misconception: 'ignored-grouping-symbols' },
+      // Read "subtract 8 from 32" as 8 - 32.
+      { text: '(8 - 32) ÷ 6', isCorrect: false, misconception: 'reversed-the-subtraction' },
+      // Grouped the 8 with the 6 instead of with the 32.
+      { text: '32 ÷ (8 - 6)', isCorrect: false, misconception: 'misgrouped-the-subtraction' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'mastery',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: "The product of 9 and 6" is written as (9 × 6).',
-        'Step 2: "Subtract 7 from the product" means subtracting 7 from (9 × 6): (9 × 6 - 7).',
-        'Step 3: "Then divide by 5" means the entire quantity must be divided by 5, requiring grouping: (9 × 6 - 7) ÷ 5.'
+        'Step 1: "Subtract 8 from 32" is written 32 - 8.',
+        'Step 2: "The difference" is the whole result of that subtraction, so it needs grouping symbols: (32 - 8).',
+        'Step 3: "Divide by 6" applies to the whole difference: (32 - 8) ÷ 6.'
       ],
-      conceptSummary: 'Grouping symbols dictate the order in which multi-step verbal statements are carried out.',
-      commonMisconception: 'Choice C reverses subtraction ("subtract from" means start with the product and remove 7).'
+      conceptSummary: 'Grouping symbols show which part of a statement is done first and treated as one quantity.',
+      commonMisconception: 'Choice C reverses the subtraction ("subtract 8 from 32" starts with 32 and takes away 8).'
     }
   },
   {
@@ -80,28 +83,28 @@ export const GRADE_5_AUTHORED: Question[] = [
     standardCode: 'NC.5.OA.2',
     domainId: 'OA',
     prompt: 'Evaluate the expression without using a calculator:',
-    promptDetails: '(18 - 6) ÷ 3 × (4 + 8) - 15',
+    promptDetails: '5 × (1.5 + 0.75)',
     options: labelOptions([
-      // Dropped the second parentheses: 4 × 4 + 8 - 15 = 9.
-      { text: '9', isCorrect: false, misconception: 'incomplete-grouping-evaluation' },
-      // Stopped at 4 × 12 = 48 and never subtracted 15.
-      { text: '48', isCorrect: false, misconception: 'forgot-the-final-step' },
-      // Parentheses ignored: 18 - 6 ÷ 3 × 4 + 8 - 15 = 18 - 8 + 8 - 15 = 3.
-      { text: '3', isCorrect: false, misconception: 'ignored-grouping-symbols' },
-      { text: '33', isCorrect: true },
+      // Parentheses ignored: 5 × 1.5 = 7.5, then 7.5 + 0.75 = 8.25.
+      { text: '8.25', isCorrect: false, misconception: 'ignored-grouping-symbols' },
+      // Stopped after the parentheses: 1.5 + 0.75 = 2.25.
+      { text: '2.25', isCorrect: false, misconception: 'forgot-the-final-step' },
+      // Added instead of multiplying: 5 + 1.5 + 0.75 = 7.25.
+      { text: '7.25', isCorrect: false, misconception: 'added-instead-of-multiplied' },
+      // Key: (1.5 + 0.75) = 2.25, then 5 × 2.25 = 11.25.
+      { text: '11.25', isCorrect: true },
     ]),
     calculatorAllowed: false,
-    isStretch: true,
-    difficulty: 'stretch',
+    isStretch: false,
+    difficulty: 'advanced',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: First parentheses: 18 - 6 = 12.',
-        'Step 2: Second parentheses: 4 + 8 = 12. Expression is now: 12 ÷ 3 × 12 - 15.',
-        'Step 3: Division and multiplication, left to right: 12 ÷ 3 = 4, then 4 × 12 = 48.',
-        'Step 4: Subtraction: 48 - 15 = 33.'
+        'Step 1: Parentheses first. Line up the decimal points: 1.50 + 0.75 = 2.25. The expression is now: 5 × 2.25.',
+        'Step 2: Multiply: 5 × 2 = 10 and 5 × 0.25 = 1.25, so 5 × 2.25 = 11.25.'
       ],
-      conceptSummary: 'Evaluate every set of parentheses first, then multiply and divide from left to right, then add and subtract.',
-      commonMisconception: 'Forgetting the second set of parentheses and multiplying 4 × 4 before adding 8.'
+      conceptSummary: 'Evaluate the parentheses first, then finish the expression. The numbers inside can be decimals.',
+      commonMisconception: 'Multiplying 5 × 1.5 = 7.5 first and then adding 0.75 gives 8.25, which ignores the parentheses.'
     }
   },
   {
@@ -186,7 +189,7 @@ export const GRADE_5_AUTHORED: Question[] = [
         'Step 3: For x = 35: y = 3 × 35 = 105.'
       ],
       conceptSummary: 'Corresponding terms of proportional patterns maintain a constant ratio (y/x = constant).',
-      commonMisconception: 'Listing terms one by one up to 35, which takes unnecessary time and risks counting errors.'
+      commonMisconception: 'Adding the difference between the rules (35 + 10 = 45) instead of scaling: y is always 3 times x.'
     }
   },
   {
@@ -203,7 +206,7 @@ export const GRADE_5_AUTHORED: Question[] = [
       // 48 × 6/9 = 32: used the reciprocal of the correct ratio.
       { text: '32', isCorrect: false, misconception: 'inverted-the-ratio' },
     ]),
-    calculatorAllowed: true,
+    calculatorAllowed: false,
     isStretch: true,
     difficulty: 'stretch',
     explanation: {
@@ -212,7 +215,7 @@ export const GRADE_5_AUTHORED: Question[] = [
         'Step 2: Apply the same 8 steps to Pattern 2: 8 × 9 = 72.',
         'Step 3: Alternatively, notice the ratio y/x = 9/6 = 3/2 = 1.5. 48 × 1.5 = 72.'
       ],
-      conceptSummary: 'Ordered pairs created by two arithmetic patterns form a straight line with slope equal to (rate 2) / (rate 1).',
+      conceptSummary: 'When two patterns both start at 0, each y is the same number of times its x. Here y is always 1.5 times x, so the points line up in a straight line.',
       commonMisconception: 'Adding 3 (the difference between 9 and 6) to 48 instead of using multiplicative scaling.'
     }
   },

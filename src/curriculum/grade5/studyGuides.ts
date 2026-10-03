@@ -21,14 +21,13 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       'Forgetting parentheses when translating word problems (e.g. "add 6 and 4, then multiply by 5" is (6 + 4) × 5 = 50, NOT 6 + 4 × 5 = 26).'
     ],
     workedExample: {
-      problem: 'Evaluate the expression: 40 - 3 × (2 + 6) + 18 ÷ 3',
+      problem: 'Evaluate the expression: 48 ÷ (10 - 4)',
       steps: [
-        '1. Parentheses: (2 + 6) = 8. Expression is now: 40 - 3 × 8 + 18 ÷ 3',
-        '2. Multiplication and division, left to right: 3 × 8 = 24 and 18 ÷ 3 = 6. Expression is now: 40 - 24 + 6',
-        '3. Left-to-right addition/subtraction: 40 - 24 = 16, then 16 + 6 = 22.'
+        '1. Parentheses first: (10 - 4) = 6. The expression is now: 48 ÷ 6',
+        '2. Divide: 48 ÷ 6 = 8.'
       ],
-      answer: '22',
-      whyItMattersForSSA: 'Test questions often mix parentheses with several operations to check that the student does not simply work left to right.'
+      answer: '8',
+      whyItMattersForSSA: 'Parentheses change which step comes first. Working left to right without them would give 48 ÷ 10 - 4 = 0.8, which is not the same expression.'
     }
   },
 
@@ -60,7 +59,7 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
         '4. 6th term of Rule Y = 15 × 4 = 60.'
       ],
       answer: '60 (Rule Y terms are 4 times Rule X terms)',
-      whyItMattersForSSA: 'SSA tests student readiness for 6th grade algebraic proportional relationships (y = kx).'
+      whyItMattersForSSA: 'Seeing that every y is the same number of times its x is what makes the points line up when they are graphed.'
     }
   },
 

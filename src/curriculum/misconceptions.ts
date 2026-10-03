@@ -610,11 +610,6 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Applied the rule the right number of times but started from zero, leaving out the number the pattern actually began with.',
     ),
     entry(
-      'incomplete-grouping-evaluation',
-      'order-of-operations',
-      'Evaluated only part of what was inside a grouping symbol, dropping one of the operations that belonged inside it.',
-    ),
-    entry(
       'inverted-both-fractions',
       'fraction-operations',
       'Took the reciprocal of both fractions instead of leaving them as written — division flips only the divisor, and multiplication flips nothing.',
