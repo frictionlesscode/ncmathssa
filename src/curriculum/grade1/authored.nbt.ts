@@ -36,9 +36,11 @@ import { unitCount, tensAndOnes } from './templates/placeValue';
  *               founding error — believing 19 + 1 is 110 — and the other two
  *               are word problems, where the generator only ever asks a bare
  *               "Find the total".
- *   NC.1.NBT.5  10 more or 10 less, as word problems, including a case that
- *               crosses into a new hundred (94 and 10 more) and a case that
- *               goes down into single digits (13 and 10 less).
+ *   NC.1.NBT.5  10 more or 10 less than a two-digit number, as word
+ *               problems, including a case at the top of the range (84 and 10
+ *               more is 94) and a case that goes down into single digits (13
+ *               and 10 less). Results stay below 100: trading 10 tens for a
+ *               hundred is Grade 2 place value.
  *   NC.1.NBT.6  subtract two multiples of 10, as word problems.
  *
  * Every prompt passes `assertGradeOneReadable` (under 90 characters, at most
@@ -462,24 +464,27 @@ export const GRADE_1_NBT_AUTHORED: Question[] = [
     id: 'g1-nbt5-02',
     standardCode: 'NC.1.NBT.5',
     domainId: 'NBT',
-    prompt: 'There are 94 pretzels, and 10 more are added. How many now?',
+    // 84 + 10 = 94: one more ten, the ones stay 4. Distractors: 84 - 10 = 74,
+    // 84 + 1 = 85, and the restated 84.
+    prompt: 'There are 84 pretzels, and 10 more are added. How many now?',
     options: labelOptions([
-      { text: '104', isCorrect: true },
-      { text: '84', isCorrect: false, misconception: 'gave-10-less-instead-of-10-more' },
-      { text: '95', isCorrect: false, misconception: 'changed-the-ones-digit-instead-of-the-tens-digit' },
-      { text: '94', isCorrect: false, misconception: 'restated-a-known-number-instead-of-solving' },
+      { text: '94', isCorrect: true },
+      { text: '74', isCorrect: false, misconception: 'gave-10-less-instead-of-10-more' },
+      { text: '85', isCorrect: false, misconception: 'changed-the-ones-digit-instead-of-the-tens-digit' },
+      { text: '84', isCorrect: false, misconception: 'restated-a-known-number-instead-of-solving' },
     ]),
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'advanced',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: 94 is 9 tens and 4 ones.',
-        'Step 2: 10 more than 9 tens is 10 tens, which trades for 1 new hundred.',
-        'Step 3: 10 more than 94 is 104.',
+        'Step 1: 84 is 8 tens and 4 ones.',
+        'Step 2: 10 more than 8 tens is 9 tens.',
+        'Step 3: 10 more than 84 is 94.',
       ],
-      conceptSummary: '10 more still works the same way once a number is close to 100 — it just crosses into a new hundred, the same way 9 + 1 crosses into a new ten.',
-      commonMisconception: 'Giving 10 less instead of 10 more lands on 84, moving the wrong direction.',
+      conceptSummary: '10 more only changes the tens digit: one more ten. The ones digit stays the same, so there is no need to count.',
+      commonMisconception: 'Giving 10 less instead of 10 more lands on 74, moving the wrong direction.',
     },
   },
   {

@@ -428,9 +428,9 @@ export const GRADE_1_MD_AUTHORED: Question[] = [
         'Step 4: A quarter is worth 25 pennies.',
       ],
       conceptSummary:
-        'The quarter is worth the most of the four coins in pennies: 25, more than five times a nickel\'s value.',
+        'The quarter is worth the most of the four coins in pennies: 25, exactly five times a nickel\'s value.',
       commonMisconception:
-        'A dime looks similar in size to a quarter but is worth far fewer pennies: 10, not 25.',
+        'A dime is worth far fewer pennies than a quarter: 10, not 25.',
     },
   },
   {

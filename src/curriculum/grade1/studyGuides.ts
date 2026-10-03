@@ -86,7 +86,7 @@ export const GRADE_1_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     coreConcept:
       'When a story adds three numbers whose total is 20 or less, the three numbers do not have to be added in the order the story tells them. Looking for two of the three that make 10 - wherever they sit in the story - turns the problem into 10 plus one more number, which is quicker to add.',
     rulesAndFormulas: [
-      { label: 'Three addends, one problem', detail: 'A Grade 1 sum of three whole numbers always totals 20 or less.' },
+      { label: 'Three addends, one problem', detail: 'In this standard, the three numbers in a problem total 20 or less.' },
       { label: 'Any order, any grouping', detail: 'The three numbers can be added in whatever order is easiest, and the total stays the same.' },
       { label: 'Look for a ten', detail: 'If two of the three numbers make 10, add those first, then add the third number to 10.' },
     ],
@@ -325,11 +325,11 @@ export const GRADE_1_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     standardCode: 'NC.1.NBT.1',
     title: 'Counting All the Way to 150',
     coreConcept:
-      'Counting on by ones works the same way no matter where you start or how far you go - all the way to 150. Sometimes the very next number crosses into a new ten (89 to 90), and sometimes it crosses into a new hundred (99 to 100, or 129 to 130). Both are still just "the next number," counted the same way.',
+      'Counting on by ones works the same way no matter where you start or how far you go - all the way to 150. Sometimes the very next number crosses into a new ten (89 to 90), and sometimes it crosses into a new hundred (99 to 100). Going from 129 to 130 crosses a ten inside the hundred, and the hundreds digit stays 1. All of these are still just "the next number," counted the same way.',
     rulesAndFormulas: [
       { label: 'Start anywhere below 150', detail: 'Counting on by ones can begin at any number less than 150, not only at 1.' },
       { label: 'Crossing a ten', detail: 'After 89 comes 90 - the ones digit resets to 0 and the tens digit goes up by one.' },
-      { label: 'Crossing into the hundreds', detail: 'After 99 comes 100, and after 129 comes 130 - the count keeps going the same way even as a new hundred begins.' },
+      { label: 'Crossing into the hundreds', detail: 'After 99 comes 100, and the hundreds digit goes up by one. After 129 comes 130, which crosses a ten: the hundreds digit stays 1 and the tens digit goes up by one.' },
     ],
     stepByStepMethod: [
       'Step 1: Say the number you are on.',
@@ -350,7 +350,7 @@ export const GRADE_1_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       ],
       answer: '130',
       whyItMattersForSSA:
-        'Number & Operations in Base Ten is 7 of the 23 Grade 1 standards, and counting past 99 and past 129 the same way the count crosses every other ten is what lets a child count all the way to 150 without getting stuck at the trickiest spots.',
+        'Number & Operations in Base Ten is 7 of the 23 Grade 1 standards, and counting past 99 into the hundreds, and past 129 into a new ten, the same way the count crosses every other ten is what lets a child count all the way to 150 without getting stuck at the trickiest spots.',
     },
   },
 
@@ -458,7 +458,7 @@ export const GRADE_1_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     standardCode: 'NC.1.NBT.4',
     title: 'Adding within 100: a One-Digit Number or a Multiple of Ten',
     coreConcept:
-      'This standard adds a two-digit number to either a one-digit number or a multiple of 10 - never two arbitrary two-digit numbers added together, which is work for a later grade. Adding a one-digit number can add up to 10 or more in the ones place, which trades for a new ten. Adding a multiple of 10 only ever changes the tens digit.',
+      'This standard adds a two-digit number to either a one-digit number or a multiple of 10 - never two arbitrary two-digit numbers added together. Adding a one-digit number can add up to 10 or more in the ones place, which trades for a new ten. Adding a multiple of 10 only ever changes the tens digit.',
     rulesAndFormulas: [
       { label: 'A two-digit number plus a one-digit number', detail: 'Add onto the ones place; if the ones reach 10 or more, trade ten ones for one more ten.' },
       { label: 'A two-digit number plus a multiple of 10', detail: 'Add onto the tens place only - the ones digit does not change.' },
@@ -491,33 +491,33 @@ export const GRADE_1_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     standardCode: 'NC.1.NBT.5',
     title: '10 More or 10 Less, Found Mentally',
     coreConcept:
-      '10 more or 10 less than a two-digit number is found without counting, and it usually only changes the tens digit - the ones digit stays the same. Right at the edges, this needs one more step: if the tens digit is already 9, 10 more trades into a brand-new hundred (94 + 10 = 104); if the tens digit is already 1, 10 less leaves only the ones (13 − 10 = 3).',
+      '10 more or 10 less than a two-digit number is found without counting, and it usually only changes the tens digit - the ones digit stays the same. Right at the edge, this needs one more step: if the tens digit is already 1, 10 less leaves only the ones (13 − 10 = 3). The number you start from is a two-digit number, so 10 more stays below 100.',
     rulesAndFormulas: [
       { label: 'Usually, only the tens digit moves', detail: '47 + 10 = 57 and 47 − 10 = 37: the 7 ones never change.' },
-      { label: 'Crossing into a new hundred', detail: 'When the tens digit is already 9, 10 more trades those 10 tens for 1 new hundred: 94 + 10 = 104.' },
+      { label: 'The biggest tens digit', detail: 'The tens digit can go up to 9 when you add 10 to a number in the eighties: 84 + 10 = 94.' },
       { label: 'Down to just the ones', detail: 'When the tens digit is 1, 10 less removes that whole ten, leaving only the ones: 13 − 10 = 3.' },
     ],
     stepByStepMethod: [
       'Step 1: Find the tens digit and the ones digit of the number.',
       'Step 2: Move the tens digit up by one for 10 more, or down by one for 10 less.',
-      'Step 3: Check the edge cases - a tens digit already at 9 (adding) or at 1 (subtracting) needs the extra trade above.',
+      'Step 3: Check the edge case - a tens digit already at 1 (subtracting) leaves only the ones, as in 13 − 10 = 3.',
       'Step 4: The ones digit stays exactly the same throughout.',
     ],
     commonTraps: [
       'Changing the ones digit instead of the tens digit, turning 10 more into just 1 more.',
       'Moving in the wrong direction - giving 10 less when 10 more was asked for, or the reverse.',
-      'Forgetting the extra trade when the tens digit is already 9, and reporting a number 100 too small.',
+      'Forgetting that taking 10 from a number in the teens leaves only the ones, and writing 0 or a wrong digit in the tens place.',
     ],
     workedExample: {
-      problem: 'There are 94 pretzels, and 10 more are added. How many now?',
+      problem: 'There are 84 pretzels, and 10 more are added. How many now?',
       steps: [
-        '1. 94 is 9 tens and 4 ones.',
-        '2. 10 more than 9 tens is 10 tens, which trades for 1 new hundred.',
-        '3. 10 more than 94 is 104.',
+        '1. 84 is 8 tens and 4 ones.',
+        '2. 10 more than 8 tens is 9 tens.',
+        '3. 10 more than 84 is 94.',
       ],
-      answer: '104',
+      answer: '94',
       whyItMattersForSSA:
-        'Number & Operations in Base Ten is 7 of the 23 Grade 1 standards, and trading 10 tens for a new hundred here is the same trade adding a one-digit number within 100, elsewhere in this domain, uses when the ones reach 10.',
+        'Number & Operations in Base Ten is 7 of the 23 Grade 1 standards, and knowing that 10 more only moves the tens digit is what lets a child add a multiple of 10 within 100, elsewhere in this domain, without counting.',
     },
   },
 
@@ -629,7 +629,7 @@ export const GRADE_1_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     standardCode: 'NC.1.MD.3',
     title: 'Telling Time to the Hour and Half-Hour',
     coreConcept:
-      'The short hour hand names the hour, and the long minute hand shows whether it is exactly on the hour or half past. When the minute hand points at the 12, it is exactly on the hour. When the minute hand points at the 6, it is half past the hour - and at half past, the hour hand always sits halfway between the hour it just passed and the next one, on an analog clock or a digital one.',
+      'The short hour hand names the hour, and the long minute hand shows whether it is exactly on the hour or half past. When the minute hand points at the 12, it is exactly on the hour. When the minute hand points at the 6, it is half past the hour - and at half past, the hour hand always sits halfway between the hour it just passed and the next one, on an analog clock.',
     rulesAndFormulas: [
       { label: 'Minute hand at 12', detail: 'Exactly on the hour, written with :00.' },
       { label: 'Minute hand at 6', detail: 'Half past the hour, written with :30.' },
@@ -763,7 +763,7 @@ export const GRADE_1_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       ],
       answer: 'No - it also needs 4 square corners',
       whyItMattersForSSA:
-        'Geometry is 3 of the 23 Grade 1 standards, and checking every defining attribute a shape\'s name requires - not just one - is what keeps a rhombus from being mistaken for a rectangle.',
+        'Geometry is 3 of the 23 Grade 1 standards, and checking every defining attribute a shape\'s name requires - not just one - is what keeps a four-sided shape with no square corners from being mistaken for a rectangle.',
     },
   },
 

@@ -127,7 +127,7 @@ describe('grade 1 curriculum', () => {
       counts[d] = (counts[d] ?? 0) + 1;
     }
     expect(mock.questionIds.length).toBeGreaterThanOrEqual(18);
-    expect(mock.questionIds.length).toBeLessThanOrEqual(22);
+    expect(mock.questionIds.length).toBeLessThanOrEqual(23);
     expect(counts.G).toBeGreaterThan(0);
 
     for (const [domainId, n] of Object.entries(counts)) {

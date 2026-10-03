@@ -103,13 +103,15 @@ describe('grade 1 NBT authored bank', () => {
     }
   });
 
-  // Ruling 23-8: NC.1.NBT.5 draws two-digit numbers 10-99, and the bank
-  // includes both a crossing into a new hundred and a drop into single
-  // digits.
-  it('covers both edges of NC.1.NBT.5s range', () => {
+  // Ruling 23-8: NC.1.NBT.5 draws two-digit numbers, and the bank includes
+  // both the top of the range and a drop into single digits. content-g1
+  // audit: no result reaches 100, because trading 10 tens for a hundred is
+  // Grade 2 place value.
+  it('covers both edges of NC.1.NBT.5s range, all below 100', () => {
     const correctValues = itemsFor('NC.1.NBT.5').map((q) => Number(q.options.find((o) => o.isCorrect)!.text));
-    expect(correctValues.some((v) => v >= 100)).toBe(true);
+    expect(correctValues.some((v) => v >= 90 && v <= 99)).toBe(true);
     expect(correctValues.some((v) => v < 10)).toBe(true);
+    expect(correctValues.every((v) => v < 100)).toBe(true);
   });
 
   // The brief's own founding errors, named verbatim. Each is checked on the
