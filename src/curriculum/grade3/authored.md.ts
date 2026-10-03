@@ -77,7 +77,7 @@ export const GRADE_3_MD_AUTHORED: Question[] = [
     // misread before any arithmetic starts.
     prompt: 'What time does the clock show?',
     promptDetails:
-      'A clock with two hands. The short hour hand is a little way past the 2. The long minute hand is pointing at the third small mark after the 8. Each small mark on this clock is one minute, and four small marks sit between one number and the next, splitting that gap into five minutes.',
+      'A clock with two hands. The short hour hand is between the 2 and the 3, most of the way to the 3. The long minute hand is pointing at the third small mark after the 8. Each small mark on this clock is one minute, and four small marks sit between one number and the next, splitting that gap into five minutes.',
     options: labelOptions([
       // The minute hand at the 8 is 8 fives, which is 40 minutes; three small
       // marks more is 43. The hour hand is past the 2, so the hour is 2.

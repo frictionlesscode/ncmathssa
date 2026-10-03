@@ -274,7 +274,7 @@ export const GRADE_3_DOMAINS: DomainInfo[] = [
     id: 'NBT',
     name: 'Number & Operations in Base Ten',
     shortName: 'Base Ten to 1,000',
-    parentName: 'Place value & rounding',
+    parentName: 'Adding, subtracting & multiples of 10',
     officialWeightRange: '9–13%',
     officialWeightMidpoint: 11,
     color: 'blue',

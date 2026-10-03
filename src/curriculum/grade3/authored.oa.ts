@@ -811,7 +811,7 @@ export const GRADE_3_OA_AUTHORED: Question[] = [
     standardCode: 'NC.3.OA.9',
     domainId: 'OA',
     prompt:
-      'On a multiplication table, the row for 3 reads 3, 6, 9, 12, 15, 18, 21, 24, and the row for 6 reads 6, 12, 18, 24, 30, 36. Every number in the row for 6 also appears in the row for 3. Which statement explains why?',
+      'On a multiplication table, the row for 3 reads 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, and the row for 6 reads 6, 12, 18, 24, 30. Every number in the row for 6 also appears in the row for 3. Which statement explains why?',
     options: labelOptions([
       // Both rows are said to be even, which is false for the row for 3
       // (3, 9, 15 and 21 are odd) - a rule taken from part of the pattern.
