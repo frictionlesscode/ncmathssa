@@ -1481,6 +1481,21 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
       'Lost track while pairing up a group of objects to check for odd or even, and reported the opposite of what the group actually pairs into.',
     ),
     entry(
+      'guessed-odd-or-even-from-the-size-of-the-number',
+      'incomplete-procedure',
+      'Decided whether a number is odd or even from how big it looks, instead of pairing the objects up or splitting them into two equal groups.',
+    ),
+    entry(
+      'split-into-unequal-groups-and-called-them-equal',
+      'incomplete-procedure',
+      'Split a group into two parts that use every object but are not the same size, and called them the two EQUAL groups or equal addends the question asked for.',
+    ),
+    entry(
+      'wrote-a-sum-that-does-not-match-the-addends',
+      'incomplete-procedure',
+      'Wrote two addends and a total that do not add up, so the equation is false even though the addends look right.',
+    ),
+    entry(
       'judged-the-total-by-the-count-of-pairs',
       'incomplete-procedure',
       "Decided odd or even from whether the number of PAIRS is odd or even, instead of from whether any object is left without a partner.",
