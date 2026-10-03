@@ -105,6 +105,8 @@ describe('masteryByStandard ignores answers recorded against an older version', 
 
   it('keeps an answer whose id the source no longer knows', () => {
     expect(isCurrentAnswer({ questionId: 'gone', contentVersion: 1 }, c)).toBe(true);
+    // a malformed stored id must not throw in parseQuestionRef
+    expect(isCurrentAnswer({ questionId: 42 as unknown as string }, c)).toBe(true);
     expect(total([attemptOf(answer('gone', true))]).total).toBe(1);
   });
 

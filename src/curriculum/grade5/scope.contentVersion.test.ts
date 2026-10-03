@@ -1,8 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { GRADE_5_AUTHORED } from './authored';
+import { getCurriculum } from '../registry';
 
-/** Every Grade 5 item whose key, options or math changed in Plan B2 and now
- *  carries contentVersion 2. g3-02 (trapezoid) is Plan B1's and is excluded
+/** Every Grade 5 item (and, below, template) whose key, options or math
+ *  changed in Plan B2 and now carries contentVersion 2. g3-02 (trapezoid) is Plan B1's and is excluded
  *  from both sides of the check. */
 const BUMPED_BY_B2 = [
   'g3-03',
@@ -12,7 +13,18 @@ const BUMPED_BY_B2 = [
   'oa2-01', 'oa2-02', 'oa2-03',
 ];
 
+/** Generators whose math changed at the same templateId#seed. Explanation-only
+ *  edits (md1-unit-conversion) do not bump. */
+const BUMPED_TEMPLATES = ['g5.nbt1.powers-of-ten', 'g5.nf1.add-unlike', 'g5.nf4.multiply-fractions'];
+
 describe('Grade 5 content versions', () => {
+  it('the three generators whose math changed are version 2', () => {
+    const c = getCurriculum(5);
+    for (const templateId of BUMPED_TEMPLATES) {
+      expect(c.source.versionOf({ kind: 'generated', templateId, seed: 1 }), templateId).toBe(2);
+    }
+  });
+
   it('audit ledger: exactly the 17 rewritten items carry contentVersion 2', () => {
     expect(BUMPED_BY_B2).toHaveLength(17);
     for (const id of BUMPED_BY_B2) {

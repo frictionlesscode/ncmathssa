@@ -14,6 +14,7 @@ import {
 import type { Question, QuizAttempt } from '../types';
 import { correctOption, parseQuestionRef } from '../engine/questionModel';
 import { isMockQuiz } from '../engine/attempts';
+import { isCurrentAnswer } from '../engine/mastery';
 import { useProgress } from '../context/ProgressContext';
 import { formatTime } from '../utils/answerChecker';
 import { PromptDetails } from './PromptDetails';
@@ -273,6 +274,10 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
         {displayedQuestions.map((q) => {
 
           const ans = attempt.answers[q.id];
+          // The question was rewritten after this answer was saved, so the
+          // stored letter and verdict describe the old options: show them as
+          // text and mark nothing on today's options.
+          const stale = !!ans && !isCurrentAnswer(ans, curriculum);
           const isCorrect = ans?.isCorrect;
           const studentAns = ans?.studentAnswer || '(No answer provided)';
 
@@ -280,18 +285,20 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
             <div
               key={q.id}
               className={`bg-white rounded-3xl border shadow-xs overflow-hidden transition-all ${
-                isCorrect ? 'border-slate-200' : 'border-rose-200 ring-1 ring-rose-200'
+                isCorrect || stale ? 'border-slate-200' : 'border-rose-200 ring-1 ring-rose-200'
               }`}
             >
               {/* Question Card Header */}
               <div className="px-6 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2.5">
                   <span className={`w-7 h-7 rounded-xl flex items-center justify-center font-bold text-xs ${
-                    isCorrect
-                      ? 'bg-emerald-100 text-emerald-800'
-                      : 'bg-rose-100 text-rose-800'
+                    stale
+                      ? 'bg-slate-100 text-slate-600'
+                      : isCorrect
+                        ? 'bg-emerald-100 text-emerald-800'
+                        : 'bg-rose-100 text-rose-800'
                   }`}>
-                    {isCorrect ? <CheckCircle className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}
+                    {stale ? <AlertTriangle className="w-4 h-4" /> : isCorrect ? <CheckCircle className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}
                   </span>
                   <span className="font-mono text-xs font-bold px-2 py-0.5 bg-white text-slate-800 rounded border border-slate-200">
                     {q.standardCode}
@@ -332,10 +339,12 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
                 {/* Answer choices, with the key and the student's pick marked */}
                 <div className="grid sm:grid-cols-2 gap-2 text-xs">
                   {q.options.map(opt => {
-                    const isStudentChoice = opt.label === studentAns.toUpperCase();
+                    const isStudentChoice = !stale && opt.label === studentAns.toUpperCase();
 
                     let cardStyle = 'bg-slate-50 border-slate-200 text-slate-700';
-                    if (opt.isCorrect) {
+                    if (stale) {
+                      // nothing is marked on rewritten options
+                    } else if (opt.isCorrect) {
                       cardStyle = 'bg-emerald-50 border-emerald-300 text-emerald-950 font-bold';
                     } else if (isStudentChoice && !isCorrect) {
                       cardStyle = 'bg-rose-50 border-rose-300 text-rose-950 font-bold';
@@ -355,6 +364,12 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
                   })}
                 </div>
 
+                {stale ? (
+                  <p className="pt-2 text-xs font-semibold text-slate-700">
+                    This question was updated after it was answered. You chose {studentAns} and it was marked {isCorrect ? 'correct' : 'incorrect'} at the time.
+                  </p>
+                ) : (
+                  <>
                 {/* Answers Comparison Box */}
                 <div className="grid sm:grid-cols-2 gap-3 pt-2 text-xs">
                   <div className={`p-3 rounded-2xl border ${
@@ -377,6 +392,8 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
                     </span>
                   </div>
                 </div>
+                  </>
+                )}
 
                 {/* Worked Explanation */}
                 <div className="mt-4 pt-4 border-t border-slate-100 space-y-3 bg-slate-50/60 p-4 rounded-2xl border border-slate-200">
@@ -399,7 +416,7 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
                 </div>
 
                 {/* Interactive "Try Again" / Instant Retry for Missed Question */}
-                {!isCorrect && (
+                {!isCorrect && !stale && (
                   <div className="pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-start sm:items-center gap-2">
                     <span className="text-xs font-bold text-slate-700">Try Question Again:</span>
                     <div className="flex items-center gap-2 w-full sm:w-auto">

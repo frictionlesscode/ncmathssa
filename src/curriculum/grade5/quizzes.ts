@@ -61,9 +61,9 @@ export const GRADE_5_QUIZZES: QuizDefinition[] = [
     id: 'diagnostic-01',
     title: 'Baseline SSA Diagnostic Assessment',
     // Both counts below come from the active curriculum, not a grade-5
-    // literal (Ruling F11): this quiz happens to test one item per
-    // standard, so the question count and the standard count are the
-    // same figure but are still each derived independently.
+    // literal (Ruling F11): this quiz has more items than standards
+    // (some standards get two), so the two counts differ and are each
+    // derived independently.
     subtitle: (c: GradeCurriculum) =>
       `${DIAGNOSTIC_QUESTION_IDS.length}-question diagnostic covering all ${standardsOf(c).length} Grade ${c.grade} NCSCOS standards to determine your initial baseline.`,
     isDiagnostic: true,

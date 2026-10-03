@@ -4,7 +4,7 @@ export const GRADE_5_STUDY_GUIDES: Record<string, StudyGuideSection> = {
   'NC.5.OA.2': {
     standardCode: 'NC.5.OA.2',
     title: 'Order of Operations & Evaluating Numerical Expressions',
-    coreConcept: 'Expressions must be evaluated in strict mathematical order (PEMDAS/GEMS). In word problems, operations grouped inside parentheses must happen first.',
+    coreConcept: 'Expressions must be evaluated in a set order: parentheses first, then × and ÷ left to right, then + and − left to right. In word problems, operations grouped inside parentheses must happen first.',
     rulesAndFormulas: [
       { label: 'Parentheses ( )', detail: 'Always compute the expressions inside parentheses first.' },
       { label: 'Multiplication & Division (Left to Right)', detail: 'Neither takes priority over the other; compute them in order from left to right as you read.' },

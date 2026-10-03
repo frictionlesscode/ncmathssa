@@ -53,6 +53,7 @@ export const nbt1PowersOfTen: QuestionTemplate = {
   difficulty: 'mastery',
   calculatorAllowed: false,
   isStretch: false,
+  contentVersion: 2, // the math changed at the same seed
 
   generate(rng: Rng): GeneratedQuestion {
     // Draw the digits individually so the leading and trailing digits are

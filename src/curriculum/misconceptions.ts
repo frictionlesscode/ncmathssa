@@ -1463,7 +1463,7 @@ export const MISCONCEPTIONS: Record<string, MisconceptionInfo> = Object.fromEntr
     entry(
       'wrote-equal-addends-with-the-wrong-total',
       'incomplete-procedure',
-      'Wrote two equal addends that are each right as a sum, but the total is not the number the question asked about.',
+      'Wrote a true doubles fact, but its total is not the number the question asked about.',
     ),
     entry(
       'swapped-the-words-odd-and-even',

@@ -57,6 +57,7 @@ export const nf4MultiplyFractions: QuestionTemplate = {
   difficulty: 'mastery',
   calculatorAllowed: false,
   isStretch: false,
+  contentVersion: 2, // the math changed at the same seed
 
   generate(rng: Rng): GeneratedQuestion {
     const { n1, d1, n2, d2 } = rng.pick(FACTOR_PAIRS);

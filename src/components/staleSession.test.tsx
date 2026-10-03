@@ -9,8 +9,8 @@ import { newSession, stampContentVersions, type ActiveSession } from '../engine/
 
 // Spec 3.3: a saved session whose question was rewritten since it started
 // shows the existing "can't continue" discard screen, in both runners. The
-// recorded version is set to 99 so this needs no rewritten content: the
-// shipped Grade 5 items are version 1.
+// recorded version is set to 99 so this needs no rewritten content,
+// whatever version the shipped Grade 5 items are.
 
 const c = getCurriculum(5);
 const ids = c.quizzes.find((q) => q.isDiagnostic)!.questionIds.slice(0, 2);

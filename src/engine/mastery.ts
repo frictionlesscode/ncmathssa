@@ -39,7 +39,7 @@ export function isCurrentAnswer(
   ans: { questionId?: string; contentVersion?: number },
   c: GradeCurriculum,
 ): boolean {
-  if (!ans.questionId) return true;
+  if (typeof ans.questionId !== 'string' || !ans.questionId) return true;
   const current = c.source.versionOf(parseQuestionRef(ans.questionId));
   if (current === undefined) return true;
   return contentVersionOf(ans) === current;

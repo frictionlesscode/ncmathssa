@@ -44,6 +44,7 @@ export const nf1AddUnlike: QuestionTemplate = {
   difficulty: 'mastery',
   calculatorAllowed: false,
   isStretch: false,
+  contentVersion: 2, // the math changed at the same seed
 
   generate(rng: Rng): GeneratedQuestion {
     // NC.5.NF.1 restricts grade 5 to related denominators (RELATED_PAIRS).

@@ -36,7 +36,7 @@ describe('NC-R2: the trapezoid is exclusive in every grade', () => {
   it('no key, explanation or concept summary teaches the inclusive definition', () => {
     for (const q of everyQuestion()) {
       const key = q.options.find((o) => o.isCorrect)!.text;
-      const taught = [q.prompt.replace(/^A student claims:.*$/s, ''), key, ...q.explanation.stepByStep, q.explanation.conceptSummary].join(' ');
+      const taught = [q.prompt.replace(/"[^"]*"/g, ''), key, ...q.explanation.stepByStep, q.explanation.conceptSummary].join(' ');
       expect(INCLUSIVE.test(taught), `${q.id} teaches the inclusive trapezoid definition`).toBe(false);
       expect(CALLS_A_PARALLELOGRAM_A_TRAPEZOID.test(taught), `${q.id} calls a parallelogram a trapezoid`).toBe(false);
     }
