@@ -429,7 +429,7 @@ export const GRADE_4_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       ],
       answer: '6,125 tickets',
       whyItMattersForSSA:
-        'Multi-digit addition and subtraction is core Base Ten work, and Base Ten is 25–29% of the Grade 4 EOG; much of it is assessed without a calculator, so accuracy on paper is what counts.',
+        'Multi-digit addition and subtraction is core Base Ten work, and Base Ten is 25–29% of the Grade 4 EOG; every Base Ten question in this app is done without a calculator, so accuracy on paper is what counts.',
     },
   },
 
@@ -755,7 +755,7 @@ export const GRADE_4_STUDY_GUIDES: Record<string, StudyGuideSection> = {
       'Step 6: Check by adding the two parts back together - they must give the whole.',
     ],
     commonTraps: [
-      'Reading the wrong protractor scale. The two numbers where a ray crosses the protractor always add to 180, so picking the wrong one gives the supplement of the angle instead of the angle.',
+      'Reading the wrong protractor scale. The two numbers where a ray crosses the protractor always add to 180, so picking the wrong one gives 180 minus the angle instead of the angle.',
       'Assuming a straight angle. Answering 180 degrees assumes the two outer rays point in exactly opposite directions, which a diagram has to actually say.',
       'Assuming a right angle where the diagram never marked one.',
       'Answering with a part bigger than the whole. A part of an angle can never be bigger than the angle it sits inside.',
@@ -958,7 +958,7 @@ export const GRADE_4_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     coreConcept:
       'A two-step problem hides a question inside a question: you have to answer the first one to get the number the second one needs. The commonest way to lose the mark is to solve step one correctly and hand it in, so the last thing to do before writing an answer is to reread what was actually asked.',
     rulesAndFormulas: [
-      { label: 'Write one equation', detail: 'Use a letter for the final unknown: m = 8 x 12 - 27. Grouping matters - m + 27 / 6 divides only the 27.' },
+      { label: 'Write one equation', detail: 'Use a letter for the final unknown: m = 8 x 12 - 27. Or write one equation for each step: n = m + 27, then n / 6 = 14.' },
       { label: 'Estimate for reasonableness', detail: 'Round the numbers and check the size of your answer, but only report the exact value if the question said "exactly".' },
       { label: 'Interpret the remainder', detail: 'Round up for vans and boxes, drop it when it cannot be used, or report it when the question asks what is left over.' },
       { label: 'Repeated groups multiply', detail: '8 trays of 12 is 8 x 12, not 8 + 12.' },

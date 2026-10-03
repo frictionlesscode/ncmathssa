@@ -215,6 +215,7 @@ export const GRADE_4_MD_AUTHORED: Question[] = [
     id: 'g4-md1-03',
     standardCode: 'NC.4.MD.1',
     domainId: 'MD',
+    contentVersion: 2,
     prompt:
       'A recipe needs 250 milliliters of milk for one batch. Priya wants to know how much milk 5 batches need. She writes 250 × 5 = 1,250 and says the answer is 1,250 liters. Which statement about her work is correct?',
     // All four options are sentences, so the canonical parser returns null for
@@ -223,23 +224,23 @@ export const GRADE_4_MD_AUTHORED: Question[] = [
       // Her arithmetic is right, but she attached a unit that was never in the
       // problem: the measurements were given in millilitres.
       {
-        text: 'Her multiplication is right, and 1,250 liters is correct.',
+        text: 'Her multiplication is right, so 1,250 liters is the correct answer.',
         isCorrect: false,
         misconception: 'mislabeled-the-unit',
       },
       {
-        text: 'Her multiplication is right, but the answer is 1,250 milliliters, not liters.',
+        text: 'Her multiplication is right, but the unit should be milliliters.',
         isCorrect: true,
       },
       // Added the two numbers instead of multiplying: 250 + 5 = 255.
       {
-        text: 'She should have added: 250 + 5 = 255 milliliters.',
+        text: 'She should have added the two numbers: 250 + 5 = 255 milliliters.',
         isCorrect: false,
         misconception: 'added-instead-of-multiplied',
       },
       // Divided instead of multiplying: 250 ÷ 5 = 50.
       {
-        text: 'She should have divided: 250 ÷ 5 = 50 milliliters.',
+        text: 'She should have divided the two numbers: 250 ÷ 5 = 50 milliliters.',
         isCorrect: false,
         misconception: 'divided-instead-of-multiplied',
       },
@@ -252,7 +253,7 @@ export const GRADE_4_MD_AUTHORED: Question[] = [
         'Step 1: Five batches each needing the same amount is five equal groups, so multiplying is the right operation: 250 × 5.',
         'Step 2: 250 × 5 = 1,250, so Priya’s arithmetic is correct.',
         'Step 3: The 250 in the problem is 250 MILLILITERS, so the product is 1,250 milliliters. Nothing in the problem was measured in liters.',
-        'Step 4: Her multiplication is right, but the answer is 1,250 milliliters, not liters.',
+        'Step 4: Her multiplication is right, but the unit should be milliliters.',
       ],
       conceptSummary:
         'A measurement answer is a number AND a unit, and the unit comes from the measurements you multiplied — it is not chosen afterwards to suit the size of the number.',
@@ -1101,7 +1102,7 @@ export const GRADE_4_MD_AUTHORED: Question[] = [
       conceptSummary:
         'Reading a protractor is two steps: line one ray up with a zero, then read the scale that zero belongs to. Deciding first whether the angle is acute or obtuse tells you at once whether the number you read is believable.',
       commonMisconception:
-        'The two numbers where a ray crosses the protractor always add to 180, so picking the wrong one gives the supplement of the angle instead of the angle.',
+        'The two numbers where a ray crosses the protractor always add to 180, so picking the wrong one gives 180 minus the angle instead of the angle.',
     },
   },
   {

@@ -534,12 +534,13 @@ export const GRADE_4_G_AUTHORED: Question[] = [
     id: 'g4-g3-01',
     standardCode: 'NC.4.G.3',
     domainId: 'G',
+    contentVersion: 2,
     prompt: 'Which statement about the rectangle described below is true?',
     promptDetails:
       'The rectangle is 12 centimeters long and 5 centimeters wide, so it is much longer than it is wide.',
     options: labelOptions([
       {
-        text: 'It has exactly 2 lines of symmetry: one straight down the middle and one straight across the middle.',
+        text: 'It has exactly 2 lines of symmetry, one down and one across the middle.',
         isCorrect: true,
       },
       // Counted the two diagonals as fold lines as well, 2 + 2 = 4. A diagonal
@@ -572,7 +573,7 @@ export const GRADE_4_G_AUTHORED: Question[] = [
         'Step 1: A line of symmetry is a fold line: fold the figure along it and the two halves have to land exactly on top of each other.',
         'Step 2: Fold this rectangle straight down the middle and the left half lands on the right half. Fold it straight across the middle and the top half lands on the bottom half. Both folds work.',
         'Step 3: Now try a diagonal, corner to opposite corner. It does cut the rectangle into two triangles of the same size, but folding along it lays a 12-centimeter side onto a 5-centimeter side, and those do not match.',
-        'Step 4: So there are two fold lines and no more: It has exactly 2 lines of symmetry: one straight down the middle and one straight across the middle.',
+        'Step 4: So there are two fold lines and no more: It has exactly 2 lines of symmetry, one down and one across the middle.',
       ],
       conceptSummary:
         'Symmetry is tested by folding, not by looking. A fold line counts only when every point of one half lands on a matching point of the other half.',

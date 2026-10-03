@@ -290,33 +290,37 @@ export const GRADE_4_OA_AUTHORED: Question[] = [
     id: 'g4-oa3-04',
     standardCode: 'NC.4.OA.3',
     domainId: 'OA',
+    // One equation per step, with a letter for each unknown quantity. Grouping
+    // symbols are NC.5.OA.2, so nothing here needs parentheses. Solved: 6 teams
+    // of 14 is n = 6 x 14 = 84 members after joining, so m = 84 - 27 = 57.
     prompt:
-      'A club had some members. Then 27 new members joined. The club then split into 6 equal teams with 14 members on each team. Which equation uses m for the number of members the club started with?',
+      'A club had some members. Then 27 new members joined. The club then split into 6 equal teams with 14 members on each team. Let m be the members the club started with and n the members after 27 joined. Which pair of equations matches the story?',
     options: labelOptions([
-      { text: '(m + 27) ÷ 6 = 14', isCorrect: true },
-      // Without the parentheses only the 27 is divided by 6, so the new members
-      // are split into teams and the original members are not.
-      { text: 'm + 27 ÷ 6 = 14', isCorrect: false, misconception: 'ignored-grouping-symbols' },
+      // The 27 new members were taken away instead of added, which describes a
+      // club that got smaller.
+      { text: 'm − 27 = n and n ÷ 6 = 14', isCorrect: false, misconception: 'subtracted-instead-of-added' },
       // Splitting into equal teams is a division; multiplying by 6 instead
       // makes the club grow when it was being shared out.
-      { text: '(m + 27) × 6 = 14', isCorrect: false, misconception: 'multiplied-instead-of-divided' },
+      { text: 'm + 27 = n and n × 6 = 14', isCorrect: false, misconception: 'multiplied-instead-of-divided' },
+      { text: 'm + 27 = n and n ÷ 6 = 14', isCorrect: true },
       // "6 teams of 14" was written as 6 + 14 rather than 6 × 14.
-      { text: 'm + 27 = 6 + 14', isCorrect: false, misconception: 'added-instead-of-multiplied' },
+      { text: 'm + 27 = n and n = 6 + 14', isCorrect: false, misconception: 'added-instead-of-multiplied' },
     ]),
     calculatorAllowed: false,
     isStretch: true,
     difficulty: 'stretch',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
-        'Step 1: Let m stand for the members the club started with.',
-        'Step 2: After 27 joined, the club has m + 27 members, and that whole amount is split into teams.',
-        'Step 3: Grouping symbols are what make the WHOLE amount get divided: (m + 27) ÷ 6.',
-        'Step 4: Each team has 14 members, so the equation is (m + 27) ÷ 6 = 14 (and m = 57).',
+        'Step 1: Let m stand for the members the club started with and n for the members after 27 joined.',
+        'Step 2: Joining adds members, so the first equation is m + 27 = n.',
+        'Step 3: Those n members were split into 6 equal teams of 14, so the second equation is n ÷ 6 = 14.',
+        'Step 4: So the pair is m + 27 = n and n ÷ 6 = 14 (and n = 84, so m = 57).',
       ],
       conceptSummary:
-        'NC.4.OA.3 asks students to represent the problem with an equation and a letter for the unknown. The parentheses are not decoration: they record that the joining happened before the splitting.',
+        'NC.4.OA.3 asks students to represent a multi-step problem with equations and a letter for the unknown. One equation for each step keeps the joining and the splitting apart.',
       commonMisconception:
-        'Writing m + 27 ÷ 6 = 14 divides only the 27, which describes a different story than the one in the problem.',
+        'Writing m − 27 = n takes the new members away instead of adding them, which describes a club that got smaller.',
     },
   },
   {
@@ -605,11 +609,14 @@ export const GRADE_4_OA_AUTHORED: Question[] = [
     domainId: 'OA',
     // "Which rule generates this pattern?" would have had two right answers:
     // "Add 9, then add 36, then add 144" really does produce these four terms.
-    // The stem now asks for the ONE rule that takes each term to the next, so
-    // a changing rule is unambiguously not an answer — and stays a good
-    // distractor for the child who read the gaps instead of the ratio.
+    // The stem now asks for the ONE rule that takes every term to the next and
+    // would keep working after 192, so a list of changing steps is
+    // unambiguously not an answer — and stays a good distractor for the child
+    // who read the gaps instead of the ratio. (The earlier stem, "takes each
+    // term to the next one", was still literally true of that list.)
     prompt:
-      'A number pattern begins 3, 12, 48, 192. Which rule takes each term of this pattern to the next one?',
+      'A number pattern begins 3, 12, 48, 192. Which single rule takes each term to the next and would keep working after 192?',
+    contentVersion: 2,
     options: labelOptions([
       { text: 'Multiply by 4', isCorrect: true },
       // 3 + 9 = 12 checks out, so the rule was accepted after testing only the

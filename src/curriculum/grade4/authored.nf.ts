@@ -200,7 +200,7 @@ export const GRADE_4_NF_AUTHORED: Question[] = [
         misconception: 'larger-denominator-means-larger-fraction',
       },
       {
-        text: 'They are the same size, but 3/6 is made of more parts and each of those parts is smaller.',
+        text: 'They are equal: 3/6 uses more parts, but each part is smaller.',
         isCorrect: true,
       },
       // Counted 3 shaded parts against 1 shaded part and stopped, never asking
@@ -221,12 +221,13 @@ export const GRADE_4_NF_AUTHORED: Question[] = [
     calculatorAllowed: false,
     isStretch: false,
     difficulty: 'advanced',
+    contentVersion: 2,
     explanation: {
       stepByStep: [
         'Step 1: The strips are the same length, so the two shaded amounts can be compared directly.',
         'Step 2: Each sixth is one third the size of a half, because 6 is 3 times 2.',
         'Step 3: There are 3 shaded sixths and only 1 shaded half, and 3 parts that are each one third the size cover exactly the same length.',
-        'Step 4: They are the same size, but 3/6 is made of more parts and each of those parts is smaller.',
+        'Step 4: They are equal: 3/6 uses more parts, but each part is smaller.',
       ],
       conceptSummary:
         'NC.4.NF.1 is about explaining WHY two fractions are equivalent: the number of parts and the size of the parts move in opposite directions by the same factor, so the amount they cover stays put.',
@@ -326,6 +327,7 @@ export const GRADE_4_NF_AUTHORED: Question[] = [
     id: 'g4-nf2-02',
     standardCode: 'NC.4.NF.2',
     domainId: 'NF',
+    contentVersion: 2,
     prompt:
       "Mr. Diaz's class walked 7/12 mile and Ms. Rowe's class walked 5/6 mile on the same trail. Which class walked farther, and why?",
     options: labelOptions([
@@ -333,19 +335,19 @@ export const GRADE_4_NF_AUTHORED: Question[] = [
       // walker; twelfths are smaller parts than sixths, which this never
       // accounts for.
       {
-        text: "Mr. Diaz's class, because 7 is greater than 5.",
+        text: "Mr. Diaz's class, because the numerator 7 is greater than 5.",
         isCorrect: false,
         misconception: 'compared-numerators-only',
       },
       // 12 > 6, so the fraction written with the bigger denominator was called
       // the bigger distance.
       {
-        text: "Mr. Diaz's class, because 12 is greater than 6.",
+        text: "Mr. Diaz's class, because the denominator 12 is greater than 6.",
         isCorrect: false,
         misconception: 'larger-denominator-means-larger-fraction',
       },
       {
-        text: "Ms. Rowe's class, because 5/6 is the same as 10/12, and 10/12 is more than 7/12.",
+        text: "Ms. Rowe's class, because 5/6 = 10/12, which is more than 7/12.",
         isCorrect: true,
       },
       // Both fractions clear the 1/2 benchmark - 7/12 > 6/12 and 5/6 > 3/6 -
@@ -365,7 +367,7 @@ export const GRADE_4_NF_AUTHORED: Question[] = [
         'Step 1: The two classes walked the same trail, so the fractions refer to the same whole mile and can be compared.',
         'Step 2: 12 is a multiple of 6, so rename the sixths as twelfths: 5/6 = 10/12.',
         'Step 3: Now the parts are the same size, so the numerators decide it: 10 twelfths against 7 twelfths.',
-        "Step 4: Ms. Rowe's class, because 5/6 is the same as 10/12, and 10/12 is more than 7/12.",
+        "Step 4: Ms. Rowe's class, because 5/6 = 10/12, which is more than 7/12.",
       ],
       conceptSummary:
         'Two fractions can only be compared by their numerators once their denominators match. Renaming one fraction so both count the same-size parts is usually less work than renaming both.',
@@ -420,6 +422,7 @@ export const GRADE_4_NF_AUTHORED: Question[] = [
     id: 'g4-nf2-04',
     standardCode: 'NC.4.NF.2',
     domainId: 'NF',
+    contentVersion: 2,
     prompt:
       'Rosa ate 1/4 of a small pizza. Her cousin ate 1/6 of a large pizza, and the large pizza is much bigger than the small one. Rosa says "I ate more, because fourths are bigger pieces than sixths." What is wrong with her reasoning?',
     options: labelOptions([
@@ -446,7 +449,7 @@ export const GRADE_4_NF_AUTHORED: Question[] = [
         misconception: 'compared-across-different-wholes',
       },
       {
-        text: 'The two pizzas are different sizes, so comparing 1/4 and 1/6 cannot tell you who ate more food.',
+        text: 'The pizzas are different sizes, so 1/4 and 1/6 cannot be compared.',
         isCorrect: true,
       },
     ]),
@@ -458,7 +461,7 @@ export const GRADE_4_NF_AUTHORED: Question[] = [
         'Step 1: Rosa is right about the fractions themselves: of one identical pizza, 1/4 is more than 1/6, because fourths are the bigger pieces.',
         'Step 2: But 1/4 and 1/6 are fractions OF something, and here they are fractions of two different pizzas.',
         'Step 3: A sixth of a very large pizza can easily be more food than a fourth of a small one, so the fractions alone do not settle it.',
-        'Step 4: The two pizzas are different sizes, so comparing 1/4 and 1/6 cannot tell you who ate more food.',
+        'Step 4: The pizzas are different sizes, so 1/4 and 1/6 cannot be compared.',
       ],
       conceptSummary:
         'NC.4.NF.2 says it directly: comparisons are valid only when the two fractions refer to the same whole. A fraction is not an amount until you know what it is a fraction of.',
@@ -1220,6 +1223,7 @@ export const GRADE_4_NF_AUTHORED: Question[] = [
     id: 'g4-nf7-05',
     standardCode: 'NC.4.NF.7',
     domainId: 'NF',
+    contentVersion: 2,
     prompt:
       'A juice carton is 0.4 full. A milk jug is 0.05 full. The carton and the jug are not the same size. Which statement is TRUE?',
     options: labelOptions([
@@ -1246,7 +1250,7 @@ export const GRADE_4_NF_AUTHORED: Question[] = [
         misconception: 'compared-across-different-wholes',
       },
       {
-        text: 'The carton is the greater fraction full, but which container holds more liquid cannot be told from 0.4 and 0.05 alone.',
+        text: 'The carton is fuller, but which one holds more liquid cannot be told.',
         isCorrect: true,
       },
     ]),
@@ -1258,7 +1262,7 @@ export const GRADE_4_NF_AUTHORED: Question[] = [
         'Step 1: Compare the two decimals by place value: 0.4 is 40 hundredths and 0.05 is 5 hundredths, so 0.4 is much the greater number.',
         'Step 2: That settles one of the two questions here — which container is the greater fraction full. It is the carton.',
         'Step 3: It does not settle the other. A decimal is a fraction OF something, and these are fractions of two different containers: if the jug holds ten times what the carton holds, 0.05 of the jug is half a carton — more liquid than the carton has in it.',
-        'Step 4: The carton is the greater fraction full, but which container holds more liquid cannot be told from 0.4 and 0.05 alone.',
+        'Step 4: The carton is fuller, but which one holds more liquid cannot be told.',
       ],
       conceptSummary:
         'NC.4.NF.7 says it directly: a comparison of two decimals is valid only when they refer to the same whole. Two questions hide in one here — which is fuller, and which holds more — and the decimals answer only the first.',
