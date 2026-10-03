@@ -21,7 +21,7 @@ export const KidDone: React.FC<{ attempt: QuizAttempt; onHandBack: () => void }>
       <p className="text-2xl text-slate-800">{attempt.scoreRaw} out of {attempt.scoreTotal} ⭐</p>
       <p className="text-slate-600">{encouragementFor(attempt.scoreRaw, attempt.scoreTotal)}</p>
       <button onClick={onHandBack} className="w-full rounded-xl bg-blue-600 px-4 py-3 text-lg font-semibold text-white hover:bg-blue-700">
-        Hand back to your grown-up
+        Hand back to your parent
       </button>
     </div>
   </div>

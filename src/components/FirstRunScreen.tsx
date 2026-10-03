@@ -80,8 +80,13 @@ export const FirstRunScreen: React.FC<FirstRunScreenProps> = ({ onComplete, onCa
             <label htmlFor="first-run-grade" className="block text-sm font-medium text-slate-700 mb-1">
               Grade
             </label>
+            <p id="first-run-grade-hint" className="text-xs text-slate-500 mb-1">
+              The grade they will test on, which is the grade they want to skip. A 4th grader
+              testing to skip 5th grade math picks Grade 5.
+            </p>
             <select
               id="first-run-grade"
+              aria-describedby="first-run-grade-hint"
               value={grade}
               onChange={(e) => setGrade(Number(e.target.value) as Grade)}
               className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"

@@ -74,7 +74,7 @@ describe('App flow', () => {
       await userEvent.click(screen.getByRole('button', { name: i === total - 1 ? /finish/i : /^next$/i }));
     }
     expect(screen.getByText(/you did it!/i)).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: /hand back to your grown-up/i }));
+    await userEvent.click(screen.getByRole('button', { name: /hand back to your parent/i }));
     expect(screen.getByText(/readiness:/i)).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: /back to home/i }));
     expect(screen.getByText(/alex · grade 5 math/i)).toBeInTheDocument();
