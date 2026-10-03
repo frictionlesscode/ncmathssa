@@ -826,11 +826,11 @@ export const GRADE_4_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     standardCode: 'NC.4.G.2',
     title: 'Classifying Triangles and Quadrilaterals',
     coreConcept:
-      'A shape is classified by checking its properties - the size of its angles, the lengths of its sides, and whether its sides are parallel or perpendicular - and a name is only correct once EVERY property it requires has been checked. North Carolina uses the inclusive definition of a trapezoid: at least one pair of parallel sides.',
+      'A shape is classified by checking its properties - the size of its angles, the lengths of its sides, and whether its sides are parallel or perpendicular - and a name is only correct once EVERY property it requires has been checked. North Carolina uses the exclusive definition of a trapezoid: exactly one pair of parallel sides.',
     rulesAndFormulas: [
       { label: 'Triangles by angle', detail: 'Acute: all three angles under 90 degrees. Right: exactly one 90 degree angle. Obtuse: one angle over 90 degrees.' },
       { label: 'Triangles by side', detail: 'Equilateral: three equal sides. Isosceles: at least two equal sides. Scalene: no two sides equal.' },
-      { label: 'Trapezoid (NC inclusive)', detail: 'At least one pair of parallel sides - which makes every parallelogram a trapezoid as well.' },
+      { label: 'Trapezoid (NC exclusive)', detail: 'Exactly one pair of parallel sides. A parallelogram has two pairs, so a parallelogram (and a rectangle, rhombus or square) is not a trapezoid.' },
       { label: 'Parallelogram', detail: 'Both pairs of opposite sides parallel. Opposite sides are also equal.' },
       { label: 'Rhombus', detail: 'A parallelogram with all FOUR sides equal. It need not have right angles.' },
       { label: 'Rectangle and square', detail: 'A rectangle is a parallelogram with four right angles. A square has four right angles AND four equal sides, so it is both a rectangle and a rhombus.' },
@@ -845,25 +845,25 @@ export const GRADE_4_STUDY_GUIDES: Record<string, StudyGuideSection> = {
     ],
     commonTraps: [
       'Classifying by one property only, so a name is chosen before every property has been checked.',
-      'Using the exclusive trapezoid definition. Books outside North Carolina often define a trapezoid as having only one pair of parallel sides; the NC standards use the inclusive definition, which makes every parallelogram a trapezoid as well.',
+      'Using the inclusive trapezoid definition. Books outside North Carolina often define a trapezoid as having at least one pair of parallel sides; the NC standards say exactly one pair, so a parallelogram is not a trapezoid.',
       'Confusing "opposite sides equal" with "all four sides equal". Only the second one makes a rhombus.',
       'Assuming equal sides force square corners. A rhombus can lean over as far as you like and still have four sides the same length.',
       'Naming a triangle by its two smaller angles. Every triangle has at least two acute angles, including every obtuse one, so the largest angle is the one that decides the name.',
       'Assuming the longest side makes an angle obtuse, or treating any unequal sides as scalene when two of the three sides still match.',
     ],
     workedExample: {
-      problem: 'Triangle RST has angles of 40, 55 and 85 degrees and sides of 5 cm, 5 cm and 7 cm. Quadrilateral JKLM has four sides of 6 cm each, both pairs of opposite sides parallel, and no right angles. Classify each shape as precisely as you can.',
+      problem: 'Triangle RST has angles of 40, 70 and 70 degrees and sides of 6 cm, 6 cm and about 4 cm. Quadrilateral JKLM has four sides of 6 cm each, both pairs of opposite sides parallel, and no right angles. Classify each shape as precisely as you can.',
       steps: [
-        '1. Triangle angles: 40 + 55 + 85 = 180, so the measurements are possible.',
-        '2. Every angle is under 90 degrees - including the largest, 85 - so RST is ACUTE. Two small angles alone would not have told us this.',
-        '3. Two of its sides are 5 cm and one is 7 cm, so exactly two sides match: RST is ISOSCELES.',
+        '1. Triangle angles: 40 + 70 + 70 = 180, so the angles are possible. The two equal angles sit opposite the two equal sides, so the measurements agree.',
+        '2. Every angle is under 90 degrees - including the largest, 70 - so RST is ACUTE. Two small angles alone would not have told us this.',
+        '3. Two of its sides are 6 cm and one is about 4 cm, so exactly two sides match: RST is ISOSCELES.',
         '4. JKLM has both pairs of opposite sides parallel, so it is a parallelogram.',
         '5. All four sides are equal, so it is more precisely a RHOMBUS. No right angles means it is not a square.',
-        '6. Under the NC inclusive definition it is also a trapezoid, because it has at least one pair of parallel sides.',
+        '6. It is not a trapezoid: the NC exclusive definition needs exactly one pair of parallel sides, and JKLM has two pairs.',
       ],
-      answer: 'Triangle RST is acute and isosceles. JKLM is a rhombus (also a parallelogram, and a trapezoid under the NC inclusive definition).',
+      answer: 'Triangle RST is acute and isosceles. JKLM is a rhombus (also a parallelogram, but not a trapezoid under the NC exclusive definition).',
       whyItMattersForSSA:
-        'Classification questions are a reliable part of Geometry, which NCDPI weights together with Measurement and Data as one 23–27% reporting category on the Grade 4 EOG, and the inclusive trapezoid definition is a place where a confident answer learned elsewhere can be the wrong one here.',
+        'Classification questions are a reliable part of Geometry, which NCDPI weights together with Measurement and Data as one 23–27% reporting category on the Grade 4 EOG, and the exclusive trapezoid definition is a place where a confident answer learned elsewhere can be the wrong one here.',
     },
   },
 
