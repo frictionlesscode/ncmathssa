@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   BookOpen,
   Calendar,
-  GraduationCap,
   Layers,
   Printer,
   RotateCcw,
@@ -111,9 +110,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={() => onSelectTab('dashboard')}
             className="flex items-center gap-3 cursor-pointer group"
           >
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
-              <GraduationCap className="w-6 h-6" />
-            </div>
+            <img src={`${import.meta.env.BASE_URL}favicon.svg`} alt="" className="w-10 h-10 shadow-md shadow-blue-500/20 rounded-[14px] group-hover:scale-105 transition-transform" />
             <div>
               <div className="flex items-center gap-1.5">
                 <span className="text-base font-black tracking-tight text-slate-900">
