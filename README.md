@@ -4,11 +4,8 @@ A web application built to help students prepare for **North Carolina Single
 Subject Acceleration (SSA)** to skip ahead a grade in mathematics in the
 **Wake County Public School System (WCPSS)**.
 
-**Current scope: Grades 1 through 5.** Every grade's curriculum, question
-bank, and adaptive engine are described below; the sections under "Program
-Structure" and the architecture notes were written against Grade 5 first and
-carry its numbers as the worked example, but the same structure now backs
-Grades 1–4 as well (`src/curriculum/grade1/` through `grade4/`).
+**Current scope: Grades 1 through 5**, one curriculum module per grade
+(`src/curriculum/grade1/` through `grade5/`).
 
 ---
 
@@ -22,42 +19,31 @@ Grades 1–4 as well (`src/curriculum/grade1/` through `grade4/`).
 
 ---
 
-## Program Structure: 5 Domains & 17 Standards (Grade 5)
+## Curriculum by Grade
 
-### 1. Operations & Algebraic Thinking (OA) — 9–13% Blueprint Weight
-- **NC.5.OA.2**: Write, explain, and evaluate numerical expressions with four operations (up to two steps); parentheses, brackets, and braces; order of operations; commutative, associative, and distributive properties.
-- **NC.5.OA.3**: Generate two numerical patterns from two rules; identify relationships; form ordered pairs; graph them on a coordinate plane.
+Each grade covers the standards from its NCSCOS document, grouped by domain:
+Operations & Algebraic Thinking (OA), Number & Operations in Base Ten (NBT),
+Number & Operations — Fractions (NF, grades 3–5), Measurement & Data (MD) and
+Geometry (G). The full standard text lives in each grade's `standards.ts`
+and in `docs/sources/nc-standards-1-5.json`.
 
-### 2. Number & Operations in Base Ten (NBT) — 25–29% Blueprint Weight
-- **NC.5.NBT.1**: Place value patterns from one million to thousandths; $10\times$ and $\frac{1}{10}$ relationships; patterns when multiplying and dividing by powers of 10.
-- **NC.5.NBT.3**: Read, write, and compare decimals to thousandths (base-ten numerals, number names, expanded form; $>$, $=$, $<$).
-- **NC.5.NBT.5**: Fluently multiply up to a three-digit by a two-digit number using the standard algorithm.
-- **NC.5.NBT.6**: Divide up to four-digit dividends by two-digit divisors (arrays, area models, partial quotients, multiplication/division relationship).
-- **NC.5.NBT.7**: Add, subtract, multiply, and divide multi-digit whole numbers and decimals to hundredths; estimation to check reasonableness.
+| Grade | Standards | Domains | Domain weighting |
+|-------|-----------|---------|------------------|
+| 1 | 23 | OA, NBT, MD, G | Even by standard count (no state blueprint) |
+| 2 | 23 | OA, NBT, MD, G | Even by standard count (no state blueprint) |
+| 3 | 20 | OA, NBT, NF, MD, G | OA 32–36%, NBT 9–13%, NF 28–32%, MD+G 23–27% |
+| 4 | 25 | OA, NBT, NF, MD, G | OA 14–18%, NBT 25–29%, NF 30–34%, MD+G 23–27% |
+| 5 | 17 | OA, NBT, NF, MD, G | OA 9–13%, NBT 25–29%, NF 39–43%, MD+G 19–23% |
 
-### 3. Number & Operations — Fractions (NF) — 39–43% Blueprint Weight (Highest Priority)
-- **NC.5.NF.1**: Add and subtract fractions and mixed numbers with unlike (related) denominators; benchmark estimation; one- and two-step word problems.
-- **NC.5.NF.3**: Interpret a fraction as division of numerator by denominator ($a/b = a \div b$); equal-sharing division word problems.
-- **NC.5.NF.4**: Multiply a fraction or whole number by a fraction, including mixed numbers; area and length models; reasoning about how factors affect the product.
-- **NC.5.NF.7**: Divide unit fractions by whole numbers and whole numbers by unit fractions.
+Grade 3–5 ranges come from the NCDPI EOG Mathematics Test Specifications
+(`docs/sources/nc-eog-blueprint.json`); NCDPI weights Measurement & Data and
+Geometry as one combined band.
 
-### 4. Measurement & Data (MD) — 12–15% Blueprint Weight
-- **NC.5.MD.1**: Convert measurement units within a system (customary and metric) using multiplicative reasoning.
-- **NC.5.MD.2**: Represent and interpret data; line graphs and plots with fractional intervals ($\frac{1}{8}, \frac{1}{4}, \frac{1}{2}$).
-- **NC.5.MD.4**: Volume as an attribute of 3D solids; measure volume by counting unit cubes.
-- **NC.5.MD.5**: Relate volume to multiplication and addition ($V = l \times w \times h$ and $V = B \times h$); volume of rectangular prisms and composed composite 3D figures.
-
-### 5. Geometry (G) — 7–10% Blueprint Weight
-- **NC.5.G.1**: Graph points in the first quadrant of the coordinate plane; interpret $x$ and $y$ coordinates in real-world contexts.
-- **NC.5.G.3**: Classify two-dimensional figures (polygons, quadrilaterals, trapezoids, parallelograms, rectangles, rhombuses, squares) by properties in a hierarchy.
-
-> **Question pool note:** 10 of the 17 standards have a seeded question
-> generator, which supplies effectively unlimited practice items. The other
-> 7 — **NC.5.G.1, NC.5.G.3, NC.5.MD.2, NC.5.MD.4, NC.5.NF.3, NC.5.OA.2, and
-> NC.5.OA.3** — currently have hand-authored questions only, so their
-> practice pool is small and will repeat sooner than the generated
-> standards. This is a known gap, not an oversight; see `src/curriculum/grade5/templates/`
-> for the current generator set.
+> **Question pool note:** every standard has questions (checked by
+> `src/curriculum/integrity.test.ts`). Many
+> also have a seeded generator (`src/curriculum/gradeN/templates/`) that
+> supplies effectively unlimited practice items; standards without one have
+> a smaller pool that repeats sooner.
 
 ---
 
@@ -107,8 +93,8 @@ change, not a new component.
 - **Two question sources, one interface** — `src/engine/questionSource.ts`
   defines `QuestionSource`, implemented by `makeQuestionSource()` over two
   kinds of content per standard: hand-authored items
-  (`src/curriculum/grade5/authored.ts`) and seeded generator templates
-  (`src/curriculum/grade5/templates/`, one file per standard) that produce
+  (`src/curriculum/gradeN/authored*.ts`) and seeded generator templates
+  (`src/curriculum/gradeN/templates/`) that produce
   effectively unlimited fresh instances from a numeric seed. Callers ask
   for `itemsFor(standardCode, { count, seedBase })` and get back a mix of
   both, without caring which standard has which.
