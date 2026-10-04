@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ProgressProvider } from '../context/ProgressContext';
@@ -11,8 +11,10 @@ const c = getCurriculum(5);
 const base = (kind: 'checkup' | 'drill' = 'checkup') =>
   // Stamped like a real session start, so rewritten (version 2) items still run.
   stampContentVersions(sessionFromQuiz(c.quizzes.find((q) => q.isDiagnostic)!, kind, new Date('2026-09-30T12:00:00Z')), c);
-const renderRunner = (session: ActiveSession, handlers: Partial<Record<'onChange' | 'onFinish' | 'onPause' | 'onDiscard', ReturnType<typeof vi.fn>>> = {}) => {
-  const h = { onChange: vi.fn(), onFinish: vi.fn(), onPause: vi.fn(), onDiscard: vi.fn(), ...handlers };
+type Handler = 'onChange' | 'onFinish' | 'onPause' | 'onDiscard';
+type HandlerMock = Mock<(...args: any[]) => void>;
+const renderRunner = (session: ActiveSession, handlers: Partial<Record<Handler, HandlerMock>> = {}) => {
+  const h: Record<Handler, HandlerMock> = { onChange: vi.fn(), onFinish: vi.fn(), onPause: vi.fn(), onDiscard: vi.fn(), ...handlers };
   render(<ProgressProvider><QuizRunner session={session} {...h} /></ProgressProvider>);
   return h;
 };
