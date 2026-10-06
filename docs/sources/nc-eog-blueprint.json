@@ -1,0 +1,26 @@
+{
+  "source": "NCDPI EOG Mathematics Grades 3-8 Test Specifications, April 2026",
+  "url": "https://www.dpi.nc.gov/documents/accountability/testing/eog/eog-mathematics-grades-3-8-test-specifications/open",
+  "corroboratedBy": "Identical table in the February 11, 2020 edition of the same document",
+  "note": "NCDPI publishes no blueprint for grades 1-2; there is no EOG below grade 3. Measurement and Data is weighted together with Geometry as a single band at every grade below.",
+  "bands": {
+    "3": [
+      { "domains": ["OA"], "range": "32–36%", "midpoint": 34 },
+      { "domains": ["NBT"], "range": "9–13%", "midpoint": 11 },
+      { "domains": ["NF"], "range": "28–32%", "midpoint": 30 },
+      { "domains": ["MD", "G"], "range": "23–27%", "midpoint": 25 }
+    ],
+    "4": [
+      { "domains": ["OA"], "range": "14–18%", "midpoint": 16 },
+      { "domains": ["NBT"], "range": "25–29%", "midpoint": 27 },
+      { "domains": ["NF"], "range": "30–34%", "midpoint": 32 },
+      { "domains": ["MD", "G"], "range": "23–27%", "midpoint": 25 }
+    ],
+    "5": [
+      { "domains": ["OA"], "range": "9–13%", "midpoint": 11 },
+      { "domains": ["NBT"], "range": "25–29%", "midpoint": 27 },
+      { "domains": ["NF"], "range": "39–43%", "midpoint": 41 },
+      { "domains": ["MD", "G"], "range": "19–23%", "midpoint": 21 }
+    ]
+  }
+}

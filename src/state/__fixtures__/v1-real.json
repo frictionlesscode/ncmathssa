@@ -1,0 +1,87 @@
+{
+  "settings": {
+    "studentName": "Maya",
+    "currentGrade": 5,
+    "targetGrade": 6,
+    "targetExamDate": "2026-05-15",
+    "weeklyStudyGoalHours": 3,
+    "dailyQuestionGoal": 20
+  },
+  "attempts": [
+    {
+      "id": "attempt-1757606400000",
+      "quizId": "drill-nbt5",
+      "quizTitle": "NC.5.NBT.5 Drill: Multi-Digit Multiplication",
+      "domainId": "NBT",
+      "standardCode": "NC.5.NBT.5",
+      "completedAt": "2026-09-11T14:20:00.000Z",
+      "scoreRaw": 1,
+      "scoreTotal": 2,
+      "scorePercent": 50,
+      "isPassingSSA": false,
+      "timeElapsedSeconds": 184,
+      "answers": {
+        "nbt5-01": {
+          "questionId": "nbt5-01",
+          "studentAnswer": "6,480",
+          "isCorrect": false,
+          "standardCode": "NC.5.NBT.5",
+          "misconception": "dropped-partial-product-zero",
+          "timeSpentSeconds": 96,
+          "flaggedForReview": true
+        },
+        "nbt5-02": {
+          "questionId": "nbt5-02",
+          "studentAnswer": "9,645",
+          "isCorrect": true,
+          "standardCode": "NC.5.NBT.5",
+          "timeSpentSeconds": 88,
+          "flaggedForReview": false
+        }
+      }
+    },
+    {
+      "id": "attempt-1757692800000",
+      "quizId": "drill-nf1",
+      "quizTitle": "NC.5.NF.1 Drill: Adding Fractions with Unlike Denominators",
+      "domainId": "NF",
+      "standardCode": "NC.5.NF.1",
+      "completedAt": "2026-09-12T13:05:00.000Z",
+      "scoreRaw": 1,
+      "scoreTotal": 3,
+      "scorePercent": 33,
+      "isPassingSSA": false,
+      "timeElapsedSeconds": 301,
+      "answers": {
+        "nf1-01": {
+          "questionId": "nf1-01",
+          "studentAnswer": "3 8/10",
+          "isCorrect": false,
+          "standardCode": "NC.5.NF.1",
+          "misconception": "added-numerators-and-denominators",
+          "timeSpentSeconds": 110,
+          "flaggedForReview": true
+        },
+        "nf1-02": {
+          "questionId": "nf1-02",
+          "studentAnswer": "4 7/12",
+          "isCorrect": true,
+          "standardCode": "NC.5.NF.1",
+          "timeSpentSeconds": 92,
+          "flaggedForReview": false
+        },
+        "nf7-01": {
+          "questionId": "nf7-01",
+          "studentAnswer": "4 patties",
+          "isCorrect": false,
+          "standardCode": "NC.5.NF.7",
+          "misconception": "forgot-to-scale-by-the-whole-number",
+          "timeSpentSeconds": 99,
+          "flaggedForReview": true
+        }
+      }
+    }
+  ],
+  "missedQuestionIds": ["nbt5-01", "nf1-01", "nf7-01"],
+  "activeQuizAttempt": null
+}
