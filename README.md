@@ -1,11 +1,67 @@
 # NC Math SSA Prep (Wake County Math Acceleration, Grades 1–5)
 
-A web application built to help students prepare for **North Carolina Single
-Subject Acceleration (SSA)** to skip ahead a grade in mathematics in the
-**Wake County Public School System (WCPSS)**.
+Free practice for **North Carolina Single Subject Acceleration (SSA)**: the test
+that lets a **Wake County (WCPSS)** student skip ahead a grade in math.
+Covers **grades 1 through 5**.
 
-**Current scope: Grades 1 through 5**, one curriculum module per grade
-(`src/curriculum/grade1/` through `grade5/`).
+## ▶ Try it: https://frictionlesscode.github.io/ncmathssa/
+
+Nothing to install. Progress is saved in your browser.
+
+## Run it yourself
+
+```bash
+git clone https://github.com/frictionlesscode/ncmathssa.git
+cd ncmathssa
+npm install
+npm run dev
+```
+
+Open the URL Vite prints, including the `/ncmathssa/` path (usually
+`http://localhost:5173/ncmathssa/`).
+
+---
+
+## How it works
+
+1. **Set up.** After agreeing to the disclaimer, enter the student's name and grade.
+2. **Parent home.** One page shows how ready the student is (goal: 80%), how they're doing on each topic, and whether they're on track for the test date. One button always says what to do next.
+3. **Check-up (optional).** A short test that finds topics the student already knows, so practice skips them.
+4. **Three rounds across every topic.**
+   - Round 1: try every topic.
+   - Round 2: get every topic to 80%.
+   - Round 3: test-ready practice under test conditions.
+5. **Practice test.** A full practice test. Scoring 80% or better shows "Ready to try for SSA".
+
+Hand the device to the student for each session. Practice gives feedback after every question, and missed questions come back in later sessions. At the end the student hands it back and the parent sees a short summary. Progress is saved after every answer, so closing the tab loses nothing.
+
+**Short on time?** Set a test date within two weeks and the path skips ahead to the weakest topics, then the practice test.
+
+The "Detailed view" link on the home page keeps the full breakdown by NC standard, study guides and per-standard drills.
+
+**Also available**
+
+- Calculator, on the questions where a calculator is allowed
+- Scratchpad for working out answers
+- Printable report of progress
+- Weak-spots and per-standard drills in Detailed view
+- Multiple students, each with their own progress
+
+**Spaced review.** A missed question returns on the existing Leitner schedule: after 1 day, then 3, 7, 16 and 35 days each time it is answered correctly.
+A wrong answer sends it back to 1 day, and after one more correct answer at 35 days it is retired.
+
+---
+
+## Disclaimer
+
+This is an independent, unofficial practice tool. It is not affiliated with,
+endorsed by, or produced by WCPSS, NCDPI, CASE, or any school or district. Its
+questions were written from publicly available information only; the actual
+test is secure and not public, so nothing here is a real test item. It is
+provided as is, with no guarantee of accuracy or of any test or placement
+outcome, and is used at your own risk. The app asks every visitor to agree to
+this, including a hold-harmless clause, before it can be used
+(`src/components/DisclaimerGate.tsx`).
 
 ---
 
@@ -44,36 +100,6 @@ Geometry as one combined band.
 > also have a seeded generator (`src/curriculum/gradeN/templates/`) that
 > supplies effectively unlimited practice items; standards without one have
 > a smaller pool that repeats sooner.
-
----
-
-## How it works
-
-1. **Set up.** After agreeing to the disclaimer, enter the student's name and grade.
-2. **Parent home.** One page shows how ready the student is (goal: 80%), how they're doing on each topic, and whether they're on track for the test date. One button always says what to do next.
-3. **Check-up (optional).** A short test that finds topics the student already knows, so practice skips them.
-4. **Three rounds across every topic.**
-   - Round 1: try every topic.
-   - Round 2: get every topic to 80%.
-   - Round 3: test-ready practice under test conditions.
-5. **Practice test.** A full practice test. Scoring 80% or better shows "Ready to try for SSA".
-
-Hand the device to the student for each session. Practice gives feedback after every question, and missed questions come back in later sessions. At the end the student hands it back and the parent sees a short summary. Progress is saved after every answer, so closing the tab loses nothing.
-
-**Short on time?** Set a test date within two weeks and the path skips ahead to the weakest topics, then the practice test.
-
-The "Detailed view" link on the home page keeps the full breakdown by NC standard, study guides and per-standard drills.
-
-**Also available**
-
-- Calculator, on the questions where a calculator is allowed
-- Scratchpad for working out answers
-- Printable report of progress
-- Weak-spots and per-standard drills in Detailed view
-- Multiple students, each with their own progress
-
-**Spaced review.** A missed question returns on the existing Leitner schedule: after 1 day, then 3, 7, 16 and 35 days each time it is answered correctly.
-A wrong answer sends it back to 1 day, and after one more correct answer at 35 days it is retired.
 
 ---
 
@@ -141,28 +167,7 @@ touch `src/engine/` or the components under `src/components/`:
 
 ---
 
-## Running the Web App Locally
-
-```bash
-# Navigate to the project directory
-cd ncmathssa
-
-# Install dependencies
-npm install
-
-# Start the local development server
-npm run dev
-
-# Or build and run production preview
-npm run build
-npm run preview
-```
-
-Open the URL Vite prints in the console, including the `/ncmathssa/` path
-(its default is `http://localhost:5173/ncmathssa/`, but it will pick the
-next free port if that one is busy).
-
-### Tests and checks
+## Tests and checks
 
 ```bash
 npm run test:run   # runs the test suite once and exits (CI-safe)
@@ -175,36 +180,12 @@ npm run build      # tsc -b && vite build
 `.github/workflows/ci.yml` runs lint, typecheck, `test:run`, and build on
 every pull request and on pushes to `master`.
 
-## Live Site
+### Deployment
 
-The app is published to GitHub Pages at
-**https://frictionlesscode.github.io/ncmathssa/** by
-`.github/workflows/deploy.yml`, which runs only after the CI workflow succeeds on
-`master` (a red CI never publishes; to redeploy, re-run the deploy workflow from the
-Actions page).
-
----
-
-## Status: Grades 1–5 Complete
-
-Grades 1 through 5 are all registered and playable (`src/curriculum/registry.ts`).
-Grades 1–2 use `{ kind: 'even-by-standard-count' }` weighting because NCDPI
-publishes no state EOG blueprint below grade 3; Grades 3–5 weight domains by
-the published NCDPI blueprint. Adding a future grade (e.g. Grade 6) follows
-the same four steps under [Adding a grade](#adding-a-grade) above.
-
----
-
-## Disclaimer
-
-This is an independent, unofficial practice tool. It is not affiliated with,
-endorsed by, or produced by WCPSS, NCDPI, CASE, or any school or district. Its
-questions were written from publicly available information only; the actual
-test is secure and not public, so nothing here is a real test item. It is
-provided as is, with no guarantee of accuracy or of any test or placement
-outcome, and is used at your own risk. The app asks every visitor to agree to
-this, including a hold-harmless clause, before it can be used
-(`src/components/DisclaimerGate.tsx`).
+The live site is published to GitHub Pages by `.github/workflows/deploy.yml`,
+which runs only after CI succeeds on `master` (a red CI never publishes; to
+redeploy, re-run the deploy workflow from the Actions page). For a local
+production preview: `npm run build && npm run preview`.
 
 ## License
 
